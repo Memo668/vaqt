@@ -62,5 +62,6 @@ Uhrzeit, Datum und Ort laufen über eine injizierbare `Clock`/`LocationSource`, 
   3. Screenshot mit `xcrun simctl io booted screenshot` aufnehmen.
   4. Neben die Referenz aus `design/screenshots/` legen.
   5. Abweichungen bei Abständen, Größen, Farben, Texten und Zuständen auflisten und beheben.
+- Befehle: `make build`, `make test`, `make run`, `make screenshot` (Übersicht mit `make help`, Einzelheiten in `README.md`). Das Xcode-Projekt entsteht mit `make project` aus `project.yml`. Die Build-Daten liegen auf der externen Platte „Extern“ (`/Volumes/Extern/Builds/NamazVakti`), weil die interne Platte knapp ist – `xcodebuild` deshalb nicht ohne `-derivedDataPath` aufrufen.
 - Kleine Commits pro abgeschlossenem Schritt, Phase im Commit-Text (`Phase 3: Zeiten-Seite – Gebetskarten`).
 - Keine neuen Funktionen über Spec und Screenshots hinaus.
