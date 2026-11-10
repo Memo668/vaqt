@@ -130,7 +130,9 @@ struct DayArcColors {
         kerahat: Palette.LiveActivity.kerahat, kerahatOpacity: 0.75, kerahatActiveOpacity: 1,
         knob: Palette.LiveActivity.background, knobStroke: Palette.LiveActivity.foreground, knobStrokeWidth: 2,
         knobShadow: nil,
-        symbolWeight: .semibold
+        // Die Symbole sind hier nur gut 8 pt groß; erst mit dieser Stärke ist der Strich so kräftig
+        // wie im Prototyp (1,15 pt).
+        symbolWeight: .heavy
     )
 }
 
@@ -176,7 +178,7 @@ struct DayArcDrawing: View {
                 Text(marker.time.description)
                     .font(Typography.arcTime(
                         size: metrics.timeFontSize, isCurrent: marker.state == .current,
-                        scales: metrics.timeScales, typeScale: typeScale
+                        scales: metrics.timeScales, tabular: metrics.tabularTimes, typeScale: typeScale
                     ))
                     .tracking(Typography.arcTimeTracking)
                     .foregroundStyle(marker.state == .current ? colors.timeCurrent : colors.time)

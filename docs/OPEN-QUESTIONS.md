@@ -135,6 +135,7 @@ Diese Punkte ergeben sich aus dem Abgleich mit den Referenzbildern `iphone/10` b
 - **Farben:** Akzent, Bogenspur, Schein, Kerahat-Segmente (ruhend und aktiv), Kartenfläche und Karte des laufenden Gebets stimmen hell und dunkel bis auf 1 von 255 je Kanal.
 - **Gebetskarten:** Höhe 52 pt, Abstände, Lage von Symbol, Name, Chip „Jetzt“, Kerahat-Zeile, Uhrzeit und Glocke, auch in RTL.
 - **Fakten-Kacheln und Stepper:** Größe und Lage wie in `iphone/40` und `iphone/60`.
+- **Kleiner Bogen der Live-Aktivität:** Lage von Spur, Markern, Zeiten, Knopf und Kerahat-Segmenten wie in `system/93`; der Ring bei eng liegenden Markern ist am Fall Jakarta geprüft. Verglichen wurde ein gerendertes Bild des Bausteins, weil die Live-Aktivität selbst erst in Phase 9 entsteht.
 
 ### Was abweicht und bleibt
 
@@ -149,6 +150,7 @@ Diese Punkte ergeben sich aus dem Abgleich mit den Referenzbildern `iphone/10` b
 | Ort | SF Symbol als Schriftgröße | Stärke | Maß im Prototyp |
 |---|---|---|---|
 | Marker im Bogen | 0,72 × Kantenlänge (11,5 pt, laufend 13 pt) | bold | Feld 16 bzw. 18 pt, Strich 1,4 pt |
+| Marker im kleinen Bogen | 0,72 × Kantenlänge (8,6 pt, laufend 9,4 pt) | heavy | Feld 12 bzw. 13 pt, Strich 1,15 pt |
 | Gebetskarte | 14,5 pt | semibold | Feld 22 pt, Zeichnung knapp 18 pt breit, Strich 1,65 pt |
 | Glocke | 13,5 pt | semibold | Feld 20 pt, Glockenkörper gut 12 pt, Strich 1,5 pt |
 | Einstellungskreis | 20 pt | medium | Feld 24 pt, Zahnrad knapp 21 pt |
@@ -164,7 +166,7 @@ Diese Punkte ergeben sich aus dem Abgleich mit den Referenzbildern `iphone/10` b
 - **Innenabstand der Chips in RTL:** 14 pt vor dem Symbol, 18 pt hinter dem Titel, in Leserichtung. Der Prototyp setzt die Werte fest links und rechts; in `iphone/20` sitzen sie deshalb vertauscht.
 - **Varianten:** jeweils die Standardwahl aus Spec § 7 – Chips nur mit Titel (52 pt hoch), Gebetskarten 52 pt, Marker nach Uhrzeit, Countdown digital.
 - **Countdown:** Phase 2 liefert die Schrift (64 pt thin, im Bogen 56 pt, ab zehn Stunden 50 pt, höchstens ×1,05) und den Platz im Bogen. Der laufende Countdown ist ein Baustein der Zeiten-Seite in Phase 3; der Katalog zeigt einen festen Text.
-- **Live-Aktivität:** `DayArc(style: .liveActivity)` zeichnet nur den kleinen Bogen (`ARCS.la`, Farben aus `.arc-la`). Kopfzeile, Name und Countdown der Live-Aktivität folgen in Phase 9.
+- **Live-Aktivität:** `DayArc(style: .liveActivity)` zeichnet nur den kleinen Bogen (`ARCS.la`, Farben aus `.arc-la`). Kopfzeile, Name und Countdown der Live-Aktivität folgen in Phase 9. Die Zeiten am kleinen Bogen haben Ziffern in natürlicher Breite, nicht gleich breite wie am großen – so zeigt es `system/93`, weil `.arc-la .arc-t` die Schrift neu setzt.
 - **Dynamic Type:** Zeiten am Bogen wachsen höchstens auf das 1,2-Fache, der Countdown auf das 1,05-Fache, die Leiste auf das 1,15-Fache; der Text der Chips wächst bis AX1. Die Maße des Bogens bleiben fest.
 - **Zeilenhöhen:** SwiftUI kennt kein `line-height`. `textStyle(_:lineHeight:)` setzt die Zeilenhöhe des Prototyps über engen Zeilenabstand plus Zugabe. Das System rundet jede Zeile auf Gerätepixel; mehrzeilige Texte weichen deshalb bis zu 0,7 pt ab.
 - **Schatten:** `box-shadow` mit Weichzeichnung b wird in SwiftUI zu `radius: b / 2`.

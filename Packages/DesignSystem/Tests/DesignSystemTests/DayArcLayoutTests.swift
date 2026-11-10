@@ -65,6 +65,8 @@ struct DayArcLayoutTests {
         #expect(metrics.kerahatInset == 19)
         #expect(metrics.kerahatWidth == 3)
         #expect(metrics.timeFontSize == 12)
+        #expect(metrics.timeScales)
+        #expect(metrics.tabularTimes)
     }
 
     @Test("ARCS.la: 330 × 122 pt, Radius 166, Spur 7 pt, Marker 21 pt")
@@ -88,6 +90,7 @@ struct DayArcLayoutTests {
         #expect(metrics.kerahatWidth == 2)
         #expect(metrics.timeFontSize == 10.5)
         #expect(!metrics.timeScales)
+        #expect(!metrics.tabularTimes)
     }
 
     @Test("arcAngle und arcPoint: Fadschr links unten, Ischa rechts unten, die Mitte ganz oben")

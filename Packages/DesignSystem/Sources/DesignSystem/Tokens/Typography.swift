@@ -148,9 +148,13 @@ public enum Typography {
     /// - Parameters:
     ///   - size: Größe bei der Standardgröße – 12 pt, in der Live-Aktivität 10,5 pt.
     ///   - scales: ob die Schrift mit Dynamic Type wächst; in der Live-Aktivität nicht.
-    public static func arcTime(size: CGFloat, isCurrent: Bool, scales: Bool = true, typeScale: CGFloat = 1) -> Font {
+    ///   - tabular: ob alle Ziffern gleich breit sind; in der Live-Aktivität nicht.
+    public static func arcTime(
+        size: CGFloat, isCurrent: Bool, scales: Bool = true, tabular: Bool = true, typeScale: CGFloat = 1
+    ) -> Font {
         let scale = scales ? min(max(typeScale, 0), arcTimeMaxScale) : 1
-        return Font.system(size: size * scale, weight: isCurrent ? .bold : .semibold).monospacedDigit()
+        let font = Font.system(size: size * scale, weight: isCurrent ? .bold : .semibold)
+        return tabular ? font.monospacedDigit() : font
     }
 }
 

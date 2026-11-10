@@ -46,6 +46,9 @@ public struct DayArcMetrics: Hashable, Sendable {
     public var timeFontSize: CGFloat
     /// Ob die Zeiten mit Dynamic Type wachsen. In der Live-Aktivität nicht.
     public var timeScales: Bool
+    /// Ob die Ziffern der Zeiten alle gleich breit sind (`tabular-nums`). In der Live-Aktivität nicht:
+    /// Dort setzt `.arc-la .arc-t` die Schrift neu und damit die Ziffern auf ihre natürliche Breite.
+    public var tabularTimes: Bool
     /// Abstand des Inhalts im Bogen zur Unterkante (`.hero-text`, `.la-text`).
     public var contentBottomInset: CGFloat
 
@@ -56,7 +59,7 @@ public struct DayArcMetrics: Hashable, Sendable {
         glowRadius: 25, knobRadius: 7,
         timeBox: CGSize(width: 34, height: 13), timeGap: 5, timeBelow: 12, kerahatInset: 19,
         trackWidth: 12, kerahatWidth: 3, ringWidth: 1.5,
-        timeFontSize: 12, timeScales: true, contentBottomInset: 2
+        timeFontSize: 12, timeScales: true, tabularTimes: true, contentBottomInset: 2
     )
 
     /// `ARCS.la`: dieselbe Zeichnung kleiner und flacher, für die Live-Aktivität auf dem
@@ -67,7 +70,7 @@ public struct DayArcMetrics: Hashable, Sendable {
         glowRadius: 17, knobRadius: 4.5,
         timeBox: CGSize(width: 28, height: 11), timeGap: 3, timeBelow: 9, kerahatInset: 13.5,
         trackWidth: 7, kerahatWidth: 2, ringWidth: 1.5,
-        timeFontSize: 10.5, timeScales: false, contentBottomInset: 6
+        timeFontSize: 10.5, timeScales: false, tabularTimes: false, contentBottomInset: 6
     )
 
     // MARK: - Geometrie
