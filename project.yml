@@ -1,0 +1,128 @@
+# Beschreibung des Xcode-Projekts. Daraus erzeugt XcodeGen `Gebetszeiten.xcodeproj`:
+#
+#   make project        (oder: xcodegen generate)
+#
+# Das erzeugte Projekt liegt nicht in Git. Änderungen an Targets, Einstellungen und
+# Info.plist gehören hierher, nicht ins Projekt.
+
+name: Gebetszeiten
+
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    iOS: "26.0"
+  developmentLanguage: de
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    # Platzhalter – vor dem ersten Archiv ersetzen (docs/BUILD-PLAN.md, Spec § 6.9).
+    # Die App Group steht nur hier; die Entitlements beider Targets lesen sie von hier.
+    APP_BUNDLE_ID: com.example.gebetszeiten
+    APP_GROUP_ID: group.com.example.gebetszeiten
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+    TARGETED_DEVICE_FAMILY: "1"
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+
+packages:
+  PrayerCore:
+    path: Packages/PrayerCore
+  DesignSystem:
+    path: Packages/DesignSystem
+  Features:
+    path: Packages/Features
+
+targets:
+  Gebetszeiten:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID)
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        # Noch kein App-Icon; das Platzhalter-Icon kommt in Phase 11.
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleDisplayName: Gebetszeiten
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        # Die Texte liegen im Paket DesignSystem. Ohne diese Liste würde iOS die App
+        # nur in der Entwicklungssprache starten.
+        CFBundleLocalizations: [de, tr, en, es]
+        UILaunchScreen: {}
+        # Hochformat; die Ausrichtung auf dem iPhone Duo klärt Phase 10 (docs/OPEN-QUESTIONS.md).
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        NSSupportsLiveActivities: true
+    entitlements:
+      path: App/Gebetszeiten.entitlements
+      properties:
+        com.apple.security.application-groups: [$(APP_GROUP_ID)]
+    dependencies:
+      - package: Features
+      - package: DesignSystem
+      - package: PrayerCore
+      - target: GebetszeitenWidgets
+
+  GebetszeitenWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Widgets
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID).widgets
+    info:
+      path: Widgets/Info.plist
+      properties:
+        CFBundleDisplayName: Gebetszeiten
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleLocalizations: [de, tr, en, es]
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: Widgets/GebetszeitenWidgets.entitlements
+      properties:
+        com.apple.security.application-groups: [$(APP_GROUP_ID)]
+    dependencies:
+      - package: DesignSystem
+      - package: PrayerCore
+
+schemes:
+  Gebetszeiten:
+    build:
+      targets:
+        Gebetszeiten: all
+    run:
+      config: Debug
+      # Die Debug-Startargumente aus CLAUDE.md, zum An- und Abhaken im Schema.
+      commandLineArguments:
+        "-debugSkipOnboarding": false
+        "-debugFixtureTimes": false
+        "-debugDate 2026-11-10": false
+        "-debugTime 14:25": false
+        "-debugCity berlin": false
+        "-debugHighLatitude": false
+        "-debugLocationDenied": false
+        "-debugOffline": false
+        "-debugTab today": false
+        "-debugQiblaHeading 137": false
+    test:
+      config: Debug
+      gatherCoverageData: true
+      targets:
+        - package: PrayerCore/PrayerCoreTests
+        - package: DesignSystem/DesignSystemTests
+        - package: Features/FeaturesTests
+    archive:
+      config: Release
