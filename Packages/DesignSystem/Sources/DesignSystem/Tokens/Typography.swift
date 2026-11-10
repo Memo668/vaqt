@@ -153,11 +153,46 @@ public enum Typography {
     }
 }
 
+/// Ober- plus Unterlänge der Systemschrift als Vielfaches der Schriftgröße (SF Pro: 1950 + 494 von 2048).
+/// So hoch ist eine Textzeile in SwiftUI, wenn nichts anderes gesagt ist.
+let systemFontLineHeight: CGFloat = 1.1934
+
+/// Zeilenhöhe wie `line-height` im CSS: Jede Zeile bekommt einen Kasten der Höhe `multiple × Schriftgröße`,
+/// der Text steht mittig darin. So liegen Grundlinien und Blockhöhen dort, wo sie im Prototyp liegen.
+private struct LineHeight: ViewModifier {
+    @ScaledMetric private var scaledFontSize: CGFloat
+    private let fontSize: CGFloat
+    private let multiple: CGFloat
+    private let scales: Bool
+
+    /// - Parameter style: der Textstil, mit dem die Schrift wächst; `nil` für eine feste Größe.
+    init(multiple: CGFloat, fontSize: CGFloat, relativeTo style: Font.TextStyle?) {
+        _scaledFontSize = ScaledMetric(wrappedValue: fontSize, relativeTo: style ?? .body)
+        self.fontSize = fontSize
+        self.multiple = multiple
+        scales = style != nil
+    }
+
+    func body(content: Content) -> some View {
+        let extra = (scales ? scaledFontSize : fontSize) * (multiple - systemFontLineHeight)
+        // Zwischen den Zeilen kann SwiftUI nur Abstand hinzufügen; ein engerer Kasten wirkt deshalb
+        // nur über und unter dem Text.
+        content
+            .lineSpacing(max(0, extra))
+            .padding(.vertical, extra / 2)
+    }
+}
+
 extension View {
 
-    /// Setzt die Ansicht in einen Zeilenkasten fester Höhe, mittig – wie `line-height` im CSS.
-    /// So stehen Grundlinien dort, wo sie im Prototyp stehen.
-    public func lineBox(height: CGFloat) -> some View {
-        frame(height: height)
+    /// Zeilenhöhe eines Textstils der Skala als Vielfaches der Schriftgröße, z. B. 1,3 für Fließtext.
+    /// Wächst mit Dynamic Type.
+    public func lineHeight(_ multiple: CGFloat, for style: TypeScale) -> some View {
+        modifier(LineHeight(multiple: multiple, fontSize: style.pointSize, relativeTo: style.textStyle))
+    }
+
+    /// Zeilenhöhe für eine Schrift fester Größe, z. B. den Countdown.
+    public func lineHeight(_ multiple: CGFloat, fontSize: CGFloat) -> some View {
+        modifier(LineHeight(multiple: multiple, fontSize: fontSize, relativeTo: nil))
     }
 }
