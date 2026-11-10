@@ -1,5 +1,8 @@
 #!/bin/bash
 # Abgleich der Bausteine mit den Referenzbildern design/screenshots/iphone/10–22 (Phase 2).
+# Nicht dabei sind iphone/17 (Banner und Hinweis gehören zur Zeiten-Seite) und iphone/19 (große Schrift:
+# dort liegen Bogen und Karten tiefer; dafür vorher `xcrun simctl ui … content_size` setzen und die
+# Ausschnitte mit scripts/compare-shot von Hand wählen).
 #
 # Startet die App im Simulator mit `-debugCatalog arc` bzw. `rows` in jedem Zustand der Referenzbilder,
 # nimmt den Bildschirm auf und legt Bogen und Gebetskarten mit scripts/compare-shot neben die Referenz.
@@ -30,18 +33,32 @@ ARC_SHOT=22,140,358,180
 ROWS_REF=0,404,390,368
 ROWS_SHOT=6,132,390,368
 
-# Nummer | Datei des Referenzbilds | hell oder dunkel | Leserichtung | Debug-Argumente
+# Nummer | Datei des Referenzbilds | hell oder dunkel | Leserichtung | Sprache | Debug-Argumente
+# Die ersten neun sind die Zustände der Abnahme von Phase 2; 18 und 21 prüfen zusätzlich die Info-Marken
+# für hohe Breiten und die türkischen Texte.
 STATES='
-10|10-home-asr-active|light|ltr|-debugTime 14:25
-11|11-home-asr-active-dark|dark|ltr|-debugTime 14:25
-12|12-home-before-fajr|light|ltr|-debugTime 05:14
-13|13-home-after-sunrise|light|ltr|-debugTime 08:04
-14|14-home-kerahat-active|light|ltr|-debugTime 07:30
-15|15-home-kerahat-before-maghrib|light|ltr|-debugTime 16:05
-16|16-home-after-isha-dark|dark|ltr|-debugTime 23:30
-20|20-home-rtl|light|rtl|-debugTime 14:25
-22|22-home-jakarta-close-markers|light|ltr|-debugCity jakarta -debugTime 17:57
+10|10-home-asr-active|light|ltr|de|-debugTime 14:25
+11|11-home-asr-active-dark|dark|ltr|de|-debugTime 14:25
+12|12-home-before-fajr|light|ltr|de|-debugTime 05:14
+13|13-home-after-sunrise|light|ltr|de|-debugTime 08:04
+14|14-home-kerahat-active|light|ltr|de|-debugTime 07:30
+15|15-home-kerahat-before-maghrib|light|ltr|de|-debugTime 16:05
+16|16-home-after-isha-dark|dark|ltr|de|-debugTime 23:30
+20|20-home-rtl|light|rtl|de|-debugTime 14:25
+22|22-home-jakarta-close-markers|light|ltr|de|-debugCity jakarta -debugTime 17:57
+18|18-home-high-latitude|light|ltr|de|-debugHighLatitude -debugTime 23:47
+21|21-home-turkish-istanbul|light|ltr|tr|-debugCity istanbul -debugTime 16:01
 '
+
+# Sprache und Region wie `LOC` im Prototyp und im Makefile.
+locale_of() {
+  case "$1" in
+    tr) echo tr_TR ;;
+    en) echo en_GB ;;
+    es) echo es_ES ;;
+    *) echo de_DE ;;
+  esac
+}
 
 mkdir -p "$OUT"
 xcrun simctl bootstatus "$SIM" -b >/dev/null
@@ -50,8 +67,8 @@ xcrun simctl bootstatus "$SIM" -b >/dev/null
 xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" -debugCatalog arc >/dev/null
 sleep 3
 
-shoot() { # Abschnitt Nummer Leserichtung Argumente…
-  local section="$1" number="$2" direction="$3"; shift 3
+shoot() { # Abschnitt Nummer Leserichtung Sprache Argumente…
+  local section="$1" number="$2" direction="$3" language="$4"; shift 4
   local rtl=()
   if [ "$direction" = rtl ]; then
     # Die Pseudosprache „Right-to-Left“ des Systems: deutsche Texte, gespiegelte Anordnung.
@@ -59,26 +76,26 @@ shoot() { # Abschnitt Nummer Leserichtung Argumente…
   fi
   # shellcheck disable=SC2068
   xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" \
-    -AppleLanguages '(de)' -AppleLocale de_DE ${rtl[@]+"${rtl[@]}"} \
+    -AppleLanguages "($language)" -AppleLocale "$(locale_of "$language")" ${rtl[@]+"${rtl[@]}"} \
     -debugCatalog "$section" -debugFixtureTimes -debugDate 2026-11-10 $@ >/dev/null
   sleep 1.5
   xcrun simctl io "$SIM" screenshot "$OUT/$section-$number.png" >/dev/null 2>&1
 }
 
-echo "$STATES" | while IFS='|' read -r number file appearance direction arguments; do
+echo "$STATES" | while IFS='|' read -r number file appearance direction language arguments; do
   [ -n "$number" ] || continue
   if [ $# -gt 0 ] && ! printf '%s\n' "$@" | grep -qx "$number"; then continue; fi
   xcrun simctl ui "$SIM" appearance "$appearance"
 
   # shellcheck disable=SC2086
-  shoot arc "$number" "$direction" $arguments
+  shoot arc "$number" "$direction" "$language" $arguments
   printf 'Bogen %s:  ' "$number"
   "$ROOT/scripts/compare-shot" --ref "$REF/$file.png" --ref-rect "$ARC_REF" \
     --shot "$OUT/arc-$number.png" --shot-rect "$ARC_SHOT" \
     --out "$OUT/compare-arc-$number.png" --zoom "$ZOOM" | head -1
 
   # shellcheck disable=SC2086
-  shoot rows "$number" "$direction" $arguments
+  shoot rows "$number" "$direction" "$language" $arguments
   printf 'Karten %s: ' "$number"
   "$ROOT/scripts/compare-shot" --ref "$REF/$file.png" --ref-rect "$ROWS_REF" \
     --shot "$OUT/rows-$number.png" --shot-rect "$ROWS_SHOT" \

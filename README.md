@@ -155,7 +155,7 @@ Previews lassen sich nicht mit `simctl` aufnehmen. Deshalb zeigt die App mit `-d
 make run ARGS='-debugCatalog arc -debugFixtureTimes -debugCity jakarta -debugDate 2026-11-10 -debugTime 17:57'
 ```
 
-`make compare` stellt die neun Zustände der Referenzbilder `iphone/10` bis `22` nach und schreibt je Zustand ein Bild nach `screenshots-out/phase-2/`: oben die Referenz, in der Mitte die Aufnahme, unten der Unterschied.
+`make compare` stellt die Zustände der Referenzbilder `iphone/10` bis `22` nach – die neun der Abnahme von Phase 2, dazu hohe Breiten (`18`) und Türkisch (`21`) – und schreibt je Zustand zwei Bilder nach `screenshots-out/phase-2/`, eines für den Bogen und eines für die Gebetskarten: oben die Referenz, in der Mitte die Aufnahme, unten der Unterschied.
 
 ```bash
 make compare
