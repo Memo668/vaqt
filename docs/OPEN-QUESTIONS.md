@@ -23,6 +23,18 @@ Nördlich des Polarkreises geht die Sonne an manchen Tagen nicht auf oder nicht 
 
 - **Standard:** offen bis Phase 3. Vorschlag: ein Hinweis an der Stelle der Zeiten.
 
+### 4. Symbol für den Chip „Anleitung“ (für Phase 3)
+
+Der Prototyp zeichnet für den Chip „Anleitung“ einen Mihrab-Bogen (`pray`). Die Design Spec nennt dafür kein SF Symbol, und in den SF Symbols gibt es kein Gegenstück.
+
+- **Standard bis dahin:** Im Katalog steht `list.number` als Platzhalter. Die Symbole der Chips legt erst die obere Leiste in Phase 3 fest; „Zeiten“ zeigt `clock`, „Qibla“ `safari`.
+
+### 5. `-debugCatalog` in `CLAUDE.md`
+
+Das neue Debug-Argument steht in `README.md`, aber nicht in der Liste der Debug-Argumente in `CLAUDE.md`. Anweisungsdateien ändere ich nur mit ausdrücklichem Ja.
+
+- **Standard bis dahin:** `CLAUDE.md` bleibt, wie sie ist.
+
 ## Vor der Veröffentlichung zu prüfen
 
 - **JAKIM und Kemenag** rechnen mit reinen Winkeln 20°/18°, ohne Sicherheitsminuten (entschieden am 10.11.2026, siehe unten). Beide sind gegen offizielle Tabellen zu prüfen, bevor die App erscheint. Bisher gibt es nur den Vergleich mit dem Mock für Jakarta: Kemenag liegt bis zu 3 Minuten daneben (Dhuhr 11:36 statt 11:39). Die Voreinstellung `singapore` von Adhan Swift – dieselben Winkel, Dhuhr +1, aufgerundet – läge näher (11:38).
@@ -101,6 +113,65 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 | Ausrichtung | „Ja, so lassen“ | nur Hochformat. Ob das innere Display des iPhone Duo Querformat braucht, klärt Phase 10 (Spec § 6.17). |
 | Nachholen | „Ja, so lassen“ | Die App startet leer: kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr. `iphone/60` und `61` zeigen die Beispielzahlen des Prototyps; die gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Annahme für Phase 6: Mit `-debugFixtureTimes` zeigt die Seite sie. |
 | JAKIM und Kemenag | „Ja, so lassen“ | reine Winkel 20°/18°. Vor der Veröffentlichung gegen offizielle Tabellen zu prüfen, siehe oben. |
+
+## Entschieden mit dem Plan für Phase 2 am 10.11.2026
+
+Der Plan für Phase 2 wurde am 10.11.2026 mit vier Vorschlägen freigegeben („Freigeben“). Damit gilt:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Aufnahmeweg für den Abgleich | neues Debug-Argument `-debugCatalog arc\|rows\|glass\|cards\|all`, nur in DEBUG | Die App zeigt den Katalog der Bausteine statt der Tabs. Bogen und Gebetskarten stehen im Zustand der übrigen Debug-Argumente. Dunkel und RTL kommen ohne eigenes Argument aus (`xcrun simctl ui … appearance dark`, `-AppleTextDirection YES -NSForceRightToLeftWritingDirection YES`). |
+| Ring bei eng liegenden Markern | 1,5 pt sichtbar, wie im Referenzbild `iphone/22` | Die Spec nennt 3 pt. Der Prototyp zeichnet eine 3 pt breite Kontur, deren innere Hälfte unter der Füllung liegt (`paint-order: stroke`). |
+| Stepper | eigener Baustein `StepperPill` wie in `iphone/60` | 94 × 32 pt, Radius 8, zwei Tasten mit eigenen VoiceOver-Texten (`qadaMinus`, `qadaPlus`, `stepLess`, `stepMore`). Der `Stepper` des Systems sieht in iOS 26 anders aus und kennt nur einen gemeinsamen Text. |
+| `BellState` | liegt in `PrayerCore` | Ton, Lautlos, Aus mit der Reihenfolge der Glocke und der Voreinstellung des Prototyps. Phase 8 braucht den Stand ohne UI. |
+
+## Annahmen in Phase 2
+
+Diese Punkte ergeben sich aus dem Abgleich mit den Referenzbildern `iphone/10` bis `22`, `40` und `60` oder aus der Umsetzung. Gemessen ist auf dem iPhone 18 Pro mit iOS 27.2.
+
+### Was mit den Referenzbildern übereinstimmt
+
+- **Bogen:** Lage und Größe von Spur, Markern, Zeiten, Knopf, Schein, Ring und Kerahat-Segmenten in allen neun Zuständen (`iphone/10` bis `16`, `20`, `22`), auch dunkel und RTL. Die Geometrie rechnet auf drei Nachkommastellen dieselben Zahlen wie der Code des Prototyps.
+- **Farben:** Akzent, Bogenspur, Schein, Kerahat-Segmente (ruhend und aktiv), Kartenfläche und Karte des laufenden Gebets stimmen hell und dunkel bis auf 1 von 255 je Kanal.
+- **Gebetskarten:** Höhe 52 pt, Abstände, Lage von Symbol, Name, Chip „Jetzt“, Kerahat-Zeile, Uhrzeit und Glocke, auch in RTL.
+- **Fakten-Kacheln und Stepper:** Größe und Lage wie in `iphone/40` und `iphone/60`.
+
+### Was abweicht und bleibt
+
+- **Schrift der Referenzbilder:** Die Bilder sind offenbar auf einem Rechner ohne SF Pro entstanden – die Ziffern sind breiter, die „1“ hat einen Fuß. Die App nimmt die Systemschrift, wie die Spec es verlangt. Folgen:
+  - Texte sind in der App etwas schmaler. Am deutlichsten beim Countdown: „2:01:59“ ist rund 177 pt breit, im Referenzbild rund 194 pt.
+  - Der Doppelpunkt zwischen Ziffern sitzt in der App mittig, im Referenzbild auf der Grundlinie. Das macht die Systemschrift von selbst.
+  - Grundlinien liegen bis zu 1 pt anders, weil die Schriften andere Ober- und Unterlängen haben.
+- **Symbole:** Die App zeigt SF Symbols, wie die Spec sie nennt, statt der Zeichnungen des Prototyps. Größe und Strichstärke sind angeglichen (siehe Tabelle unten), die Formen bleiben verschieden. Am deutlichsten bei der Glocke „Ton“: `bell.and.waves.left.and.right` ist mit den Wellen rund 25 pt breit, die Zeichnung des Prototyps rund 17 pt.
+- **Glass:** Echtes Liquid Glass ist auf dem hellen Seitenhintergrund durchsichtiger als die Nachbildung im Prototyp: Die Kreise sind nicht weiß gefüllt und haben statt des grauen Schlagschattens einen feinen Rand. Das ist Systemverhalten.
+- **Trennstrich im Stepper:** `separator` ist in iOS 27.2 heller als im Prototyp – hell 12 % statt 29 % Deckkraft, dunkel 50 % statt 65 %. Die Spec verlangt die Systemfarbe; der Strich ist deshalb heller als in `iphone/60`. Die übrigen Systemfarben (`tertiaryLabel`, die Füllungen, die Hintergründe) haben die Werte des Prototyps.
+
+| Ort | SF Symbol als Schriftgröße | Stärke | Maß im Prototyp |
+|---|---|---|---|
+| Marker im Bogen | 0,72 × Kantenlänge (11,5 pt, laufend 13 pt) | bold | Feld 16 bzw. 18 pt, Strich 1,4 pt |
+| Gebetskarte | 14,5 pt | semibold | Feld 22 pt, Zeichnung knapp 18 pt breit, Strich 1,65 pt |
+| Glocke | 13,5 pt | semibold | Feld 20 pt, Glockenkörper gut 12 pt, Strich 1,5 pt |
+| Einstellungskreis | 20 pt | medium | Feld 24 pt, Zahnrad knapp 21 pt |
+| Chip | 18 pt | medium | Feld 22 pt, Zeichnung 18 pt |
+| Stepper | 12,5 pt | regular | Feld 18 pt, Strich gut 10 pt lang |
+
+### Annahmen in der Umsetzung
+
+- **Größe des Bogens:** fest 358 × 180 pt wie `ARCS.home`; er wächst nicht mit der Bildschirmbreite. Auf dem iPhone 18 Pro (402 pt) steht er mittig mit 22 pt Rand. Ob er auf breiteren Geräten wachsen soll, klärt Phase 3 bzw. Phase 10.
+- **„Schwebende Leiste“:** `FloatingBar` ist der Träger der oberen Leiste – ein `GlassEffectContainer` mit 8 pt Abstand, ohne eigene Glasfläche (Spec § 3: vier einzelne Glass-Elemente, keine gemeinsame Kapsel). Die Tableiste bleibt die des Systems, der Toast kommt mit Phase 3.
+- **Runder Glass-Button:** `.buttonStyle(.glass)` legt 7 pt Innenabstand um den Inhalt. Der Button bekommt deshalb seine Größe (52 pt) von außen, und der Inhalt füllt, was der Stil ihm lässt. Ein Test misst die Größe.
+- **Schatten des gewählten Chips:** liegt hinter dem Glas und ist unter dem Chip ausgespart, wie ein `box-shadow`. Als Schatten auf der Glasfläche selbst war er nicht zu sehen.
+- **Innenabstand der Chips in RTL:** 14 pt vor dem Symbol, 18 pt hinter dem Titel, in Leserichtung. Der Prototyp setzt die Werte fest links und rechts; in `iphone/20` sitzen sie deshalb vertauscht.
+- **Varianten:** jeweils die Standardwahl aus Spec § 7 – Chips nur mit Titel (52 pt hoch), Gebetskarten 52 pt, Marker nach Uhrzeit, Countdown digital.
+- **Countdown:** Phase 2 liefert die Schrift (64 pt thin, im Bogen 56 pt, ab zehn Stunden 50 pt, höchstens ×1,05) und den Platz im Bogen. Der laufende Countdown ist ein Baustein der Zeiten-Seite in Phase 3; der Katalog zeigt einen festen Text.
+- **Live-Aktivität:** `DayArc(style: .liveActivity)` zeichnet nur den kleinen Bogen (`ARCS.la`, Farben aus `.arc-la`). Kopfzeile, Name und Countdown der Live-Aktivität folgen in Phase 9.
+- **Dynamic Type:** Zeiten am Bogen wachsen höchstens auf das 1,2-Fache, der Countdown auf das 1,05-Fache, die Leiste auf das 1,15-Fache; der Text der Chips wächst bis AX1. Die Maße des Bogens bleiben fest.
+- **Zeilenhöhen:** SwiftUI kennt kein `line-height`. `textStyle(_:lineHeight:)` setzt die Zeilenhöhe des Prototyps über engen Zeilenabstand plus Zugabe. Das System rundet jede Zeile auf Gerätepixel; mehrzeilige Texte weichen deshalb bis zu 0,7 pt ab.
+- **Schatten:** `box-shadow` mit Weichzeichnung b wird in SwiftUI zu `radius: b / 2`.
+- **Uhrzeiten:** immer „HH:mm“ im 24-Stunden-Format, wie `fmt()` im Prototyp, in allen vier Sprachen.
+- **Kerahat-Zeile:** Wortverbinder um den Strich halten die Spanne „15:42–16:27“ in einer Zeile.
+- **Katalog:** in der Breite der Referenzbilder (390 pt), der Baustein 140 pt unter der Oberkante – so liegt er in jeder Aufnahme am selben Ort. Die Überschriften im Katalog sind Notizen für die Entwicklung und stehen nicht im String Catalog.
+- **`-debugCatalog` ohne `-debugFixtureTimes`:** Der Katalog rechnet dann echt, wie später die Zeiten-Seite. Ohne Stadt zeigt er Berlin um 14:25 aus den Mock-Zeiten.
 
 ## Annahmen in Phase 1
 
