@@ -50,29 +50,55 @@ struct CalculationMethodTests {
         #expect(CalculationMethod.allCases.filter(\.isSeasonal) == [.moonsighting])
     }
 
-    @Test("automatische Methode je Land", arguments: [
-        ("DE", CalculationMethod.mwl),
-        ("TR", .diyanet),
+    /// Die Zuordnung Land → Methode, wie am 10.11.2026 entschieden (docs/OPEN-QUESTIONS.md).
+    private static let automaticMethods: [(country: String, method: CalculationMethod)] = [
+        ("DE", .diyanet), ("TR", .diyanet),
         ("ES", .mwl),
         ("SA", .ummAlQura),
         ("ID", .kemenag),
-    ])
+        ("US", .isna), ("CA", .isna),
+        ("EG", .egyptian),
+        ("PK", .karachi), ("IN", .karachi), ("BD", .karachi), ("AF", .karachi),
+        ("MY", .jakim),
+        ("SG", .singapore),
+        ("IR", .tehran),
+    ]
+
+    @Test("automatische Methode je Land", arguments: automaticMethods)
     func automatic(country: String, expected: CalculationMethod) {
         #expect(CalculationMethod.automatic(forCountryCode: country) == expected)
         #expect(CalculationMethod.automatic(forCountryCode: country.lowercased()) == expected)
     }
 
-    @Test("ohne Land und für alle anderen Länder gilt MWL", arguments: [nil, "", "US", "MY", "GB", "XX"] as [String?])
+    @Test("ohne Land und für alle anderen Länder gilt MWL", arguments: [nil, "", "GB", "FR", "AT", "XX", "DEU"] as [String?])
     func automaticFallback(country: String?) {
         #expect(CalculationMethod.automatic(forCountryCode: country) == .mwl)
     }
 
+    @Test("von allen Ländern der Welt weichen nur die entschiedenen von MWL ab")
+    func automaticEverywhere() {
+        let decided = Dictionary(uniqueKeysWithValues: Self.automaticMethods.map { ($0.country, $0.method) })
+        for region in Locale.Region.isoRegions.map(\.identifier) {
+            #expect(CalculationMethod.automatic(forCountryCode: region) == decided[region] ?? .mwl, "\(region)")
+        }
+        // Moonsighting gilt nirgends von selbst; die Methode lässt sich nur wählen.
+        #expect(!decided.values.contains(.moonsighting))
+    }
+
     #if DEBUG
-    @Test("die automatische Methode passt zu den Städten des Prototyps")
+    @Test("die automatische Methode passt zu den Städten des Prototyps – außer für Berlin")
     func automaticMatchesFixtureCities() {
-        for city in FixtureTimes.cities {
+        for city in FixtureTimes.cities where city.id != "berlin" {
             #expect(CalculationMethod.automatic(forCountryCode: city.countryCode).rawValue == city.automaticMethodID, "\(city.id)")
         }
+    }
+
+    @Test("für Deutschland gilt Diyanet, auch wenn der Prototyp Berlin mit MWL führt")
+    func germany() throws {
+        // Die Fixture bleibt wie der Prototyp (`CITIES.berlin.auto`); die App folgt der Entscheidung.
+        let berlin = try #require(FixtureTimes.city("berlin"))
+        #expect(berlin.automaticMethodID == "mwl")
+        #expect(CalculationMethod.automatic(forCountryCode: berlin.countryCode) == .diyanet)
     }
     #endif
 

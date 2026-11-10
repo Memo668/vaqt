@@ -90,15 +90,34 @@ public enum CalculationMethod: String, CaseIterable, Codable, Sendable, Identifi
 
     /// Die Methode, die ohne eigene Wahl für ein Land gilt (`S.method == null`).
     ///
-    /// DE → MWL, TR → Diyanet, ES → MWL, SA → Umm al-Qura, ID → Kemenag (Spec § 5). Für alle
-    /// anderen Länder und ohne Land gilt MWL (docs/OPEN-QUESTIONS.md, Punkt 3).
+    /// | Land | Methode |
+    /// |---|---|
+    /// | DE, TR | Diyanet |
+    /// | SA | Umm al-Qura |
+    /// | ID | Kemenag |
+    /// | US, CA | ISNA |
+    /// | EG | Egyptian |
+    /// | PK, IN, BD, AF | Karachi |
+    /// | MY | JAKIM |
+    /// | SG | Singapore |
+    /// | IR | Tehran |
+    /// | ES, alle anderen Länder und ohne Land | MWL |
+    ///
+    /// So entschieden am 10.11.2026 (docs/OPEN-QUESTIONS.md). Der Prototyp nennt nur fünf Länder und
+    /// führt Deutschland noch mit MWL (`CITIES.berlin.auto`).
     ///
     /// - Parameter countryCode: ISO-3166-1-Code mit zwei Buchstaben; Groß- und Kleinschreibung zählt nicht.
     public static func automatic(forCountryCode countryCode: String?) -> CalculationMethod {
         switch countryCode?.uppercased() {
-        case "TR": .diyanet
+        case "DE", "TR": .diyanet
         case "SA": .ummAlQura
         case "ID": .kemenag
+        case "US", "CA": .isna
+        case "EG": .egyptian
+        case "PK", "IN", "BD", "AF": .karachi
+        case "MY": .jakim
+        case "SG": .singapore
+        case "IR": .tehran
         default: .mwl
         }
     }

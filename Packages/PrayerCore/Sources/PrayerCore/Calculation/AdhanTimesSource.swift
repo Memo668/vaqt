@@ -9,7 +9,8 @@ import Foundation
 /// Gerechnet wird auf dem Gerät, ohne Netz. Für neun der elf Methoden gelten die Voreinstellungen von
 /// Adhan Swift samt den Minuten, die die jeweilige Stelle auf ihre Zeiten aufschlägt (z. B. Diyanet:
 /// Sonnenaufgang −7, Dhuhr +5, Asr +4, Maghrib +7). JAKIM und Kemenag haben dort keine Voreinstellung
-/// und rechnen mit den Winkeln aus `METHODS` (docs/OPEN-QUESTIONS.md, Punkt 3).
+/// und rechnen mit den reinen Winkeln aus `METHODS`. Vor der Veröffentlichung sind beide gegen
+/// offizielle Tabellen zu prüfen (docs/OPEN-QUESTIONS.md).
 public struct AdhanTimesSource: PrayerTimesSource {
 
     public init() {}

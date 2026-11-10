@@ -116,9 +116,11 @@ struct CalculationSettingsTests {
     @Test("ohne Wahl gilt die automatische Methode des Landes")
     func automaticMethod() {
         var place = Place.berlin
-        #expect(CalculationSettings().effectiveMethod(for: place) == .mwl)
-        place.countryCode = "TR"
         #expect(CalculationSettings().effectiveMethod(for: place) == .diyanet)
+        place.countryCode = "ID"
+        #expect(CalculationSettings().effectiveMethod(for: place) == .kemenag)
+        place.countryCode = "ES"
+        #expect(CalculationSettings().effectiveMethod(for: place) == .mwl)
         place.countryCode = nil
         #expect(CalculationSettings().effectiveMethod(for: place) == .mwl)
     }

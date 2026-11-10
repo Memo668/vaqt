@@ -7,6 +7,8 @@ struct AdhanTimesSourceTests {
 
     private let source = AdhanTimesSource()
     private let day = calendarDay("2026-11-10")
+    /// MWL fest gewählt. Ohne Wahl gilt in Berlin die Automatik für Deutschland, also Diyanet.
+    private let mwl = CalculationSettings(method: .mwl)
 
     private func place(_ name: String, country: String?, latitude: Double, longitude: Double, zone: String) -> Place {
         Place(
@@ -34,16 +36,25 @@ struct AdhanTimesSourceTests {
 
     @Test("Berlin am 10.11.2026 mit MWL")
     func berlin() throws {
-        let times = try times()
+        let times = try times(mwl)
         #expect(clockTimes(times) == ["05:21", "07:19", "11:51", "13:55", "16:21", "18:13"])
         #expect(times.day == day)
         #expect(times.timeZone == .berlin)
     }
 
+    @Test("Berlin am 10.11.2026 ohne Wahl: Für Deutschland gilt Diyanet")
+    func berlinAutomatic() throws {
+        let times = try times()
+        #expect(times == (try self.times(CalculationSettings(method: .diyanet))))
+        // Dieselben Winkel wie MWL (18°/17°), dazu die Minuten von Diyanet:
+        // Sonnenaufgang −7, Dhuhr +5 statt +1, Asr +4, Maghrib +7.
+        #expect(clockTimes(times) == ["05:21", "07:12", "11:55", "13:59", "16:28", "18:13"])
+    }
+
     @Test("Asr hanafitisch beginnt später, alles andere bleibt")
     func hanafi() throws {
-        let standard = try times()
-        let hanafi = try times(CalculationSettings(asr: .hanafi))
+        let standard = try times(mwl)
+        let hanafi = try times(CalculationSettings(method: .mwl, asr: .hanafi))
         #expect(hanafi.clockTime(of: .asr) == clockTime("14:31"))
         #expect(hanafi.asr > standard.asr)
         for prayer in Prayer.allCases where prayer != .asr {
@@ -64,7 +75,8 @@ struct AdhanTimesSourceTests {
     // MARK: - Methode
 
     @Test("ohne Wahl gilt die Methode des Landes", arguments: [
-        ("DE", CalculationMethod.mwl), ("TR", .diyanet), ("ES", .mwl), ("SA", .ummAlQura), ("ID", .kemenag),
+        ("DE", CalculationMethod.diyanet), ("TR", .diyanet), ("ES", .mwl), ("SA", .ummAlQura), ("ID", .kemenag),
+        ("US", .isna), ("EG", .egyptian), ("PK", .karachi), ("MY", .jakim), ("SG", .singapore), ("IR", .tehran),
     ])
     func automaticMethod(country: String, method: CalculationMethod) throws {
         var place = Place.berlin
@@ -76,7 +88,7 @@ struct AdhanTimesSourceTests {
     func withoutCountry() throws {
         var place = Place.berlin
         place.countryCode = nil
-        #expect(try times(at: place) == times(CalculationSettings(method: .mwl)))
+        #expect(try times(at: place) == times(mwl))
     }
 
     @Test("eine gewählte Methode gilt unabhängig vom Land")
@@ -112,7 +124,7 @@ struct AdhanTimesSourceTests {
     @Test("Karachi rechnet Fadschr wie MWL und Ischa später (18° statt 17°)")
     func karachi() throws {
         let karachi = try times(CalculationSettings(method: .karachi))
-        let mwl = try times(CalculationSettings(method: .mwl))
+        let mwl = try times(self.mwl)
         #expect(karachi.fajr == mwl.fajr)
         #expect(karachi.isha > mwl.isha)
         #expect(karachi.isha.timeIntervalSince(mwl.isha) < minutes(15))
@@ -122,8 +134,8 @@ struct AdhanTimesSourceTests {
 
     @Test("eine Korrektur verschiebt genau ihr Ereignis")
     func adjustment() throws {
-        let plain = try times()
-        let adjusted = try times(CalculationSettings(adjustments: MinuteAdjustments([.maghrib: 7, .fajr: -30])))
+        let plain = try times(mwl)
+        let adjusted = try times(CalculationSettings(method: .mwl, adjustments: MinuteAdjustments([.maghrib: 7, .fajr: -30])))
         #expect(adjusted.maghrib.timeIntervalSince(plain.maghrib) == minutes(7))
         #expect(adjusted.fajr.timeIntervalSince(plain.fajr) == minutes(-30))
         for prayer in [Prayer.sunrise, .dhuhr, .asr, .isha] {
@@ -148,8 +160,8 @@ struct AdhanTimesSourceTests {
 
     @Test("Ende der Sommerzeit am 25.10.2026: Die Uhrzeiten springen eine Stunde zurück, die Zeitpunkte nicht")
     func clocksGoBack() throws {
-        let before = try times(on: calendarDay("2026-10-24"))
-        let changeDay = try times(on: calendarDay("2026-10-25"))
+        let before = try times(on: calendarDay("2026-10-24"), mwl)
+        let changeDay = try times(on: calendarDay("2026-10-25"), mwl)
         #expect(clockTimes(before) == ["05:53", "07:48", "12:52", "15:20", "17:52", "19:40"])
         #expect(clockTimes(changeDay) == ["04:55", "06:50", "11:51", "14:18", "16:50", "18:38"])
         for prayer in Prayer.allCases {
@@ -162,8 +174,8 @@ struct AdhanTimesSourceTests {
 
     @Test("Beginn der Sommerzeit am 28.03.2027: Die Uhrzeiten springen eine Stunde vor, die Zeitpunkte nicht")
     func clocksGoForward() throws {
-        let before = try times(on: calendarDay("2027-03-27"))
-        let changeDay = try times(on: calendarDay("2027-03-28"))
+        let before = try times(on: calendarDay("2027-03-27"), mwl)
+        let changeDay = try times(on: calendarDay("2027-03-28"), mwl)
         #expect(clockTimes(before) == ["03:54", "05:53", "12:13", "15:38", "18:31", "20:23"])
         #expect(clockTimes(changeDay) == ["04:52", "06:51", "13:13", "16:39", "19:33", "21:26"])
         for prayer in Prayer.allCases {

@@ -170,10 +170,10 @@ struct PrayerTimelineTests {
         }
     }
 
-    @Test("echte Rechnung, Berlin im Juli mit Nachtmitte: Fadschr läuft bis zum Sonnenaufgang")
+    @Test("echte Rechnung, Berlin im Juli mit MWL und Nachtmitte: Fadschr läuft bis zum Sonnenaufgang")
     func ishaAfterNextFajrComputed() throws {
         let summer = calendarDay("2027-07-11")
-        let settings = CalculationSettings(highLatitudeRule: .middle)
+        let settings = CalculationSettings(method: .mwl, highLatitudeRule: .middle)
         let timeline = try #require(source.timeline(around: summer, at: .berlin, settings: settings))
         #expect(timeline.today.clockTime(of: .fajr) == clockTime("01:11"))
         #expect(timeline.yesterday.clockTime(of: .isha) == clockTime("01:12"))
@@ -187,10 +187,10 @@ struct PrayerTimelineTests {
 
     // MARK: - Echte Rechnung
 
-    @Test("echte Rechnung, Berlin am 10.11.2026 um 14:25: Asr läuft seit 13:55")
+    @Test("echte Rechnung mit MWL, Berlin am 10.11.2026 um 14:25: Asr läuft seit 13:55")
     func computedPhase() throws {
         let now = day.at("14:25", in: .berlin)
-        let timeline = try #require(source.timeline(at: now, place: .berlin, settings: CalculationSettings()))
+        let timeline = try #require(source.timeline(at: now, place: .berlin, settings: CalculationSettings(method: .mwl)))
         let phase = try #require(timeline.phase(at: now))
         #expect(phase.highlighted == .asr)
         #expect(phase.next.prayer == .maghrib)
@@ -202,7 +202,7 @@ struct PrayerTimelineTests {
     @Test("echte Rechnung am Tag der Zeitumstellung: Der Countdown zählt echte Zeit")
     func computedClockChange() throws {
         let changeDay = calendarDay("2026-10-25")
-        let timeline = try #require(source.timeline(around: changeDay, at: .berlin, settings: CalculationSettings()))
+        let timeline = try #require(source.timeline(around: changeDay, at: .berlin, settings: CalculationSettings(method: .mwl)))
         // 00:30 Sommerzeit bis Fadschr um 04:55 Winterzeit: 5 h 25 min.
         let night = try #require(timeline.phase(at: changeDay.at("00:30", in: .berlin)))
         #expect(night.next.prayer == .fajr)
