@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Xcode – das Projekt wird aus project.yml erzeugt (make project)
+*.xcodeproj
+xcuserdata/
+*.xcuserstate
+DerivedData/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved.orig
+
+# Lokale Ausgaben
+/build/
+/screenshots-out/
