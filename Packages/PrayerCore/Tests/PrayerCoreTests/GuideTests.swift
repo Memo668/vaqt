@@ -170,6 +170,102 @@ struct GuideStateTests {
         }
     }
 
+    // MARK: - Zeitfenster
+
+    private func window(_ prayer: Prayer, at time: String) throws -> Guide.Window {
+        try #require(Guide.window(of: prayer, in: berlin, at: day.at(time, in: .berlin)))
+    }
+
+    private func clockTimes(_ window: Guide.Window) -> String {
+        "\(ClockTime(window.start, in: .berlin))–\(ClockTime(window.end, in: .berlin))"
+    }
+
+    @Test("das Zeitfenster reicht vom Beginn des Gebets bis zum nächsten Ereignis", arguments: [
+        (Prayer.fajr, "05:16–07:14"), (.dhuhr, "11:52–14:00"), (.asr, "14:00–16:27"), (.maghrib, "16:27–18:17"),
+        (.isha, "18:17–05:16"),
+    ])
+    func windows(prayer: Prayer, expected: String) throws {
+        #expect(try clockTimes(window(prayer, at: "14:25")) == expected)
+    }
+
+    @Test("der Sonnenaufgang hat kein Zeitfenster")
+    func sunriseHasNoWindow() {
+        #expect(Guide.window(of: .sunrise, in: berlin, at: day.at("14:25", in: .berlin)) == nil)
+    }
+
+    @Test("Ischa endet mit Fadschr von morgen")
+    func ishaEndsWithTomorrowsFajr() throws {
+        for time in ["14:25", "18:17", "23:30"] {
+            let window = try window(.isha, at: time)
+            #expect(window.start == berlin.today.isha, "\(time)")
+            #expect(window.end == berlin.tomorrow.fajr, "\(time)")
+            #expect(window.end == day.adding(days: 1).at("05:16", in: .berlin), "\(time)")
+        }
+    }
+
+    @Test("vor Fadschr läuft Ischa von gestern: von gestern Abend bis Fadschr heute")
+    func ishaBeforeFajr() throws {
+        let window = try window(.isha, at: "04:01")
+        #expect(window.start == day.adding(days: -1).at("18:17", in: .berlin))
+        #expect(window.end == day.at("05:16", in: .berlin))
+        #expect(window.end == berlin.today.fajr)
+
+        // Mit Fadschr beginnt das Fenster des nächsten Ischa.
+        let afterFajr = try self.window(.isha, at: "05:16")
+        #expect(afterFajr.start == berlin.today.isha)
+        #expect(afterFajr.end == berlin.tomorrow.fajr)
+    }
+
+    @Test("über Mitternacht bleibt das Fenster des laufenden Ischa dasselbe")
+    func ishaWindowAcrossMidnight() throws {
+        let evening = try window(.isha, at: "23:30")
+        let nextDay = day.adding(days: 1)
+        let night = try #require(Guide.window(of: .isha, in: fixtureTimeline(on: nextDay), at: nextDay.at("00:30", in: .berlin)))
+        #expect(night == evening)
+    }
+
+    @Test("das Fenster endet dort, wohin der Countdown zählt")
+    func windowEndsAtNextEvent() throws {
+        for time in ["04:01", "06:00", "12:00", "14:25", "17:00", "23:30"] {
+            let now = day.at(time, in: .berlin)
+            let phase = try #require(berlin.phase(at: now))
+            let current = try #require(phase.current)
+            let window = try #require(Guide.window(of: current.prayer, in: berlin, at: now))
+            #expect(window.start == current.date, "\(time)")
+            #expect(window.end == phase.next.date, "\(time)")
+        }
+    }
+
+    @Test("die anderen Gebete zeigen immer die Zeiten von heute")
+    func otherWindowsIgnoreTheClock() throws {
+        for prayer in [Prayer.fajr, .dhuhr, .asr, .maghrib] {
+            #expect(try window(prayer, at: "04:01") == window(prayer, at: "23:30"))
+        }
+    }
+
+    @Test("Nachtmitte: Ischa beginnt und endet um 01:08 am Folgetag")
+    func ishaWindowMiddleOfNight() throws {
+        let summer = FixtureTimes.berlinSummer.day
+        let timeline = fixtureTimeline(
+            on: summer, settings: CalculationSettings(highLatitudeRule: .middle), highLatitude: true
+        )
+        let window = try #require(Guide.window(of: .isha, in: timeline, at: summer.at("23:00", in: .berlin)))
+        #expect(window.start == summer.adding(days: 1).at("01:08", in: .berlin))
+        #expect(window.end == window.start)
+    }
+
+    @Test("echte Rechnung: Fadschr von morgen liegt neben Fadschr von heute")
+    func ishaWindowComputed() throws {
+        let now = day.at("20:00", in: .berlin)
+        let timeline = try #require(AdhanTimesSource().timeline(at: now, place: .berlin, settings: CalculationSettings(method: .mwl)))
+        let window = try #require(Guide.window(of: .isha, in: timeline, at: now))
+        #expect(window.start == timeline.today.isha)
+        #expect(window.end == timeline.tomorrow.fajr)
+        // Im November beginnt Fadschr jeden Tag etwas später: 05:21 heute, 05:22 morgen.
+        #expect(timeline.today.clockTime(of: .fajr) == clockTime("05:21"))
+        #expect(ClockTime(window.end, in: .berlin) == clockTime("05:22"))
+    }
+
     // MARK: - Manuelle Wahl
 
     @Test("eine manuelle Wahl zeigt ein anderes Gebet und den Knopf zurück")
