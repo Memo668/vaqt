@@ -1,7 +1,19 @@
+import Foundation
+
 /// Uhrzeit ohne Datum, minutengenau – z. B. 14:25.
 public struct ClockTime: Hashable, Comparable, Sendable, CustomStringConvertible {
     public let hour: Int
     public let minute: Int
+
+    /// Die Uhrzeit, die eine Uhr in `timeZone` zum Zeitpunkt `date` zeigt. Sekunden fallen weg.
+    public init(_ date: Date, in timeZone: TimeZone) {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        let parts = calendar.dateComponents([.hour, .minute], from: date)
+        // Der gregorianische Kalender liefert für jeden Zeitpunkt Stunde und Minute.
+        hour = parts.hour ?? 0
+        minute = parts.minute ?? 0
+    }
 
     /// `nil`, wenn die Werte keine Uhrzeit ergeben (Stunde 0–23, Minute 0–59).
     public init?(hour: Int, minute: Int) {

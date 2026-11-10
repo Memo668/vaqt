@@ -70,6 +70,28 @@ struct CalendarDayTests {
         #expect(CalendarDay(day.date(at: time, in: berlin), in: berlin) == day)
     }
 
+    @Test("zählt Tage weiter, über Monats- und Jahresgrenzen", arguments: [
+        ("2026-11-10", 1, "2026-11-11"),
+        ("2026-11-10", -1, "2026-11-09"),
+        ("2026-11-10", 0, "2026-11-10"),
+        ("2026-11-30", 1, "2026-12-01"),
+        ("2026-12-31", 1, "2027-01-01"),
+        ("2027-01-01", -1, "2026-12-31"),
+        ("2028-02-28", 1, "2028-02-29"),
+        ("2027-02-28", 1, "2027-03-01"),
+        ("2026-11-10", 519, "2028-04-12"),
+    ])
+    func addsDays(start: String, days: Int, expected: String) throws {
+        #expect(try #require(CalendarDay(start)).adding(days: days) == CalendarDay(expected))
+    }
+
+    @Test("Tage mit Zeitumstellung zählen als ein Tag")
+    func addsDaysAcrossClockChanges() throws {
+        // 25.10.2026 hat in Berlin 25 Stunden, der 28.03.2027 nur 23.
+        #expect(try #require(CalendarDay("2026-10-24")).adding(days: 2) == CalendarDay("2026-10-26"))
+        #expect(try #require(CalendarDay("2027-03-27")).adding(days: 2) == CalendarDay("2027-03-29"))
+    }
+
     @Test("ordnet nach Jahr, Monat, Tag")
     func compares() throws {
         let earlier = try #require(CalendarDay("2026-11-10"))

@@ -50,6 +50,17 @@ public struct CalendarDay: Hashable, Comparable, Sendable, CustomStringConvertib
         return date
     }
 
+    /// Der Tag `days` Tage später; mit negativem Wert früher.
+    public func adding(days: Int) -> CalendarDay {
+        let calendar = Self.calendar(in: .gmt)
+        guard let start = calendar.date(from: DateComponents(year: year, month: month, day: day)),
+              let shifted = calendar.date(byAdding: .day, value: days, to: start)
+        else {
+            preconditionFailure("CalendarDay \(self) ist beim Erzeugen geprüft – hier nicht erreichbar")
+        }
+        return CalendarDay(shifted, in: .gmt)
+    }
+
     public var description: String {
         String(year) + "-" + (month < 10 ? "0" : "") + String(month) + "-" + (day < 10 ? "0" : "") + String(day)
     }

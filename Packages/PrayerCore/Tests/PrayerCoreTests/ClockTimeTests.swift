@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 @testable import PrayerCore
 
@@ -42,6 +43,21 @@ struct ClockTimeTests {
     func midnight() {
         #expect(ClockTime.midnight == ClockTime("00:00"))
         #expect(ClockTime.midnight.minutesSinceMidnight == 0)
+    }
+
+    @Test("liest die Uhrzeit eines Zeitpunkts in einer Zeitzone")
+    func fromInstant() throws {
+        let instant = try #require(ISO8601DateFormatter().date(from: "2026-11-10T13:25:59Z"))
+        #expect(ClockTime(instant, in: .gmt) == ClockTime("13:25"))
+        #expect(ClockTime(instant, in: .berlin) == ClockTime("14:25"))
+        #expect(ClockTime(instant, in: .jakarta) == ClockTime("20:25"))
+    }
+
+    @Test("Tag und Uhrzeit ergeben einen Zeitpunkt, der wieder dieselbe Uhrzeit zeigt")
+    func roundTrip() throws {
+        let day = try #require(CalendarDay("2027-06-21"))
+        let time = try #require(ClockTime("23:59"))
+        #expect(ClockTime(day.date(at: time, in: .berlin), in: .berlin) == time)
     }
 
     @Test("ordnet nach der Uhrzeit")
