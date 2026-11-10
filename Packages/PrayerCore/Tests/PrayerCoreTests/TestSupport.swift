@@ -51,3 +51,25 @@ extension Place {
         coordinates: Coordinates(latitude: 52.5200, longitude: 13.4050), timeZoneIdentifier: "Europe/Berlin"
     )
 }
+
+#if DEBUG
+
+/// Der Ort einer Fixture-Stadt, z. B. `fixturePlace("jakarta")`.
+func fixturePlace(_ id: String) -> Place {
+    guard let city = FixtureTimes.city(id) else { preconditionFailure("Unbekannte Fixture-Stadt im Test: \(id)") }
+    return city.place(named: id)
+}
+
+/// Der Zeitstrahl aus den Mock-Zeiten des Prototyps um den Tag `day`.
+func fixtureTimeline(
+    city: String = "berlin", on day: CalendarDay = FixtureTimes.referenceDay,
+    settings: CalculationSettings = CalculationSettings(), highLatitude: Bool = false
+) -> PrayerTimeline {
+    let source = FixtureTimesSource(highLatitude: highLatitude)
+    guard let timeline = source.timeline(around: day, at: fixturePlace(city), settings: settings) else {
+        preconditionFailure("Die Fixture liefert für jeden Tag Zeiten")
+    }
+    return timeline
+}
+
+#endif
