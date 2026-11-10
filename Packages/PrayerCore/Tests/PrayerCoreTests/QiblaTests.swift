@@ -67,18 +67,26 @@ struct QiblaTests {
         #expect(Qibla.kaaba == Coordinates(latitude: 21.4225241, longitude: 39.8261818))
     }
 
-    @Test("„in Mekka“ gilt unter 5 km")
+    @Test("„in Mekka“ gilt unter 1 km")
     func meccaRadius() {
-        #expect(Qibla.meccaRadiusKm == 5)
-        // Ein Breitengrad sind 111,195 km: 0,044° nördlich der Kaaba sind 4,89 km, 0,046° sind 5,11 km.
-        let inside = qibla(Qibla.kaaba.latitude + 0.044, Qibla.kaaba.longitude)
-        let outside = qibla(Qibla.kaaba.latitude + 0.046, Qibla.kaaba.longitude)
-        #expect(abs(inside.distanceKm - 4.893) < 0.001)
+        #expect(Qibla.meccaRadiusKm == 1)
+        // Ein Breitengrad sind 111,195 km: 0,008° nördlich der Kaaba sind 0,89 km, 0,010° sind 1,11 km.
+        let inside = qibla(Qibla.kaaba.latitude + 0.008, Qibla.kaaba.longitude)
+        let outside = qibla(Qibla.kaaba.latitude + 0.010, Qibla.kaaba.longitude)
+        #expect(abs(inside.distanceKm - 0.890) < 0.001)
         #expect(inside.isInMecca)
-        #expect(abs(outside.distanceKm - 5.115) < 0.001)
+        #expect(abs(outside.distanceKm - 1.112) < 0.001)
         #expect(!outside.isInMecca)
         // Von Norden aus liegt die Kaaba genau im Süden.
         #expect(abs(outside.bearing - 180) < 0.001)
+    }
+
+    @Test("schon wenige Kilometer von der Kaaba entfernt zeigt die Seite wieder die Nadel")
+    func withinTheCity() {
+        // 4,89 km nördlich der Kaaba – noch in der Stadt Mekka, aber nicht mehr „in Mekka“.
+        let qibla = qibla(Qibla.kaaba.latitude + 0.044, Qibla.kaaba.longitude)
+        #expect(abs(qibla.distanceKm - 4.893) < 0.001)
+        #expect(!qibla.isInMecca)
     }
 
     @Test("Dschidda liegt nicht in Mekka")

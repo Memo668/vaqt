@@ -11,8 +11,8 @@ public struct Qibla: Hashable, Sendable {
     public static let kaaba = Coordinates(latitude: 21.4225241, longitude: 39.8261818)
 
     /// Näher als so viele Kilometer an der Kaaba gilt ein Ort als „in Mekka“: Die Qibla-Seite zeigt dann
-    /// eine Meldung statt der Nadel (docs/OPEN-QUESTIONS.md, Punkt 5).
-    public static let meccaRadiusKm = 5.0
+    /// eine Meldung statt der Nadel. Unter 1 km, so entschieden am 10.11.2026 (docs/OPEN-QUESTIONS.md).
+    public static let meccaRadiusKm = 1.0
 
     /// Richtung zur Kaaba in Grad ab geografisch Nord im Uhrzeigersinn, von 0 bis unter 360.
     public let bearing: Double
