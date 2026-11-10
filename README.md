@@ -4,7 +4,7 @@ Gemeinnützige Gebetszeiten-App für iOS: werbefrei, ohne Tracking, ohne Konto. 
 
 Die Regeln für die Arbeit stehen in `CLAUDE.md`, der Bauplan in `docs/BUILD-PLAN.md`, offene Punkte in `docs/OPEN-QUESTIONS.md`.
 
-**Stand:** Phase 0 (Projektgerüst) ist fertig. Die App startet mit einer leeren `TabView` (Gebete, Verse, Nachholen).
+**Stand:** Phase 0 (Projektgerüst) und Phase 1 (`PrayerCore`, die Logik ohne UI) sind fertig. Die App startet weiterhin mit einer leeren `TabView` (Gebete, Verse, Nachholen); die Bildschirme folgen ab Phase 2.
 
 ## Voraussetzungen
 
@@ -81,7 +81,7 @@ Nur in DEBUG-Builds. Damit lässt sich jeder Referenz-Screenshot nachstellen:
 
 Die Sprache kommt über die Systemargumente `-AppleLanguages '(tr)' -AppleLocale tr_TR`. Welche Argumente zu welchem Screenshot gehören, steht in `docs/PROMPTS.md`.
 
-Versteht die App ein Debug-Argument nicht, schreibt sie das beim Start in die Konsole (`Debug-Startargumente: …`). In Phase 0 wirken `-debugTab` (Tab), `-debugDate`, `-debugTime`, `-debugCity`, `-debugHighLatitude` und `-debugLocationDenied` (Uhr und Standortquelle); die übrigen werden gelesen und greifen, sobald ihre Bildschirme gebaut sind.
+Versteht die App ein Debug-Argument nicht, schreibt sie das beim Start in die Konsole (`Debug-Startargumente: …`). Bisher wirken `-debugTab` (Tab), `-debugDate`, `-debugTime`, `-debugCity`, `-debugHighLatitude` und `-debugLocationDenied` (Uhr und Standortquelle); die übrigen werden gelesen und greifen, sobald ihre Bildschirme gebaut sind. Für `-debugFixtureTimes` gibt es seit Phase 1 die Quelle `FixtureTimesSource`; eingehängt wird sie mit der Zeiten-Seite in Phase 3.
 
 ## Aufbau
 
@@ -96,6 +96,29 @@ project.yml             Beschreibung des Xcode-Projekts für XcodeGen
 design/                 Prototyp, Design Spec, Referenz-Screenshots
 docs/                   Bauplan, Prompts, offene Fragen
 ```
+
+## Logik in PrayerCore
+
+| Baustein | Aufgabe |
+|---|---|
+| `CalculationMethod`, `CalculationSettings` | die elf Methoden aus `METHODS`, automatische Methode je Land, Asr, hohe Breiten, Minutenkorrekturen ±30 |
+| `PrayerTimesSource` | Zeiten eines Tages: `AdhanTimesSource` rechnet echt, `FixtureTimesSource` liefert die Mock-Zeiten des Prototyps (nur DEBUG) |
+| `PrayerTimeline`, `DayPhase` | Zeitstrahl über drei Tage; laufendes und nächstes Ereignis, Restzeit, Tagesfortschritt, Schlüssel für den Neuaufbau |
+| `Kerahat` | die drei Kerahat-Fenster eines Tages |
+| `Qibla` | Richtung und Entfernung zur Kaaba, „in Mekka“ |
+| `HijriDate` | Datum nach Umm al-Qura und sein Text je Sprache |
+| `Guide`, `GuideState`, `GuideSelection` | Daten der Anleitung, gezeigtes Gebet, manuelle Wahl |
+| `QadaLedger` | Stand des Nachholens: offen, nachgeholt, Anteil, voraussichtliches Ende |
+
+So kommt eine Seite an die Tagesphase:
+
+```swift
+let source: any PrayerTimesSource = AdhanTimesSource()
+let timeline = source.timeline(at: clock.now, place: place, settings: settings)
+let phase = timeline?.phase(at: clock.now)   // phase?.highlighted, phase?.next, phase?.remaining
+```
+
+Die Referenzwerte für die Berechnung liegen unter `Packages/PrayerCore/Tests/PrayerCoreTests/Resources/AdhanTimes/`. Was Phase 1 angenommen hat und was noch eine Entscheidung braucht, steht in `docs/OPEN-QUESTIONS.md`.
 
 ## Texte
 
