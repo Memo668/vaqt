@@ -162,6 +162,23 @@ struct LaunchOptionsTests {
         #expect(options.effectiveDate == CalendarDay("2026-11-10"))
     }
 
+    @Test("mit -debugFixtureTimes gilt ohne -debugCity Berlin")
+    func fixtureDefaultsToBerlin() {
+        #expect(LaunchOptions(arguments: ["-debugFixtureTimes"]).effectiveCity?.id == "berlin")
+        #expect(LaunchOptions(arguments: ["-debugFixtureTimes", "-debugCity", "jakarta"]).effectiveCity?.id == "jakarta")
+        #expect(LaunchOptions(arguments: ["-debugSkipOnboarding"]).effectiveCity == nil)
+    }
+
+    @Test("die Argumente aus docs/PROMPTS.md für den Haupt-Screenshot ergeben Berlin, 14:25 Ortszeit")
+    func promptsReference() throws {
+        let device = FixedClock(try instant("2030-01-01T12:00:00Z"))
+        let options = LaunchOptions(arguments: ["-debugSkipOnboarding", "-debugFixtureTimes", "-debugDate", "2026-11-10", "-debugTime", "14:25"])
+        #expect(options.effectiveCity?.id == "berlin")
+        #expect(options.problems.isEmpty)
+        let clock = try #require(options.makeClock(system: device, deviceTimeZone: .gmt) as? DebugClock)
+        #expect(device.now.addingTimeInterval(clock.offset) == (try instant("2026-11-10T13:25:00Z")))
+    }
+
     // MARK: Uhr
 
     @Test("ohne Datum und Uhrzeit bleibt es bei der Gerätezeit")

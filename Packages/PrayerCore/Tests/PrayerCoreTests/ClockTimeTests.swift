@@ -38,6 +38,12 @@ struct ClockTimeTests {
         #expect(ClockTime("14:25")?.description == "14:25")
     }
 
+    @Test("Mitternacht ist 00:00")
+    func midnight() {
+        #expect(ClockTime.midnight == ClockTime("00:00"))
+        #expect(ClockTime.midnight.minutesSinceMidnight == 0)
+    }
+
     @Test("ordnet nach der Uhrzeit")
     func compares() throws {
         let early = try #require(ClockTime("05:16"))

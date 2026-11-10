@@ -30,8 +30,10 @@ public struct AppEnvironment: Sendable {
     public static func launch(arguments: [String] = ProcessInfo.processInfo.arguments) -> AppEnvironment {
         #if DEBUG
         let options = LaunchOptions(arguments: arguments)
+        // Auf die Fehlerausgabe, weil sie ungepuffert ist: Die Meldung steht sofort in der Xcode-Konsole
+        // und bei `xcrun simctl launch --console`.
         for problem in options.problems {
-            print("Debug-Startargumente: \(problem)")
+            FileHandle.standardError.write(Data("Debug-Startargumente: \(problem)\n".utf8))
         }
         return AppEnvironment(options: options)
         #else

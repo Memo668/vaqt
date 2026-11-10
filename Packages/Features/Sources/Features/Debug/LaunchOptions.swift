@@ -80,9 +80,14 @@ public struct LaunchOptions: Equatable, Sendable {
         }
     }
 
-    /// Die Stadt, die gilt. `-debugHighLatitude` bedeutet immer Berlin.
+    /// Die Stadt, die gilt.
+    ///
+    /// `-debugHighLatitude` bedeutet immer Berlin. Mit `-debugFixtureTimes` gilt ohne `-debugCity`
+    /// ebenfalls Berlin – die Stadt, in der der Prototyp startet (`S.city`) und für die
+    /// docs/PROMPTS.md die Argumente der Screenshots ohne `-debugCity` angibt.
     public var effectiveCity: FixtureTimes.City? {
-        highLatitude ? FixtureTimes.city("berlin") : city
+        if highLatitude { return FixtureTimes.city("berlin") }
+        return city ?? (fixtureTimes ? FixtureTimes.city("berlin") : nil)
     }
 
     /// Der Tag, der gilt. `-debugHighLatitude` bedeutet immer den Tag aus `BERLIN_SUMMER`.

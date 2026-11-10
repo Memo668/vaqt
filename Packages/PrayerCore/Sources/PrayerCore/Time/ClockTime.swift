@@ -1,5 +1,5 @@
 /// Uhrzeit ohne Datum, minutengenau – z. B. 14:25.
-public struct ClockTime: Hashable, Comparable, Codable, Sendable, CustomStringConvertible {
+public struct ClockTime: Hashable, Comparable, Sendable, CustomStringConvertible {
     public let hour: Int
     public let minute: Int
 

@@ -1,7 +1,7 @@
 import Foundation
 
 /// Ein Kalendertag im gregorianischen Kalender, ohne Uhrzeit und ohne Zeitzone – z. B. 2026-11-10.
-public struct CalendarDay: Hashable, Comparable, Codable, Sendable, CustomStringConvertible {
+public struct CalendarDay: Hashable, Comparable, Sendable, CustomStringConvertible {
     public let year: Int
     public let month: Int
     public let day: Int
