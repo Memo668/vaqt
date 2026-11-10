@@ -161,9 +161,11 @@ struct CatalogHero: View {
         DayArc(phase: phase) {
             VStack(spacing: 0) {
                 Text(label)
-                    .font(Typography.countdownLabel)
+                    .textStyle(
+                        .subheadline, weight: Typography.countdownLabelWeight,
+                        lineHeight: Typography.countdownLabelLineHeight
+                    )
                     .foregroundStyle(Palette.textSecondary)
-                    .lineHeight(CatalogMetrics.heroLabelLineHeight, for: .subheadline)
                 Text(CatalogFixtures.countdownText(phase.remaining))
                     .font(Typography.countdown(inArc: true, isWide: isWide, typeScale: typeScale))
                     .tracking(Typography.countdownTracking)
@@ -181,11 +183,6 @@ struct CatalogHero: View {
         let name = phase.next.prayer.localizedName
         return phase.isNextTomorrow ? L10n.nextInTomorrow(p: name) : L10n.nextIn(p: name)
     }
-}
-
-extension CatalogMetrics {
-    /// Zeilenhöhe der Zeile über dem Countdown (`.hero-label`: `line-height: 1.3`).
-    static let heroLabelLineHeight: CGFloat = 1.3
 }
 
 /// Ein Zustand der Abnahme im Erscheinungsbild und in der Leserichtung seines Referenzbilds.

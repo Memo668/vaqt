@@ -27,17 +27,14 @@ public struct FactTile: View {
         VStack(alignment: .leading, spacing: FactMetrics.captionGap) {
             if isProminent {
                 Text(value)
-                    .font(TypeScale.title2.font(weight: .bold, design: .rounded))
-                    .lineHeight(FactMetrics.prominentLineHeight, for: .title2)
+                    .textStyle(.title2, weight: .bold, design: .rounded, lineHeight: FactMetrics.prominentLineHeight)
             } else {
                 Text(value)
-                    .font(TypeScale.subheadline.font(weight: .semibold))
-                    .lineHeight(FactMetrics.lineHeight, for: .subheadline)
+                    .textStyle(.subheadline, weight: .semibold, lineHeight: FactMetrics.lineHeight)
             }
             Text(caption)
-                .font(TypeScale.caption1.font())
+                .textStyle(.caption1, lineHeight: FactMetrics.lineHeight)
                 .foregroundStyle(Palette.textSecondary)
-                .lineHeight(FactMetrics.lineHeight, for: .caption1)
         }
         .foregroundStyle(Palette.label)
         .padding(.top, FactMetrics.paddingTop)

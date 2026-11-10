@@ -84,9 +84,8 @@ public struct PrayerRow: View {
 
     private var name: some View {
         Text(model.prayer.localizedName)
-            .font(TypeScale.body.font(weight: isCurrent ? .semibold : nil))
+            .textStyle(.body, weight: isCurrent ? .semibold : nil, lineHeight: RowMetrics.nameLineHeight)
             .foregroundStyle(textColor)
-            .lineHeight(RowMetrics.nameLineHeight, for: .body)
     }
 
     @ViewBuilder
@@ -121,10 +120,9 @@ public struct PrayerRow: View {
                 .padding(.top, captionSize * 0.62 - RowMetrics.dotSize / 2)
                 .accessibilityHidden(true)
             Text(kerahat.text)
-                .font(TypeScale.caption1.font())
+                .textStyle(.caption1, lineHeight: RowMetrics.captionLineHeight)
                 .monospacedDigit()
                 .foregroundStyle(kerahat.isActive ? Palette.kerahatText : Palette.textSecondary)
-                .lineHeight(RowMetrics.captionLineHeight, for: .caption1)
         }
     }
 

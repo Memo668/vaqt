@@ -85,8 +85,9 @@ public enum Typography {
     public static let largeTitle = TypeScale.largeTitle.font(weight: .bold)
     /// Name der Stadt: Title 2, 22 pt, semibold.
     public static let cityTitle = TypeScale.title2.font(weight: .semibold)
-    /// Zeile über dem Countdown, z. B. „Maghrib in“: Subheadline, medium (`.hero-label`).
-    public static let countdownLabel = TypeScale.subheadline.font(weight: .medium)
+    /// Zeile über dem Countdown, z. B. „Maghrib in“: Subheadline, medium, Zeilenhöhe 1,3 (`.hero-label`).
+    public static let countdownLabelWeight: Font.Weight = .medium
+    public static let countdownLabelLineHeight: CGFloat = 1.3
     /// Chip „Jetzt“: Caption 2, bold, in Großbuchstaben (`.now-chip`).
     public static let nowChip = TypeScale.caption2.font(weight: .bold)
     /// Laufweite des „Jetzt“-Chips (`letter-spacing: .4px`).
@@ -154,29 +155,74 @@ public enum Typography {
 }
 
 /// Ober- plus Unterlänge der Systemschrift als Vielfaches der Schriftgröße (SF Pro: 1950 + 494 von 2048).
-/// So hoch ist eine Textzeile in SwiftUI, wenn nichts anderes gesagt ist.
+/// So hoch ist eine einzelne Textzeile in SwiftUI.
 let systemFontLineHeight: CGFloat = 1.1934
 
-/// Zeilenhöhe wie `line-height` im CSS: Jede Zeile bekommt einen Kasten der Höhe `multiple × Schriftgröße`,
-/// der Text steht mittig darin. So liegen Grundlinien und Blockhöhen dort, wo sie im Prototyp liegen.
-private struct LineHeight: ViewModifier {
-    @ScaledMetric private var scaledFontSize: CGFloat
-    private let fontSize: CGFloat
-    private let multiple: CGFloat
-    private let scales: Bool
+extension TypeScale {
 
-    /// - Parameter style: der Textstil, mit dem die Schrift wächst; `nil` für eine feste Größe.
-    init(multiple: CGFloat, fontSize: CGFloat, relativeTo style: Font.TextStyle?) {
-        _scaledFontSize = ScaledMetric(wrappedValue: fontSize, relativeTo: style ?? .body)
-        self.fontSize = fontSize
-        self.multiple = multiple
-        scales = style != nil
+    /// Maße eines Textstils bei einer Schriftgröße von Dynamic Type.
+    struct Metrics: Equatable {
+        /// Schriftgröße in pt.
+        let pointSize: CGFloat
+        /// Höhe einer einzelnen Zeile: Ober- plus Unterlänge.
+        let lineHeight: CGFloat
+        /// Abstand von Zeile zu Zeile mit engem Zeilenabstand (`Font.leading(.tight)`): 2 pt weniger
+        /// als der Standard des Systems – z. B. 20 statt 22 pt für Fließtext.
+        let tightPitch: CGFloat
     }
 
+    /// Die Maße des Textstils, wie das System sie für `size` vorgibt.
+    func metrics(for size: DynamicTypeSize) -> Metrics {
+        let traits = UITraitCollection(preferredContentSizeCategory: UIContentSizeCategory(size))
+        let font = UIFont.preferredFont(forTextStyle: uiTextStyle, compatibleWith: traits)
+        return Metrics(
+            pointSize: font.pointSize,
+            lineHeight: font.lineHeight,
+            tightPitch: font.lineHeight + font.leading - 2
+        )
+    }
+
+    /// Wie eine Zeilenhöhe aus dem CSS in SwiftUI gesetzt wird.
+    ///
+    /// SwiftUI kennt kein `line-height`. Eine Zeile ist so hoch wie die Schrift; von Zeile zu Zeile gilt
+    /// der Abstand des Textstils. Mit engem Zeilenabstand als Ausgangspunkt lässt sich der Abstand auf
+    /// den des Prototyps anheben; über und unter dem Block fehlt dann noch je eine halbe Differenz.
+    ///
+    /// - Returns: `lineSpacing` für den Abstand zwischen den Zeilen und `padding` für oben und unten.
+    ///   Ist die gewünschte Zeile niedriger als der enge Abstand, bleibt es zwischen den Zeilen beim
+    ///   engen Abstand – enger kann SwiftUI nicht setzen.
+    static func lineLayout(multiple: CGFloat, metrics: Metrics) -> (lineSpacing: CGFloat, padding: CGFloat) {
+        let pitch = metrics.pointSize * multiple
+        return (max(0, pitch - metrics.tightPitch), (pitch - metrics.lineHeight) / 2)
+    }
+}
+
+/// Schrift und Zeilenhöhe eines Textstils, geschrieben wie `font: <Stärke> <Größe>/<Zeilenhöhe>` im CSS.
+private struct TextStyleModifier: ViewModifier {
+    let style: TypeScale
+    let weight: Font.Weight?
+    let design: Font.Design
+    let lineHeight: CGFloat
+
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     func body(content: Content) -> some View {
-        let extra = (scales ? scaledFontSize : fontSize) * (multiple - systemFontLineHeight)
-        // Zwischen den Zeilen kann SwiftUI nur Abstand hinzufügen; ein engerer Kasten wirkt deshalb
-        // nur über und unter dem Text.
+        let layout = TypeScale.lineLayout(multiple: lineHeight, metrics: style.metrics(for: dynamicTypeSize))
+        content
+            .font(style.font(weight: weight, design: design).leading(.tight))
+            .lineSpacing(layout.lineSpacing)
+            .padding(.vertical, layout.padding)
+    }
+}
+
+/// Zeilenhöhe für eine Schrift fester Größe. Solche Schriften haben keinen eigenen Zeilenabstand; die
+/// Differenz zur Höhe der Schrift kommt zwischen die Zeilen und je zur Hälfte über und unter den Block.
+private struct FixedLineHeight: ViewModifier {
+    let multiple: CGFloat
+    let fontSize: CGFloat
+
+    func body(content: Content) -> some View {
+        let extra = fontSize * (multiple - systemFontLineHeight)
         content
             .lineSpacing(max(0, extra))
             .padding(.vertical, extra / 2)
@@ -185,14 +231,24 @@ private struct LineHeight: ViewModifier {
 
 extension View {
 
-    /// Zeilenhöhe eines Textstils der Skala als Vielfaches der Schriftgröße, z. B. 1,3 für Fließtext.
-    /// Wächst mit Dynamic Type.
-    public func lineHeight(_ multiple: CGFloat, for style: TypeScale) -> some View {
-        modifier(LineHeight(multiple: multiple, fontSize: style.pointSize, relativeTo: style.textStyle))
+    /// Setzt Schrift und Zeilenhöhe eines Textstils der Skala – wie `font: 600 15px/1.25` im Prototyp.
+    ///
+    /// Jede Zeile bekommt einen Kasten der Höhe `lineHeight × Schriftgröße`, der Text steht mittig
+    /// darin. So liegen Grundlinien und Blockhöhen dort, wo sie im Prototyp liegen, auch bei mehreren
+    /// Zeilen. Wächst mit Dynamic Type.
+    ///
+    /// - Parameters:
+    ///   - weight: Stärke; ohne Angabe die des Systems (Headline semibold, sonst regular).
+    ///   - lineHeight: Zeilenhöhe als Vielfaches der Schriftgröße, z. B. 1,3 für Fließtext.
+    public func textStyle(
+        _ style: TypeScale, weight: Font.Weight? = nil, design: Font.Design = .default, lineHeight: CGFloat
+    ) -> some View {
+        modifier(TextStyleModifier(style: style, weight: weight, design: design, lineHeight: lineHeight))
     }
 
-    /// Zeilenhöhe für eine Schrift fester Größe, z. B. den Countdown.
+    /// Zeilenhöhe für eine Schrift fester Größe, z. B. den Countdown: ein Kasten der Höhe
+    /// `multiple × fontSize` je Zeile, der Text mittig darin.
     public func lineHeight(_ multiple: CGFloat, fontSize: CGFloat) -> some View {
-        modifier(LineHeight(multiple: multiple, fontSize: fontSize, relativeTo: nil))
+        modifier(FixedLineHeight(multiple: multiple, fontSize: fontSize))
     }
 }
