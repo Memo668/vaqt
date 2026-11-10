@@ -75,7 +75,8 @@ struct AdhanTimesSourceTests {
     // MARK: - Methode
 
     @Test("ohne Wahl gilt die Methode des Landes", arguments: [
-        ("DE", CalculationMethod.diyanet), ("TR", .diyanet), ("ES", .mwl), ("SA", .ummAlQura), ("ID", .kemenag),
+        ("DE", CalculationMethod.diyanet), ("AT", .diyanet), ("TR", .diyanet), ("ES", .mwl), ("SA", .ummAlQura),
+        ("ID", .kemenag),
         ("US", .isna), ("EG", .egyptian), ("PK", .karachi), ("MY", .jakim), ("SG", .singapore), ("IR", .tehran),
     ])
     func automaticMethod(country: String, method: CalculationMethod) throws {

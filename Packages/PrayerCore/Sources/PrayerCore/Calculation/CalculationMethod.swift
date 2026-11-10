@@ -92,7 +92,7 @@ public enum CalculationMethod: String, CaseIterable, Codable, Sendable, Identifi
     ///
     /// | Land | Methode |
     /// |---|---|
-    /// | DE, TR | Diyanet |
+    /// | DE, AT, TR | Diyanet |
     /// | SA | Umm al-Qura |
     /// | ID | Kemenag |
     /// | US, CA | ISNA |
@@ -104,12 +104,13 @@ public enum CalculationMethod: String, CaseIterable, Codable, Sendable, Identifi
     /// | ES, alle anderen Länder und ohne Land | MWL |
     ///
     /// So entschieden am 10.11.2026 (docs/OPEN-QUESTIONS.md). Der Prototyp nennt nur fünf Länder und
-    /// führt Deutschland noch mit MWL (`CITIES.berlin.auto`).
+    /// führt Deutschland noch mit MWL (`CITIES.berlin.auto`). In Deutschland und Österreich sind die
+    /// Zeiten von Diyanet verbreitet; deshalb gilt dort Diyanet.
     ///
     /// - Parameter countryCode: ISO-3166-1-Code mit zwei Buchstaben; Groß- und Kleinschreibung zählt nicht.
     public static func automatic(forCountryCode countryCode: String?) -> CalculationMethod {
         switch countryCode?.uppercased() {
-        case "DE", "TR": .diyanet
+        case "DE", "AT", "TR": .diyanet
         case "SA": .ummAlQura
         case "ID": .kemenag
         case "US", "CA": .isna

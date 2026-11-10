@@ -52,7 +52,7 @@ struct CalculationMethodTests {
 
     /// Die Zuordnung Land → Methode, wie am 10.11.2026 entschieden (docs/OPEN-QUESTIONS.md).
     private static let automaticMethods: [(country: String, method: CalculationMethod)] = [
-        ("DE", .diyanet), ("TR", .diyanet),
+        ("DE", .diyanet), ("AT", .diyanet), ("TR", .diyanet),
         ("ES", .mwl),
         ("SA", .ummAlQura),
         ("ID", .kemenag),
@@ -70,7 +70,7 @@ struct CalculationMethodTests {
         #expect(CalculationMethod.automatic(forCountryCode: country.lowercased()) == expected)
     }
 
-    @Test("ohne Land und für alle anderen Länder gilt MWL", arguments: [nil, "", "GB", "FR", "AT", "XX", "DEU"] as [String?])
+    @Test("ohne Land und für alle anderen Länder gilt MWL", arguments: [nil, "", "GB", "FR", "CH", "XX", "DEU"] as [String?])
     func automaticFallback(country: String?) {
         #expect(CalculationMethod.automatic(forCountryCode: country) == .mwl)
     }

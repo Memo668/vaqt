@@ -34,11 +34,12 @@ Die Entscheidung steht jeweils wörtlich in Anführungszeichen.
 ### Automatische Methode je Land
 
 - **Deutschland:** „Diyanet“ – statt MWL wie im Prototyp und im Vorschlag der Spec (§ 5, § 6.1).
+- **Österreich:** „Ja, auch Österreich“ – ebenfalls Diyanet. Begründung: Die Zeiten von Diyanet sind in Deutschland und Österreich sehr verbreitet (DITIB).
 - **Weitere Länder:** „Eigene Methode je Land“.
 
 | Land | Methode |
 |---|---|
-| DE, TR | Diyanet |
+| DE, AT, TR | Diyanet |
 | ES | MWL |
 | SA | Umm al-Qura |
 | ID | Kemenag |
@@ -53,7 +54,7 @@ Die Entscheidung steht jeweils wörtlich in Anführungszeichen.
 Moonsighting gilt in keinem Land von selbst; die Methode lässt sich nur wählen. Die Zuordnung steht in `CalculationMethod.automatic(forCountryCode:)`.
 
 - **Folge für die Referenzbilder:** `iphone/70` und `iphone/73` zeigen für Berlin „Automatisch · MWL“ (im Prototyp `CITIES.berlin.auto`). Die Fixture-Daten bleiben wie der Prototyp. Annahme für Phase 7: Mit `-debugFixtureTimes` gilt die Automatik der Fixture-Stadt (`FixtureTimes.City.automaticMethodID`), damit sich die Bilder nachstellen lassen; ohne das Argument gilt Diyanet.
-- **Folge für die Zeiten:** Ohne eigene Wahl rechnet die App in Deutschland mit Diyanet – siehe „Mock-Zeiten für Berlin“.
+- **Folge für die Zeiten:** Ohne eigene Wahl rechnet die App in Deutschland und Österreich mit Diyanet – siehe „Mock-Zeiten für Berlin“.
 
 ### „In Mekka“
 

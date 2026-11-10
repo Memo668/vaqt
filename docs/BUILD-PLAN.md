@@ -9,7 +9,7 @@ Elf Phasen, jede für sich abnehmbar. Pro Phase stehen hier Ziel, Inhalt, die pa
 | Arbeitstitel / Bundle-ID | „Gebetszeiten“ / `com.example.gebetszeiten` (vor dem ersten Archiv ersetzen) | § 6.9 |
 | Mindestversion | iOS 26 | § 6.10 |
 | Rechenbibliothek | Adhan Swift (MIT) | § 6.3 |
-| Automatische Methode | DE und TR → Diyanet, ES → MWL, SA → Umm al-Qura, ID → Kemenag, US und CA → ISNA, EG → Egyptian, PK, IN, BD und AF → Karachi, MY → JAKIM, SG → Singapore, IR → Tehran, alle übrigen Länder MWL (entschieden am 10.11.2026) | § 5, § 6.1 |
+| Automatische Methode | DE, AT und TR → Diyanet, ES → MWL, SA → Umm al-Qura, ID → Kemenag, US und CA → ISNA, EG → Egyptian, PK, IN, BD und AF → Karachi, MY → JAKIM, SG → Singapore, IR → Tehran, alle übrigen Länder MWL (entschieden am 10.11.2026) | § 5, § 6.1 |
 | Kerahat-Dauern | 45 / 10 / 45 Min. als Konstanten in `PrayerCore` | § 6.15 |
 | Vers-Übersetzungen, Adhan-Aufnahmen | Platzhalter, markiert mit `TODO(placeholder)` | § 6.5, § 6.12 |
 | Varianten | jeweils die erste Option aus § 7 | § 7 |
