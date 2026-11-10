@@ -36,7 +36,7 @@ Lies dazu die passenden Abschnitte der Spec und die genannten Funktionen im Prot
 Erst planen (Dateien, Komponenten, offene Fragen), nach meiner Freigabe bauen.
 Zum Schluss prüfen wie in CLAUDE.md beschrieben:
 1. Build und Tests müssen grün sein.
-2. Im Simulator iPhone 17 jeden Referenzzustand mit den Debug-Argumenten nachstellen und einen Screenshot aufnehmen.
+2. Im Simulator iPhone 18 Pro jeden Referenzzustand mit den Debug-Argumenten nachstellen und einen Screenshot aufnehmen.
 3. Ihn neben die Referenz legen und die Abweichungen als Liste ausgeben (Abstand, Größe, Farbe, Text, Zustand).
 4. Die Abweichungen beheben und erneut vergleichen, bis nichts Sichtbares mehr abweicht.
 Danach committen und mir eine kurze Zusammenfassung geben: was fertig ist, was offen ist.

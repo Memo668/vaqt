@@ -58,7 +58,7 @@ Uhrzeit, Datum und Ort laufen über eine injizierbare `Clock`/`LocationSource`, 
 - In Phasen nach `docs/BUILD-PLAN.md`. Pro Phase: erst Plan (Dateien, Typen, offene Fragen), nach Freigabe bauen, dann prüfen.
 - **Prüfen** heißt:
   1. `xcodebuild build` und `xcodebuild test` laufen grün.
-  2. Simulator iPhone 17 (iOS 26) mit den Debug-Argumenten des Referenzbilds starten.
+  2. Simulator iPhone 18 Pro (iOS 26) mit den Debug-Argumenten des Referenzbilds starten.
   3. Screenshot mit `xcrun simctl io booted screenshot` aufnehmen.
   4. Neben die Referenz aus `design/screenshots/` legen.
   5. Abweichungen bei Abständen, Größen, Farben, Texten und Zuständen auflisten und beheben.
