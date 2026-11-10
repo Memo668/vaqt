@@ -39,6 +39,8 @@ open Gebetszeiten.xcodeproj
 | `make screenshot` | Screenshot nach `screenshots-out/screenshot.png` |
 | `make strings` | String Catalog und `L10n.swift` aus dem Prototyp neu erzeugen |
 
+Simulator für Build, Tests und Abgleich ist das iPhone 18 Pro. Ein anderer lässt sich je Aufruf wählen, z. B. `make test SIM='iPhone 17'`.
+
 Andere Zustände stellt `make run` über Variablen ein:
 
 ```bash
@@ -52,11 +54,11 @@ make screenshot SHOT=screenshots-out/21-home-turkish-istanbul.png
 Die Befehle dahinter, falls du ohne `make` arbeitest:
 
 ```bash
-xcodebuild test -project Gebetszeiten.xcodeproj -scheme Gebetszeiten -destination 'platform=iOS Simulator,name=iPhone 17'
+xcodebuild test -project Gebetszeiten.xcodeproj -scheme Gebetszeiten -destination 'platform=iOS Simulator,name=iPhone 18 Pro'
 ```
 
 ```bash
-xcrun simctl launch --terminate-running-process 'iPhone 17' com.example.gebetszeiten -AppleLanguages '(de)' -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25
+xcrun simctl launch --terminate-running-process 'iPhone 18 Pro' com.example.gebetszeiten -AppleLanguages '(de)' -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25
 ```
 
 ```bash

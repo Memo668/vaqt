@@ -9,8 +9,9 @@ PROJECT   := Gebetszeiten.xcodeproj
 SCHEME    := Gebetszeiten
 BUNDLE_ID := com.example.gebetszeiten
 
-# Simulator für Build, Tests und Abgleich (CLAUDE.md: iPhone 17).
-SIM  ?= iPhone 17
+# Simulator für Build, Tests und Abgleich: iPhone 18 Pro, entschieden am 10.11.2026
+# (docs/OPEN-QUESTIONS.md). Ein anderer Simulator: make test SIM='iPhone 17'
+SIM  ?= iPhone 18 Pro
 DEST := platform=iOS Simulator,name=$(SIM)
 
 EXTERN     := /Volumes/Extern
