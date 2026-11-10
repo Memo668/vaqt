@@ -20,6 +20,9 @@ public struct ClockTime: Hashable, Comparable, Codable, Sendable, CustomStringCo
         self.init(hour: hour, minute: minute)
     }
 
+    /// 00:00.
+    public static let midnight = ClockTime(validHour: 0, minute: 0)
+
     /// Minuten seit Mitternacht – wie `toMin()` im Prototyp.
     public var minutesSinceMidnight: Int { hour * 60 + minute }
 
@@ -29,6 +32,12 @@ public struct ClockTime: Hashable, Comparable, Codable, Sendable, CustomStringCo
 
     public static func < (lhs: ClockTime, rhs: ClockTime) -> Bool {
         lhs.minutesSinceMidnight < rhs.minutesSinceMidnight
+    }
+
+    /// Für Werte, die schon geprüft sind.
+    private init(validHour hour: Int, minute: Int) {
+        self.hour = hour
+        self.minute = minute
     }
 
     /// Ein bis zwei ASCII-Ziffern, sonst `nil` – `Int("+5")` oder `Int("٥")` sollen nicht durchgehen.
