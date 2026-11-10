@@ -32,6 +32,14 @@ public struct ClockTime: Hashable, Comparable, Sendable, CustomStringConvertible
         self.init(hour: hour, minute: minute)
     }
 
+    /// Die Uhrzeit `minutes` Minuten nach Mitternacht. Werte außerhalb des Tages laufen um, wie bei
+    /// `fmt()` im Prototyp: 1508 ist 01:08, −20 ist 23:40.
+    public init(minutesSinceMidnight minutes: Int) {
+        let minutesPerDay = 24 * 60
+        let wrapped = ((minutes % minutesPerDay) + minutesPerDay) % minutesPerDay
+        self.init(validHour: wrapped / 60, minute: wrapped % 60)
+    }
+
     /// 00:00.
     public static let midnight = ClockTime(validHour: 0, minute: 0)
 

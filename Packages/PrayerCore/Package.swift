@@ -20,7 +20,9 @@ let package = Package(
         ),
         .testTarget(
             name: "PrayerCoreTests",
-            dependencies: ["PrayerCore", .product(name: "Adhan", package: "adhan-swift")]
+            dependencies: ["PrayerCore", .product(name: "Adhan", package: "adhan-swift")],
+            // Referenztabellen aus den Testdaten von Adhan Swift (MIT), siehe README im Ordner.
+            resources: [.copy("Resources/AdhanTimes")]
         ),
     ],
     swiftLanguageModes: [.v6]
