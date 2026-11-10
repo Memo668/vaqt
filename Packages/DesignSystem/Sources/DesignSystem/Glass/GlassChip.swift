@@ -42,7 +42,11 @@ public struct GlassChip: View {
         }
         .buttonStyle(.plain)
         .glassEffect(glass, in: .capsule)
-        .shadow(isSelected ? ShadowToken.selectedChip : ShadowToken(color: .clear, blur: 0, y: 0))
+        .background {
+            if isSelected {
+                selectionShadow
+            }
+        }
         // Der Text wächst bis AX1; darüber zeigt der Large Content Viewer den Titel.
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .accessibilityLabel(title)
@@ -50,6 +54,24 @@ public struct GlassChip: View {
         .accessibilityShowsLargeContentViewer {
             Label(title, systemImage: systemImage)
         }
+    }
+
+    /// Der weiche Akzentschatten des ausgewählten Chips (`box-shadow: 0 10px 26px` in Akzent 24 %).
+    ///
+    /// Er liegt hinter dem Glas und ist dort ausgespart, wo der Chip sitzt – wie ein `box-shadow`, der
+    /// nur außerhalb der Fläche zu sehen ist. Sonst würde das Glas ihn als zusätzliche Tönung zeigen.
+    private var selectionShadow: some View {
+        let reach = ShadowToken.selectedChip.blur + ShadowToken.selectedChip.y
+        return Capsule()
+            .fill(.black)
+            .shadow(ShadowToken.selectedChip)
+            .mask {
+                Rectangle()
+                    .padding(-reach)
+                    .overlay { Capsule().blendMode(.destinationOut) }
+                    .compositingGroup()
+            }
+            .accessibilityHidden(true)
     }
 
     private var glass: Glass {
@@ -61,7 +83,7 @@ public struct GlassChip: View {
     @ViewBuilder
     private func content(height: CGFloat) -> some View {
         let symbol = Image(systemName: systemImage)
-            .font(.system(size: GlassMetrics.chipSymbolSize))
+            .font(.system(size: GlassMetrics.chipSymbolSize, weight: GlassMetrics.symbolWeight))
             .foregroundStyle(isSelected ? Palette.accent : Palette.textSecondary)
             .frame(width: GlassMetrics.chipSymbolBox)
 

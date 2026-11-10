@@ -45,6 +45,10 @@ STATES='
 
 mkdir -p "$OUT"
 xcrun simctl bootstatus "$SIM" -b >/dev/null
+# Der erste Start nach einer Pause dauert länger als die Wartezeit vor der Aufnahme; sonst zeigt das
+# erste Bild noch den leeren Startbildschirm. Deshalb einmal vorab starten.
+xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" -debugCatalog arc >/dev/null
+sleep 3
 
 shoot() { # Abschnitt Nummer Leserichtung Argumente…
   local section="$1" number="$2" direction="$3"; shift 3

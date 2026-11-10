@@ -67,7 +67,7 @@ public struct StepperPill: View {
     private func key(_ systemImage: String, label: String, isEnabled: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: systemImage)
-                .font(.system(size: StepperMetrics.symbolSize, weight: .medium))
+                .font(.system(size: StepperMetrics.symbolSize))
                 .frame(width: StepperMetrics.keyWidth, height: StepperMetrics.height)
                 .contentShape(TapArea())
         }
@@ -84,8 +84,9 @@ enum StepperMetrics {
     static let keyWidth: CGFloat = 47
     static let radius: CGFloat = 8
     static let dividerInset: CGFloat = 8
-    /// Symbole der Tasten – `ic('minus', 18)`, `ic('plus', 18)`.
-    static let symbolSize: CGFloat = 14
+    /// Symbole der Tasten – `ic('minus', 18)`, `ic('plus', 18)`. Als Schriftgröße eines SF Symbols so
+    /// gewählt, dass die Striche so lang erscheinen wie im Prototyp (gut 10 pt).
+    static let symbolSize: CGFloat = 12.5
 }
 
 /// Das Tippziel einer Taste reicht oben und unten 6 pt über die Fläche hinaus – 44 pt Höhe

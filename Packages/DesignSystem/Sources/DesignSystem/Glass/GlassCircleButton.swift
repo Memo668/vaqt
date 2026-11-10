@@ -23,13 +23,16 @@ public struct GlassCircleButton: View {
     public var body: some View {
         let diameter = GlassMetrics.barHeight(typeScale: typeScale)
         Button(action: action) {
+            // Der Stil des Systems legt eigenen Innenabstand um den Inhalt. Damit der Kreis genau so
+            // groß wird wie die Leiste hoch ist, füllt der Inhalt den Platz, den der Stil ihm lässt.
             Image(systemName: systemImage)
-                .font(.system(size: GlassMetrics.circleSymbolSize))
+                .font(.system(size: GlassMetrics.circleSymbolSize, weight: GlassMetrics.symbolWeight))
                 .foregroundStyle(Palette.label)
-                .frame(width: diameter, height: diameter)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .buttonStyle(.glass)
         .buttonBorderShape(.circle)
+        .frame(width: diameter, height: diameter)
         .accessibilityLabel(label)
         .accessibilityShowsLargeContentViewer {
             Label(label, systemImage: systemImage)
@@ -39,10 +42,13 @@ public struct GlassCircleButton: View {
 
 /// Maße der Glass-Bausteine der oberen Leiste (`.gear-btn`, `.chip`).
 enum GlassMetrics {
-    /// Symbol im Einstellungskreis – `ic('gear', 24)`.
+    /// Symbol im Einstellungskreis – `ic('gear', 24)`. Als Schriftgröße eines SF Symbols so gewählt,
+    /// dass es so breit erscheint wie die Zeichnung des Prototyps (knapp 21 pt).
     static let circleSymbolSize: CGFloat = 20
-    /// Symbol in einem Chip – `ic(icon, 22)`.
-    static let chipSymbolSize: CGFloat = 17
+    /// Symbol in einem Chip – `ic(icon, 22)`; im Prototyp 18 pt breit.
+    static let chipSymbolSize: CGFloat = 18
+    /// Strichstärke der Symbole: Der Prototyp zeichnet mit 1,65 bis 1,8 pt.
+    static let symbolWeight: Font.Weight = .medium
     /// Breite des Symbolfelds in einem Chip.
     static let chipSymbolBox: CGFloat = 22
     /// Abstand zwischen Symbol und Titel (`gap: 7px`).
