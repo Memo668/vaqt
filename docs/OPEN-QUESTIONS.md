@@ -1,111 +1,115 @@
 # Offene Fragen
 
-Hier steht alles, was Spec, Screenshots und Prototyp nicht eindeutig beantworten. Jeder Punkt nennt den Standardwert, mit dem bis zu einer Entscheidung gebaut wird. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
+Hier steht alles, was Spec, Screenshots und Prototyp nicht eindeutig beantworten. Was noch offen ist, nennt den Standardwert, mit dem bis zu einer Entscheidung gebaut wird. Was entschieden ist, steht weiter unten mit seiner Folge. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
 ## Braucht eine Entscheidung
 
-### 1. Größe der Referenzbilder und Simulator
+### 1. Umm al-Qura im Ramadan
 
-Die Referenzbilder sind 390 × 844 pt groß. Der Simulator „iPhone 17“, den `CLAUDE.md` vorgibt, hat 402 × 874 pt (gemessen am Screenshot: 1206 × 2622 px bei 3x). Ein Vergleich Pixel auf Pixel geht damit nicht: Der Bildschirm ist 12 pt breiter und 30 pt höher.
+Die Methode legt Ischa 90 Minuten nach Maghrib (`iMin:90`). In Saudi-Arabien gilt im Ramadan ein Abstand von 120 Minuten; Adhan Swift empfiehlt dafür eine eigene Korrektur von +30 Minuten.
 
-- **Standard:** Abgleich auf dem iPhone 17 wie vorgegeben. Verglichen werden Abstände, Größen, Farben und Texte der Bausteine, nicht die Lage im ganzen Bild.
-- **Alternative:** ein Simulator mit 390 × 844 pt für den Abgleich. Das iPhone 17e hat vermutlich diese Größe; geprüft ist das nicht.
+- **Stand:** Die Antwort vom 10.11.2026 – „So wie es in Europa normal gehandhabt wird“ – ist noch nicht eindeutig und wird geklärt.
+- **Standard bis dahin:** immer 90 Minuten, wie im Prototyp, auch im Ramadan.
 
-### 2. Tableiste: Breite und Symbole
+### 2. Moonsighting und die Regel für hohe Breiten (vertagt bis Phase 7)
 
-Die App benutzt die System-`TabView` (Spec, Komponente „TabBar“; `CLAUDE.md`: Systemelemente nicht nachbauen). Sie weicht in zwei Punkten vom Prototyp ab, der die Leiste in CSS nachzeichnet:
+Moonsighting rechnet in Adhan Swift mit eigenen jahreszeitlichen Grenzen und übergeht die Regel für hohe Breiten. Die Einstellung „Hohe Breitengrade“ wirkt bei dieser Methode also nicht.
 
-- Die Leiste ist 274 pt breit und mittig (gemessen auf dem iPhone 17, iOS 27.2). Im Prototyp reicht sie bis 22 pt an beide Ränder (346 pt).
-- Das System zeigt gefüllte Symbole (`moon.stars.fill`, `book.fill`). Der Prototyp zeigt Umrisse.
-- Der Abstand zum unteren Rand ist 21 pt statt 22 pt.
+- **Standard:** so lassen. Ob die Einstellungen das sagen sollen, entscheidet Phase 7.
 
-Die Höhe stimmt mit 62 pt.
-
-- **Standard:** Systemverhalten.
-- **Alternative:** Die Umriss-Symbole lassen sich erzwingen. Die Breite der Systemleiste lässt sich nicht einstellen.
-
-### 3. Rechenmethoden (Phase 1, so gebaut)
-
-Der Prototyp nennt für jede Methode nur die Winkel (`METHODS`). Adhan Swift bringt für einige Methoden zusätzlich Minutenkorrekturen mit, so wie die jeweilige Stelle ihre Zeiten veröffentlicht – etwa Diyanet: Sonnenaufgang −7, Dhuhr +5, Asr +4, Maghrib +7; MWL: Dhuhr +1.
-
-- **Standard:** die Voreinstellungen von Adhan Swift samt Korrekturen übernehmen.
-- **JAKIM und Kemenag** haben in Adhan Swift keine Voreinstellung. Standard: reine Winkel 20°/18° ohne Sicherheitsminuten. Gibt es Referenztabellen, an denen sich das prüfen lässt? Für Jakarta liegt Kemenag damit bis zu 3 Minuten neben dem Mock (Dhuhr 11:36 statt 11:39). Die Voreinstellung `singapore` von Adhan Swift (dieselben Winkel, Dhuhr +1, aufgerundet) läge näher (11:38).
-- **Umm al-Qura:** Standard ist immer 90 Minuten nach Maghrib, wie im Prototyp (`iMin:90`), auch im Ramadan.
-- **Automatische Methode** für Länder außerhalb der Liste im Bauplan (DE, TR, ES, SA, ID): Standard MWL. Für Deutschland siehe Spec § 6.1.
-- **Moonsighting** rechnet in Adhan Swift mit eigenen jahreszeitlichen Grenzen und übergeht die Regel für hohe Breiten. Standard: so lassen. Die Einstellung „Hohe Breitengrade“ wirkt bei dieser Methode also nicht – soll die Seite das sagen (Phase 7)?
-
-Wie weit das geprüft ist:
-
-| Methode | Prüfung |
-|---|---|
-| Diyanet, Umm al-Qura, Singapore, Tehran, Moonsighting | veröffentlichte Tabellen aus den Testdaten von Adhan Swift, auf 0 bis 2 Minuten genau |
-| MWL, ISNA, Egyptian | einzelne Tage aus den Tests von Adhan Swift, auf die Minute |
-| Karachi | nur die Winkel (18°/18°) |
-| JAKIM, Kemenag | nur die Winkel (20°/18°); gegen veröffentlichte Zeiten ungeprüft |
-
-### 4. Regel für hohe Breiten (Phase 1, so gebaut)
-
-- **Standard:** winkelbasiert, wie im Prototyp (`hlRule:'angle'`) und als Vorschlag in Spec § 6.2. Adhan Swift würde oberhalb von 48° das Siebtel der Nacht empfehlen.
-
-### 5. „In Mekka“ und die Entfernung (Phase 4)
-
-Ab welcher Entfernung zur Kaaba zeigt die Qibla-Seite die Meldung statt der Nadel? Der Prototyp kennt nur den Fall „Stadt Mekka“ (`km:0`).
-
-- **Standard:** unter 5 km (`Qibla.meccaRadiusKm`).
-
-Wie wird die Entfernung gerundet? `PrayerCore` liefert sie ungerundet (Berlin 4130,2 km). Die vier Werte des Prototyps (4130, 2410, 4600, 7920 km) passen alle zu „auf 10 km gerundet“: Istanbul sind gerechnet 2405,1 km, Madrid 4598,2 km.
-
-- **Standard:** auf 10 km runden, wie die Werte des Prototyps.
-
-### 6. Ausrichtung
-
-- **Standard:** nur Hochformat. Ob das innere Display des iPhone Duo Querformat braucht, klärt Phase 10 (Spec § 6.17).
-
-### 7. Name der App je Sprache
-
-`T` enthält `appName` in vier Sprachen (Gebetszeiten, Namaz Vakitleri, Prayer Times, Horarios de oración). Unter dem App-Symbol steht bisher in jeder Sprache „Gebetszeiten“.
-
-- **Standard:** bleibt so, bis der Name entschieden ist (Spec § 6.9).
-
-### 8. Mock-Zeiten für Berlin und die echte Rechnung (Phase 1)
-
-Für Berlin am 10.11.2026 rechnet die App mit MWL 05:21 · 07:19 · 11:51 · 13:55 · 16:21 · 18:13. Der Prototyp zeigt 05:16 · 07:14 · 11:52 · 14:00 · 16:27 · 18:17. Maghrib liegt damit 6 Minuten neben der Rechnung, die anderen Werte höchstens 5. Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städte liegen höchstens 4 Minuten neben der Rechnung.
-
-- **Standard:** Die Mock-Zeiten bleiben, wie sie sind – sie sind die Zahlen der Referenz-Screenshots. Der Test erlaubt ±5 Minuten und führt Berlin-Maghrib als benannte Ausnahme (`FixturePlausibilityTests`).
-- **Folge:** Ohne `-debugFixtureTimes` zeigt die App für Berlin am 10.11.2026 andere Zahlen als die Screenshots, z. B. Asr 13:55 statt 14:00.
-
-### 9. Orte ohne Sonnenauf- oder -untergang (Phase 3)
+### 3. Orte ohne Sonnenauf- oder -untergang (vertagt bis Phase 3)
 
 Nördlich des Polarkreises geht die Sonne an manchen Tagen nicht auf oder nicht unter. Adhan Swift liefert dann keine Zeiten: `PrayerTimesSource.times` gibt `nil` zurück, und es gibt keinen Zeitstrahl. Spec und Prototyp kennen den Fall nicht.
 
 - **Standard:** offen bis Phase 3. Vorschlag: ein Hinweis an der Stelle der Zeiten.
 
-### 10. Nachholen: Startwerte (Phase 6)
+## Vor der Veröffentlichung zu prüfen
 
-Der Prototyp startet mit Beispielzahlen: 1 Jahr 6 Monate, 545 je Gebet, 133 nachgeholt.
+- **JAKIM und Kemenag** rechnen mit reinen Winkeln 20°/18°, ohne Sicherheitsminuten (entschieden am 10.11.2026, siehe unten). Beide sind gegen offizielle Tabellen zu prüfen, bevor die App erscheint. Bisher gibt es nur den Vergleich mit dem Mock für Jakarta: Kemenag liegt bis zu 3 Minuten daneben (Dhuhr 11:36 statt 11:39). Die Voreinstellung `singapore` von Adhan Swift – dieselben Winkel, Dhuhr +1, aufgerundet – läge näher (11:38).
 
-- **Standard:** Die App startet leer – kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr (Spec § 5: „empty state when nothing is entered“). Wie der leere Zustand aussieht, zeigt kein Screenshot.
-- Die Beispielzahlen gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Standard: Mit `-debugFixtureTimes` zeigt die Seite sie, damit sich `iphone/60` und `61` nachstellen lassen.
+## Entschieden am 10.11.2026
 
-### 11. Hijri-Datum: Wechsel um Mitternacht (Phase 3)
+Die Entscheidung steht jeweils wörtlich in Anführungszeichen.
 
-Der Prototyp wechselt das Hijri-Datum um Mitternacht, zusammen mit dem gregorianischen. Der islamische Tag beginnt aber mit dem Sonnenuntergang; manche Apps wechseln deshalb bei Maghrib.
+### Automatische Methode je Land
 
-- **Standard:** wie der Prototyp, um Mitternacht. Siehe auch Spec § 6.7 zur Korrektur um ±1 Tag.
+- **Deutschland:** „Diyanet“ – statt MWL wie im Prototyp und im Vorschlag der Spec (§ 5, § 6.1).
+- **Weitere Länder:** „Eigene Methode je Land“.
 
-### 12. Anleitung: Ende des Zeitfensters von Ischa (Phase 5)
+| Land | Methode |
+|---|---|
+| DE, TR | Diyanet |
+| ES | MWL |
+| SA | Umm al-Qura |
+| ID | Kemenag |
+| US, CA | ISNA |
+| EG | Egyptian |
+| PK, IN, BD, AF | Karachi |
+| MY | JAKIM |
+| SG | Singapore |
+| IR | Tehran |
+| alle übrigen Länder und ohne Land | MWL |
 
-Die Kopfkarte zeigt das Zeitfenster eines Gebets, bei Ischa „18:17–05:16“. Der Prototyp nimmt dafür Fadschr von heute (`ph.t[NEXT_OF[p]]`). Mit echter Rechnung liegt Fadschr von morgen ein bis zwei Minuten daneben.
+Moonsighting gilt in keinem Land von selbst; die Methode lässt sich nur wählen. Die Zuordnung steht in `CalculationMethod.automatic(forCountryCode:)`.
 
-- **Standard:** wie der Prototyp, die Zeiten von heute.
+- **Folge für die Referenzbilder:** `iphone/70` und `iphone/73` zeigen für Berlin „Automatisch · MWL“ (im Prototyp `CITIES.berlin.auto`). Die Fixture-Daten bleiben wie der Prototyp. Annahme für Phase 7: Mit `-debugFixtureTimes` gilt die Automatik der Fixture-Stadt (`FixtureTimes.City.automaticMethodID`), damit sich die Bilder nachstellen lassen; ohne das Argument gilt Diyanet.
+- **Folge für die Zeiten:** Ohne eigene Wahl rechnet die App in Deutschland mit Diyanet – siehe „Mock-Zeiten für Berlin“.
+
+### „In Mekka“
+
+„Unter 1 km“ – statt der vorgeschlagenen 5 km (`Qibla.meccaRadiusKm`). Näher an der Kaaba zeigt die Qibla-Seite die Meldung statt der Nadel.
+
+- **Folge für die Referenzbilder:** keine. Die Fixture-Stadt Mekka liegt an der Kaaba; `iphone/32` lässt sich weiter nachstellen.
+
+### Anleitung: Ende des Zeitfensters von Ischa
+
+„Fadschr von morgen“ – statt Fadschr von heute wie im Prototyp (`ph.t[NEXT_OF[p]]`). Das Fenster liefert `Guide.window(of:in:at:)`.
+
+- **Folge für die Referenzbilder:** keine. Mit den Mock-Zeiten bleibt es bei „18:17–05:16“, weil dort jeder Tag dieselben Uhrzeiten hat.
+
+### Simulator für Tests und Abgleich
+
+„Iphone 18 pro“ – der Simulator „iPhone 18 Pro“ (iOS 27.2). `make` nimmt ihn als Standard; ein anderer lässt sich mit `SIM='…'` wählen.
+
+- **Folge für die Referenzbilder:** Das iPhone 18 Pro hat wie das iPhone 17 402 × 874 pt (1206 × 2622 px bei 3x). Die Referenzbilder sind 390 × 844 pt groß – der Bildschirm ist 12 pt breiter und 30 pt höher. Ein Vergleich Pixel auf Pixel geht damit weiterhin nicht: Verglichen werden Abstände, Größen, Farben und Texte der Bausteine, nicht die Lage im ganzen Bild.
+
+### Mock-Zeiten für Berlin
+
+„Ja, so lassen“ – die Mock-Zeiten bleiben unverändert. Sie sind die Zahlen der Referenz-Screenshots.
+
+Der Prototyp zeigt für Berlin 05:16 · 07:14 · 11:52 · 14:00 · 16:27 · 18:17 und nennt MWL als Methode. Für den 10.11.2026 rechnet die App:
+
+| Methode | Fadschr | Sonnenaufgang | Dhuhr | Asr | Maghrib | Ischa | größte Abweichung vom Mock |
+|---|---|---|---|---|---|---|---|
+| MWL, die Methode des Prototyps | 05:21 | 07:19 | 11:51 | 13:55 | 16:21 | 18:13 | 6 Minuten (Maghrib) |
+| Diyanet, die Automatik der App | 05:21 | 07:12 | 11:55 | 13:59 | 16:28 | 18:13 | 5 Minuten (Fadschr) |
+
+Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städte liegen höchstens 4 Minuten neben der Rechnung. Der Test `FixturePlausibilityTests` erlaubt ±5 Minuten: mit der Methode des Prototyps und Berlin-Maghrib als benannter Ausnahme, mit der Automatik der App ohne Ausnahme.
+
+- **Folge für die Referenzbilder:** Ohne `-debugFixtureTimes` zeigt die App für Berlin am 10.11.2026 andere Zahlen als die Screenshots, z. B. Sonnenaufgang 07:12 statt 07:14 und Maghrib 16:28 statt 16:27.
+
+### Bestätigt, wie es war
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Regel für hohe Breiten | „Winkelbasiert“ | wie im Prototyp (`hlRule:'angle'`) und im Vorschlag der Spec § 6.2. Adhan Swift würde oberhalb von 48° das Siebtel der Nacht empfehlen. |
+| Hijri-Datum | „Um Mitternacht“ | Das Datum wechselt zusammen mit dem gregorianischen, nicht bei Maghrib. Zur Korrektur um ±1 Tag siehe Spec § 6.7. |
+| Name der App | „Überall ‚Gebetszeiten‘“ | Unter dem App-Symbol steht in jeder Sprache „Gebetszeiten“, auch wenn `T` vier Namen enthält (Spec § 6.9). |
+| Tableiste | „Systemverhalten“ | Die System-`TabView` bleibt. Sie weicht von den Referenzbildern ab: 274 pt breit und mittig statt 346 pt, gefüllte Symbole statt Umrissen, 21 pt statt 22 pt Abstand zum unteren Rand (gemessen auf dem iPhone 17, iOS 27.2). Die Höhe stimmt mit 62 pt. |
+| Entfernung zur Kaaba | „Ja, so lassen“ | Die Anzeige rundet auf 10 km, wie die Werte des Prototyps (4130, 2410, 4600, 7920 km). `PrayerCore` liefert die Entfernung ungerundet, für Berlin 4130,2 km. |
+| Ausrichtung | „Ja, so lassen“ | nur Hochformat. Ob das innere Display des iPhone Duo Querformat braucht, klärt Phase 10 (Spec § 6.17). |
+| Nachholen | „Ja, so lassen“ | Die App startet leer: kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr. `iphone/60` und `61` zeigen die Beispielzahlen des Prototyps; die gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Annahme für Phase 6: Mit `-debugFixtureTimes` zeigt die Seite sie. |
+| JAKIM und Kemenag | „Ja, so lassen“ | reine Winkel 20°/18°. Vor der Veröffentlichung gegen offizielle Tabellen zu prüfen, siehe oben. |
 
 ## Annahmen in Phase 1
 
-Diese Punkte sind entschieden oder ergeben sich aus den Unterlagen. Die Zahlen dazu stammen aus einer Rechenprobe mit Adhan Swift 1.5.0.
+Diese Punkte ergeben sich aus den Unterlagen oder aus der Umsetzung. Die Zahlen dazu stammen aus einer Rechenprobe mit Adhan Swift 1.5.0.
 
+- **Voreinstellungen von Adhan Swift:** Der Prototyp nennt für jede Methode nur die Winkel (`METHODS`). Adhan Swift bringt für einige Methoden zusätzlich Minuten mit, so wie die jeweilige Stelle ihre Zeiten veröffentlicht – etwa Diyanet: Sonnenaufgang −7, Dhuhr +5, Asr +4, Maghrib +7; MWL: Dhuhr +1. Die App übernimmt die Voreinstellungen samt diesen Minuten.
 - **Reihenfolge der Ereignisse:** Der Prototyp sortiert seinen Zeitstrahl nach Uhrzeit. `PrayerTimeline` lässt die Ereignisse in ihrer Tagesfolge; laufend ist das letzte der Folge, das begonnen hat. Für aufsteigende Zeiten und bei Gleichstand ist das Ergebnis dasselbe (Ischa von gestern und Fadschr von heute um 01:08 – Fadschr gewinnt). Der Unterschied zeigt sich mit der Regel „Nachtmitte“ nach der Sonnenwende: Dann liegt Ischa von gestern eine Minute hinter Fadschr von heute (Berlin, 11.07.2027: Ischa 01:12, Fadschr 01:11). Nach Uhrzeit sortiert liefe ab 01:12 „Ischa von gestern“, und Fadschr wäre bis zum Sonnenaufgang nicht hervorgehoben.
 - **Zeitumstellung:** Countdown, Spanne und Tagesfortschritt rechnen mit echter Zeit. Am 25.10.2026 um 00:30 sind es bis Fadschr um 05:16 deshalb 5 h 46 min. Der Prototyp käme mit seinen Minuten seit Mitternacht auf 4 h 46 min.
 - **Ein Zeitstrahl gilt für einen Kalendertag am Ort.** Nach Mitternacht liefert `PrayerTimeline.phase(at:)` nichts mehr; die App baut dann einen neuen (`covers(_:)`).
+- **Zeitfenster von Ischa vor Fadschr:** Läuft vor Fadschr noch Ischa von gestern, zeigt die Anleitung dessen Fenster: von gestern Abend bis Fadschr heute. So endet das Fenster dort, wohin auch der Countdown zählt. Das folgt aus der Entscheidung „Fadschr von morgen“: Ein Ischa endet mit dem Fadschr des Tages nach ihm.
 - **Mock-Quelle:** `FixtureTimesSource` nimmt die Fixture-Stadt, die an den Koordinaten des Ortes liegt, für jeden anderen Ort Berlin. Methode und Datum ändern die Mock-Zeiten nicht. Asr-Regel, Minutenkorrekturen und – mit `-debugHighLatitude` – die Regel für hohe Breiten wirken wie in `todayTimes()`. In `AppEnvironment` hängt die Quelle erst Phase 3 ein.
 - **Referenzwerte:** Fünf Tabellen aus den Testdaten von Adhan Swift liegen als Kopie unter `Packages/PrayerCore/Tests/PrayerCoreTests/Resources/AdhanTimes/` (MIT, Lizenztext liegt bei). So laufen die Tests auch ohne die externe Platte.
 - **Qibla:** Die Richtung kommt von Adhan Swift. Die Entfernung folgt dem Großkreis auf einer Kugel mit 6371,0088 km Radius.
@@ -113,6 +117,15 @@ Diese Punkte sind entschieden oder ergeben sich aus den Unterlagen. Die Zahlen d
 - **Texte in `PrayerCore`:** Die Namen der Methoden (`METHODS`) und die Formeln der Anleitung (`FORMULA`) stehen als Daten im Code, weil sie in allen Sprachen gleich sind. Alles andere bleibt im String Catalog.
 - **Anleitung:** Zwischen Sonnenaufgang und Dhuhr ist das automatische Gebet immer Dhuhr. Der Sonnenaufgang lässt sich nicht wählen.
 - **Nachholen:** Die Grenzen der Stepper gelten auch für gespeicherte Werte. Bei 99.999 offenen Gebeten bewirkt „+“ nichts mehr.
+
+Wie weit die Rechenmethoden geprüft sind:
+
+| Methode | Prüfung |
+|---|---|
+| Diyanet, Umm al-Qura, Singapore, Tehran, Moonsighting | veröffentlichte Tabellen aus den Testdaten von Adhan Swift, auf 0 bis 2 Minuten genau |
+| MWL, ISNA, Egyptian | einzelne Tage aus den Tests von Adhan Swift, auf die Minute |
+| Karachi | nur die Winkel (18°/18°) |
+| JAKIM, Kemenag | nur die Winkel (20°/18°); gegen veröffentlichte Zeiten ungeprüft |
 
 ## Annahmen in Phase 0
 
