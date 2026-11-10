@@ -1,5 +1,6 @@
 #if DEBUG
 
+import DesignSystem
 import Foundation
 import PrayerCore
 
@@ -15,6 +16,7 @@ import PrayerCore
 /// -debugLocationDenied  -debugOffline
 /// -debugTab today|qibla|guide|verses|qada|settings
 /// -debugQiblaHeading 137
+/// -debugCatalog arc|rows|glass|cards|all   Katalog der Bausteine statt der App, für den Abgleich
 /// ```
 ///
 /// Es gibt diesen Typ nur in DEBUG-Builds. Alles, was nicht mit `-debug` beginnt, wird übergangen.
@@ -36,6 +38,9 @@ public struct LaunchOptions: Equatable, Sendable {
     public var page: Page?
     /// Kompasskurs in Grad, 0 bis unter 360.
     public var qiblaHeading: Double?
+    /// Abschnitt des Katalogs, den die App statt der Tabs zeigt (`-debugCatalog`). Bogen und
+    /// Gebetskarten stehen dort im Zustand der übrigen Argumente.
+    public var catalog: ComponentCatalog.Section?
     /// Was an den Debug-Argumenten nicht verstanden wurde. Die App gibt es beim Start aus, damit
     /// ein Tippfehler nicht unbemerkt zu einem falschen Screenshot führt.
     public var problems: [String] = []
@@ -70,6 +75,11 @@ public struct LaunchOptions: Equatable, Sendable {
             case "-debugQiblaHeading":
                 qiblaHeading = value(of: argument, from: &rest, expected: "ein Kurs von 0 bis unter 360 Grad") {
                     Double($0).flatMap { (0..<360).contains($0) ? $0 : nil }
+                }
+            case "-debugCatalog":
+                let sections = ComponentCatalog.Section.allCases.map(\.rawValue).joined(separator: ", ")
+                catalog = value(of: argument, from: &rest, expected: "einer der Abschnitte \(sections)") {
+                    ComponentCatalog.Section(rawValue: $0)
                 }
             default:
                 problems.append("\(argument) ist kein bekanntes Debug-Argument.")

@@ -12,6 +12,19 @@ public struct RootView: View {
     }
 
     public var body: some View {
+        #if DEBUG
+        if let section = environment.launchOptions.catalog {
+            // `-debugCatalog`: der Katalog der Bausteine statt der App, für den Abgleich mit den Referenzbildern.
+            CatalogRoot(section: section, environment: environment)
+        } else {
+            tabs
+        }
+        #else
+        tabs
+        #endif
+    }
+
+    private var tabs: some View {
         TabView(selection: $selection) {
             ForEach(AppTab.allCases, id: \.self) { tab in
                 Tab(tab.title, systemImage: tab.systemImage, value: tab) {

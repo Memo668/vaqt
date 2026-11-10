@@ -1,0 +1,11 @@
+#!/bin/bash
+# Legt einen Ausschnitt einer Simulator-Aufnahme neben denselben Ausschnitt eines Referenzbilds.
+#
+#   scripts/compare-shot --ref design/screenshots/iphone/10-home-asr-active.png --ref-rect 16,223.4,358,180 \
+#                        --shot screenshots-out/phase-2/arc-1425.png --shot-rect 22,140,358,180 \
+#                        --out screenshots-out/phase-2/compare-arc-1425.png
+#
+# Rechtecke in pt (x,y,Breite,Höhe). Einzelheiten und alle Optionen stehen in scripts/compare-shot.swift.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+exec swift "$ROOT/scripts/compare-shot.swift" "$@"

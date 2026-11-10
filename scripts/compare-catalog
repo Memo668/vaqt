@@ -1,0 +1,85 @@
+#!/bin/bash
+# Abgleich der Bausteine mit den Referenzbildern design/screenshots/iphone/10–22 (Phase 2).
+#
+# Startet die App im Simulator mit `-debugCatalog arc` bzw. `rows` in jedem Zustand der Referenzbilder,
+# nimmt den Bildschirm auf und legt Bogen und Gebetskarten mit scripts/compare-shot neben die Referenz.
+# Die App muss gebaut und installiert sein:
+#
+#   make run ARGS='-debugCatalog all'
+#   scripts/compare-catalog            alle Zustände
+#   scripts/compare-catalog 22 20      nur diese Referenzbilder
+#
+# Ergebnis in screenshots-out/phase-2/: arc-<nr>.png, rows-<nr>.png (Aufnahmen) und
+# compare-arc-<nr>.png, compare-rows-<nr>.png (oben Referenz, Mitte Aufnahme, unten Unterschied).
+#
+# Der Simulator lässt sich mit SIM='…' wählen, wie im Makefile.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SIM="${SIM:-iPhone 18 Pro}"
+BUNDLE_ID=com.example.gebetszeiten
+REF="$ROOT/design/screenshots/iphone"
+OUT="${OUT:-$ROOT/screenshots-out/phase-2}"
+ZOOM="${ZOOM:-3}"
+
+# Ausschnitte in pt (x,y,Breite,Höhe). Der Bogen steht im Referenzbild 16 pt vom Rand und 223,4 pt von
+# oben, im Katalog mittig (402 − 358) / 2 = 22 pt vom Rand und 140 pt von oben (CatalogMetrics.captureTop).
+# Die Karten beginnen im Referenzbild bei 412 pt, im Katalog bei 140 pt; der Katalog ist 390 pt breit
+# und sitzt 6 pt vom Rand.
+ARC_REF=16,223.4,358,180
+ARC_SHOT=22,140,358,180
+ROWS_REF=0,404,390,368
+ROWS_SHOT=6,132,390,368
+
+# Nummer | Datei des Referenzbilds | hell oder dunkel | Leserichtung | Debug-Argumente
+STATES='
+10|10-home-asr-active|light|ltr|-debugTime 14:25
+11|11-home-asr-active-dark|dark|ltr|-debugTime 14:25
+12|12-home-before-fajr|light|ltr|-debugTime 05:14
+13|13-home-after-sunrise|light|ltr|-debugTime 08:04
+14|14-home-kerahat-active|light|ltr|-debugTime 07:30
+15|15-home-kerahat-before-maghrib|light|ltr|-debugTime 16:05
+16|16-home-after-isha-dark|dark|ltr|-debugTime 23:30
+20|20-home-rtl|light|rtl|-debugTime 14:25
+22|22-home-jakarta-close-markers|light|ltr|-debugCity jakarta -debugTime 17:57
+'
+
+mkdir -p "$OUT"
+xcrun simctl bootstatus "$SIM" -b >/dev/null
+
+shoot() { # Abschnitt Nummer Leserichtung Argumente…
+  local section="$1" number="$2" direction="$3"; shift 3
+  local rtl=()
+  if [ "$direction" = rtl ]; then
+    # Die Pseudosprache „Right-to-Left“ des Systems: deutsche Texte, gespiegelte Anordnung.
+    rtl=(-AppleTextDirection YES -NSForceRightToLeftWritingDirection YES)
+  fi
+  # shellcheck disable=SC2068
+  xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" \
+    -AppleLanguages '(de)' -AppleLocale de_DE ${rtl[@]+"${rtl[@]}"} \
+    -debugCatalog "$section" -debugFixtureTimes -debugDate 2026-11-10 $@ >/dev/null
+  sleep 1.5
+  xcrun simctl io "$SIM" screenshot "$OUT/$section-$number.png" >/dev/null 2>&1
+}
+
+echo "$STATES" | while IFS='|' read -r number file appearance direction arguments; do
+  [ -n "$number" ] || continue
+  if [ $# -gt 0 ] && ! printf '%s\n' "$@" | grep -qx "$number"; then continue; fi
+  xcrun simctl ui "$SIM" appearance "$appearance"
+
+  # shellcheck disable=SC2086
+  shoot arc "$number" "$direction" $arguments
+  printf 'Bogen %s:  ' "$number"
+  "$ROOT/scripts/compare-shot" --ref "$REF/$file.png" --ref-rect "$ARC_REF" \
+    --shot "$OUT/arc-$number.png" --shot-rect "$ARC_SHOT" \
+    --out "$OUT/compare-arc-$number.png" --zoom "$ZOOM" | head -1
+
+  # shellcheck disable=SC2086
+  shoot rows "$number" "$direction" $arguments
+  printf 'Karten %s: ' "$number"
+  "$ROOT/scripts/compare-shot" --ref "$REF/$file.png" --ref-rect "$ROWS_REF" \
+    --shot "$OUT/rows-$number.png" --shot-rect "$ROWS_SHOT" \
+    --out "$OUT/compare-rows-$number.png" --zoom "$ZOOM" | head -1
+done
+
+xcrun simctl ui "$SIM" appearance light
+echo "Ergebnis in $OUT"
