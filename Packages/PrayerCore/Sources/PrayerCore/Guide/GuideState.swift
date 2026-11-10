@@ -24,12 +24,8 @@ public struct GuideState: Hashable, Sendable {
     ///   - pick: die manuelle Wahl (`S.guidePick`); `nil` heißt, die Anleitung folgt der Zeit. Der
     ///     Sonnenaufgang ist kein Gebet und zählt wie keine Wahl.
     public init(phase: DayPhase, pick: Prayer? = nil) {
-        let automatic: Prayer
-        if let current = phase.current {
-            automatic = current.prayer
-        } else {
-            automatic = phase.next.prayer == .sunrise ? .dhuhr : phase.next.prayer
-        }
+        // Läuft kein Gebet, liegt „jetzt“ zwischen Sonnenaufgang und Dhuhr; das nächste Gebet ist dann Dhuhr.
+        let automatic = phase.current?.prayer ?? .dhuhr
         let pick = pick == .sunrise ? nil : pick
         let prayer = pick ?? automatic
         let isCurrent = phase.current?.prayer == prayer

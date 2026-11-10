@@ -16,11 +16,11 @@ public struct HijriDate: Hashable, Sendable {
     /// Das Hijri-Datum zu einem gregorianischen Kalendertag.
     public init(_ gregorianDay: CalendarDay) {
         self.gregorianDay = gregorianDay
-        let parts = Self.calendar.dateComponents([.year, .month, .day], from: Self.instant(of: gregorianDay))
-        // Der Kalender liefert für jeden Zeitpunkt Jahr, Monat und Tag.
-        year = parts.year ?? 1
-        month = parts.month ?? 1
-        day = parts.day ?? 1
+        let calendar = Self.calendar
+        let instant = Self.instant(of: gregorianDay)
+        year = calendar.component(.year, from: instant)
+        month = calendar.component(.month, from: instant)
+        day = calendar.component(.day, from: instant)
     }
 
     /// Das Datum als Text mit ausgeschriebenem Monat in der Sprache von `locale`, ohne Ära –

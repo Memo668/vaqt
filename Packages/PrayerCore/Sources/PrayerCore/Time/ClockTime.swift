@@ -9,10 +9,8 @@ public struct ClockTime: Hashable, Comparable, Sendable, CustomStringConvertible
     public init(_ date: Date, in timeZone: TimeZone) {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = timeZone
-        let parts = calendar.dateComponents([.hour, .minute], from: date)
-        // Der gregorianische Kalender liefert für jeden Zeitpunkt Stunde und Minute.
-        hour = parts.hour ?? 0
-        minute = parts.minute ?? 0
+        hour = calendar.component(.hour, from: date)
+        minute = calendar.component(.minute, from: date)
     }
 
     /// `nil`, wenn die Werte keine Uhrzeit ergeben (Stunde 0–23, Minute 0–59).

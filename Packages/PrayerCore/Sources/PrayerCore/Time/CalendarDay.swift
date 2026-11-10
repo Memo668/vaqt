@@ -52,13 +52,9 @@ public struct CalendarDay: Hashable, Comparable, Sendable, CustomStringConvertib
 
     /// Der Tag `days` Tage später; mit negativem Wert früher.
     public func adding(days: Int) -> CalendarDay {
-        let calendar = Self.calendar(in: .gmt)
-        guard let start = calendar.date(from: DateComponents(year: year, month: month, day: day)),
-              let shifted = calendar.date(byAdding: .day, value: days, to: start)
-        else {
-            preconditionFailure("CalendarDay \(self) ist beim Erzeugen geprüft – hier nicht erreichbar")
-        }
-        return CalendarDay(shifted, in: .gmt)
+        // In GMT gibt es keine Zeitumstellung: Dort ist jeder Tag genau 86 400 Sekunden lang.
+        let start = date(at: .midnight, in: .gmt)
+        return CalendarDay(start.addingTimeInterval(TimeInterval(days) * 86_400), in: .gmt)
     }
 
     public var description: String {
