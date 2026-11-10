@@ -1,0 +1,10 @@
+#!/bin/bash
+# Erzeugt Localizable.xcstrings und L10n.swift aus dem Objekt `T` des Prototyps.
+#
+#   scripts/import-strings            Dateien neu schreiben
+#   scripts/import-strings --check    nur prüfen (Exit 1, wenn die Dateien nicht zum Prototyp passen)
+#
+# Einzelheiten stehen in scripts/import-strings.swift.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+exec swift "$ROOT/scripts/import-strings.swift" --root "$ROOT" "$@"
