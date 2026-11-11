@@ -16,6 +16,8 @@ public final class TodayModel {
     public let settings: SettingsStore
     /// Die Uhr der App. Der Bogen liest sie im Sekundentakt.
     public let clock: any AppClock
+    /// Die Ortssuche für das Stadt-Sheet.
+    public let citySearch: any CitySearching
 
     @ObservationIgnored private let timesSource: any PrayerTimesSource
     @ObservationIgnored private let locationSource: any LocationSource
@@ -49,6 +51,7 @@ public final class TodayModel {
         timesSource: any PrayerTimesSource,
         locationSource: any LocationSource,
         connectivity: any ConnectivitySource,
+        citySearch: any CitySearching = NoCitySearch(),
         settings: SettingsStore,
         toast: ToastCenter,
         locale: Locale = L10n.locale,
@@ -58,6 +61,7 @@ public final class TodayModel {
         self.timesSource = timesSource
         self.locationSource = locationSource
         self.connectivity = connectivity
+        self.citySearch = citySearch
         self.settings = settings
         self.toast = toast
         self.locale = locale
@@ -78,6 +82,12 @@ public final class TodayModel {
         isAutomatic ? settings.devicePlace : settings.manualPlace
     }
 
+    /// Der Ort, in dessen Umgebung die Ortssuche zuerst sucht: der, für den die Seite Zeiten zeigt,
+    /// sonst der zuletzt bestimmte Standort.
+    public var searchCenter: Coordinates? {
+        (place ?? settings.devicePlace ?? settings.manualPlace)?.coordinates
+    }
+
     /// Die Zeile mit der Stadt. Solange der Name des aktuellen Standorts fehlt – noch nicht bestimmt
     /// oder ohne Netz –, steht dort „Aktueller Standort“; gibt es weder Freigabe noch Stadt,
     /// „Stadt wählen“.
@@ -88,9 +98,11 @@ public final class TodayModel {
         return isAutomatic ? L10n.currentLocation : L10n.citySheetTitle
     }
 
-    /// Text des Stadt-Buttons für VoiceOver: „Stadt: Berlin. Ändern“.
+    /// Text des Stadt-Buttons für VoiceOver: „Stadt: Berlin. Ändern“. Ohne Stadt sagt der Titel schon,
+    /// was der Button tut: „Stadt wählen“.
     public var cityAccessibilityLabel: String {
-        "\(L10n.city): \(cityTitle). \(L10n.change)"
+        guard place != nil || isAutomatic else { return cityTitle }
+        return "\(L10n.city): \(cityTitle). \(L10n.change)"
     }
 
     /// Das Symbol `location.fill` vor der Stadt: nur beim aktuellen Standort.

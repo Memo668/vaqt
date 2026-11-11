@@ -214,9 +214,12 @@ struct TodayModelTests {
         let fixture = make(location: FixedLocationSource(place: nil, status: .denied))
         await fixture.model.activate()
         #expect(fixture.model.cityTitle == L10n.citySheetTitle)
+        // Für VoiceOver sagt der Titel schon, was der Button tut.
+        #expect(fixture.model.cityAccessibilityLabel == L10n.citySheetTitle)
         #expect(fixture.model.showsLocationDeniedBanner)
         #expect(fixture.model.isCitySheetPresented)
         #expect(fixture.model.rows.isEmpty)
+        #expect(fixture.model.searchCenter == nil)
     }
 
     @Test("wird die Abfrage abgelehnt, öffnet sich das Stadt-Sheet")

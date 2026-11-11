@@ -22,7 +22,7 @@ public struct RootView: View {
         _today = State(initialValue: TodayModel(
             clock: environment.clock, timesSource: environment.timesSource,
             locationSource: environment.locationSource, connectivity: environment.connectivity,
-            settings: settings, toast: toast
+            citySearch: environment.citySearch, settings: settings, toast: toast
         ))
     }
 

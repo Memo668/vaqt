@@ -28,7 +28,7 @@ struct AppTabTests {
 struct AppEnvironmentTests {
 
     @Test("die ausgelieferte App nutzt die Gerätezeit und beginnt bei Gebete")
-    func live() async {
+    func live() {
         let environment = AppEnvironment.live
         #expect(environment.clock is SystemClock)
         #expect(environment.initialTab == .prayers)
@@ -39,20 +39,22 @@ struct AppEnvironmentTests {
         #expect(environment.timesSource is AdhanTimesSource)
         #expect(environment.connectivity is NetworkConnectivity)
         #expect(environment.settings == .userDefaults(suiteName: nil))
-        // Die Standortquelle mit Core Location folgt mit dem Stadt-Sheet.
-        #expect(await environment.locationSource.authorization() == .notDetermined)
-        #expect(await environment.locationSource.currentPlace() == nil)
+        // Der Standort kommt von Core Location, die Ortssuche von MapKit.
+        #expect(environment.locationSource is CoreLocationSource)
+        #expect(environment.citySearch is MapKitCitySearch)
     }
 
     #if DEBUG
 
     @Test("ohne Debug-Argumente entspricht der Start der ausgelieferten App")
-    func launchWithoutArguments() async {
+    func launchWithoutArguments() {
         let environment = AppEnvironment.launch(arguments: ["Gebetszeiten"])
         #expect(environment.clock is SystemClock)
         #expect(environment.initialTab == .prayers)
         #expect(environment.launchOptions == LaunchOptions())
-        #expect(await environment.locationSource.authorization() == .notDetermined)
+        #expect(environment.locationSource is CoreLocationSource)
+        #expect(environment.citySearch is MapKitCitySearch)
+        #expect(environment.timesSource is AdhanTimesSource)
     }
 
     @Test("der Start liest die Debug-Argumente")
@@ -118,6 +120,9 @@ struct AppEnvironmentTests {
         #expect(snapshot.manualPlace?.countryCode == "DE")
         #expect(snapshot.savedPlaces.map(\.countryCode) == ["DE", "TR", "ES", "SA", "ID"])
         #expect(snapshot.bells == SettingsStore.standardBells)
+        // Die Ortssuche bleibt stumm: Das Sheet filtert nur die fünf Städte, wie der Prototyp.
+        #expect(environment.citySearch is NoCitySearch)
+        #expect(environment.locationSource is FixedLocationSource)
     }
 
     @Test("-debugFixtureTimes mit -debugCity: Die Stadt ist auch die gewählte")
@@ -143,6 +148,11 @@ struct AppEnvironmentTests {
         #expect(environment.timesSource is AdhanTimesSource)
         #expect(environment.connectivity is NetworkConnectivity)
         #expect(environment.settings == .userDefaults(suiteName: nil))
+        #expect(environment.citySearch is MapKitCitySearch)
+        // Die Stadt aus -debugCity bleibt fest; ohne sie fragt die App Core Location.
+        #expect(environment.locationSource is FixedLocationSource)
+        let withoutCity = AppEnvironment(options: LaunchOptions(arguments: ["-debugTime", "14:25"]))
+        #expect(withoutCity.locationSource is CoreLocationSource)
     }
 
     @Test("-debugOffline: fest kein Netz, mit und ohne Mock-Zeiten", arguments: [

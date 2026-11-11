@@ -111,18 +111,26 @@ struct SettingsStoreTests {
         #expect(store.savedPlaces == [.istanbul])
     }
 
-    @Test("gespeicherte Städte lassen sich entfernen, nur die gewählte nicht")
+    @Test("gespeicherte Städte lassen sich entfernen")
     func remove() {
         let store = ephemeral()
         store.select(.istanbul)
         store.select(.berlin)
-        #expect(store.canRemove(.istanbul))
-        #expect(!store.canRemove(.berlin))
-
-        store.removeSavedPlace(.berlin)
-        #expect(store.savedPlaces == [.istanbul, .berlin])
         store.removeSavedPlace(.istanbul)
         #expect(store.savedPlaces == [.berlin])
+        // Die gewählte Stadt ist davon nicht berührt.
+        #expect(store.manualPlace == .berlin)
+    }
+
+    @Test("mit der gemerkten Wahl verschwindet auch die Erinnerung an sie")
+    func removeChosen() {
+        let store = ephemeral()
+        store.select(.istanbul)
+        store.useCurrentLocation()
+        store.removeSavedPlace(.istanbul)
+        #expect(store.savedPlaces.isEmpty)
+        #expect(store.manualPlace == nil)
+        #expect(store.autoLocation)
     }
 
     // MARK: - Speichern

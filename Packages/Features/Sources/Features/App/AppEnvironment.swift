@@ -3,8 +3,8 @@ import Foundation
 import PrayerCore
 import SwiftUI
 
-/// Alles, was die App von außen bekommt: Uhr, Standortquelle, Zeitenquelle, Netz-Zustand, der Ort der
-/// Einstellungen und womit sie startet.
+/// Alles, was die App von außen bekommt: Uhr, Standortquelle, Zeitenquelle, Netz-Zustand, Ortssuche,
+/// der Ort der Einstellungen und womit sie startet.
 ///
 /// Uhrzeit, Datum und Ort laufen nur hierüber – nie direkt über `Date()` oder `CLLocationManager`.
 /// In DEBUG-Builds tauschen die Debug-Startargumente einzelne Quellen gegen feste Zustände, damit sich
@@ -16,6 +16,8 @@ public struct AppEnvironment: Sendable {
     public var timesSource: any PrayerTimesSource
     /// Ob das Gerät ein Netz hat; mit `-debugOffline` fest „kein Netz“.
     public var connectivity: any ConnectivitySource
+    /// Die Ortssuche des Stadt-Sheets; mit `-debugFixtureTimes` ohne Vorschläge, wie im Prototyp.
+    public var citySearch: any CitySearching
     /// Wo die Einstellungen liegen: in den UserDefaults der App Group, mit `-debugFixtureTimes` nur im
     /// Speicher.
     public var settings: SettingsStore.Storage
@@ -34,6 +36,7 @@ public struct AppEnvironment: Sendable {
         locationSource: any LocationSource,
         timesSource: any PrayerTimesSource = AdhanTimesSource(),
         connectivity: any ConnectivitySource = NetworkConnectivity(),
+        citySearch: any CitySearching = NoCitySearch(),
         settings: SettingsStore.Storage = .userDefaults(suiteName: nil),
         initialTab: AppTab = .prayers,
         initialPage: PrayersPage = .today,
@@ -43,16 +46,19 @@ public struct AppEnvironment: Sendable {
         self.locationSource = locationSource
         self.timesSource = timesSource
         self.connectivity = connectivity
+        self.citySearch = citySearch
         self.settings = settings
         self.initialTab = initialTab
         self.initialPage = initialPage
         self.opensSettings = opensSettings
     }
 
-    /// Die Umgebung der ausgelieferten App: Gerätezeit, echte Rechnung, Einstellungen in der App Group.
+    /// Die Umgebung der ausgelieferten App: Gerätezeit, Standort über Core Location, echte Rechnung,
+    /// Ortssuche über MapKit, Einstellungen in der App Group.
     public static var live: AppEnvironment {
         AppEnvironment(
-            clock: SystemClock(), locationSource: Self.pendingLocationSource,
+            clock: SystemClock(), locationSource: CoreLocationSource(),
+            citySearch: MapKitCitySearch(),
             settings: .userDefaults(suiteName: appGroupIdentifier)
         )
     }
@@ -72,7 +78,8 @@ public struct AppEnvironment: Sendable {
         #endif
     }
 
-    /// Platzhalter, bis die Standortquelle mit Core Location da ist: kein Ort, noch nicht gefragt.
+    /// Eine Standortquelle ohne Ort und ohne Antwort auf die Freigabe – der Standardwert der Umgebung
+    /// für Previews und Tests, die keine eigene Quelle setzen.
     static var pendingLocationSource: any LocationSource {
         FixedLocationSource(place: nil, status: .notDetermined)
     }
@@ -94,9 +101,10 @@ extension AppEnvironment {
 
     /// Die Umgebung zu einem Satz Debug-Startargumente.
     ///
-    /// - `-debugFixtureTimes`: Mock-Zeiten, festes Netz und flüchtige Einstellungen mit den Startwerten
-    ///   von `S` im Prototyp – so sieht jede Aufnahme gleich aus.
-    /// - `-debugCity`, `-debugHighLatitude`, `-debugLocationDenied`: feste Standortquelle.
+    /// - `-debugFixtureTimes`: Mock-Zeiten, festes Netz, keine Ortssuche und flüchtige Einstellungen mit
+    ///   den Startwerten von `S` im Prototyp – so sieht jede Aufnahme gleich aus.
+    /// - `-debugCity`, `-debugHighLatitude`, `-debugLocationDenied`: feste Standortquelle; sonst
+    ///   Core Location.
     /// - `-debugOffline`: fest „kein Netz“.
     public init(options: LaunchOptions, system: any AppClock = SystemClock(), deviceTimeZone: TimeZone = .current) {
         clock = options.makeClock(system: system, deviceTimeZone: deviceTimeZone)
@@ -106,15 +114,17 @@ extension AppEnvironment {
                 status: options.locationDenied ? .denied : .authorized
             )
         } else {
-            locationSource = Self.pendingLocationSource
+            locationSource = CoreLocationSource()
         }
         if options.fixtureTimes {
             timesSource = FixtureTimesSource(highLatitude: options.highLatitude)
             connectivity = FixedConnectivity(isOnline: !options.offline)
+            citySearch = NoCitySearch()
             settings = .ephemeral(.prototype(city: options.effectiveCity))
         } else {
             timesSource = AdhanTimesSource()
             connectivity = options.offline ? FixedConnectivity(isOnline: false) : NetworkConnectivity()
+            citySearch = MapKitCitySearch()
             settings = .userDefaults(suiteName: Self.appGroupIdentifier)
         }
         initialTab = AppTab(options.page)

@@ -15,6 +15,7 @@ struct TodayPage: View {
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
+        @Bindable var model = model
         ScrollView {
             VStack(spacing: 0) {
                 TodayHeader(model: model)
@@ -66,6 +67,9 @@ struct TodayPage: View {
         }
         .onChange(of: model.settings.calculation) { model.refresh() }
         .onChange(of: model.settings.showKerahat) { model.refresh() }
+        .sheet(isPresented: $model.isCitySheetPresented) {
+            CitySheet(today: model, search: model.citySearch)
+        }
     }
 
     /// Die sechs Gebetskarten. Die Liste trägt für VoiceOver das Datum, wie `aria-label` im Prototyp.

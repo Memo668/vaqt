@@ -143,16 +143,15 @@ public final class SettingsStore {
         save(devicePlace, forKey: Key.devicePlace)
     }
 
-    /// Ob sich eine gespeicherte Stadt entfernen lässt: jede außer der gerade gewählten.
-    public func canRemove(_ place: Place) -> Bool {
-        manualPlace.map { !Self.isSameCity($0, place) } ?? true
-    }
-
-    /// Entfernt eine Stadt aus der Liste der gespeicherten. Die gerade gewählte bleibt.
+    /// Entfernt eine Stadt aus der Liste der gespeicherten. War sie die gemerkte Wahl, ist auch die
+    /// vergessen. Dass die Stadt, die gerade gilt, in der Liste bleibt, regelt das Stadt-Sheet.
     public func removeSavedPlace(_ place: Place) {
-        guard canRemove(place) else { return }
         savedPlaces.removeAll { Self.isSameCity($0, place) }
         save(savedPlaces, forKey: Key.savedPlaces)
+        if let chosen = manualPlace, Self.isSameCity(chosen, place) {
+            manualPlace = nil
+            save(manualPlace, forKey: Key.manualPlace)
+        }
     }
 
     /// Zwei Einträge meinen dieselbe Stadt, wenn Name und Land übereinstimmen – auch wenn die Suche
