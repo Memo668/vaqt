@@ -30,4 +30,33 @@ public struct Qibla: Hashable, Sendable {
     public var isInMecca: Bool {
         distanceKm < Self.meccaRadiusKm
     }
+
+    // MARK: - Anzeige
+
+    /// Die Richtung in ganzen Grad, 0 bis 359 – so nennt sie die Qibla-Seite („Qibla 137° SO“).
+    public var wholeDegrees: Int {
+        Int(bearing.rounded()) % 360
+    }
+
+    /// Die Himmelsrichtung, in der die Kaaba liegt, bestimmt aus den ganzen Grad wie `dirName(q)` im
+    /// Prototyp.
+    public var compassPoint: CompassPoint {
+        CompassPoint(degrees: Double(wholeDegrees))
+    }
+
+    /// Ab dieser Entfernung in Kilometern rundet die Anzeige auf 10 km.
+    public static let coarseDistanceKm = 10.0
+
+    /// Die Entfernung, wie die Qibla-Seite sie zeigt: auf 10 km gerundet, wie die Werte des Prototyps
+    /// (4130, 2410, 4600, 7920 km). Unter 10 km auf ganze Kilometer – sonst stünde wenige Kilometer vor
+    /// der Kaaba „0 km“ (docs/OPEN-QUESTIONS.md).
+    public var displayDistanceKm: Int {
+        guard distanceKm >= Self.coarseDistanceKm else { return Int(distanceKm.rounded()) }
+        return Int((distanceKm / Self.coarseDistanceKm).rounded()) * Int(Self.coarseDistanceKm)
+    }
+
+    /// Wie ein Gerät mit diesem Kurs zur Qibla steht.
+    public func alignment(with heading: Heading) -> QiblaAlignment {
+        QiblaAlignment(bearing: bearing, heading: heading.degrees)
+    }
 }

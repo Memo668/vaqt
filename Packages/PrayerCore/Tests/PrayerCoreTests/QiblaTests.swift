@@ -44,9 +44,19 @@ struct QiblaTests {
         let city = try #require(FixtureTimes.city(id))
         let qibla = Qibla(from: city.coordinates)
         #expect(Int(qibla.bearing.rounded()) == city.qiblaDegrees)
+        #expect(qibla.wholeDegrees == city.qiblaDegrees)
         // Die Entfernungen im Prototyp sind auf 10 km gerundet.
         #expect(Int((qibla.distanceKm / 10).rounded()) * 10 == city.distanceKm)
+        #expect(qibla.displayDistanceKm == city.distanceKm)
         #expect(!qibla.isInMecca)
+    }
+
+    @Test("die Himmelsrichtung der Qibla in den Städten des Prototyps", arguments: [
+        ("berlin", CompassPoint.southEast), ("istanbul", .southEast), ("madrid", .east), ("jakarta", .northWest),
+    ])
+    func fixtureCompassPoints(id: String, expected: CompassPoint) throws {
+        let city = try #require(FixtureTimes.city(id))
+        #expect(Qibla(from: city.coordinates).compassPoint == expected)
     }
 
     @Test("die Fixture-Stadt Mekka liegt in Mekka")
@@ -106,6 +116,39 @@ struct QiblaTests {
         #expect(abs(antipode.distanceKm - 20015.114) < 0.01)
         // Auf dem Äquator, 90° westlich des Längengrads der Kaaba: ein Viertel des Erdumfangs.
         #expect(abs(qibla(0, Qibla.kaaba.longitude - 90).distanceKm - 10007.557) < 0.01)
+    }
+
+    @Test("die Anzeige nennt ganze Grad von 0 bis 359")
+    func wholeDegrees() {
+        #expect(Qibla(from: Place.berlin.coordinates).wholeDegrees == 137)
+        // Genau südlich der Kaaba liegt sie im Norden: 0°, nicht 360°.
+        let south = qibla(Qibla.kaaba.latitude - 10, Qibla.kaaba.longitude)
+        #expect(south.wholeDegrees == 0)
+        #expect(south.compassPoint == .north)
+        // Von Norden aus liegt sie im Süden.
+        #expect(qibla(Qibla.kaaba.latitude + 10, Qibla.kaaba.longitude).wholeDegrees == 180)
+    }
+
+    @Test("die Anzeige rundet die Entfernung auf 10 km")
+    func displayDistance() {
+        #expect(Qibla(from: Place.berlin.coordinates).displayDistanceKm == 4130)
+        // Ein Breitengrad sind 111,195 km: 0,13° sind 14,46 km, 0,14° sind 15,57 km.
+        #expect(qibla(Qibla.kaaba.latitude + 0.13, Qibla.kaaba.longitude).displayDistanceKm == 10)
+        #expect(qibla(Qibla.kaaba.latitude + 0.14, Qibla.kaaba.longitude).displayDistanceKm == 20)
+        // Dschidda: rund 66 km.
+        #expect(qibla(21.4858, 39.1925).displayDistanceKm == 70)
+    }
+
+    @Test("unter 10 km nennt die Anzeige ganze Kilometer statt „0 km“")
+    func displayDistanceNearby() {
+        #expect(Qibla.coarseDistanceKm == 10)
+        // 0,010° sind 1,11 km, 0,044° sind 4,89 km, 0,085° sind 9,45 km, 0,088° sind 9,79 km.
+        #expect(qibla(Qibla.kaaba.latitude + 0.010, Qibla.kaaba.longitude).displayDistanceKm == 1)
+        #expect(qibla(Qibla.kaaba.latitude + 0.044, Qibla.kaaba.longitude).displayDistanceKm == 5)
+        #expect(qibla(Qibla.kaaba.latitude + 0.085, Qibla.kaaba.longitude).displayDistanceKm == 9)
+        #expect(qibla(Qibla.kaaba.latitude + 0.088, Qibla.kaaba.longitude).displayDistanceKm == 10)
+        // Knapp über 10 km gilt schon die Rundung auf 10 km: 0,092° sind 10,23 km.
+        #expect(qibla(Qibla.kaaba.latitude + 0.092, Qibla.kaaba.longitude).displayDistanceKm == 10)
     }
 
     @Test("gleiche Orte ergeben gleiche Werte")
