@@ -1,14 +1,29 @@
+import DesignSystem
 import PrayerCore
 import SwiftUI
 
-/// Wurzel der App: die System-`TabView` mit den drei Tabs Gebete, Verse und Nachholen.
+/// Wurzel der App: die System-`TabView` mit den drei Tabs Gebete, Verse und Nachholen, darüber der
+/// Toast.
 public struct RootView: View {
     private let environment: AppEnvironment
+
     @State private var selection: AppTab
+    @State private var settings: SettingsStore
+    @State private var toast: ToastCenter
+    @State private var today: TodayModel
 
     public init(environment: AppEnvironment) {
         self.environment = environment
+        let settings = SettingsStore(storage: environment.settings)
+        let toast = ToastCenter()
         _selection = State(initialValue: environment.initialTab)
+        _settings = State(initialValue: settings)
+        _toast = State(initialValue: toast)
+        _today = State(initialValue: TodayModel(
+            clock: environment.clock, timesSource: environment.timesSource,
+            locationSource: environment.locationSource, connectivity: environment.connectivity,
+            settings: settings, toast: toast
+        ))
     }
 
     public var body: some View {
@@ -28,11 +43,20 @@ public struct RootView: View {
         TabView(selection: $selection) {
             ForEach(AppTab.allCases, id: \.self) { tab in
                 Tab(tab.title, systemImage: tab.systemImage, value: tab) {
-                    // Noch leer: Gebete folgt in Phase 3, Verse und Nachholen in Phase 6.
-                    Color.clear
+                    switch tab {
+                    case .prayers:
+                        PrayersTab(
+                            today: today, initialPage: environment.initialPage,
+                            opensSettings: environment.opensSettings
+                        )
+                    case .verses, .qada:
+                        // Noch leer: Verse und Nachholen folgen in Phase 6.
+                        Color.clear
+                    }
                 }
             }
         }
+        .toasts(from: toast)
         .environment(\.appClock, environment.clock)
         .environment(\.locationSource, environment.locationSource)
     }

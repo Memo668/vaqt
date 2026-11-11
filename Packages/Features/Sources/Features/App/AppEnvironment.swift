@@ -3,27 +3,58 @@ import Foundation
 import PrayerCore
 import SwiftUI
 
-/// Alles, was die App von außen bekommt: Uhr, Standortquelle und der Tab beim Start.
+/// Alles, was die App von außen bekommt: Uhr, Standortquelle, Zeitenquelle, Netz-Zustand, der Ort der
+/// Einstellungen und womit sie startet.
 ///
 /// Uhrzeit, Datum und Ort laufen nur hierüber – nie direkt über `Date()` oder `CLLocationManager`.
+/// In DEBUG-Builds tauschen die Debug-Startargumente einzelne Quellen gegen feste Zustände, damit sich
+/// jeder Referenz-Screenshot nachstellen lässt (CLAUDE.md).
 public struct AppEnvironment: Sendable {
     public var clock: any AppClock
     public var locationSource: any LocationSource
+    /// Quelle der Gebetszeiten: die echte Rechnung, mit `-debugFixtureTimes` die Mock-Zeiten.
+    public var timesSource: any PrayerTimesSource
+    /// Ob das Gerät ein Netz hat; mit `-debugOffline` fest „kein Netz“.
+    public var connectivity: any ConnectivitySource
+    /// Wo die Einstellungen liegen: in den UserDefaults der App Group, mit `-debugFixtureTimes` nur im
+    /// Speicher.
+    public var settings: SettingsStore.Storage
     public var initialTab: AppTab
+    /// Die Seite des Gebete-Tabs beim Start.
+    public var initialPage: PrayersPage
+    /// Ob die Einstellungen beim Start schon offen sind (`-debugTab settings`).
+    public var opensSettings: Bool
     #if DEBUG
-    /// Die ausgewerteten Debug-Startargumente; spätere Phasen lesen hier z. B. `fixtureTimes`.
+    /// Die ausgewerteten Debug-Startargumente; spätere Phasen lesen hier z. B. `qiblaHeading`.
     public var launchOptions = LaunchOptions()
     #endif
 
-    public init(clock: any AppClock, locationSource: any LocationSource, initialTab: AppTab = .prayers) {
+    public init(
+        clock: any AppClock,
+        locationSource: any LocationSource,
+        timesSource: any PrayerTimesSource = AdhanTimesSource(),
+        connectivity: any ConnectivitySource = NetworkConnectivity(),
+        settings: SettingsStore.Storage = .userDefaults(suiteName: nil),
+        initialTab: AppTab = .prayers,
+        initialPage: PrayersPage = .today,
+        opensSettings: Bool = false
+    ) {
         self.clock = clock
         self.locationSource = locationSource
+        self.timesSource = timesSource
+        self.connectivity = connectivity
+        self.settings = settings
         self.initialTab = initialTab
+        self.initialPage = initialPage
+        self.opensSettings = opensSettings
     }
 
-    /// Die Umgebung der ausgelieferten App.
+    /// Die Umgebung der ausgelieferten App: Gerätezeit, echte Rechnung, Einstellungen in der App Group.
     public static var live: AppEnvironment {
-        AppEnvironment(clock: SystemClock(), locationSource: Self.pendingLocationSource)
+        AppEnvironment(
+            clock: SystemClock(), locationSource: Self.pendingLocationSource,
+            settings: .userDefaults(suiteName: appGroupIdentifier)
+        )
     }
 
     /// Die Umgebung beim Start der App. In DEBUG-Builds gelten die Debug-Startargumente.
@@ -41,9 +72,19 @@ public struct AppEnvironment: Sendable {
         #endif
     }
 
-    /// Platzhalter, bis Phase 3 die Standortquelle mit Core Location bringt: kein Ort, noch nicht gefragt.
+    /// Platzhalter, bis die Standortquelle mit Core Location da ist: kein Ort, noch nicht gefragt.
     static var pendingLocationSource: any LocationSource {
         FixedLocationSource(place: nil, status: .notDetermined)
+    }
+
+    /// Die App Group aus der Info.plist der App (`AppGroupIdentifier`, gefüllt aus `APP_GROUP_ID` in
+    /// project.yml). In ihr liegen die Einstellungen, damit Widgets und Live-Aktivität sie lesen können.
+    /// Ohne den Eintrag – etwa in Tests – gelten die Standard-Defaults.
+    static var appGroupIdentifier: String? {
+        guard let identifier = Bundle.main.object(forInfoDictionaryKey: "AppGroupIdentifier") as? String,
+              !identifier.isEmpty
+        else { return nil }
+        return identifier
     }
 }
 
@@ -52,6 +93,11 @@ public struct AppEnvironment: Sendable {
 extension AppEnvironment {
 
     /// Die Umgebung zu einem Satz Debug-Startargumente.
+    ///
+    /// - `-debugFixtureTimes`: Mock-Zeiten, festes Netz und flüchtige Einstellungen mit den Startwerten
+    ///   von `S` im Prototyp – so sieht jede Aufnahme gleich aus.
+    /// - `-debugCity`, `-debugHighLatitude`, `-debugLocationDenied`: feste Standortquelle.
+    /// - `-debugOffline`: fest „kein Netz“.
     public init(options: LaunchOptions, system: any AppClock = SystemClock(), deviceTimeZone: TimeZone = .current) {
         clock = options.makeClock(system: system, deviceTimeZone: deviceTimeZone)
         if options.effectiveCity != nil || options.locationDenied {
@@ -62,7 +108,18 @@ extension AppEnvironment {
         } else {
             locationSource = Self.pendingLocationSource
         }
+        if options.fixtureTimes {
+            timesSource = FixtureTimesSource(highLatitude: options.highLatitude)
+            connectivity = FixedConnectivity(isOnline: !options.offline)
+            settings = .ephemeral(.prototype(city: options.effectiveCity))
+        } else {
+            timesSource = AdhanTimesSource()
+            connectivity = options.offline ? FixedConnectivity(isOnline: false) : NetworkConnectivity()
+            settings = .userDefaults(suiteName: Self.appGroupIdentifier)
+        }
         initialTab = AppTab(options.page)
+        initialPage = PrayersPage(options.page)
+        opensSettings = options.page == .settings
         launchOptions = options
     }
 }
@@ -77,6 +134,32 @@ extension AppTab {
         case .qada: self = .qada
         case .today, .qibla, .guide, .settings, nil: self = .prayers
         }
+    }
+}
+
+extension PrayersPage {
+
+    /// Die Seite des Gebete-Tabs zu `-debugTab`. Alles außer Qibla und Anleitung beginnt bei den Zeiten.
+    init(_ page: LaunchOptions.Page?) {
+        switch page {
+        case .qibla: self = .qibla
+        case .guide: self = .guide
+        case .today, .verses, .qada, .settings, nil: self = .today
+        }
+    }
+}
+
+extension SettingsStore.Snapshot {
+
+    /// Die Startwerte von `S` im Prototyp: Standort automatisch, die Stadt der Fixture als gewählte und
+    /// als aktuelle Stadt (`S.city`, `S.deviceCity`), die fünf Städte aus `CITY_IDS` als gespeicherte.
+    static func prototype(city: FixtureTimes.City?) -> SettingsStore.Snapshot {
+        var snapshot = SettingsStore.Snapshot()
+        let place = city.map { $0.place(named: $0.localizedName) }
+        snapshot.manualPlace = place
+        snapshot.devicePlace = place
+        snapshot.savedPlaces = FixtureTimes.cities.map { $0.place(named: $0.localizedName) }
+        return snapshot
     }
 }
 

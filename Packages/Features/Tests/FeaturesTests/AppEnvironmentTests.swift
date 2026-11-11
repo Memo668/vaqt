@@ -32,7 +32,14 @@ struct AppEnvironmentTests {
         let environment = AppEnvironment.live
         #expect(environment.clock is SystemClock)
         #expect(environment.initialTab == .prayers)
-        // Bis Phase 3 gibt es noch keine echte Standortquelle.
+        #expect(environment.initialPage == .today)
+        #expect(!environment.opensSettings)
+        // Echte Rechnung, das Netz des Geräts, Einstellungen in den UserDefaults. Die App Group steht in
+        // der Info.plist der App; im Test gibt es die nicht, dann gelten die Standard-Defaults.
+        #expect(environment.timesSource is AdhanTimesSource)
+        #expect(environment.connectivity is NetworkConnectivity)
+        #expect(environment.settings == .userDefaults(suiteName: nil))
+        // Die Standortquelle mit Core Location folgt mit dem Stadt-Sheet.
         #expect(await environment.locationSource.authorization() == .notDetermined)
         #expect(await environment.locationSource.currentPlace() == nil)
     }
@@ -95,6 +102,69 @@ struct AppEnvironmentTests {
         let place = try #require(await environment.locationSource.currentPlace())
         #expect(place.countryCode == "DE")
         #expect(place.timeZoneIdentifier == "Europe/Berlin")
+    }
+
+    @Test("-debugFixtureTimes: Mock-Zeiten, festes Netz, flüchtige Einstellungen mit den Städten des Prototyps")
+    func fixtureTimes() throws {
+        let environment = AppEnvironment(options: LaunchOptions(arguments: ["-debugFixtureTimes"]))
+        let source = try #require(environment.timesSource as? FixtureTimesSource)
+        #expect(!source.highLatitude)
+        #expect((environment.connectivity as? FixedConnectivity)?.isOnline == true)
+        guard case .ephemeral(let snapshot) = environment.settings else {
+            Issue.record("mit -debugFixtureTimes bleiben die Einstellungen im Speicher")
+            return
+        }
+        #expect(snapshot.autoLocation)
+        #expect(snapshot.manualPlace?.countryCode == "DE")
+        #expect(snapshot.savedPlaces.map(\.countryCode) == ["DE", "TR", "ES", "SA", "ID"])
+        #expect(snapshot.bells == SettingsStore.standardBells)
+    }
+
+    @Test("-debugFixtureTimes mit -debugCity: Die Stadt ist auch die gewählte")
+    func fixtureCity() {
+        let environment = AppEnvironment(options: LaunchOptions(arguments: ["-debugFixtureTimes", "-debugCity", "jakarta"]))
+        guard case .ephemeral(let snapshot) = environment.settings else {
+            Issue.record("mit -debugFixtureTimes bleiben die Einstellungen im Speicher")
+            return
+        }
+        #expect(snapshot.manualPlace?.countryCode == "ID")
+        #expect(snapshot.devicePlace == snapshot.manualPlace)
+    }
+
+    @Test("-debugHighLatitude mit Mock-Zeiten: Berlin im Sommer")
+    func fixtureHighLatitude() throws {
+        let environment = AppEnvironment(options: LaunchOptions(arguments: ["-debugFixtureTimes", "-debugHighLatitude"]))
+        #expect(try #require(environment.timesSource as? FixtureTimesSource).highLatitude)
+    }
+
+    @Test("ohne -debugFixtureTimes rechnet die App echt und behält ihre Einstellungen")
+    func realTimes() {
+        let environment = AppEnvironment(options: LaunchOptions(arguments: ["-debugCity", "berlin", "-debugTime", "14:25"]))
+        #expect(environment.timesSource is AdhanTimesSource)
+        #expect(environment.connectivity is NetworkConnectivity)
+        #expect(environment.settings == .userDefaults(suiteName: nil))
+    }
+
+    @Test("-debugOffline: fest kein Netz, mit und ohne Mock-Zeiten", arguments: [
+        ["-debugOffline"], ["-debugFixtureTimes", "-debugOffline"],
+    ])
+    func offline(arguments: [String]) {
+        let environment = AppEnvironment(options: LaunchOptions(arguments: arguments))
+        #expect((environment.connectivity as? FixedConnectivity)?.isOnline == false)
+    }
+
+    @Test("-debugTab wählt die Seite des Gebete-Tabs; settings öffnet die Einstellungen")
+    func initialPage() {
+        func environment(_ page: String) -> AppEnvironment {
+            AppEnvironment(options: LaunchOptions(arguments: ["-debugTab", page]))
+        }
+        #expect(environment("qibla").initialPage == .qibla)
+        #expect(environment("guide").initialPage == .guide)
+        #expect(environment("today").initialPage == .today)
+        #expect(!environment("qibla").opensSettings)
+        #expect(environment("settings").opensSettings)
+        #expect(environment("settings").initialPage == .today)
+        #expect(environment("settings").initialTab == .prayers)
     }
 
     @Test("die Uhr folgt den Argumenten")
