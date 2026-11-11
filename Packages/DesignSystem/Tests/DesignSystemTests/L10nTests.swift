@@ -20,9 +20,10 @@ struct L10nTests {
         try bundle(for: language).localizedString(forKey: key, value: nil, table: nil)
     }
 
-    @Test("der Katalog hat 260 Schlüssel und keinen doppelt")
+    @Test("der Katalog hat 261 Schlüssel und keinen doppelt")
     func keyCount() {
-        #expect(L10n.allKeys.count == 260)
+        // 260 aus der Design-Übergabe v0.7, dazu `noTimes` (Phase 3, docs/OPEN-QUESTIONS.md).
+        #expect(L10n.allKeys.count == 261)
         #expect(Set(L10n.allKeys).count == L10n.allKeys.count)
     }
 

@@ -259,6 +259,8 @@ public enum L10n {
     public static func highLatNote(city: String, rule: String) -> String { text("highLatNote", city, rule) }
     /// „Regel ändern“
     public static var highLatLink: String { text("highLatLink") }
+    /// „Für diesen Ort lassen sich heute keine Gebetszeiten berechnen, weil die Sonne nicht auf- oder untergeht.“
+    public static var noTimes: String { text("noTimes") }
     /// „Ton“
     public static var bellSound: String { text("bellSound") }
     /// „Lautlos“
@@ -642,6 +644,7 @@ public enum L10n {
         "highLatTitle",
         "highLatNote",
         "highLatLink",
+        "noTimes",
         "bellSound",
         "bellSilent",
         "bellOff",

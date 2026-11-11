@@ -1,0 +1,36 @@
+{
+  "sourceLanguage" : "de",
+  "strings" : {
+    "NSLocationWhenInUseUsageDescription" : {
+      "comment" : "Aus `T.alLocBody` im Prototyp.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Standort wird nur auf diesem Gerät zur Berechnung der Gebetszeiten verwendet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your location is only used on this device to calculate prayer times."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu ubicación solo se usa en este dispositivo para calcular los horarios."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konumun yalnızca bu cihazda namaz vakitlerini hesaplamak için kullanılır."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

@@ -3706,6 +3706,35 @@
         }
       }
     },
+    "noTimes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für diesen Ort lassen sich heute keine Gebetszeiten berechnen, weil die Sonne nicht auf- oder untergeht."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prayer times can’t be calculated for this location today because the sun doesn’t rise or set."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoy no se pueden calcular los horarios para este lugar porque el sol no sale o no se pone."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu konum için bugün namaz vakitleri hesaplanamıyor, çünkü güneş doğmuyor veya batmıyor."
+          }
+        }
+      }
+    },
     "now" : {
       "extractionState" : "manual",
       "localizations" : {

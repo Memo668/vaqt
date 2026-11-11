@@ -5,6 +5,7 @@
 //
 //   • Packages/DesignSystem/Sources/DesignSystem/Resources/Localizable.xcstrings
 //   • Packages/DesignSystem/Sources/DesignSystem/Generated/L10n.swift
+//   • App/InfoPlist.xcstrings – die Texte der Info.plist, die aus `T` kommen (siehe `infoPlistTexts`)
 //
 // Aufruf über den Wrapper:
 //   scripts/import-strings            Dateien neu schreiben
@@ -19,6 +20,8 @@
 //     Die Reihenfolge der Argumente ist die des ersten Auftretens (DE, dann TR, EN, ES).
 //   • Listen (z. B. `dirs`) werden zu `dirs.0`, `dirs.1` …
 //   • Quellsprache des Katalogs ist Deutsch.
+//   • Die Info.plist braucht jeden ihrer Texte zusätzlich als Grundwert. Der steht in project.yml und
+//     muss dem deutschen Text entsprechen; das Skript prüft das, schreibt project.yml aber nicht um.
 
 import Foundation
 import JavaScriptCore
@@ -31,6 +34,11 @@ func fail(_ message: String) -> Never {
 }
 
 let languages = ["de", "tr", "en", "es"]
+
+/// Ein Text als Zeichenkette in doppelten Anführungszeichen, wie Swift und YAML sie schreiben.
+func literalString(_ text: String) -> String {
+    "\"" + text.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "\"", with: "\\\"") + "\""
+}
 
 // MARK: - Argumente
 
@@ -54,6 +62,15 @@ let rootURL = URL(fileURLWithPath: root)
 let prototypeURL = rootURL.appendingPathComponent("design/prayer-times-prototype.html")
 let catalogURL = rootURL.appendingPathComponent("Packages/DesignSystem/Sources/DesignSystem/Resources/Localizable.xcstrings")
 let swiftURL = rootURL.appendingPathComponent("Packages/DesignSystem/Sources/DesignSystem/Generated/L10n.swift")
+let infoPlistURL = rootURL.appendingPathComponent("App/InfoPlist.xcstrings")
+let projectURL = rootURL.appendingPathComponent("project.yml")
+
+/// Texte der Info.plist, die aus `T` kommen: Schlüssel der Info.plist → Schlüssel in `T`.
+/// `NSLocationWhenInUseUsageDescription` ist die Begründung im System-Dialog der Standortabfrage –
+/// im Prototyp der Text des nachgebauten Dialogs (`alLocBody`, design/screenshots/iphone/04).
+let infoPlistTexts: [(plistKey: String, textKey: String)] = [
+    ("NSLocationWhenInUseUsageDescription", "alLocBody"),
+]
 
 // MARK: - `T` aus dem Prototyp schneiden
 
@@ -278,6 +295,41 @@ else {
 }
 catalogText += "\n"
 
+// MARK: - InfoPlist.xcstrings
+
+var infoPlistStrings: [String: Any] = [:]
+var projectProblems: [String] = []
+let projectText = (try? String(contentsOf: projectURL, encoding: .utf8)) ?? ""
+for (plistKey, textKey) in infoPlistTexts {
+    guard let entry = entries.first(where: { entry in entry.key == textKey }) else {
+        fail("`\(textKey)` fehlt in `T`; die Info.plist braucht ihn für \(plistKey)")
+    }
+    guard entry.names.isEmpty else { fail("\(textKey): Texte der Info.plist dürfen keine Platzhalter haben") }
+    var localizations: [String: Any] = [:]
+    for language in languages {
+        guard let text = entry.source[language] else { fail("\(language).\(textKey) fehlt für die Info.plist") }
+        localizations[language] = ["stringUnit": ["state": "translated", "value": text]]
+    }
+    infoPlistStrings[plistKey] = [
+        "comment": "Aus `T.\(textKey)` im Prototyp.",
+        "extractionState": "manual",
+        "localizations": localizations,
+    ]
+    // Der Grundwert in project.yml: `<Schlüssel>: "<deutscher Text>"`.
+    let german = entry.source["de"] ?? ""
+    if !projectText.contains("\(plistKey): \(literalString(german))") {
+        projectProblems.append("project.yml: \(plistKey) muss lauten: \(literalString(german))")
+    }
+}
+let infoPlistCatalog: [String: Any] = ["sourceLanguage": "de", "strings": infoPlistStrings, "version": "1.0"]
+guard let infoPlistData = try? JSONSerialization.data(
+    withJSONObject: infoPlistCatalog, options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]),
+    var infoPlistText = String(data: infoPlistData, encoding: .utf8)
+else {
+    fail("InfoPlist-Katalog ließ sich nicht serialisieren")
+}
+infoPlistText += "\n"
+
 // MARK: - L10n.swift
 
 let reservedWords: Set<String> = [
@@ -300,10 +352,6 @@ func identifier(_ name: String) -> String {
 
 func comment(_ text: String) -> String {
     text.replacingOccurrences(of: "\n", with: " ")
-}
-
-func literalString(_ text: String) -> String {
-    "\"" + text.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "\"", with: "\\\"") + "\""
 }
 
 var swift = """
@@ -358,19 +406,25 @@ if checkOnly {
     var stale: [String] = []
     if current(catalogURL) != catalogText { stale.append(catalogURL.lastPathComponent) }
     if current(swiftURL) != swift { stale.append(swiftURL.lastPathComponent) }
+    if current(infoPlistURL) != infoPlistText { stale.append(infoPlistURL.lastPathComponent) }
     guard stale.isEmpty else {
         fail("Nicht aktuell: \(stale.joined(separator: ", ")). Bitte `scripts/import-strings` ausführen.")
     }
 } else {
     do {
-        for url in [catalogURL, swiftURL] {
+        for url in [catalogURL, swiftURL, infoPlistURL] {
             try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         }
         try catalogText.write(to: catalogURL, atomically: true, encoding: .utf8)
         try swift.write(to: swiftURL, atomically: true, encoding: .utf8)
+        try infoPlistText.write(to: infoPlistURL, atomically: true, encoding: .utf8)
     } catch {
         fail("Schreiben fehlgeschlagen: \(error.localizedDescription)")
     }
+}
+// Der Grundwert in project.yml wird in beiden Fällen geprüft, aber nie umgeschrieben.
+guard projectProblems.isEmpty else {
+    fail(projectProblems.joined(separator: "\n"))
 }
 
 // MARK: - Bericht
@@ -384,6 +438,7 @@ let allNames = Set(withArguments.flatMap(\.names)).sorted().joined(separator: ",
 print(checkOnly ? "String Catalog ist aktuell." : "String Catalog geschrieben.")
 print("  Schlüssel im Prototyp: \(order.count)  →  Einträge im Katalog: \(entries.count)  (\(perLanguage))")
 print("  Texte mit Argumenten: \(withArguments.count)  (Namen: \(allNames))")
+print("  Info.plist: \(infoPlistTexts.map { pair in "\(pair.plistKey) ← \(pair.textKey)" }.joined(separator: ", "))")
 if !missing.isEmpty {
     print("  FEHLEND (\(missing.count)): \(missing.joined(separator: ", "))")
 }
