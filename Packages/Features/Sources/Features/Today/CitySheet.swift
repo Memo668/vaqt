@@ -50,6 +50,7 @@ struct CitySheet: View {
                 }
             }
             .listSectionSpacing(CitySheetMetrics.sectionSpacing)
+            .contentMargins(.top, CitySheetMetrics.listTop, for: .scrollContent)
             // Eine Zeile ohne Zusatz ist 44 pt hoch (`--row-min`), nicht die 52 pt der Liste von iOS 26.
             .environment(\.defaultMinListRowHeight, Layout.minRowHeight)
             .navigationTitle(L10n.citySheetTitle)
@@ -171,13 +172,18 @@ enum CitySheetMetrics {
     /// Zeilenhöhe von Titel und Zusatz (`line-height: 1.3`) und ihr Abstand (`.row-sub`: `margin-top: 2px`).
     static let lineHeight: CGFloat = 1.3
     static let detailGap: CGFloat = 2
-    /// Feld des Symbols vor „Aktueller Standort“ (`.row-ic`: 24 pt, `ic(…, 18)`).
+    /// Feld des Symbols vor „Aktueller Standort“ (`.row-ic`: 24 pt, `ic(…, 18)`). Als Schriftgröße
+    /// eines SF Symbols so gewählt, dass der Pfeil so breit erscheint wie die Zeichnung des Prototyps
+    /// (rund 13 pt).
     static let symbolBox: CGFloat = 24
-    static let symbolSize: CGFloat = 14
+    static let symbolSize: CGFloat = 12.5
     static let symbolWeight: Font.Weight = .semibold
-    /// Feld des Häkchens (`.check`: 20 pt, `ic('check', 18)`).
+    /// Feld des Häkchens (`.check`: 20 pt, `ic('check', 18)`); die Zeichnung ist rund 12 pt breit.
     static let checkBox: CGFloat = 20
-    static let checkSize: CGFloat = 14
+    static let checkSize: CGFloat = 12.5
     /// Abstand zwischen den Gruppen (`.group-wrap`: `margin-bottom: 32px`).
     static let sectionSpacing: CGFloat = 32
+    /// Abstand zwischen der Leiste des Sheets und der ersten Gruppe. Die Leiste endet 10 pt unter dem
+    /// Suchfeld; zusammen sind es die 18 pt des Prototyps (`.searchbar`: `margin-bottom: 18px`).
+    static let listTop: CGFloat = 8
 }
