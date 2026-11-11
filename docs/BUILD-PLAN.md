@@ -111,6 +111,8 @@ Gebaut am 11.11.2026. Abgleich mit `make compare-today`; was übereinstimmt, was
 
 **Referenzen:** `iphone/30`–`32`.
 
+Gebaut am 11.11.2026. Abgleich mit `make compare-qibla`; was übereinstimmt, was abweicht und was angenommen ist, steht in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 4“). Der Kompass selbst ist im Simulator nur mit festem Kurs geprüft; Kurs, geografisch Nord, Kalibrierungskarte und Haptik brauchen ein echtes Gerät.
+
 ## Phase 5 – Anleitung
 
 - Auswahl der fünf Gebete; ein Punkt markiert das aktuelle.

@@ -72,7 +72,9 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 | `iphone/18` | … `-debugHighLatitude -debugTime 23:47` |
 | `iphone/21` | … `-debugCity istanbul -debugTime 16:01`, Sprache Türkisch |
 | `iphone/22` | … `-debugCity jakarta -debugTime 17:57` |
-| `iphone/30`–`31` | … `-debugTab qibla` (`-debugQiblaHeading 137` für 31) |
+| `iphone/30` | … `-debugTime 14:25 -debugTab qibla -debugQiblaHeading 98 -debugQiblaAccuracy 40` |
+| `iphone/31` | … `-debugTime 14:25 -debugTab qibla -debugQiblaHeading 137 -debugQiblaAccuracy 40` |
+| `iphone/32` | … `-debugCity mecca -debugTime 15:42 -debugTab qibla -debugQiblaHeading 138 -debugQiblaAccuracy 40` |
 | `iphone/40` | … `-debugTab guide` |
 | `iphone/50` / `60` | … `-debugTab verses` / `-debugTab qada` |
 

@@ -37,6 +37,7 @@ Die Ortssuche fragt bei Apple nach Städten und Verwaltungsgebieten. Mit „nur 
 
 ## Vor der Veröffentlichung zu prüfen
 
+- **Kompass am echten Gerät** (Phase 4): Der Simulator hat keinen Kompass; geprüft ist dort alles nur mit festem Kurs. Am Gerät zu prüfen: dass die Skala ruhig und in die richtige Richtung dreht, dass mit Standortfreigabe geografisch Nord gilt und ohne sie magnetisch Nord, ab welcher Abweichung die Karte „Kompass kalibrieren“ erscheint (angenommen sind 25°), die Haptik beim Ausrichten und der Verbrauch, solange die Seite offen ist.
 - **JAKIM und Kemenag** rechnen mit reinen Winkeln 20°/18°, ohne Sicherheitsminuten (entschieden am 10.11.2026, siehe unten). Beide sind gegen offizielle Tabellen zu prüfen, bevor die App erscheint. Bisher gibt es nur den Vergleich mit dem Mock für Jakarta: Kemenag liegt bis zu 3 Minuten daneben (Dhuhr 11:36 statt 11:39). Die Voreinstellung `singapore` von Adhan Swift – dieselben Winkel, Dhuhr +1, aufgerundet – läge näher (11:38).
 
 ## Entschieden am 10.11.2026
@@ -145,6 +146,67 @@ Mit dem Plan freigegeben sind auch seine Annahmen; sie stehen unten unter „Ann
 ## Abnahme von Phase 3 am 11.11.2026
 
 Phase 3 wurde am 11.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-3` stand (Stand `87bbb08`). Zu den Punkten 3 bis 5 unter „Braucht eine Entscheidung“ – Banner ohne gewählte Stadt, Bundesländer in der Ortssuche, Antippen beim Abgleich – gab es dabei keine Antwort; dort gilt weiter der jeweilige Standard.
+
+## Entschieden mit dem Plan für Phase 4 am 11.11.2026
+
+Der Plan für Phase 4 wurde am 11.11.2026 freigegeben („Freigeben“). Damit gelten die drei empfohlenen Antworten und die Annahmen des Plans:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Standort verweigert und keine Stadt gewählt | Skala ohne Nadel, an der Stelle der Info-Zeile ein Textknopf „Stadt wählen“ | Der Knopf öffnet das Stadt-Sheet. Der Text ist `citySheetTitle`; ein neuer Text war nicht nötig. Die Titelzeile heißt dann nur „Qibla“. |
+| Gerät ohne Kompass (Simulator, iPhone-App auf dem Mac) | Skala fest mit Norden oben, die Nadel zeigt die Richtung auf der Skala; Kursanzeige und Peilmarke entfallen, die Info-Zeile bleibt | Neuer Text `noCompass` in `T`, in der Statuszeile: „Kein Kompass verfügbar“ · „Pusula kullanılamıyor“ · „No compass available“ · „Brújula no disponible“. Das Aussehen des Prototyps ist unverändert. Der String Catalog hat damit 262 Einträge. |
+| Standort verweigert, Stadt gewählt | magnetisch Nord | iOS liefert geografisch Nord nur zusammen mit dem Standort des Geräts. Ohne Freigabe weicht der Kurs um die örtliche Missweisung ab – in Mitteleuropa wenige Grad, anderswo mehr. |
+| Ort | eigenes Modell `PlaceModel` statt `TodayModel` durchzureichen | Zeiten- und Qibla-Seite teilen sich das Modell. `TodayModel` behält seine Schnittstelle. |
+| Kalibrierungskarte | bei ungültigem Kurs oder mehr als 25° Abweichung (`Heading.poorAccuracy`) | Apple nennt keine Schwelle; der Wert ist eine Annahme und am Gerät zu prüfen (siehe oben). |
+| Debug-Argument `-debugQiblaAccuracy` | neu | Die Referenzbilder zeigen die Karte immer, die App nur bei ungenauem Kompass. Mit `-debugQiblaAccuracy 40` lässt sie sich nachstellen. |
+| `-debugFixtureTimes` ohne `-debugQiblaHeading` | Kurs 99°, der Startwert von `S.qibla.heading` | wie die übrigen Startwerte von `S`. Für den Abgleich gelten die Werte der Bilder: 98° (`iphone/30`), 137° (`31`), 138° (`32`). |
+| Entfernung unter 10 km | auf ganze Kilometer | Mit der Rundung auf 10 km stünde 1 bis 5 km vor der Kaaba „0 km“. Ab 10 km gilt die entschiedene Rundung auf 10 km. |
+| Standort noch nicht bestimmt | „Qibla · Aktueller Standort“, Skala ohne Nadel | bis der Ort da ist |
+
+## Annahmen in Phase 4
+
+Gemessen ist auf dem iPhone 18 Pro mit iOS 27.2, Zustände wie in `scripts/compare-qibla`. Der Simulator hat keinen Kompass: Alles hier ist mit festem Kurs geprüft (`-debugQiblaHeading`).
+
+### Was mit den Referenzbildern übereinstimmt
+
+- **Kompass (`iphone/30` bis `32`):** Skala, Striche, Zahlen, Himmelsrichtungen, Nadel, Kaaba-Marke, Peilmarke und Mittelpunkt liegen auf den Pixeln der Referenz; der Unterschied der Ausschnitte ist im Mittel 1,1 bis 1,6 von 255. Die Geometrie rechnet dieselben Zahlen wie `dialSVG()` (Tests in `CompassLayoutTests`). Wie auf der Zeiten-Seite sitzt alles 4 pt tiefer und 6 pt weiter rechts, weil der sichere Bereich bei 62 statt 58 pt beginnt und der Bildschirm 12 pt breiter ist.
+- **Zustände:** „Nach rechts drehen 39°“ bei Kurs 98° (`30`), Haken und „Du blickst Richtung Qibla“ in Akzent, Peilmarke in Akzent (`31`), in Mekka keine Nadel, keine Kaaba-Marke, leere Statuszeile und die Meldung (`32`).
+- **Farben:** Akzent, Striche (`label-3` und `label-2`), Zahlen, Status in Akzent und Kartenfläche bis auf 1 von 255 je Kanal.
+- **Kalibrierungskarte:** 86,3 pt hoch (Prototyp 86,6), Symbol 24 × 11 pt wie die Zeichnung; im Katalog in Referenzbreite mit demselben Zeilenumbruch.
+
+**Lage der Zeilen:** Die Grundlinien liegen höchstens 1,7 pt neben denen des Referenzbilds. Das kommt von der Schrift der Referenzbilder: Mit den Maßen von SF Pro gerechnet setzt das CSS des Prototyps jede Zeile auf 0,5 pt dorthin, wo die App sie zeigt.
+
+| Zeile (Grundlinie) | Referenz (y in pt) | App, 4 pt nach oben gerechnet | CSS des Prototyps mit den Maßen von SF Pro |
+|---|---|---|---|
+| „QIBLA · BERLIN“ | 140,0 | 139,0 | 139,1 |
+| Kursanzeige „137°“ | 202,0 | 201,7 | 201,4 |
+| Statuszeile | 568,0 | 569,0 | 568,5 |
+| Info-Zeile | 597,0 | 597,0 | 596,6 |
+| Karte, Titel | 655,0 | 655,0 | 654,7 |
+| Karte, Text, erste Zeile | 674,0 | 675,7 | 675,3 |
+| Karte, Text, zweite Zeile | 692,0 | 693,3 | 693,2 |
+
+### Was abweicht und bleibt
+
+- **Schrift:** wie in Phase 2. Die Ziffern der Kursanzeige sind in SF Pro schmaler und niedriger: „137°“ ist 93 statt 101 pt breit, die Ziffern 41 statt 42 pt hoch. Kursanzeige und Statuszeile stehen trotzdem mittig an derselben Stelle.
+- **Haken vor „Du blickst Richtung Qibla“:** SF Symbol `checkmark`, 11 × 10,7 pt statt der flacheren Zeichnung des Prototyps (12 × 8,5 pt) – so groß wie das Häkchen im Stadt-Sheet.
+- **„N“:** das Rot des Systems, in iOS 27.2 `#FF383C` statt `#FF3B30` im Prototyp.
+- **Kalibrierungskarte:** 370 statt 358 pt breit, wie alle Karten; ihr Text bricht deshalb nach „die“ statt nach „bis“ um. Sie erscheint nur bei ungenauem Kompass – die Referenzbilder zeigen sie immer.
+- **Statusleiste:** `iphone/32` zeigt 15:42; `make statusbar TIME=15:42`.
+- **Obere Leiste:** wie in Phase 3 beschrieben (Glass, Schrift).
+
+### Annahmen in der Umsetzung
+
+- **Ort:** `PlaceModel` sagt, welcher Ort gilt; Zeiten- und Qibla-Seite teilen es sich. Der Tab bestimmt den Ort beim Erscheinen und wenn die App nach vorn kommt, und das Stadt-Sheet hängt am Tab. So öffnet die Qibla-Seite es über „Stadt wählen“, und es öffnet sich wie bisher von selbst, wenn der Standort verweigert und keine Stadt gewählt ist.
+- **Kurs:** `CoreLocationHeadingSource` mit 1° Auflösung für das aufrecht gehaltene Gerät. Für geografisch Nord läuft mit Standortfreigabe die Ortung mit, grob (3 km) und nur, solange die Qibla-Seite zu sehen ist; liefert Core Location keinen Wert für geografisch Nord, gilt magnetisch Nord. Die Quelle fragt nie selbst nach der Freigabe. Die Kalibrierungsanzeige des Systems bleibt aus, weil die Seite ihre eigene Karte zeigt.
+- **Sichtbar:** Der Kompass läuft nur, solange die Seite gewählt ist, die App vorn ist und weder die Einstellungen noch ein anderer Tab davorliegen (`qiblaVisible()` im Prototyp). Danach bleibt der letzte Kurs stehen.
+- **Statuszeile:** ausgerichtet bis einschließlich 3°; die Gradzahl ist gerundet, knapp außerhalb steht deshalb wie im Prototyp noch „3°“; genau entgegengesetzt heißt es „Nach links drehen 180°“. Ein ungültiger Kurs (Genauigkeit negativ) dreht die Skala weiter, meldet aber keine Ausrichtung und zeigt die Kalibrierungskarte.
+- **Ausrichten:** Haptik `.success`, ein Ring in Akzent läuft in 0,8 Sekunden 26 pt nach außen (bei „Bewegung reduzieren“ nicht), VoiceOver sagt „Du blickst Richtung Qibla“ an – jeweils nur, wenn die Seite zu sehen ist.
+- **VoiceOver:** Der Kompass ist ausgeblendet; was er zeigt, sagen Kursanzeige („137° SO“, ein Element), Statuszeile und Info-Zeile. Die Titelzeile ist eine Überschrift. `dialAria` bleibt ungenutzt, weil der Text die Pfeiltasten der Simulation beschreibt.
+- **Kursanzeige:** Ziffern in natürlicher Breite – `.q-readout` verlangt gleich breite Ziffern, aber `.q-deg` setzt die Schrift neu und nimmt das zurück. Sie wächst mit Dynamic Type höchstens auf das 1,2-Fache, die Himmelsrichtung daneben ohne Grenze, wie im Prototyp. Der Kompass bleibt 280 pt groß.
+- **RTL:** Skala, Zahlen und Nadel werden nicht gespiegelt. Kursanzeige, Statuszeile und Kalibrierungskarte folgen der Leserichtung – im Prototyp tun sie das als Flex-Zeilen auch.
+- **Ohne Kompass:** Bis feststeht, ob das Gerät einen hat, steht die Peilmarke da und der Platz der Kursanzeige bleibt frei; ohne Kompass entfallen beide, und der Kompass rückt nach oben.
+- **Entfernung:** mit der Zifferngruppierung der Sprache, wie `num()` im Prototyp: „4.130“, englisch „4,130“, spanisch „4130“.
 
 ## Annahmen in Phase 3
 

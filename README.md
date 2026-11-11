@@ -4,7 +4,7 @@ Gemeinnützige Gebetszeiten-App für iOS: werbefrei, ohne Tracking, ohne Konto. 
 
 Die Regeln für die Arbeit stehen in `CLAUDE.md`, der Bauplan in `docs/BUILD-PLAN.md`, offene Punkte in `docs/OPEN-QUESTIONS.md`.
 
-**Stand:** Phase 0 (Projektgerüst), Phase 1 (`PrayerCore`, die Logik ohne UI), Phase 2 (`DesignSystem`: Tokens und Bausteine) und Phase 3 (Gebete-Tab: Zeiten) sind fertig. Der Tab „Gebete“ zeigt die obere Leiste mit den Chips Zeiten, Qibla und Anleitung und die Zeiten-Seite: Stadt, Datum, Bogen mit laufendem Countdown, sechs Gebetskarten mit Glocke, Stadt-Sheet. Die Seiten Qibla und Anleitung, die Einstellungen und die Tabs Verse und Nachholen sind noch leer; sie folgen ab Phase 4. Die Bausteine lassen sich als Previews in Xcode ansehen und in der App mit `-debugCatalog`.
+**Stand:** Phase 0 (Projektgerüst), Phase 1 (`PrayerCore`, die Logik ohne UI), Phase 2 (`DesignSystem`: Tokens und Bausteine), Phase 3 (Gebete-Tab: Zeiten) und Phase 4 (Qibla) sind fertig. Der Tab „Gebete“ zeigt die obere Leiste mit den Chips Zeiten, Qibla und Anleitung, die Zeiten-Seite – Stadt, Datum, Bogen mit laufendem Countdown, sechs Gebetskarten mit Glocke, Stadt-Sheet – und die Qibla-Seite mit Kompass, Statuszeile, Richtung und Entfernung zur Kaaba. Die Anleitung, die Einstellungen und die Tabs Verse und Nachholen sind noch leer; sie folgen ab Phase 5. Die Bausteine lassen sich als Previews in Xcode ansehen und in der App mit `-debugCatalog`.
 
 ## Voraussetzungen
 
@@ -39,6 +39,7 @@ open Gebetszeiten.xcodeproj
 | `make screenshot` | Screenshot nach `screenshots-out/screenshot.png` |
 | `make compare` | Bausteine in den Zuständen der Referenzbilder aufnehmen und neben die Referenz legen |
 | `make compare-today` | Zeiten-Seite in den Zuständen der Referenzbilder `iphone/10` bis `22` aufnehmen und neben die Referenz legen |
+| `make compare-qibla` | Qibla-Seite in den Zuständen der Referenzbilder `iphone/30` bis `32` aufnehmen und neben die Referenz legen |
 | `make strings` | String Catalog und `L10n.swift` aus dem Prototyp neu erzeugen |
 
 Simulator für Build, Tests und Abgleich ist das iPhone 18 Pro. Ein anderer lässt sich je Aufruf wählen, z. B. `make test SIM='iPhone 17'`.
@@ -81,7 +82,8 @@ Nur in DEBUG-Builds. Damit lässt sich jeder Referenz-Screenshot nachstellen:
 -debugLocationDenied  -debugOffline
 -debugTab today|qibla|guide|verses|qada|settings
 -debugQiblaHeading 137
--debugCatalog arc|rows|glass|cards|all   Katalog der Bausteine statt der App, für den Abgleich
+-debugQiblaAccuracy 40        Genauigkeit des Kompasses in Grad; über 25 erscheint die Kalibrierungskarte
+-debugCatalog arc|rows|glass|cards|compass|all   Katalog der Bausteine statt der App, für den Abgleich
 ```
 
 Die Sprache kommt über die Systemargumente `-AppleLanguages '(tr)' -AppleLocale tr_TR`. Welche Argumente zu welchem Screenshot gehören, steht in `docs/PROMPTS.md`.
@@ -96,9 +98,11 @@ Versteht die App ein Debug-Argument nicht, schreibt sie das beim Start in die Ko
 | `-debugLocationDenied` | Standort verweigert: Banner auf der Zeiten-Seite, „Aktueller Standort“ im Stadt-Sheet gesperrt |
 | `-debugOffline` | fest „kein Netz“: Hinweis unter dem Datum, im Stadt-Sheet nur gespeicherte Städte |
 | `-debugTab` | `verses` und `qada` wählen den Tab; `qibla` und `guide` die Seite im Tab „Gebete“; `settings` öffnet das (noch leere) Ziel der Einstellungen |
+| `-debugQiblaHeading` | fester Kompasskurs statt des Kompasses des Geräts. Mit `-debugFixtureTimes` gilt ohne Angabe 99°, der Startwert des Prototyps (`S.qibla.heading`) |
+| `-debugQiblaAccuracy` | Genauigkeit dieses Kurses in Grad, wie `CLHeading.headingAccuracy` (negativ heißt ungültig). Über 25° erscheint die Karte „Kompass kalibrieren“ – die Referenzbilder zeigen sie immer, die App nur bei ungenauem Kompass |
 | `-debugCatalog` | Katalog der Bausteine statt der App |
 
-`-debugSkipOnboarding` und `-debugQiblaHeading` werden gelesen und greifen, sobald ihre Bildschirme gebaut sind (Phase 7 und Phase 4). Ohne `-debugFixtureTimes` rechnet die App echt und behält ihre Einstellungen; ohne `-debugCity` fragt sie Core Location.
+`-debugSkipOnboarding` wird gelesen und greift, sobald es das Onboarding gibt (Phase 7). Ohne `-debugFixtureTimes` rechnet die App echt und behält ihre Einstellungen; ohne `-debugCity` fragt sie Core Location, ohne festen Kurs den Kompass des Geräts – den hat der Simulator nicht, die Qibla-Seite zeigt dort „Kein Kompass verfügbar“.
 
 ## Aufbau
 
@@ -111,6 +115,7 @@ Packages/Features       Bildschirme, AppEnvironment, Debug-Startargumente
 scripts/import-strings  erzeugt den String Catalog und die Texte der Info.plist aus dem Prototyp
 scripts/compare-catalog nimmt die Bausteine in den Zuständen der Referenzbilder auf
 scripts/compare-today   nimmt die Zeiten-Seite in den Zuständen der Referenzbilder auf
+scripts/compare-qibla   nimmt die Qibla-Seite in den Zuständen der Referenzbilder auf
 scripts/compare-shot    legt einen Ausschnitt einer Aufnahme neben die Referenz
 project.yml             Beschreibung des Xcode-Projekts für XcodeGen
 design/                 Prototyp, Design Spec, Referenz-Screenshots
@@ -126,7 +131,9 @@ docs/                   Bauplan, Prompts, offene Fragen
 | `PrayerTimeline`, `DayPhase` | Zeitstrahl über drei Tage; laufendes und nächstes Ereignis, Restzeit, Tagesfortschritt, Schlüssel für den Neuaufbau |
 | `Kerahat` | die drei Kerahat-Fenster eines Tages |
 | `BellState` | Stand der Mitteilung je Ereignis: Ton, Lautlos, Aus |
-| `Qibla` | Richtung und Entfernung zur Kaaba, „in Mekka“ |
+| `Qibla` | Richtung und Entfernung zur Kaaba, „in Mekka“, Anzeige in ganzen Grad und auf 10 km gerundet |
+| `Heading`, `HeadingSource` | Kompasskurs mit Genauigkeit und Bezug (geografisch oder magnetisch Nord); die Quelle des Kurses, `FixedHeadingSource` für Debug und Tests |
+| `CompassPoint`, `QiblaAlignment` | acht Himmelsrichtungen wie `dirName()`; wie das Gerät zur Qibla steht – ausgerichtet bis 3°, sonst links oder rechts und um wie viel |
 | `HijriDate` | Datum nach Umm al-Qura und sein Text je Sprache |
 | `Guide`, `GuideState`, `GuideSelection` | Daten der Anleitung, gezeigtes Gebet, manuelle Wahl |
 | `QadaLedger` | Stand des Nachholens: offen, nachgeholt, Anteil, voraussichtliches Ende |
@@ -154,6 +161,8 @@ Die Referenzwerte für die Berechnung liegen unter `Packages/PrayerCore/Tests/Pr
 | `ArcCountdown`, `CountdownFormat` | Zeile und Countdown unten im Bogen; der Countdown als Text wie `cdDigital()` und `cdText()` |
 | `Toast`, `Banner`, `HintPill`, `NoteCard` | HUD-Toast, Banner mit Aktion, Hinweis-Pille, Hinweiskarte mit Link |
 | `GlassSymbol`, `PrayerRugShape` | Symbol eines Chips: SF Symbol oder der Gebetsteppich des Prototyps für „Anleitung“ |
+| `Compass`, `CompassLayout`, `CompassMetrics` | der Kompass der Qibla-Seite (`dialSVG()`): Skala, aufrechte Himmelsrichtungen, Nadel, Kaaba-Marke, Peilmarke, Puls beim Ausrichten |
+| `CalibrationCard` | die Karte „Kompass kalibrieren“ |
 | `ComponentCatalog` (nur DEBUG) | alle Bausteine zum Ansehen: Previews hell und dunkel, in der App über `-debugCatalog` |
 
 So kommt der Bogen auf eine Seite:
@@ -168,25 +177,28 @@ DayArc(phase: phase, showKerahat: settings.showKerahat) {
 
 | Baustein | Aufgabe |
 |---|---|
-| `PrayersTab`, `TopBar`, `PrayersPager`, `PrayersPage` | obere Leiste (Einstellungskreis und drei Chips, `ViewThatFits`) über drei Seiten, die sich wischen lassen; die Einstellungen schieben sich darüber |
-| `TodayModel` | Zustand der Zeiten-Seite: welcher Ort gilt, Zeitstrahl, die sechs Karten, Banner und Hinweise, Glocke, Stadtwahl |
+| `PrayersTab`, `TopBar`, `PrayersPager`, `PrayersPage` | obere Leiste (Einstellungskreis und drei Chips, `ViewThatFits`) über drei Seiten, die sich wischen lassen; die Einstellungen schieben sich darüber. Der Tab bestimmt den Ort und trägt das Stadt-Sheet |
+| `PlaceModel` | welcher Ort gilt – aktueller Standort oder gewählte Stadt, Freigabe, Stadtname; Zeiten- und Qibla-Seite teilen es sich |
+| `TodayModel` | Zustand der Zeiten-Seite: Zeitstrahl, die sechs Karten, Banner und Hinweise, Glocke, Stadtwahl |
 | `TodayPage`, `TodayHeader`, `TodayHero` | die Seite; `TodayHero` holt die Tagesphase im Sekundentakt der App-Uhr, die Karten bauen sich nur beim Phasenwechsel neu auf |
 | `CitySheet`, `CitySheetModel` | Stadt-Sheet: aktueller Standort, gespeicherte Städte, Ortssuche |
+| `QiblaModel`, `QiblaPage` | Qibla-Seite: Kursanzeige, Kompass, Statuszeile („Nach rechts drehen 39°“, ausgerichtet mit Haptik), Richtung und Entfernung, in Mekka die Meldung, ohne Ort „Stadt wählen“, ohne Kompass „Kein Kompass verfügbar“, Kalibrierungskarte nur bei ungenauem Kompass |
 | `SettingsStore` | die Einstellungen in den UserDefaults der App Group: Glocke je Gebet, Standort oder Stadt, gespeicherte Städte, Rechen-Einstellungen, Kerahat-Schalter |
 | `CoreLocationSource`, `MapKitPlaceResolver` | aktueller Ort über Core Location („Beim Verwenden der App“), Stadtname über `MKReverseGeocodingRequest` |
+| `CoreLocationHeadingSource` | Kompasskurs über Core Location: geografisch Nord, ohne Standortfreigabe magnetisch Nord; läuft nur, solange die Qibla-Seite zu sehen ist |
 | `MapKitCitySearch` | Ortssuche mit `MKLocalSearchCompleter` |
 | `NetworkConnectivity` | ob das Gerät ein Netz hat (`NWPathMonitor`) |
 | `ToastCenter` | zeigt den Toast über der Tableiste, 1,7 Sekunden |
 
-Alles, was nach außen geht, hängt in `AppEnvironment`: Uhr, Standortquelle, Zeitenquelle, Netz-Zustand, Ortssuche und der Ort der Einstellungen. Views sprechen nie selbst mit `Date()`, `CLLocationManager` oder MapKit.
+Alles, was nach außen geht, hängt in `AppEnvironment`: Uhr, Standortquelle, Kursquelle, Zeitenquelle, Netz-Zustand, Ortssuche und der Ort der Einstellungen. Views sprechen nie selbst mit `Date()`, `CLLocationManager` oder MapKit.
 
-Ins Netz geht die App nur über Apple-Dienste und nur dafür: die Koordinaten des Standorts an den Geocoder (für den Stadtnamen) und der Suchtext an die Ortssuche. Gerechnet wird auf dem Gerät; ohne Netz gilt der zuletzt bestimmte Ort weiter.
+Ins Netz geht die App nur über Apple-Dienste und nur dafür: die Koordinaten des Standorts an den Geocoder (für den Stadtnamen) und der Suchtext an die Ortssuche. Gerechnet wird auf dem Gerät; ohne Netz gilt der zuletzt bestimmte Ort weiter. Der Kompass braucht kein Netz. Für geografisch Nord bestimmt Core Location nebenbei grob den Standort, solange die Qibla-Seite zu sehen ist; der bleibt auf dem Gerät.
 
 Solange es das Onboarding noch nicht gibt (Phase 7), fragt die Zeiten-Seite beim ersten Start selbst nach dem Standort.
 
 ### Abgleich mit den Referenzbildern
 
-Previews lassen sich nicht mit `simctl` aufnehmen. Deshalb zeigt die App mit `-debugCatalog` den Katalog statt der Tabs: `arc` den Bogen und `rows` die Gebetskarten im Zustand der übrigen Debug-Argumente, `glass` und `cards` die übrigen Bausteine, `all` alles untereinander.
+Previews lassen sich nicht mit `simctl` aufnehmen. Deshalb zeigt die App mit `-debugCatalog` den Katalog statt der Tabs: `arc` den Bogen, `rows` die Gebetskarten und `compass` den Kompass mit der Kalibrierungskarte im Zustand der übrigen Debug-Argumente, `glass` und `cards` die übrigen Bausteine, `all` alles untereinander.
 
 ```bash
 make run ARGS='-debugCatalog arc -debugFixtureTimes -debugCity jakarta -debugDate 2026-11-10 -debugTime 17:57'
@@ -214,7 +226,13 @@ make compare-today STATES='17 22'
 
 `iphone/85` (Stadt-Sheet) entsteht mit den Argumenten von `iphone/10` und einem Tipp auf die Stadt; ein Debug-Argument dafür gibt es nicht.
 
-Einzelne Ausschnitte vergleicht `scripts/compare-shot`; die Optionen stehen im Kopf von `scripts/compare-shot.swift`. Was vom Referenzbild abweicht und warum, steht in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 2“ und „Annahmen in Phase 3“.
+`make compare-qibla` stellt die Zustände `iphone/30` bis `32` der Qibla-Seite nach – mit festem Kurs, weil der Simulator keinen Kompass hat, und mit `-debugQiblaAccuracy 40`, damit die Kalibrierungskarte erscheint – und schreibt je Zustand die Aufnahme (`qibla-<nr>.png`) und Ausschnitte von Leiste, Kopf, Kompass, Status- und Info-Zeile und Kalibrierungskarte nach `screenshots-out/phase-4/`. Die Karte kommt zusätzlich aus dem Katalog (`-debugCatalog compass`), dort in der Breite der Referenzbilder.
+
+```bash
+make compare-qibla
+```
+
+Einzelne Ausschnitte vergleicht `scripts/compare-shot`; die Optionen stehen im Kopf von `scripts/compare-shot.swift`. Was vom Referenzbild abweicht und warum, steht in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 2“, „Annahmen in Phase 3“ und „Annahmen in Phase 4“.
 
 ## Texte
 
