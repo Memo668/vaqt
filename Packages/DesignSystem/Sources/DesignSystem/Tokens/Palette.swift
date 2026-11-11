@@ -39,6 +39,9 @@ public enum Palette {
     /// `--label-3`: z. B. das Symbol einer vergangenen Zeile oder eine ausgeschaltete Glocke.
     public static let labelTertiary = Color(uiColor: .tertiaryLabel)
 
+    /// `--red`: das Rot des Systems – das „N“ auf der Skala des Kompasses.
+    public static let red = Color(uiColor: .systemRed)
+
     // MARK: - Flächen
 
     /// `--bg-grouped`: der Hintergrund der Seiten, `#F2F2F7` hell und `#000000` dunkel.

@@ -24,7 +24,7 @@ struct ComponentTests {
         "sun.horizon", "sunrise", "sun.max", "sun.min", "sunset", "moon.stars",
         "bell.and.waves.left.and.right", "bell", "bell.slash",
         "info.circle", "minus", "plus", "gearshape", "clock", "safari",
-        "location.fill", "location.slash", "wifi.slash", "checkmark",
+        "location.fill", "location.slash", "wifi.slash", "checkmark", "infinity",
     ])
     func symbolExists(name: String) {
         #expect(UIImage(systemName: name) != nil)
@@ -140,7 +140,7 @@ struct ComponentTests {
 
     @Test("die Abschnitte des Katalogs heißen wie die Werte von -debugCatalog")
     func catalogSections() {
-        #expect(ComponentCatalog.Section.allCases.map(\.rawValue) == ["arc", "rows", "glass", "cards", "all"])
+        #expect(ComponentCatalog.Section.allCases.map(\.rawValue) == ["arc", "rows", "glass", "cards", "compass", "all"])
     }
     #endif
 }

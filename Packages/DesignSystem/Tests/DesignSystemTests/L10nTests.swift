@@ -40,10 +40,11 @@ struct L10nTests {
         #expect(["de", "tr", "en", "es"].contains(L10n.locale.language.languageCode?.identifier ?? ""))
     }
 
-    @Test("der Katalog hat 261 Schlüssel und keinen doppelt")
+    @Test("der Katalog hat 262 Schlüssel und keinen doppelt")
     func keyCount() {
-        // 260 aus der Design-Übergabe v0.7, dazu `noTimes` (Phase 3, docs/OPEN-QUESTIONS.md).
-        #expect(L10n.allKeys.count == 261)
+        // 260 aus der Design-Übergabe v0.7, dazu `noTimes` (Phase 3) und `noCompass` (Phase 4,
+        // docs/OPEN-QUESTIONS.md).
+        #expect(L10n.allKeys.count == 262)
         #expect(Set(L10n.allKeys).count == L10n.allKeys.count)
     }
 
@@ -73,6 +74,16 @@ struct L10nTests {
     func tabTitles(language: String, expected: [String]) throws {
         let actual = try ["navPrayers", "navVerses", "navQada"].map { try text($0, in: language) }
         #expect(actual == expected)
+    }
+
+    @Test("der Hinweis für Geräte ohne Kompass steht in allen vier Sprachen", arguments: [
+        ("de", "Kein Kompass verfügbar"),
+        ("tr", "Pusula kullanılamıyor"),
+        ("en", "No compass available"),
+        ("es", "Brújula no disponible"),
+    ])
+    func noCompass(language: String, expected: String) throws {
+        #expect(try text("noCompass", in: language) == expected)
     }
 
     @Test("ein Argument wird eingesetzt")

@@ -96,4 +96,43 @@ private struct ArcStatePreview: View {
         .preferredColorScheme(.dark)
 }
 
+/// Der Kompass in einem der Zustände von `CatalogFixtures.compassStates`.
+private struct CompassStatePreview: View {
+    let id: String
+    var isRightToLeft = false
+
+    var body: some View {
+        if let state = CatalogFixtures.compassStates.first(where: { $0.id == id }) {
+            ComponentCatalog(section: .compass, compass: state)
+                .environment(\.layoutDirection, isRightToLeft ? .rightToLeft : .leftToRight)
+        }
+    }
+}
+
+#Preview("Kompass · Kurs 98°") {
+    CompassStatePreview(id: "Kurs 98°")
+        .preferredColorScheme(.light)
+}
+
+#Preview("Kompass · Kurs 98° dunkel") {
+    CompassStatePreview(id: "Kurs 98°")
+        .preferredColorScheme(.dark)
+}
+
+#Preview("Kompass · ausgerichtet") {
+    CompassStatePreview(id: "ausgerichtet")
+}
+
+#Preview("Kompass · in Mekka") {
+    CompassStatePreview(id: "in Mekka")
+}
+
+#Preview("Kompass · ohne Kompass") {
+    CompassStatePreview(id: "ohne Kompass")
+}
+
+#Preview("Kompass · RTL") {
+    CompassStatePreview(id: "Kurs 98°", isRightToLeft: true)
+}
+
 #endif

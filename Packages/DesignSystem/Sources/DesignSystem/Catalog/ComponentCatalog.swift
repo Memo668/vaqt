@@ -6,7 +6,7 @@ import SwiftUI
 /// Katalog aller Bausteine des DesignSystems – nur in DEBUG-Builds.
 ///
 /// Er dient zwei Zwecken: als Preview in Xcode (hell und dunkel) und als Bildschirm der App, wenn sie
-/// mit `-debugCatalog arc|rows|glass|cards|all` startet. So lassen sich die Bausteine mit
+/// mit `-debugCatalog arc|rows|glass|cards|compass|all` startet. So lassen sich die Bausteine mit
 /// `xcrun simctl io … screenshot` aufnehmen und neben die Referenzbilder legen.
 ///
 /// Die Überschriften im Katalog sind Notizen für die Entwicklung, keine Texte der App – sie stehen
@@ -23,6 +23,8 @@ public struct ComponentCatalog: View {
         case glass
         /// Karte, Fakten-Kacheln und Stepper.
         case cards
+        /// Der Kompass der Qibla-Seite und die Kalibrierungskarte.
+        case compass
         /// Alles untereinander, zum Durchblättern.
         case all
     }
@@ -30,14 +32,20 @@ public struct ComponentCatalog: View {
     private let section: Section
     private let phase: DayPhase
     private let isHighLatitude: Bool
+    private let compass: CatalogFixtures.CompassState
 
     /// - Parameters:
     ///   - phase: der Zustand für Bogen und Gebetskarten; ohne Angabe Berlin um 14:25 wie `iphone/10`.
     ///   - isHighLatitude: ob Fadschr und Ischa die Info-Marke für hohe Breiten tragen.
-    public init(section: Section = .all, phase: DayPhase? = nil, isHighLatitude: Bool = false) {
+    ///   - compass: der Zustand des Kompasses; ohne Angabe Berlin mit Kurs 98° wie `iphone/30`.
+    public init(
+        section: Section = .all, phase: DayPhase? = nil, isHighLatitude: Bool = false,
+        compass: CatalogFixtures.CompassState? = nil
+    ) {
         self.section = section
         self.phase = phase ?? CatalogFixtures.phase(time: "14:25:01")
         self.isHighLatitude = isHighLatitude
+        self.compass = compass ?? CatalogFixtures.compassStates[0]
     }
 
     public var body: some View {
@@ -50,6 +58,8 @@ public struct ComponentCatalog: View {
             capture { CatalogGlass() }
         case .cards:
             capture { CatalogCards() }
+        case .compass:
+            capture { CatalogCompass(state: compass) }
         case .all:
             everything
         }
@@ -93,6 +103,12 @@ public struct ComponentCatalog: View {
                 CatalogGroup("Banner, Hinweis-Pille, Hinweiskarte, Toast") {
                     CatalogHints()
                 }
+                CatalogGroup("Kompass – gedreht, ausgerichtet, in Mekka, ohne Kompass") {
+                    ForEach(CatalogFixtures.compassStates) { state in
+                        CatalogCompassState(state: state)
+                    }
+                    CalibrationCard(title: L10n.calibrate, text: L10n.calibrateBody)
+                }
                 CatalogGroup("Tokens") {
                     CatalogTokens()
                 }
@@ -109,8 +125,12 @@ public enum CatalogMetrics {
     /// Breite der Referenzbilder in pt (design/screenshots/INDEX.md). In dieser Breite stehen die
     /// Bausteine, damit sie so breit sind wie auf den Bildern.
     public static let referenceWidth: CGFloat = 390
-    /// Abstand des Bausteins zur Oberkante des Bildschirms bei `arc`, `rows`, `glass` und `cards`.
+    /// Abstand des Bausteins zur Oberkante des Bildschirms bei `arc`, `rows`, `glass`, `cards` und
+    /// `compass`.
     public static let captureTop: CGFloat = 140
+    /// Abstand zwischen Kompass und Kalibrierungskarte bei `compass`. Die Kaaba-Marke ragt bis zu 20 pt
+    /// über den Rand des Kompasses hinaus.
+    public static let compassGap: CGFloat = 40
 }
 
 // MARK: - Abschnitte
@@ -314,6 +334,36 @@ struct CatalogCards: View {
         .padding(.trailing, 10)
         .frame(minHeight: Layout.prayerRowHeight)
         .background(Palette.backgroundCell, in: .rect(cornerRadius: Radius.row, style: .continuous))
+    }
+}
+
+/// Der Kompass in einem Zustand, darunter die Kalibrierungskarte – beide so breit wie in den
+/// Referenzbildern `iphone/30` bis `32`.
+struct CatalogCompass: View {
+    let state: CatalogFixtures.CompassState
+    var inset: CGFloat = Layout.inset
+
+    var body: some View {
+        VStack(spacing: CatalogMetrics.compassGap) {
+            Compass(heading: state.heading, bearing: state.bearing, isAligned: state.isAligned)
+            CalibrationCard(title: L10n.calibrate, text: L10n.calibrateBody)
+                .padding(.horizontal, inset)
+        }
+    }
+}
+
+/// Ein Zustand des Kompasses mit seinem Namen. Oben und unten bleibt Platz für Peilmarke und Kaaba-Marke,
+/// die über den Rand des Kompasses hinausragen.
+private struct CatalogCompassState: View {
+    let state: CatalogFixtures.CompassState
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Spacing.x1) {
+            Compass(heading: state.heading, bearing: state.bearing, isAligned: state.isAligned)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, Spacing.x6)
+            CatalogNote(state.reference.isEmpty ? state.id : "\(state.id) · \(state.reference)")
+        }
     }
 }
 

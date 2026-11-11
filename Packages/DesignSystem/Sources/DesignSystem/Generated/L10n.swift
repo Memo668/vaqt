@@ -493,6 +493,8 @@ public enum L10n {
     public static var inMecca: String { text("inMecca") }
     /// „Kompass. Pfeiltasten drehen das Gerät (Simulation).“
     public static var dialAria: String { text("dialAria") }
+    /// „Kein Kompass verfügbar“
+    public static var noCompass: String { text("noCompass") }
     /// N · NO · O · SO · S · SW · W · NW
     public static var dirs: [String] { (0..<8).map { text("dirs.\($0)") } }
     /// „Nächstes“
@@ -761,6 +763,7 @@ public enum L10n {
         "calibrateBody",
         "inMecca",
         "dialAria",
+        "noCompass",
         "dirs.0",
         "dirs.1",
         "dirs.2",

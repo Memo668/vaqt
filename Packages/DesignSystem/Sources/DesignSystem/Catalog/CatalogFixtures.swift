@@ -60,6 +60,50 @@ public enum CatalogFixtures {
         return phase
     }
 
+    // MARK: - Kompass
+
+    /// Ein Zustand des Kompasses: Kurs des Geräts und Richtung zur Kaaba.
+    public struct CompassState: Identifiable, Hashable, Sendable {
+        /// Kurzname, z. B. „ausgerichtet“.
+        public let id: String
+        /// Kurs in Grad; `nil` für ein Gerät ohne Kompass.
+        public let heading: Double?
+        /// Richtung zur Kaaba in Grad; `nil` in Mekka.
+        public let bearing: Double?
+        /// Referenzbild unter design/screenshots, ohne Endung; leer, wenn es keines gibt.
+        public let reference: String
+
+        public init(id: String, heading: Double?, bearing: Double?, reference: String = "") {
+            self.id = id
+            self.heading = heading
+            self.bearing = bearing
+            self.reference = reference
+        }
+
+        /// Ob das Gerät in diesem Zustand zur Qibla zeigt.
+        public var isAligned: Bool {
+            guard let heading, let bearing else { return false }
+            return QiblaAlignment(bearing: bearing, heading: heading).isAligned
+        }
+    }
+
+    /// Die Richtung zur Kaaba von einer Fixture-Stadt aus; `nil` in Mekka.
+    public static func bearing(city: String = "berlin") -> Double? {
+        guard let fixture = FixtureTimes.city(city) else {
+            preconditionFailure("Unbekannte Fixture-Stadt: \(city)")
+        }
+        let qibla = Qibla(from: fixture.coordinates)
+        return qibla.isInMecca ? nil : qibla.bearing
+    }
+
+    /// Die Zustände der Referenzbilder `iphone/30` bis `32` mit dem Kurs, den die Bilder zeigen, dazu
+    /// ein Gerät ohne Kompass.
+    public static let compassStates: [CompassState] = [
+        CompassState(id: "Kurs 98°", heading: 98, bearing: bearing(), reference: "iphone/30-qibla"),
+        CompassState(id: "ausgerichtet", heading: 137, bearing: bearing(), reference: "iphone/31-qibla-aligned"),
+        CompassState(id: "in Mekka", heading: 138, bearing: bearing(city: "mecca"), reference: "iphone/32-qibla-mecca"),
+        CompassState(id: "ohne Kompass", heading: nil, bearing: bearing()),
+    ]
 }
 
 #endif

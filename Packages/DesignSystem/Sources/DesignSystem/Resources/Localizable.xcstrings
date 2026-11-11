@@ -3469,6 +3469,35 @@
         }
       }
     },
+    "noCompass" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Kompass verfügbar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No compass available"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brújula no disponible"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pusula kullanılamıyor"
+          }
+        }
+      }
+    },
     "noResults" : {
       "extractionState" : "manual",
       "localizations" : {
