@@ -335,7 +335,7 @@ struct DayArcLayoutTests {
     ])
     func countdownOfReference(state: String, expected: String) throws {
         let state = try #require(CatalogFixtures.arcStates.first { $0.id == state })
-        #expect(CatalogFixtures.countdownText(state.phase.remaining) == expected)
+        #expect(CountdownFormat.digital(state.phase.remaining) == expected)
     }
 
     @Test("der Katalog kennt die acht Zustände aus dem Bauplan")

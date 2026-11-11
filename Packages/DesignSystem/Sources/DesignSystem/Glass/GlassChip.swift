@@ -12,7 +12,7 @@ import SwiftUI
 /// (Spec § 7, 5b).
 public struct GlassChip: View {
     private let title: String
-    private let systemImage: String
+    private let symbol: GlassSymbol
     private let isSelected: Bool
     private let showsTitle: Bool
     private let action: () -> Void
@@ -21,17 +21,25 @@ public struct GlassChip: View {
 
     /// - Parameters:
     ///   - title: Titel des Chips; ohne sichtbaren Titel bleibt er der Text für VoiceOver.
-    ///   - systemImage: SF Symbol.
+    ///   - symbol: SF Symbol oder eigene Zeichnung.
     ///   - showsTitle: `false` für den eingeklappten Kreis.
+    public init(
+        _ title: String, symbol: GlassSymbol, isSelected: Bool, showsTitle: Bool = true,
+        action: @escaping () -> Void
+    ) {
+        self.title = title
+        self.symbol = symbol
+        self.isSelected = isSelected
+        self.showsTitle = showsTitle
+        self.action = action
+    }
+
+    /// Ein Chip mit einem SF Symbol.
     public init(
         _ title: String, systemImage: String, isSelected: Bool, showsTitle: Bool = true,
         action: @escaping () -> Void
     ) {
-        self.title = title
-        self.systemImage = systemImage
-        self.isSelected = isSelected
-        self.showsTitle = showsTitle
-        self.action = action
+        self.init(title, symbol: .system(systemImage), isSelected: isSelected, showsTitle: showsTitle, action: action)
     }
 
     public var body: some View {
@@ -52,7 +60,13 @@ public struct GlassChip: View {
         .accessibilityLabel(title)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityShowsLargeContentViewer {
-            Label(title, systemImage: systemImage)
+            Label {
+                Text(title)
+            } icon: {
+                GlassSymbolView(
+                    symbol: symbol, pointSize: GlassMetrics.chipSymbolSize, box: GlassMetrics.chipSymbolBox
+                )
+            }
         }
     }
 
@@ -82,10 +96,11 @@ public struct GlassChip: View {
 
     @ViewBuilder
     private func content(height: CGFloat) -> some View {
-        let symbol = Image(systemName: systemImage)
-            .font(.system(size: GlassMetrics.chipSymbolSize, weight: GlassMetrics.symbolWeight))
-            .foregroundStyle(isSelected ? Palette.accent : Palette.textSecondary)
-            .frame(width: GlassMetrics.chipSymbolBox)
+        let symbol = GlassSymbolView(
+            symbol: symbol, pointSize: GlassMetrics.chipSymbolSize, box: GlassMetrics.chipSymbolBox
+        )
+        .foregroundStyle(isSelected ? Palette.accent : Palette.textSecondary)
+        .frame(width: GlassMetrics.chipSymbolBox)
 
         if showsTitle {
             HStack(spacing: GlassMetrics.chipGap) {

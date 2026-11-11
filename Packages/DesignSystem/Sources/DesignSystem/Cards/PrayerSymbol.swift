@@ -30,6 +30,18 @@ extension Prayer {
     }
 }
 
+extension HighLatitudeRule {
+
+    /// Name der Regel aus dem String Catalog (`HL_KEY`: `hlAngle`, `hlSeventh`, `hlMiddle`).
+    public var localizedName: String {
+        switch self {
+        case .angle: L10n.hlAngle
+        case .seventh: L10n.hlSeventh
+        case .middle: L10n.hlMiddle
+        }
+    }
+}
+
 extension BellState {
 
     /// SF Symbol der Glocke in diesem Stand.

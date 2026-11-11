@@ -42,6 +42,11 @@ public enum Layout {
     public static let topBarHeight: CGFloat = 52
     /// Die Leiste wächst mit Dynamic Type höchstens auf das 1,15-Fache (`min(var(--ts), 1.15)`).
     public static let topBarMaxScale: CGFloat = 1.15
+    /// Abstand des Toasts zur Unterkante des Bildschirms (`.toast`: `bottom: 100px`) – 16 pt über
+    /// der Tableiste.
+    public static let toastBottom: CGFloat = 100
+    /// So lange steht ein Toast, in Sekunden (`setTimeout(…, 1700)`).
+    public static let toastDuration: TimeInterval = 1.7
 }
 
 /// Eckenradien in pt – Design Spec § 2. Karten und Gruppen sind `.continuous` gerundet; Buttons und

@@ -90,6 +90,9 @@ public struct ComponentCatalog: View {
                 CatalogGroup("Karte, Fakten-Kacheln, Stepper") {
                     CatalogCards(inset: 0)
                 }
+                CatalogGroup("Banner, Hinweis-Pille, Hinweiskarte, Toast") {
+                    CatalogHints()
+                }
                 CatalogGroup("Tokens") {
                     CatalogTokens()
                 }
@@ -150,38 +153,14 @@ private struct CatalogNote: View {
 
 /// Der Bogen mit der Zeile „Maghrib in“ und dem Countdown – so wie er auf der Zeiten-Seite steht.
 ///
-/// Der Countdown ist hier ein fester Text; den laufenden bringt die Zeiten-Seite in Phase 3.
+/// Der Katalog zeigt einen stehenden Zustand; auf der Zeiten-Seite läuft der Countdown im Sekundentakt.
 struct CatalogHero: View {
     let phase: DayPhase
 
-    @ScaledMetric(relativeTo: .body) private var typeScale: CGFloat = 1
-
     var body: some View {
-        let isWide = phase.remaining >= Typography.countdownWideThreshold
         DayArc(phase: phase) {
-            VStack(spacing: 0) {
-                Text(label)
-                    .textStyle(
-                        .subheadline, weight: Typography.countdownLabelWeight,
-                        lineHeight: Typography.countdownLabelLineHeight
-                    )
-                    .foregroundStyle(Palette.textSecondary)
-                Text(CatalogFixtures.countdownText(phase.remaining))
-                    .font(Typography.countdown(inArc: true, isWide: isWide, typeScale: typeScale))
-                    .tracking(Typography.countdownTracking)
-                    .foregroundStyle(Palette.label)
-                    .fixedSize()
-                    .lineHeight(
-                        Typography.countdownLineHeight,
-                        fontSize: Typography.countdownSize(inArc: true, isWide: isWide, typeScale: typeScale)
-                    )
-            }
+            ArcCountdown(phase: phase)
         }
-    }
-
-    private var label: String {
-        let name = phase.next.prayer.localizedName
-        return phase.isNextTomorrow ? L10n.nextInTomorrow(p: name) : L10n.nextIn(p: name)
     }
 }
 
@@ -248,10 +227,10 @@ struct CatalogGlass: View {
 
     @State private var selection = 0
 
-    /// Die drei Chips des Gebete-Tabs. Für „Anleitung“ zeichnet der Prototyp einen Mihrab-Bogen; ein
-    /// SF Symbol dafür nennt die Spec nicht – hier steht ein Platzhalter (docs/OPEN-QUESTIONS.md).
-    private var chips: [(title: String, systemImage: String)] {
-        [(L10n.tabToday, "clock"), (L10n.tabQibla, "safari"), (L10n.guideChip, "list.number")]
+    /// Die drei Chips des Gebete-Tabs. „Anleitung“ trägt die Zeichnung des Prototyps, einen
+    /// Gebetsteppich mit Mihrab-Bogen – in den SF Symbols gibt es dafür nichts (docs/OPEN-QUESTIONS.md).
+    private var chips: [(title: String, symbol: GlassSymbol)] {
+        [(L10n.tabToday, .system("clock")), (L10n.tabQibla, .system("safari")), (L10n.guideChip, .prayerRug)]
     }
 
     var body: some View {
@@ -267,7 +246,7 @@ struct CatalogGlass: View {
             GlassCircleButton(systemImage: "gearshape", label: L10n.tabSettings) {}
             ForEach(Array(chips.enumerated()), id: \.offset) { index, chip in
                 GlassChip(
-                    chip.title, systemImage: chip.systemImage,
+                    chip.title, symbol: chip.symbol,
                     isSelected: selection == index, showsTitle: !collapsed || selection == index
                 ) {
                     selection = index
@@ -335,6 +314,23 @@ struct CatalogCards: View {
         .padding(.trailing, 10)
         .frame(minHeight: Layout.prayerRowHeight)
         .background(Palette.backgroundCell, in: .rect(cornerRadius: Radius.row, style: .continuous))
+    }
+}
+
+/// Banner, Hinweis-Pille, Hinweiskarte und Toast mit den Texten der Zeiten-Seite.
+struct CatalogHints: View {
+    var body: some View {
+        VStack(spacing: Spacing.x3) {
+            HintPill(L10n.offline, systemImage: "wifi.slash")
+            Banner(L10n.locOffBanner, systemImage: "location.slash", actionTitle: L10n.change) {}
+            NoteCard(
+                title: L10n.highLatTitle,
+                text: L10n.highLatNote(city: L10n.c_berlin, rule: HighLatitudeRule.angle.localizedName),
+                linkTitle: L10n.highLatLink
+            )
+            NoteCard(text: L10n.noTimes)
+            Toast(L10n.bellToast(p: Prayer.fajr.localizedName, s: BellState.silent.localizedName), systemImage: BellState.silent.symbolName)
+        }
     }
 }
 

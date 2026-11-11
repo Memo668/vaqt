@@ -20,6 +20,26 @@ struct L10nTests {
         try bundle(for: language).localizedString(forKey: key, value: nil, table: nil)
     }
 
+    @Test("Datum und Zahlen folgen der Sprache der Texte, mit der Region des Geräts, wenn sie passt", arguments: [
+        ("de", "de_AT", "de_AT"),
+        ("de", "fr_FR", "de_DE"),
+        ("tr", "tr_TR", "tr_TR"),
+        ("en", "en_US", "en_US"),
+        ("en", "de_DE", "en_GB"),
+        ("es", "it_IT", "es_ES"),
+        ("xx", "it_IT", "de_DE"),
+    ])
+    func locale(language: String, device: String, expected: String) {
+        let locale = L10n.locale(language: language, device: Locale(identifier: device))
+        #expect(locale.identifier == expected)
+    }
+
+    @Test("die Sprache der Texte ist eine der vier der App")
+    func currentLocale() {
+        #expect(L10n.regions.keys.sorted() == ["de", "en", "es", "tr"])
+        #expect(["de", "tr", "en", "es"].contains(L10n.locale.language.languageCode?.identifier ?? ""))
+    }
+
     @Test("der Katalog hat 261 Schlüssel und keinen doppelt")
     func keyCount() {
         // 260 aus der Design-Übergabe v0.7, dazu `noTimes` (Phase 3, docs/OPEN-QUESTIONS.md).

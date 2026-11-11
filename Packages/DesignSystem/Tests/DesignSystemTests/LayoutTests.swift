@@ -99,11 +99,53 @@ struct LayoutTests {
         let bar = FloatingBar {
             GlassCircleButton(systemImage: "gearshape", label: "Einstellungen") {}
             GlassChip("Qibla", systemImage: "safari", isSelected: false, showsTitle: false) {}
-            GlassChip("Anleitung", systemImage: "list.number", isSelected: false, showsTitle: false) {}
+            GlassChip("Anleitung", symbol: .prayerRug, isSelected: false, showsTitle: false) {}
         }
         #expect(height(bar, width: 390) == 52)
         // Ohne den Rahmen über die ganze Breite: 16 + 52 + 8 + 52 + 8 + 52 + 16.
         #expect(size(bar).width == 204)
+    }
+
+    @Test("der Chip „Anleitung“ ist mit der eigenen Zeichnung so groß wie mit einem SF Symbol")
+    func prayerRugChip() {
+        let drawn = size(GlassChip("Anleitung", symbol: .prayerRug, isSelected: true) {})
+        let system = size(GlassChip("Anleitung", systemImage: "clock", isSelected: true) {})
+        #expect(drawn == system)
+        #expect(size(GlassChip("Anleitung", symbol: .prayerRug, isSelected: false, showsTitle: false) {}) == CGSize(width: 52, height: 52))
+    }
+
+    // MARK: - Hinweise
+
+    @Test("der Toast ist 36 pt hoch: 9 + 15 × 1,2 + 9")
+    func toast() {
+        #expect(close(size(Toast("Fadschr: Lautlos", systemImage: "bell")).height, 36))
+        #expect(close(size(Toast("Kopiert")).height, 36))
+    }
+
+    @Test("das Banner ist mit zwei Zeilen Text 52 pt hoch, wie in iphone/17")
+    func banner() {
+        let banner = Banner(
+            "Standortzugriff aus – Stadt manuell gewählt", systemImage: "location.slash", actionTitle: "Ändern"
+        ) {}
+        // 4 + Tippziel 44 + 4; der Text daneben hat zwei Zeilen zu 19,5 pt.
+        #expect(close(height(banner, width: 358), 52))
+    }
+
+    @Test("die Hinweis-Pille ist 26,25 pt hoch: 5 + 13 × 1,25 + 5")
+    func hintPill() {
+        let measured = size(HintPill("Offline", systemImage: "wifi.slash")).height
+        // Das System rundet Text und Block auf Gerätepixel: gemessen 26,67 pt.
+        #expect(close(measured, 26.25, tolerance: 0.7), "\(measured)")
+    }
+
+    @Test("die Hinweiskarte: 12 pt oben und unten, Titel 21 pt, 2 pt Abstand, Text in Zeilen zu 18,2 pt")
+    func noteCard() {
+        // Eine Zeile Text ohne Titel: Das Symbol (1 + 18 pt) ist höher als die Zeile (18,2 pt): 12 + 19 + 12.
+        let plain = height(NoteCard(text: "Kurz"), width: 358)
+        #expect(close(plain, 43, tolerance: 0.7), "\(plain)")
+        // Mit Titel: 12 + 21 + 2 + 18,2 + 12.
+        let titled = height(NoteCard(title: "Hohe Breitengrade", text: "Kurz"), width: 358)
+        #expect(close(titled, 65.2, tolerance: 0.7), "\(titled)")
     }
 
     // MARK: - Karten

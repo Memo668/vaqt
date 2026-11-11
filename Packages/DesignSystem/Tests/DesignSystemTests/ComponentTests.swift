@@ -24,6 +24,7 @@ struct ComponentTests {
         "sun.horizon", "sunrise", "sun.max", "sun.min", "sunset", "moon.stars",
         "bell.and.waves.left.and.right", "bell", "bell.slash",
         "info.circle", "minus", "plus", "gearshape", "clock", "safari",
+        "location.fill", "location.slash", "wifi.slash", "checkmark",
     ])
     func symbolExists(name: String) {
         #expect(UIImage(systemName: name) != nil)
@@ -124,7 +125,7 @@ struct ComponentTests {
     // MARK: - Katalog
 
     #if DEBUG
-    @Test("der Countdown im Katalog schreibt wie cdDigital()", arguments: [
+    @Test("der Countdown schreibt wie cdDigital()", arguments: [
         (7319.0, "2:01:59"),
         (74.9, "1:14"),
         (3600.0, "1:00:00"),
@@ -134,7 +135,7 @@ struct ComponentTests {
         (36_000.0, "10:00:00"),
     ])
     func countdownText(remaining: Double, expected: String) {
-        #expect(CatalogFixtures.countdownText(remaining) == expected)
+        #expect(CountdownFormat.digital(remaining) == expected)
     }
 
     @Test("die Abschnitte des Katalogs heißen wie die Werte von -debugCatalog")
@@ -142,4 +143,51 @@ struct ComponentTests {
         #expect(ComponentCatalog.Section.allCases.map(\.rawValue) == ["arc", "rows", "glass", "cards", "all"])
     }
     #endif
+}
+
+/// Countdown in Worten, Regelnamen und die Zeichnung für den Chip „Anleitung“.
+@Suite("Bausteine der Zeiten-Seite")
+struct TodayComponentTests {
+
+    @Test("der Countdown in Worten rundet auf volle Minuten auf wie cdText()", arguments: [
+        (7319.0, "2 Std. 2 Min."),
+        (7200.0, "2 Std."),
+        (3600.0, "1 Std."),
+        (3599.0, "1 Std."),
+        (74.9, "2 Min."),
+        (60.0, "1 Min."),
+        (1.0, "1 Min."),
+        (0.0, "1 Min."),
+        (-5.0, "1 Min."),
+    ])
+    func spokenCountdown(remaining: Double, expected: String) throws {
+        // Die Kürzel kommen aus dem String Catalog; verglichen wird mit den deutschen.
+        let german = try #require(L10n.bundle.url(forResource: "de", withExtension: "lproj").flatMap(Bundle.init(url:)))
+        let hours = german.localizedString(forKey: "hShort", value: nil, table: nil)
+        let minutes = german.localizedString(forKey: "mShort", value: nil, table: nil)
+        let localized = expected.replacingOccurrences(of: "Std.", with: L10n.hShort)
+            .replacingOccurrences(of: "Min.", with: L10n.mShort)
+        #expect(hours == "Std." && minutes == "Min.")
+        #expect(CountdownFormat.spoken(remaining) == localized)
+    }
+
+    @Test("jede Regel für hohe Breiten hat ihren Namen aus dem String Catalog")
+    func highLatitudeRuleNames() {
+        let names = HighLatitudeRule.allCases.map(\.localizedName)
+        #expect(names == [L10n.hlAngle, L10n.hlSeventh, L10n.hlMiddle])
+        #expect(Set(names).count == 3)
+        #expect(!names.contains { $0.isEmpty || $0.hasPrefix("hl") })
+    }
+
+    @Test("der Gebetsteppich füllt sein Feld wie im Prototyp: 12 von 24 breit, von 3,2 bis 22 hoch")
+    func prayerRug() {
+        let box = PrayerRugShape().path(in: CGRect(x: 0, y: 0, width: 24, height: 24)).cgPath.boundingBoxOfPath
+        #expect(abs(box.minX - 6) < 0.01 && abs(box.maxX - 18) < 0.01)
+        #expect(abs(box.minY - 3.2) < 0.01 && abs(box.maxY - 22) < 0.01)
+
+        // In einem Feld von 22 pt: im selben Verhältnis kleiner, mittig.
+        let small = PrayerRugShape().path(in: CGRect(x: 0, y: 0, width: 22, height: 22)).cgPath.boundingBoxOfPath
+        #expect(abs(small.width - 11) < 0.01)
+        #expect(abs(small.midX - 11) < 0.01)
+    }
 }

@@ -60,16 +60,6 @@ public enum CatalogFixtures {
         return phase
     }
 
-    /// Der Countdown als fester Text wie `cdDigital()`: „2:01:59“, unter einer Stunde „1:14“.
-    ///
-    /// Der laufende Countdown ist ein Baustein der Zeiten-Seite (Phase 3); der Katalog zeigt hier nur
-    /// Schrift und Lage.
-    public static func countdownText(_ remaining: TimeInterval) -> String {
-        let total = max(0, Int(remaining.rounded(.down)))
-        let hours = total / 3600, minutes = total % 3600 / 60, seconds = total % 60
-        func pad(_ value: Int) -> String { (value < 10 ? "0" : "") + String(value) }
-        return hours > 0 ? "\(hours):\(pad(minutes)):\(pad(seconds))" : "\(minutes):\(pad(seconds))"
-    }
 }
 
 #endif
