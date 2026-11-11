@@ -142,6 +142,10 @@ Der Plan für Phase 3 wurde am 11.11.2026 mit vier Vorschlägen freigegeben („
 
 Mit dem Plan freigegeben sind auch seine Annahmen; sie stehen unten unter „Annahmen in Phase 3“.
 
+## Abnahme von Phase 3 am 11.11.2026
+
+Phase 3 wurde am 11.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-3` stand (Stand `87bbb08`). Zu den Punkten 3 bis 5 unter „Braucht eine Entscheidung“ – Banner ohne gewählte Stadt, Bundesländer in der Ortssuche, Antippen beim Abgleich – gab es dabei keine Antwort; dort gilt weiter der jeweilige Standard.
+
 ## Annahmen in Phase 3
 
 Gemessen ist auf dem iPhone 18 Pro mit iOS 27.2, Zustände wie in `scripts/compare-today`. Lage und Größe stammen aus dem Baum der Bedienungshilfen der laufenden App.
