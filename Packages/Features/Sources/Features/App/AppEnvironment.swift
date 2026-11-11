@@ -3,15 +3,18 @@ import Foundation
 import PrayerCore
 import SwiftUI
 
-/// Alles, was die App von außen bekommt: Uhr, Standortquelle, Zeitenquelle, Netz-Zustand, Ortssuche,
-/// der Ort der Einstellungen und womit sie startet.
+/// Alles, was die App von außen bekommt: Uhr, Standortquelle, Kursquelle, Zeitenquelle, Netz-Zustand,
+/// Ortssuche, der Ort der Einstellungen und womit sie startet.
 ///
-/// Uhrzeit, Datum und Ort laufen nur hierüber – nie direkt über `Date()` oder `CLLocationManager`.
+/// Uhrzeit, Datum, Ort und Kurs laufen nur hierüber – nie direkt über `Date()` oder `CLLocationManager`.
 /// In DEBUG-Builds tauschen die Debug-Startargumente einzelne Quellen gegen feste Zustände, damit sich
 /// jeder Referenz-Screenshot nachstellen lässt (CLAUDE.md).
 public struct AppEnvironment: Sendable {
     public var clock: any AppClock
     public var locationSource: any LocationSource
+    /// Quelle des Kompasskurses für die Qibla-Seite: der Kompass des Geräts, mit `-debugQiblaHeading`
+    /// ein fester Kurs.
+    public var headingSource: any HeadingSource
     /// Quelle der Gebetszeiten: die echte Rechnung, mit `-debugFixtureTimes` die Mock-Zeiten.
     public var timesSource: any PrayerTimesSource
     /// Ob das Gerät ein Netz hat; mit `-debugOffline` fest „kein Netz“.
@@ -27,13 +30,14 @@ public struct AppEnvironment: Sendable {
     /// Ob die Einstellungen beim Start schon offen sind (`-debugTab settings`).
     public var opensSettings: Bool
     #if DEBUG
-    /// Die ausgewerteten Debug-Startargumente; spätere Phasen lesen hier z. B. `qiblaHeading`.
+    /// Die ausgewerteten Debug-Startargumente; der Katalog liest hier seinen Zustand.
     public var launchOptions = LaunchOptions()
     #endif
 
     public init(
         clock: any AppClock,
         locationSource: any LocationSource,
+        headingSource: any HeadingSource = FixedHeadingSource(heading: nil),
         timesSource: any PrayerTimesSource = AdhanTimesSource(),
         connectivity: any ConnectivitySource = NetworkConnectivity(),
         citySearch: any CitySearching = NoCitySearch(),
@@ -44,6 +48,7 @@ public struct AppEnvironment: Sendable {
     ) {
         self.clock = clock
         self.locationSource = locationSource
+        self.headingSource = headingSource
         self.timesSource = timesSource
         self.connectivity = connectivity
         self.citySearch = citySearch
@@ -53,11 +58,12 @@ public struct AppEnvironment: Sendable {
         self.opensSettings = opensSettings
     }
 
-    /// Die Umgebung der ausgelieferten App: Gerätezeit, Standort über Core Location, echte Rechnung,
-    /// Ortssuche über MapKit, Einstellungen in der App Group.
+    /// Die Umgebung der ausgelieferten App: Gerätezeit, Standort und Kurs über Core Location, echte
+    /// Rechnung, Ortssuche über MapKit, Einstellungen in der App Group.
     public static var live: AppEnvironment {
         AppEnvironment(
             clock: SystemClock(), locationSource: CoreLocationSource(),
+            headingSource: CoreLocationHeadingSource(),
             citySearch: MapKitCitySearch(),
             settings: .userDefaults(suiteName: appGroupIdentifier)
         )
@@ -105,6 +111,8 @@ extension AppEnvironment {
     ///   den Startwerten von `S` im Prototyp – so sieht jede Aufnahme gleich aus.
     /// - `-debugCity`, `-debugHighLatitude`, `-debugLocationDenied`: feste Standortquelle; sonst
     ///   Core Location.
+    /// - `-debugQiblaHeading`, `-debugQiblaAccuracy`: fester Kompasskurs; mit `-debugFixtureTimes` auch
+    ///   ohne Angabe der Startwert des Prototyps. Sonst der Kompass des Geräts.
     /// - `-debugOffline`: fest „kein Netz“.
     public init(options: LaunchOptions, system: any AppClock = SystemClock(), deviceTimeZone: TimeZone = .current) {
         clock = options.makeClock(system: system, deviceTimeZone: deviceTimeZone)
@@ -115,6 +123,11 @@ extension AppEnvironment {
             )
         } else {
             locationSource = CoreLocationSource()
+        }
+        if let heading = options.fixedHeading {
+            headingSource = FixedHeadingSource(heading: heading)
+        } else {
+            headingSource = CoreLocationHeadingSource()
         }
         if options.fixtureTimes {
             timesSource = FixtureTimesSource(highLatitude: options.highLatitude)

@@ -7,15 +7,14 @@ import SwiftUI
 ///
 /// Die Seite scrollt senkrecht unter der oberen Leiste. Tippen auf die Stadt oder auf „Ändern“ im
 /// Banner öffnet das Stadt-Sheet; „Regel ändern“ im Hinweis zu hohen Breiten führt in die Einstellungen.
+/// Den Ort bestimmt der Tab (`PrayersTab`): Er gilt auch für die Qibla-Seite, und dort hängt das
+/// Stadt-Sheet.
 struct TodayPage: View {
     let model: TodayModel
     /// „Regel ändern“ im Hinweis zu hohen Breiten.
     let onHighLatitudeRule: () -> Void
 
-    @Environment(\.scenePhase) private var scenePhase
-
     var body: some View {
-        @Bindable var model = model
         ScrollView {
             VStack(spacing: 0) {
                 TodayHeader(model: model)
@@ -52,24 +51,15 @@ struct TodayPage: View {
                         .padding(.horizontal, Layout.inset)
                 }
             }
-            .padding(.top, TodayMetrics.contentTop)
-            .padding(.bottom, TodayMetrics.contentBottom)
+            .padding(.top, PageMetrics.contentTop)
+            .padding(.bottom, PageMetrics.contentBottom)
         }
         .background(Palette.backgroundGrouped)
         .task {
             await model.observeConnectivity()
         }
-        // Beim ersten Erscheinen und immer, wenn die App wieder nach vorn kommt.
-        .task(id: scenePhase) {
-            if scenePhase == .active {
-                await model.activate()
-            }
-        }
         .onChange(of: model.settings.calculation) { model.refresh() }
         .onChange(of: model.settings.showKerahat) { model.refresh() }
-        .sheet(isPresented: $model.isCitySheetPresented) {
-            CitySheet(today: model, search: model.citySearch)
-        }
     }
 
     /// Die sechs Gebetskarten. Die Liste trägt für VoiceOver das Datum, wie `aria-label` im Prototyp.
@@ -88,12 +78,6 @@ struct TodayPage: View {
 
 /// Maße der Zeiten-Seite (`.home-head`, `.city-btn`, `.home-date`, `.hero`, `.prayers`, `.note`).
 enum TodayMetrics {
-    /// Abstand zwischen oberer Leiste und Inhalt (`.root-page .scroll`: 8 pt unter der Leiste).
-    static let contentTop: CGFloat = 8
-    /// Platz unter dem letzten Element, über der Tableiste: `.tab-spacer` ist 112 pt hoch, davon liegen
-    /// 84 pt hinter der Tableiste (22 pt Rand + 62 pt Leiste).
-    static let contentBottom: CGFloat = 28
-
     /// Kopf (`.home-head`: `padding: 10px 16px 0`).
     static let headerTop: CGFloat = 10
     /// Stadt-Button (`.city-btn`): `gap: 7px; padding: 2px 10px; border-radius: 12px`, Zeilenhöhe 1,25.

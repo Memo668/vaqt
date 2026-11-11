@@ -78,6 +78,53 @@ struct LaunchOptionsTests {
         #expect(options.problems.isEmpty)
     }
 
+    @Test("Genauigkeit des Kompasses, auch negativ für einen ungültigen Kurs", arguments: [
+        ("40", 40.0), ("0", 0.0), ("12.5", 12.5), ("-1", -1.0),
+    ])
+    func accuracy(text: String, expected: Double) {
+        let options = LaunchOptions(arguments: ["-debugQiblaHeading", "98", "-debugQiblaAccuracy", text])
+        #expect(options.qiblaAccuracy == expected)
+        #expect(options.fixedHeading == Heading(degrees: 98, accuracy: expected))
+        #expect(options.problems.isEmpty)
+    }
+
+    @Test("ohne -debugQiblaHeading fragt die App den Kompass des Geräts")
+    func noFixedHeading() {
+        let options = LaunchOptions(arguments: ["-debugCity", "berlin", "-debugTab", "qibla"])
+        #expect(options.effectiveQiblaHeading == nil)
+        #expect(options.fixedHeading == nil)
+    }
+
+    @Test("mit -debugFixtureTimes gilt ohne -debugQiblaHeading der Startwert des Prototyps, 99°")
+    func fixtureHeading() {
+        #expect(LaunchOptions.prototypeQiblaHeading == 99)
+        let fixture = LaunchOptions(arguments: ["-debugFixtureTimes", "-debugTab", "qibla"])
+        #expect(fixture.qiblaHeading == nil)
+        #expect(fixture.effectiveQiblaHeading == 99)
+        #expect(fixture.fixedHeading == Heading(degrees: 99))
+
+        let explicit = LaunchOptions(arguments: ["-debugFixtureTimes", "-debugQiblaHeading", "137"])
+        #expect(explicit.effectiveQiblaHeading == 137)
+        #expect(explicit.fixedHeading == Heading(degrees: 137))
+    }
+
+    @Test("die Genauigkeit gilt auch für den Startwert des Prototyps")
+    func fixtureAccuracy() {
+        let options = LaunchOptions(arguments: ["-debugFixtureTimes", "-debugQiblaAccuracy", "40"])
+        #expect(options.fixedHeading == Heading(degrees: 99, accuracy: 40))
+        #expect(options.fixedHeading?.needsCalibration == true)
+        #expect(options.problems.isEmpty)
+    }
+
+    @Test("-debugQiblaAccuracy ohne festen Kurs wird gemeldet")
+    func accuracyWithoutHeading() {
+        let options = LaunchOptions(arguments: ["-debugQiblaAccuracy", "40"])
+        #expect(options.qiblaAccuracy == 40)
+        #expect(options.fixedHeading == nil)
+        #expect(options.problems.count == 1)
+        #expect(options.problems.first?.contains("-debugQiblaAccuracy") == true)
+    }
+
     @Test("bei doppelten Argumenten gilt das letzte")
     func lastWins() {
         let options = LaunchOptions(arguments: ["-debugCity", "berlin", "-debugCity", "jakarta", "-debugTime", "08:04", "-debugTime", "16:05"])
@@ -99,6 +146,8 @@ struct LaunchOptionsTests {
         ["-debugQiblaHeading", "-10"],
         ["-debugQiblaHeading", "nan"],
         ["-debugQiblaHeading", "süd"],
+        ["-debugQiblaAccuracy", "schlecht"],
+        ["-debugQiblaAccuracy", "inf"],
     ])
     func invalidValue(arguments: [String]) {
         let options = LaunchOptions(arguments: arguments)

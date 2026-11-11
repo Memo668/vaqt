@@ -16,7 +16,8 @@ import PrayerCore
 /// -debugLocationDenied  -debugOffline
 /// -debugTab today|qibla|guide|verses|qada|settings
 /// -debugQiblaHeading 137
-/// -debugCatalog arc|rows|glass|cards|all   Katalog der Bausteine statt der App, für den Abgleich
+/// -debugQiblaAccuracy 40        Genauigkeit des Kompasses in Grad; über 25 erscheint die Kalibrierungskarte
+/// -debugCatalog arc|rows|glass|cards|compass|all   Katalog der Bausteine statt der App, für den Abgleich
 /// ```
 ///
 /// Es gibt diesen Typ nur in DEBUG-Builds. Alles, was nicht mit `-debug` beginnt, wird übergangen.
@@ -38,6 +39,10 @@ public struct LaunchOptions: Equatable, Sendable {
     public var page: Page?
     /// Kompasskurs in Grad, 0 bis unter 360.
     public var qiblaHeading: Double?
+    /// Genauigkeit des festen Kompasskurses in Grad, wie `CLHeading.headingAccuracy`: die größte
+    /// Abweichung, negativ für einen ungültigen Kurs. Die Referenzbilder zeigen die Karte „Kompass
+    /// kalibrieren“ immer, die App nur bei schlechter Genauigkeit – damit lässt sie sich nachstellen.
+    public var qiblaAccuracy: Double?
     /// Abschnitt des Katalogs, den die App statt der Tabs zeigt (`-debugCatalog`). Bogen und
     /// Gebetskarten stehen dort im Zustand der übrigen Argumente.
     public var catalog: ComponentCatalog.Section?
@@ -76,6 +81,10 @@ public struct LaunchOptions: Equatable, Sendable {
                 qiblaHeading = value(of: argument, from: &rest, expected: "ein Kurs von 0 bis unter 360 Grad") {
                     Double($0).flatMap { (0..<360).contains($0) ? $0 : nil }
                 }
+            case "-debugQiblaAccuracy":
+                qiblaAccuracy = value(of: argument, from: &rest, expected: "eine Abweichung in Grad, z. B. 40") {
+                    Double($0).flatMap { $0.isFinite ? $0 : nil }
+                }
             case "-debugCatalog":
                 let sections = ComponentCatalog.Section.allCases.map(\.rawValue).joined(separator: ", ")
                 catalog = value(of: argument, from: &rest, expected: "einer der Abschnitte \(sections)") {
@@ -88,6 +97,26 @@ public struct LaunchOptions: Equatable, Sendable {
         if highLatitude, city != nil || date != nil {
             problems.append("-debugHighLatitude legt Berlin und den 21. Juni fest; -debugCity und -debugDate werden übergangen.")
         }
+        if qiblaAccuracy != nil, effectiveQiblaHeading == nil {
+            problems.append("-debugQiblaAccuracy wirkt nur mit festem Kurs: zusammen mit -debugQiblaHeading oder -debugFixtureTimes.")
+        }
+    }
+
+    /// Der Startwert des Kompasskurses im Prototyp (`S.qibla.heading`).
+    public static let prototypeQiblaHeading = 99.0
+
+    /// Der feste Kompasskurs, der gilt; `nil` heißt, die App fragt den Kompass des Geräts.
+    ///
+    /// Mit `-debugFixtureTimes` gilt ohne `-debugQiblaHeading` der Startwert des Prototyps – wie bei den
+    /// übrigen Startwerten von `S`. So zeigt die Qibla-Seite auch im Simulator, der keinen Kompass hat,
+    /// den Zustand von `iphone/30`.
+    public var effectiveQiblaHeading: Double? {
+        qiblaHeading ?? (fixtureTimes ? Self.prototypeQiblaHeading : nil)
+    }
+
+    /// Die feste Kursquelle zu den Argumenten; `nil`, wenn der Kompass des Geräts gilt.
+    public var fixedHeading: Heading? {
+        effectiveQiblaHeading.map { Heading(degrees: $0, accuracy: qiblaAccuracy ?? 0) }
     }
 
     /// Die Stadt, die gilt.

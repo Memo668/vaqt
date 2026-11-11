@@ -33,7 +33,7 @@ struct CatalogRootTests {
         let options = LaunchOptions(arguments: ["-debugCatalog", "bogen"])
         #expect(options.catalog == nil)
         #expect(options.problems.count == 1)
-        #expect(options.problems.first?.contains("arc, rows, glass, cards, all") == true)
+        #expect(options.problems.first?.contains("arc, rows, glass, cards, compass, all") == true)
     }
 
     @Test("fehlt der Abschnitt, wird das gemeldet und das nächste Argument trotzdem gelesen")
@@ -113,6 +113,52 @@ struct CatalogRootTests {
     @Test("ohne Stadt gibt es keinen Zustand; der Katalog zeigt dann seinen eigenen")
     func withoutCity() {
         #expect(CatalogRoot.phase(for: environment("-debugCatalog", "all")) == nil)
+        #expect(CatalogRoot.compass(for: environment("-debugCatalog", "all")) == nil)
+    }
+
+    // MARK: Kompass
+
+    @Test("die Argumente von iphone/31: Berlin, Kurs 137°, ausgerichtet")
+    func compassAligned() throws {
+        let environment = environment("-debugCatalog", "compass", "-debugFixtureTimes", "-debugQiblaHeading", "137")
+        let state = try #require(CatalogRoot.compass(for: environment))
+        let bearing = try #require(state.bearing)
+        #expect(state.heading == 137)
+        #expect(abs(bearing - 136.68) < 0.01)
+        #expect(state.isAligned)
+    }
+
+    @Test("mit -debugFixtureTimes ohne Kurs: der Startwert des Prototyps, 99°")
+    func compassPrototypeStart() throws {
+        let state = try #require(CatalogRoot.compass(for: environment("-debugCatalog", "compass", "-debugFixtureTimes")))
+        #expect(state.heading == 99)
+        #expect(!state.isAligned)
+    }
+
+    @Test("die Argumente von iphone/32: in Mekka fehlt die Richtung und damit die Nadel")
+    func compassMecca() throws {
+        let environment = environment(
+            "-debugCatalog", "compass", "-debugFixtureTimes", "-debugCity", "mecca", "-debugQiblaHeading", "138"
+        )
+        let state = try #require(CatalogRoot.compass(for: environment))
+        #expect(state.heading == 138)
+        #expect(state.bearing == nil)
+    }
+
+    @Test("ohne festen Kurs zeigt der Katalog den Kompass eines Geräts ohne Kompass")
+    func compassWithoutHeading() throws {
+        let state = try #require(CatalogRoot.compass(for: environment("-debugCatalog", "compass", "-debugCity", "jakarta")))
+        let bearing = try #require(state.bearing)
+        #expect(state.heading == nil)
+        #expect(Int(bearing.rounded()) == 295)
+    }
+
+    @Test("nur ein Kurs, keine Stadt: Berlin")
+    func compassHeadingOnly() throws {
+        let state = try #require(CatalogRoot.compass(for: environment("-debugCatalog", "compass", "-debugQiblaHeading", "98")))
+        let bearing = try #require(state.bearing)
+        #expect(state.heading == 98)
+        #expect(Int(bearing.rounded()) == 137)
     }
 }
 

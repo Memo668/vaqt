@@ -39,9 +39,16 @@ struct AppEnvironmentTests {
         #expect(environment.timesSource is AdhanTimesSource)
         #expect(environment.connectivity is NetworkConnectivity)
         #expect(environment.settings == .userDefaults(suiteName: nil))
-        // Der Standort kommt von Core Location, die Ortssuche von MapKit.
+        // Der Standort und der Kurs kommen von Core Location, die Ortssuche von MapKit.
         #expect(environment.locationSource is CoreLocationSource)
+        #expect(environment.headingSource is CoreLocationHeadingSource)
         #expect(environment.citySearch is MapKitCitySearch)
+    }
+
+    @Test("ohne Angabe hat die Umgebung keinen Kompass – für Previews und Tests")
+    func defaultHeadingSource() async {
+        let environment = AppEnvironment(clock: SystemClock(), locationSource: AppEnvironment.pendingLocationSource)
+        #expect(await !environment.headingSource.isAvailable())
     }
 
     #if DEBUG
@@ -53,6 +60,7 @@ struct AppEnvironmentTests {
         #expect(environment.initialTab == .prayers)
         #expect(environment.launchOptions == LaunchOptions())
         #expect(environment.locationSource is CoreLocationSource)
+        #expect(environment.headingSource is CoreLocationHeadingSource)
         #expect(environment.citySearch is MapKitCitySearch)
         #expect(environment.timesSource is AdhanTimesSource)
     }
@@ -77,6 +85,30 @@ struct AppEnvironmentTests {
         var options = LaunchOptions()
         options.page = page
         #expect(AppEnvironment(options: options).initialTab == tab)
+    }
+
+    @Test("-debugQiblaHeading liefert einen festen Kurs, -debugQiblaAccuracy seine Genauigkeit")
+    func fixedHeading() async throws {
+        let environment = AppEnvironment(options: LaunchOptions(arguments: [
+            "-debugCity", "berlin", "-debugQiblaHeading", "137", "-debugQiblaAccuracy", "40",
+        ]))
+        let source = try #require(environment.headingSource as? FixedHeadingSource)
+        #expect(source.heading == Heading(degrees: 137, accuracy: 40))
+        #expect(await source.isAvailable())
+    }
+
+    @Test("-debugFixtureTimes: der Kurs ist der Startwert des Prototyps")
+    func fixtureHeading() throws {
+        let environment = AppEnvironment(options: LaunchOptions(arguments: ["-debugFixtureTimes"]))
+        let source = try #require(environment.headingSource as? FixedHeadingSource)
+        #expect(source.heading == Heading(degrees: 99))
+    }
+
+    @Test("ohne festen Kurs gilt der Kompass des Geräts, auch mit fester Stadt")
+    func deviceHeading() {
+        let environment = AppEnvironment(options: LaunchOptions(arguments: ["-debugCity", "berlin", "-debugTab", "qibla"]))
+        #expect(environment.headingSource is CoreLocationHeadingSource)
+        #expect(environment.initialPage == .qibla)
     }
 
     @Test("-debugCity liefert den Ort der Stadt")

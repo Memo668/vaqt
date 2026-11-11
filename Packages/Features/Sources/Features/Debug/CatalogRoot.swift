@@ -6,11 +6,12 @@ import SwiftUI
 
 /// Der Bildschirm zu `-debugCatalog`: der Katalog der Bausteine statt der Tabs.
 ///
-/// Bogen und Gebetskarten stehen im Zustand der übrigen Debug-Argumente. So gehören zu jedem
-/// Referenzbild dieselben Argumente wie später für die Zeiten-Seite, nur mit `-debugCatalog arc` davor:
+/// Bogen, Gebetskarten und Kompass stehen im Zustand der übrigen Debug-Argumente. So gehören zu jedem
+/// Referenzbild dieselben Argumente wie für die Seite selbst, nur mit `-debugCatalog arc` davor:
 ///
 /// ```
 /// -debugCatalog arc -debugFixtureTimes -debugCity jakarta -debugDate 2026-11-10 -debugTime 17:57
+/// -debugCatalog compass -debugFixtureTimes -debugQiblaHeading 137
 /// ```
 struct CatalogRoot: View {
     let section: ComponentCatalog.Section
@@ -20,7 +21,21 @@ struct CatalogRoot: View {
         ComponentCatalog(
             section: section,
             phase: Self.phase(for: environment),
-            isHighLatitude: environment.launchOptions.highLatitude
+            isHighLatitude: environment.launchOptions.highLatitude,
+            compass: Self.compass(for: environment)
+        )
+    }
+
+    /// Der Zustand des Kompasses zu den Debug-Argumenten: die Richtung zur Kaaba von der Stadt aus und
+    /// der feste Kurs. Ohne festen Kurs zeigt der Katalog den Kompass eines Geräts ohne Kompass.
+    ///
+    /// Ohne Stadt und ohne Kurs gibt es `nil`; der Katalog zeigt dann seinen Standardzustand.
+    nonisolated static func compass(for environment: AppEnvironment) -> CatalogFixtures.CompassState? {
+        let options = environment.launchOptions
+        guard options.effectiveCity != nil || options.effectiveQiblaHeading != nil else { return nil }
+        let city = options.effectiveCity?.id ?? "berlin"
+        return CatalogFixtures.CompassState(
+            id: city, heading: options.effectiveQiblaHeading, bearing: CatalogFixtures.bearing(city: city)
         )
     }
 

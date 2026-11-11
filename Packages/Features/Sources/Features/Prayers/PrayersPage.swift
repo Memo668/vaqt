@@ -1,3 +1,4 @@
+import CoreGraphics
 import DesignSystem
 
 /// Die drei Seiten des Gebete-Tabs, zwischen denen die Chips der oberen Leiste und das Wischen
@@ -29,4 +30,13 @@ public enum PrayersPage: String, CaseIterable, Hashable, Identifiable, Sendable 
         case .guide: .prayerRug
         }
     }
+}
+
+/// Maße, die für jede Seite des Gebete-Tabs gelten (`.root-page .scroll`, `.tab-spacer`).
+enum PageMetrics {
+    /// Abstand zwischen oberer Leiste und Inhalt (`.root-page .scroll`: 8 pt unter der Leiste).
+    static let contentTop: CGFloat = 8
+    /// Platz unter dem letzten Element, über der Tableiste: `.tab-spacer` ist 112 pt hoch, davon liegen
+    /// 84 pt hinter der Tableiste (22 pt Rand + 62 pt Leiste).
+    static let contentBottom: CGFloat = 28
 }

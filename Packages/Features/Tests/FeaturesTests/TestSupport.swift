@@ -51,6 +51,50 @@ actor ScriptedLocationSource: LocationSource {
     }
 }
 
+/// Eine Kursquelle, die eine vorgegebene Folge von Kursen liefert und dann endet.
+struct ScriptedHeadingSource: HeadingSource {
+    let headings: [Heading]
+
+    func isAvailable() async -> Bool { true }
+
+    func updates() async -> AsyncStream<Heading> {
+        AsyncStream { continuation in
+            for heading in headings {
+                continuation.yield(heading)
+            }
+            continuation.finish()
+        }
+    }
+}
+
+/// Eine Kursquelle wie ein echter Kompass: Sie liefert, was der Test ihr gibt, bis der Zuhörer aufhört.
+actor LiveHeadingSource: HeadingSource {
+    private var continuation: AsyncStream<Heading>.Continuation?
+    /// Wie oft jemand zugehört und wie oft jemand aufgehört hat.
+    private(set) var starts = 0
+    private(set) var stops = 0
+
+    func isAvailable() async -> Bool { true }
+
+    func updates() async -> AsyncStream<Heading> {
+        let (stream, continuation) = AsyncStream.makeStream(of: Heading.self)
+        self.continuation = continuation
+        starts += 1
+        continuation.onTermination = { [weak self] _ in
+            Task { await self?.stopped() }
+        }
+        return stream
+    }
+
+    func send(_ heading: Heading) {
+        continuation?.yield(heading)
+    }
+
+    private func stopped() {
+        stops += 1
+    }
+}
+
 /// Eine Quelle ohne Zeiten – wie dort, wo die Sonne nicht auf- oder untergeht.
 struct NoTimesSource: PrayerTimesSource {
     func times(on day: CalendarDay, at place: Place, settings: CalculationSettings) -> DayTimes? { nil }
@@ -99,6 +143,12 @@ extension Place {
     static let munich = Place(
         name: "München", countryCode: "DE",
         coordinates: Coordinates(latitude: 48.1351, longitude: 11.5820), timeZoneIdentifier: "Europe/Berlin"
+    )
+
+    /// Die Fixture-Stadt Mekka: Sie liegt an der Kaaba.
+    static let mecca = Place(
+        name: "Mekka", countryCode: "SA",
+        coordinates: Coordinates(latitude: 21.4225, longitude: 39.8262), timeZoneIdentifier: "Asia/Riyadh"
     )
 
     /// Ein Standort ohne Namen, wie ihn die Standortquelle ohne Netz liefert.
