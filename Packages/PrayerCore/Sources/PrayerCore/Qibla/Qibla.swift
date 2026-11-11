@@ -23,26 +23,11 @@ public struct Qibla: Hashable, Sendable {
     public init(from coordinates: Coordinates) {
         let origin = Adhan.Coordinates(latitude: coordinates.latitude, longitude: coordinates.longitude)
         bearing = Adhan.Qibla(coordinates: origin).direction
-        distanceKm = Self.greatCircleDistanceKm(from: coordinates, to: Self.kaaba)
+        distanceKm = coordinates.distanceKm(to: Self.kaaba)
     }
 
     /// Ob der Ort in Mekka liegt. Die Richtung sagt dort nichts mehr aus.
     public var isInMecca: Bool {
         distanceKm < Self.meccaRadiusKm
-    }
-
-    /// Mittlerer Erdradius in Kilometern (IUGG).
-    private static let earthRadiusKm = 6371.0088
-
-    /// Entfernung zweier Orte entlang des Großkreises, mit der Haversine-Formel auf einer Kugel.
-    private static func greatCircleDistanceKm(from start: Coordinates, to end: Coordinates) -> Double {
-        let startLatitude = start.latitude * .pi / 180
-        let endLatitude = end.latitude * .pi / 180
-        let latitudeDelta = endLatitude - startLatitude
-        let longitudeDelta = (end.longitude - start.longitude) * .pi / 180
-
-        let haversine = sin(latitudeDelta / 2) * sin(latitudeDelta / 2)
-            + cos(startLatitude) * cos(endLatitude) * sin(longitudeDelta / 2) * sin(longitudeDelta / 2)
-        return 2 * earthRadiusKm * asin(min(1, haversine.squareRoot()))
     }
 }
