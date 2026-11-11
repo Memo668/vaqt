@@ -1,0 +1,132 @@
+#!/bin/bash
+# Abgleich der Zeiten-Seite mit den Referenzbildern design/screenshots/iphone/10–22 (Phase 3).
+#
+# Startet die App im Simulator in jedem Zustand der Referenzbilder – mit den Debug-Argumenten aus
+# docs/PROMPTS.md –, nimmt den Bildschirm auf und legt Ausschnitte mit scripts/compare-shot neben die
+# Referenz: obere Leiste, Kopf (Stadt, Datum, Hinweis), Bogen und die Gebetskarten, bei iphone/17 dazu
+# das Banner. Die App muss gebaut und installiert sein:
+#
+#   make run
+#   scripts/compare-today            alle Zustände
+#   scripts/compare-today 17 22      nur diese Referenzbilder
+#
+# Ergebnis in screenshots-out/phase-3/: today-<nr>.png (Aufnahme) und compare-<Ausschnitt>-<nr>.png
+# (oben Referenz, Mitte Aufnahme, unten Unterschied).
+#
+# Der Simulator (iPhone 18 Pro, 402 × 874 pt) ist 12 pt breiter und 30 pt höher als die Referenzbilder
+# (390 × 844 pt). Verglichen werden deshalb Ausschnitte:
+#   - Der sichere Bereich beginnt bei 62 statt 58 pt: Alles sitzt 4 pt tiefer.
+#   - Mittige Bausteine (Kopf, Bogen) sitzen 6 pt weiter rechts.
+#   - Die Gebetskarten sind 12 pt breiter. Ihre linke und ihre rechte Hälfte werden getrennt verglichen,
+#     jede an ihrem Rand ausgerichtet; ebenso das Banner.
+#
+# Die Uhr läuft ab dem Start weiter: Zwischen Start und Aufnahme vergehen rund zwei Sekunden, der
+# Countdown steht deshalb eine oder zwei Sekunden unter dem des Referenzbilds.
+#
+# Nicht dabei ist iphone/85 (Stadt-Sheet): Es entsteht mit den Argumenten von iphone/10 und einem Tipp
+# auf die Stadt.
+#
+# Der Simulator lässt sich mit SIM='…' wählen, wie im Makefile.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SIM="${SIM:-iPhone 18 Pro}"
+BUNDLE_ID=com.example.gebetszeiten
+REF="$ROOT/design/screenshots/iphone"
+OUT="${OUT:-$ROOT/screenshots-out/phase-3}"
+ZOOM="${ZOOM:-3}"
+WAIT="${WAIT:-2}"
+
+# Nummer | Datei | hell oder dunkel | Leserichtung | Sprache | Schriftgröße | Versatz Referenz | Versatz Aufnahme | Argumente
+#
+# „Versatz“ ist, wie viel tiefer Bogen und Karten liegen als in iphone/10:
+#   17  Hinweis-Pille (10 + 26,25) und Banner (14 + 52) schieben beides 102,25 pt nach unten.
+#   19  Große Schrift: Leiste und Datum sind höher. Der Prototyp vergrößert einheitlich auf das
+#       1,35-Fache, die App folgt den Größen des Systems je Textstil – daher zwei Werte.
+STATES='
+10|10-home-asr-active|light|ltr|de|large|0|0|-debugTime 14:25
+11|11-home-asr-active-dark|dark|ltr|de|large|0|0|-debugTime 14:25
+12|12-home-before-fajr|light|ltr|de|large|0|0|-debugTime 05:14
+13|13-home-after-sunrise|light|ltr|de|large|0|0|-debugTime 08:04
+14|14-home-kerahat-active|light|ltr|de|large|0|0|-debugTime 07:30
+15|15-home-kerahat-before-maghrib|light|ltr|de|large|0|0|-debugTime 16:05
+16|16-home-after-isha-dark|dark|ltr|de|large|0|0|-debugTime 23:30
+17|17-home-location-denied-offline|light|ltr|de|large|102.25|102.25|-debugTime 14:25 -debugLocationDenied -debugOffline
+18|18-home-high-latitude|light|ltr|de|large|0|0|-debugHighLatitude -debugTime 23:47
+19|19-home-large-type|light|ltr|de|extra-extra-extra-large|22.3|26.6|-debugTime 14:25
+20|20-home-rtl|light|rtl|de|large|0|0|-debugTime 14:25
+21|21-home-turkish-istanbul|light|ltr|tr|large|0|0|-debugCity istanbul -debugTime 16:01
+22|22-home-jakarta-close-markers|light|ltr|de|large|0|0|-debugCity jakarta -debugTime 17:57
+'
+
+# Sprache und Region wie `LOC` im Prototyp und im Makefile.
+locale_of() {
+  case "$1" in
+    tr) echo tr_TR ;;
+    en) echo en_GB ;;
+    es) echo es_ES ;;
+    *) echo de_DE ;;
+  esac
+}
+
+# rect x y Breite Höhe [Versatz nach unten] → „x,y,b,h“
+rect() {
+  awk -v x="$1" -v y="$2" -v w="$3" -v h="$4" -v s="${5:-0}" 'BEGIN { printf "%s,%s,%s,%s", x, y + s, w, h }'
+}
+
+# compare Name Nummer Datei Referenz-Ausschnitt Aufnahme-Ausschnitt
+compare() {
+  printf '  %-9s ' "$1"
+  "$ROOT/scripts/compare-shot" --ref "$REF/$3.png" --ref-rect "$4" \
+    --shot "$OUT/today-$2.png" --shot-rect "$5" \
+    --out "$OUT/compare-$1-$2.png" --zoom "$ZOOM" | head -1
+}
+
+mkdir -p "$OUT"
+xcrun simctl bootstatus "$SIM" -b >/dev/null
+# Der erste Start nach einer Pause dauert länger als die Wartezeit vor der Aufnahme. Deshalb einmal vorab.
+xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" -debugSkipOnboarding -debugFixtureTimes >/dev/null
+sleep 3
+
+echo "$STATES" | while IFS='|' read -r number file appearance direction language size ref_shift shot_shift arguments; do
+  [ -n "$number" ] || continue
+  if [ $# -gt 0 ] && ! printf '%s\n' "$@" | grep -qx "$number"; then continue; fi
+  xcrun simctl ui "$SIM" appearance "$appearance"
+  xcrun simctl ui "$SIM" content_size "$size"
+
+  rtl=()
+  if [ "$direction" = rtl ]; then
+    # Die Pseudosprache „Right-to-Left“ des Systems: deutsche Texte, gespiegelte Anordnung.
+    rtl=(-AppleTextDirection YES -NSForceRightToLeftWritingDirection YES)
+  fi
+  # shellcheck disable=SC2086,SC2068
+  xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" \
+    -AppleLanguages "($language)" -AppleLocale "$(locale_of "$language")" ${rtl[@]+"${rtl[@]}"} \
+    -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 $arguments >/dev/null
+  sleep "$WAIT"
+  xcrun simctl io "$SIM" screenshot "$OUT/today-$number.png" >/dev/null 2>&1
+  echo "iphone/$number:"
+
+  # Obere Leiste: links ausgerichtet, bei RTL rechts. Bei großer Schrift ist sie 59,8 statt 52 pt hoch.
+  bar_x=0
+  [ "$direction" = rtl ] && bar_x=12
+  compare bar "$number" "$file" "$(rect 0 50 390 76)" "$(rect "$bar_x" 54 390 76)"
+
+  # Kopf: Stadt, Datum und – bei iphone/17 – die Hinweis-Pille. Mittig.
+  compare head "$number" "$file" "$(rect 0 118 390 142)" "$(rect 6 122 390 142)"
+
+  if [ "$number" = 17 ]; then
+    compare banner-l "$number" "$file" "$(rect 0 256 230 68)" "$(rect 0 260 230 68)"
+    compare banner-r "$number" "$file" "$(rect 160 256 230 68)" "$(rect 172 260 230 68)"
+  fi
+
+  # Bogen mit Countdown: mittig, 358 × 180 pt.
+  compare hero "$number" "$file" "$(rect 16 223.4 358 180 "$ref_shift")" "$(rect 22 227.4 358 180 "$shot_shift")"
+
+  # Gebetskarten: linke und rechte Hälfte, jede an ihrem Rand.
+  compare rows-l "$number" "$file" "$(rect 0 404 230 372 "$ref_shift")" "$(rect 0 408 230 372 "$shot_shift")"
+  compare rows-r "$number" "$file" "$(rect 160 404 230 372 "$ref_shift")" "$(rect 172 408 230 372 "$shot_shift")"
+done
+
+xcrun simctl ui "$SIM" appearance light
+xcrun simctl ui "$SIM" content_size large
+echo "Ergebnis in $OUT"
