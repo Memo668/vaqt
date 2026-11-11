@@ -29,12 +29,6 @@ Der Prototyp zeichnet für den Chip „Anleitung“ einen Mihrab-Bogen (`pray`).
 
 - **Standard bis dahin:** Im Katalog steht `list.number` als Platzhalter. Die Symbole der Chips legt erst die obere Leiste in Phase 3 fest; „Zeiten“ zeigt `clock`, „Qibla“ `safari`.
 
-### 5. `-debugCatalog` in `CLAUDE.md`
-
-Das neue Debug-Argument steht in `README.md`, aber nicht in der Liste der Debug-Argumente in `CLAUDE.md`. Anweisungsdateien ändere ich nur mit ausdrücklichem Ja.
-
-- **Standard bis dahin:** `CLAUDE.md` bleibt, wie sie ist.
-
 ## Vor der Veröffentlichung zu prüfen
 
 - **JAKIM und Kemenag** rechnen mit reinen Winkeln 20°/18°, ohne Sicherheitsminuten (entschieden am 10.11.2026, siehe unten). Beide sind gegen offizielle Tabellen zu prüfen, bevor die App erscheint. Bisher gibt es nur den Vergleich mit dem Mock für Jakarta: Kemenag liegt bis zu 3 Minuten daneben (Dhuhr 11:36 statt 11:39). Die Voreinstellung `singapore` von Adhan Swift – dieselben Winkel, Dhuhr +1, aufgerundet – läge näher (11:38).
@@ -124,6 +118,10 @@ Der Plan für Phase 2 wurde am 10.11.2026 mit vier Vorschlägen freigegeben („
 | Ring bei eng liegenden Markern | 1,5 pt sichtbar, wie im Referenzbild `iphone/22` | Die Spec nennt 3 pt. Der Prototyp zeichnet eine 3 pt breite Kontur, deren innere Hälfte unter der Füllung liegt (`paint-order: stroke`). |
 | Stepper | eigener Baustein `StepperPill` wie in `iphone/60` | 94 × 32 pt, Radius 8, zwei Tasten mit eigenen VoiceOver-Texten (`qadaMinus`, `qadaPlus`, `stepLess`, `stepMore`). Der `Stepper` des Systems sieht in iOS 26 anders aus und kennt nur einen gemeinsamen Text. |
 | `BellState` | liegt in `PrayerCore` | Ton, Lautlos, Aus mit der Reihenfolge der Glocke und der Voreinstellung des Prototyps. Phase 8 braucht den Stand ohne UI. |
+
+## Entschieden mit der Abnahme von Phase 2 am 11.11.2026
+
+- **`-debugCatalog` in `CLAUDE.md`:** „ja“ – Das Argument steht jetzt in der Liste der Debug-Argumente in `CLAUDE.md`, wie schon in `README.md`.
 
 ## Annahmen in Phase 2
 

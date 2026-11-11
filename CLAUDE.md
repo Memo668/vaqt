@@ -49,6 +49,7 @@ Nur in DEBUG: Startargumente, mit denen sich jeder Referenz-Screenshot nachstell
 -debugLocationDenied  -debugOffline
 -debugTab today|qibla|guide|verses|qada|settings
 -debugQiblaHeading 137
+-debugCatalog arc|rows|glass|cards|all   # Katalog der Bausteine statt der App, für den Abgleich (make compare)
 ```
 
 Uhrzeit, Datum und Ort laufen über eine injizierbare `Clock`/`LocationSource`, nie direkt über `Date()` oder `CLLocationManager` in den Views.
