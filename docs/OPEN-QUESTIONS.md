@@ -17,17 +17,23 @@ Moonsighting rechnet in Adhan Swift mit eigenen jahreszeitlichen Grenzen und üb
 
 - **Standard:** so lassen. Ob die Einstellungen das sagen sollen, entscheidet Phase 7.
 
-### 3. Orte ohne Sonnenauf- oder -untergang (vertagt bis Phase 3)
+### 3. Banner „Standortzugriff aus – Stadt manuell gewählt“, solange noch keine Stadt gewählt ist
 
-Nördlich des Polarkreises geht die Sonne an manchen Tagen nicht auf oder nicht unter. Adhan Swift liefert dann keine Zeiten: `PrayerTimesSource.times` gibt `nil` zurück, und es gibt keinen Zeitstrahl. Spec und Prototyp kennen den Fall nicht.
+Verweigert jemand den Standort, bevor eine Stadt gewählt ist, steht das Banner schon da – sein Text sagt aber „Stadt manuell gewählt“. Der Prototyp kennt den Zustand nicht: Dort ist immer eine Stadt gewählt. `T` hat keinen anderen Text.
 
-- **Standard:** offen bis Phase 3. Vorschlag: ein Hinweis an der Stelle der Zeiten.
+- **Standard:** Das Banner bleibt, wie es ist. Die Stadtzeile zeigt „Stadt wählen“, und das Stadt-Sheet öffnet sich von selbst. Sobald eine Stadt gewählt ist, stimmt der Text.
 
-### 4. Symbol für den Chip „Anleitung“ (für Phase 3)
+### 4. Bundesländer in der Ortssuche
 
-Der Prototyp zeichnet für den Chip „Anleitung“ einen Mihrab-Bogen (`pray`). Die Design Spec nennt dafür kein SF Symbol, und in den SF Symbols gibt es kein Gegenstück.
+Die Ortssuche fragt bei Apple nach Städten und Verwaltungsgebieten. Mit „nur Städte“ fehlen Stadtstaaten: Für „Berl“, „Hambu“ und „Wien“ liefert der Dienst dann weder Berlin noch Hamburg noch Wien, weil er sie als Verwaltungsgebiet führt. Mit den Verwaltungsgebieten stehen sie an erster Stelle – es erscheinen aber auch Flächenländer wie „Bayern“ als Vorschlag. Wer eines wählt, bekommt die Zeiten für dessen Mitte.
 
-- **Standard bis dahin:** Im Katalog steht `list.number` als Platzhalter. Die Symbole der Chips legt erst die obere Leiste in Phase 3 fest; „Zeiten“ zeigt `clock`, „Qibla“ `safari`.
+- **Standard:** Städte und Verwaltungsgebiete, weil fehlende Großstädte schwerer wiegen als ein Bundesland in der Liste.
+
+### 5. Antippen beim Abgleich
+
+`xcrun simctl` kann starten und aufnehmen, aber nicht tippen. Zustände, die einen Tipp brauchen – `iphone/85` (Stadt-Sheet), später Qibla, Anleitung, Nachholen und die Einstellungen –, lassen sich damit nicht automatisch nachstellen. In Phase 3 hat ein kleines Hilfsprojekt außerhalb des Repos getippt: ein UI-Test, der die installierte App startet, antippt, wischt, tippt und aufnimmt (`/Volumes/Extern/Builds/NamazVakti/ui-harness`).
+
+- **Standard:** Das Hilfsprojekt bleibt außerhalb des Repos. Vorschlag: als `scripts/ui-harness` ins Repo übernehmen, damit `make` auch Zustände mit Tipp nachstellen kann.
 
 ## Vor der Veröffentlichung zu prüfen
 
@@ -122,6 +128,70 @@ Der Plan für Phase 2 wurde am 10.11.2026 mit vier Vorschlägen freigegeben („
 ## Entschieden mit der Abnahme von Phase 2 am 11.11.2026
 
 - **`-debugCatalog` in `CLAUDE.md`:** „ja“ – Das Argument steht jetzt in der Liste der Debug-Argumente in `CLAUDE.md`, wie schon in `README.md`.
+
+## Entschieden mit dem Plan für Phase 3 am 11.11.2026
+
+Der Plan für Phase 3 wurde am 11.11.2026 mit vier Vorschlägen freigegeben („Freigeben“). Damit gilt:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Symbol für den Chip „Anleitung“ | die Zeichnung des Prototyps: ein Gebetsteppich mit Mihrab-Bogen (`pray`) | Die Design Spec nennt für diesen Chip kein SF Symbol, und in den SF Symbols gibt es keines für Gebet oder Moschee; es gilt deshalb das Referenzbild. `GlassSymbol.prayerRug` zeichnet die Linien des Prototyps in einem Feld von 22 pt. „Zeiten“ zeigt `clock`, „Qibla“ `safari`. |
+| Orte ohne Sonnenauf- oder -untergang | neuer Text `noTimes` in `T` (DE, TR, EN, ES), gezeigt an der Stelle von Bogen und Karten | „Für diesen Ort lassen sich heute keine Gebetszeiten berechnen, weil die Sonne nicht auf- oder untergeht.“ Der Prototyp hat dafür einen neuen Schlüssel bekommen, sein Aussehen ist unverändert. Der String Catalog hat damit 261 Einträge. |
+| Gespeicherte Städte | Die Liste startet leer. Jede über die Suche gewählte Stadt wird gemerkt und ist dann auch ohne Netz wählbar. Löschen mit der Wischgeste der Liste. | Die fünf Städte aus `iphone/85` stehen nur mit `-debugFixtureTimes` da. Das Löschen geht über die Spec hinaus. Die Stadt, die gerade gilt, lässt sich nicht löschen. |
+| Teilung der Phase | zwei Abschnitte in einem Durchgang | 3a: Leiste, Pager, Zeiten-Seite, Glocke, Toast, Abgleich `iphone/10` bis `22`. 3b: Stadt-Sheet, Standort, Ortssuche, `iphone/85`. |
+
+Mit dem Plan freigegeben sind auch seine Annahmen; sie stehen unten unter „Annahmen in Phase 3“.
+
+## Annahmen in Phase 3
+
+Gemessen ist auf dem iPhone 18 Pro mit iOS 27.2, Zustände wie in `scripts/compare-today`. Lage und Größe stammen aus dem Baum der Bedienungshilfen der laufenden App.
+
+### Was mit den Referenzbildern übereinstimmt
+
+- **Zeiten-Seite, `iphone/10` bis `16`, `20` bis `22`:** Leiste, Kopf, Bogen und Karten liegen an der Stelle der Referenz. Der sichere Bereich beginnt im Simulator bei 62 statt 58 pt, alles sitzt deshalb 4 pt tiefer; mittige Bausteine sitzen 6 pt weiter rechts, weil der Bildschirm 12 pt breiter ist.
+
+| Baustein | Referenz (y in pt) | App (y in pt) |
+|---|---|---|
+| obere Leiste | 58 bis 110 | 62 bis 114 |
+| Stadt-Button | 128 bis 172 | 132 bis 176 |
+| Datum, zwei Zeilen | 172 bis 213,4 | 176 bis 217,4 |
+| Bogen | ab 223,4 | ab 227,4 |
+| Gebetskarten, je 52 pt mit 8 pt Abstand | ab 411,4 | ab 415,3 |
+
+- **Standort aus, offline (`iphone/17`):** Die Hinweis-Pille ist 26,3 pt hoch und sitzt 10 pt unter dem Datum, das Banner ist 52 pt hoch und sitzt 14 pt darunter, der Bogen 10 pt unter dem Banner. Kein Standortsymbol, keine Marke „manuell“.
+- **Hohe Breiten (`iphone/18`):** Info-Marken an Fadschr und Ischa; die Hinweiskarte beginnt 12 pt unter den Karten und ist mit drei Zeilen Text 101 pt hoch. „Regel ändern“ führt nach Einstellungen › Hohe Breitengrade.
+- **Zustände:** nichts hervorgehoben vor Fadschr (`12`), kein laufendes Gebet nach Sonnenaufgang (`13`), „Kerahat bis …“ in Gold (`14`, `15`), „Fadschr (morgen) in“ nach Ischa (`16`), gespiegelte Anordnung (`20`), türkische Texte und Daten (`21`), Ring bei eng liegenden Markern (`22`).
+- **Stadt-Sheet (`iphone/85`):** Zeile „Aktueller Standort“ 44,3 pt, Städte mit Land 63,3 pt, 32 pt zwischen den Gruppen, 18 pt zwischen Suchfeld und erster Gruppe; Symbol und Häkchen so groß wie die Zeichnungen des Prototyps.
+- **Toast:** 36 pt hoch, Unterkante 100 pt über der Unterkante des Bildschirms.
+
+### Was abweicht und bleibt
+
+- **Schrift, Symbole, Glass, Tableiste:** wie in Phase 2 beschrieben. Auf der Zeiten-Seite heißt das: Der Name der Stadt sitzt rund 1 pt tiefer als im Referenzbild und ist rund 5 pt schmaler; der Chip „Zeiten“ ist 1,3 pt breiter, die Kreise daneben sitzen entsprechend weiter rechts.
+- **Breite:** Karten, Banner und Hinweiskarte füllen die Breite des Bildschirms abzüglich 16 pt Rand und sind im Simulator deshalb 370 statt 358 pt breit. Der Bogen bleibt 358 pt breit und steht mittig.
+- **Große Schrift (`iphone/19`):** Der Text der Chips wächst bis AX1, wie die Spec es verlangt (bei „xxxLarge“ 23 pt); der Prototyp begrenzt ihn auf das 1,15-Fache (19,5 pt). Der gewählte Chip ist deshalb breiter. Stadt und Datum folgen den Größen des Systems (28 und 21 pt statt 29,7 und 20,25 pt); Bogen und Karten liegen dadurch 2 pt tiefer als im Referenzbild. Die Kerahat-Zeile bricht nur in der Karte des laufenden Gebets um, im Referenzbild in allen dreien – die Karten sind breiter und die Schrift schmaler.
+- **Stadt-Sheet:** Das Sheet, seine Leiste, das Suchfeld und die Liste sind die des Systems. „Abbrechen“ ist eine Glass-Kapsel statt reinem Text; das Suchfeld ist eine 44 pt hohe Kapsel statt eines 38 pt hohen Rechtecks, die Gruppen liegen deshalb 6 pt tiefer; die Trennlinien sind auf beiden Seiten eingerückt statt bis zum rechten Rand zu laufen. Beim Suchen ersetzt das System Titel und „Abbrechen“ durch das Suchfeld mit einem Schließen-Knopf. Die gesperrte Zeile „Aktueller Standort“ blasst als Ganzes ab; im Prototyp bleibt ihr Symbol in Akzent.
+- **Countdown:** Die Uhr läuft ab dem Start weiter. Eine Aufnahme entsteht ein bis zwei Sekunden danach und zeigt deshalb z. B. 2:01:57 statt 2:01:59.
+- **Statusleiste:** `make statusbar` setzt 14:25. Die Referenzbilder zeigen die Uhrzeit ihres Zustands; dafür `make statusbar TIME=23:47`.
+
+### Annahmen in der Umsetzung
+
+- **Standortabfrage:** Bis es das Onboarding gibt (Phase 7), fragt die Zeiten-Seite beim ersten Start selbst („Beim Verwenden der App“). Mit Phase 7 wandert die Abfrage hinter den Vorab-Bildschirm. Wird abgelehnt und ist noch keine Stadt gewählt, öffnet sich das Stadt-Sheet – wie im Ablauf des Prototyps nach „Nicht erlauben“.
+- **Begründung im System-Dialog:** `NSLocationWhenInUseUsageDescription` ist der Text `alLocBody` aus `T`, in vier Sprachen (`App/InfoPlist.xcstrings`). Der Dialog erscheint in der Sprache des Systems, nicht in der der App.
+- **Automatik und Verweigern:** Ob der aktuelle Standort gilt, ist `S.autoLocation && !S.locDenied` wie im Prototyp. Das Verweigern schaltet die Automatik nicht ab: Wird der Standort in den iOS-Einstellungen wieder erlaubt, gilt er wieder. Die zuletzt gewählte Stadt bleibt gemerkt und gilt, solange der Standort verweigert ist.
+- **Noch kein Ort:** Die Stadtzeile zeigt „Aktueller Standort“ (`currentLocation`), solange der Name fehlt, und „Stadt wählen“ (`citySheetTitle`), wenn es weder Freigabe noch Stadt gibt. Bogen und Karten erscheinen, sobald ein Ort da ist. Neue Texte braucht das nicht.
+- **Geocoding:** über MapKit (`MKReverseGeocodingRequest`), weil `CLGeocoder` seit iOS 26 als veraltet markiert ist. An Apple gehen dafür nur die Koordinaten. Der Stadtname kommt in der Sprache der App. Gerechnet wird für den Standort des Geräts, nicht für die Mitte der gefundenen Stadt; gefragt wird mit einer Genauigkeit von drei Kilometern.
+- **Ohne Netz:** Der zuletzt bestimmte Ort gilt weiter, wenn der neue Standort höchstens 25 km entfernt liegt (`Place.sameAreaKm`). Sonst rechnet die App mit dem Standort ohne Namen, in der Zeitzone des Geräts und – weil das Land fehlt – mit MWL, und zeigt „Aktueller Standort“. Kommt das Netz zurück, holt sie den Namen nach. Ob es ein Netz gibt, sagt `NWPathMonitor`; das schickt selbst nichts.
+- **Ortssuche:** `MKLocalSearchCompleter` mit Städten und Verwaltungsgebieten (siehe oben, Punkt 4). Treffer in rund 1000 km Umkreis des Ortes, für den die Seite Zeiten zeigt, stehen zuerst. Der Name einer gewählten Stadt ist der aus der Adresse des Treffers, in der Sprache der App; ohne Zeitzone gilt ein Treffer als nicht bestimmbar. Ein Vorschlag, der schon als gespeicherte Stadt dasteht, erscheint nicht doppelt. Der Suchtext filtert die gespeicherten Städte nach Name und Land, ohne auf Schreibweise und Akzente zu achten.
+- **Gespeicherte Städte:** in der Reihenfolge, in der sie gewählt wurden; dieselbe Stadt (Name und Land) steht nur einmal da. Löschen mit der Wischgeste des Systems; ihr Text „Löschen“ kommt vom System. Wird die gemerkte Stadt gelöscht, während der aktuelle Standort gilt, ist auch die Erinnerung an sie weg.
+- **Hohe Breiten:** Hinweis und Info-Marken erscheinen an den Tagen, an denen die Regel Fadschr oder Ischa tatsächlich bestimmt (`PrayerTimesSource.usesHighLatitudeRule`). Adhan Swift sagt das nicht selbst; die App vergleicht dazu mit der weitesten Regel „Nachtmitte“. Für Berlin im Jahr 2027 (Diyanet): mit „Winkelbasiert“ vom 4. Mai bis 9. August, mit „Ein Siebtel der Nacht“ vom 28. Februar bis 12. Oktober, mit „Nachtmitte“ vom 23. Mai bis 21. Juli. Nur die letzte Spanne sind die Nächte, in denen es wirklich nicht ganz dunkel wird; davor und danach legen die beiden anderen Regeln Fadschr schon später und Ischa früher, als der Winkel es ergäbe. Der Text des Hinweises („wird es nachts nicht ganz dunkel“) trifft an diesen Tagen nicht wörtlich zu. Moonsighting übergeht die Regel, dort erscheint der Hinweis nie. Mit `-debugHighLatitude` und Mock-Zeiten gilt der Schalter des Prototyps.
+- **Countdown und Bogen:** Eine `TimelineView` im Sekundentakt holt die Tagesphase aus dem Zeitstrahl; der Takt schlägt, wenn die App-Uhr auf eine neue Sekunde springt (`AppClock.nextWholeSecondOnDevice`), auch mit der verschobenen Debug-Uhr. Die Karten bauen sich nur neu auf, wenn sich der Schlüssel der Phase ändert (Spec § 4). Für VoiceOver ist der Countdown ein Element in Worten („Maghrib in 2 Std. 2 Min.“).
+- **Datum:** der Kalendertag am Ort, nicht der des Geräts – 23:30 in Berlin ist in Jakarta schon der nächste Tag. Ohne Ort gilt die Zeitzone des Geräts. Sprache und Region kommen aus `L10n.locale`.
+- **Pager:** eine waagerechte `ScrollView` mit Paging. Die obere Leiste hängt mit `safeAreaBar` darüber; der Inhalt jeder Seite scrollt unter ihr durch, mit dem Randeffekt des Systems. Chips wechseln die Seite mit Bewegung, bei „Bewegung reduzieren“ ohne. Die Auswahl bleibt beim Wechsel der Tabs und beim Öffnen der Einstellungen erhalten, nicht über einen Neustart.
+- **Einstellungen als Ziel:** Der Einstellungskreis und „Regel ändern“ führen auf leere Seiten mit Titel und Zurück-Knopf (`SettingsRoute`); die Bildschirme folgen in Phase 7. Die Leiste gibt es bisher nur im Tab „Gebete“; Verse und Nachholen bekommen ihren Einstellungskreis in Phase 6.
+- **Speicher:** `SettingsStore` schreibt in die UserDefaults der App Group (`AppGroupIdentifier` in der Info.plist, aus `APP_GROUP_ID`), damit Widgets und Live-Aktivität sie ab Phase 9 lesen können. Gespeichert sind Glocke je Ereignis, Automatik, gewählte Stadt, gespeicherte Städte, zuletzt bestimmter Ort, Rechen-Einstellungen und Kerahat-Schalter; die letzten beiden lassen sich erst in Phase 7 ändern.
+- **Abgleich:** Mit `-debugFixtureTimes` startet die App mit den Startwerten von `S` – Glocken wie im Prototyp, die Stadt der Fixture, die fünf Städte aus `CITY_IDS` – und speichert nichts. Die Ortssuche bleibt dann stumm, das Netz gilt als vorhanden, außer mit `-debugOffline`.
+- **Unterer Rand:** Unter dem letzten Element bleiben 28 pt bis zur Tableiste – die 112 pt von `.tab-spacer` abzüglich der 84 pt, die im Prototyp hinter der Tableiste liegen.
+- **Toast:** Er steht über allen Tabs, 100 pt über der Unterkante des Bildschirms, und verdeckt dabei wie im Prototyp die unterste Gebetskarte. VoiceOver sagt ihn an.
 
 ## Annahmen in Phase 2
 

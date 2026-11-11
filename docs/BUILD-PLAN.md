@@ -98,6 +98,8 @@ Elf Phasen, jede für sich abnehmbar. Pro Phase stehen hier Ziel, Inhalt, die pa
 
 **Abnahme:** Jeder Referenzzustand lässt sich mit den Debug-Argumenten nachstellen und weicht höchstens um 1–2 pt ab.
 
+Gebaut am 11.11.2026. Abgleich mit `make compare-today`; was übereinstimmt, was abweicht und was angenommen ist, steht in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 3“). Qibla, Anleitung und die Einstellungen sind als leere Seiten angelegt.
+
 ## Phase 4 – Qibla
 
 - Kompass mit Kurs aus `CLLocationManager` (geografisch Nord):
@@ -144,7 +146,7 @@ Elf Phasen, jede für sich abnehmbar. Pro Phase stehen hier Ziel, Inhalt, die pa
   - Mitteilungen pro Gebet, Vorab-Erinnerung, Live-Aktivität (Aus/30/60), Klang
   - Darstellung, Sprache, Kerahat-Schalter
   - Datenschutz, Quellcode, Version
-- Onboarding in drei Schritten, Standort und Mitteilungen erst nach dem jeweiligen Vorab-Bildschirm abfragen.
+- Onboarding in drei Schritten, Standort und Mitteilungen erst nach dem jeweiligen Vorab-Bildschirm abfragen. Die Standortabfrage, die die Zeiten-Seite seit Phase 3 beim ersten Start selbst stellt, wandert dann hinter den Vorab-Bildschirm.
 - Adhan-Sheet: Wellenform, Scrubber, Play/Pause, Stimmen (Platzhalter), Fadschr-Variante; Clips höchstens 30 s.
 
 **Referenzen:** `iphone/01`–`04`, `70`–`81`, `86`.

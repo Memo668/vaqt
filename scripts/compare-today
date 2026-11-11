@@ -41,7 +41,8 @@ WAIT="${WAIT:-2}"
 # „Versatz“ ist, wie viel tiefer Bogen und Karten liegen als in iphone/10:
 #   17  Hinweis-Pille (10 + 26,25) und Banner (14 + 52) schieben beides 102,25 pt nach unten.
 #   19  Große Schrift: Leiste und Datum sind höher. Der Prototyp vergrößert einheitlich auf das
-#       1,35-Fache, die App folgt den Größen des Systems je Textstil – daher zwei Werte.
+#       1,35-Fache (Leiste +7,8 pt, Datum +14,5 pt), die App folgt den Größen des Systems je Textstil
+#       (Leiste +7,8 pt, Datum +16,5 pt) – daher zwei Werte.
 STATES='
 10|10-home-asr-active|light|ltr|de|large|0|0|-debugTime 14:25
 11|11-home-asr-active-dark|dark|ltr|de|large|0|0|-debugTime 14:25
@@ -52,7 +53,7 @@ STATES='
 16|16-home-after-isha-dark|dark|ltr|de|large|0|0|-debugTime 23:30
 17|17-home-location-denied-offline|light|ltr|de|large|102.25|102.25|-debugTime 14:25 -debugLocationDenied -debugOffline
 18|18-home-high-latitude|light|ltr|de|large|0|0|-debugHighLatitude -debugTime 23:47
-19|19-home-large-type|light|ltr|de|extra-extra-extra-large|22.3|26.6|-debugTime 14:25
+19|19-home-large-type|light|ltr|de|extra-extra-extra-large|22.3|24.3|-debugTime 14:25
 20|20-home-rtl|light|rtl|de|large|0|0|-debugTime 14:25
 21|21-home-turkish-istanbul|light|ltr|tr|large|0|0|-debugCity istanbul -debugTime 16:01
 22|22-home-jakarta-close-markers|light|ltr|de|large|0|0|-debugCity jakarta -debugTime 17:57

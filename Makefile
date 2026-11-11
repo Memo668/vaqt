@@ -36,7 +36,7 @@ SHOT ?= screenshots-out/screenshot.png
 
 XCODEBUILD := xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' -derivedDataPath '$(DERIVED)'
 
-.PHONY: help project strings check-strings build test test-core coverage boot run statusbar screenshot compare clean
+.PHONY: help project strings check-strings build test test-core coverage boot run statusbar screenshot compare compare-today clean
 
 help: ## Diese Übersicht
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -86,6 +86,10 @@ screenshot: ## Screenshot des Simulators nach SHOT=…
 compare: build boot ## Bausteine wie in den Referenzbildern aufnehmen und danebenlegen (STATES='10 22' für einzelne)
 	xcrun simctl install '$(SIM)' '$(APP)'
 	SIM='$(SIM)' scripts/compare-catalog $(STATES)
+
+compare-today: build boot ## Zeiten-Seite wie in den Referenzbildern aufnehmen und danebenlegen (STATES='10 17' für einzelne)
+	xcrun simctl install '$(SIM)' '$(APP)'
+	SIM='$(SIM)' scripts/compare-today $(STATES)
 
 clean: ## Build-Daten dieses Projekts löschen
 	rm -rf '$(DERIVED)' '$(CORE_BUILD)'
