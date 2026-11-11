@@ -62,12 +62,14 @@ struct QiblaPage: View {
                 await model.run()
             }
         }
+        // Haptik und Ansage nur, solange die Seite zu sehen ist – eine andere Stadt kann die Ausrichtung
+        // auch ändern, während eine andere Seite vorn ist.
         .sensoryFeedback(.success, trigger: model.isAligned) { _, isAligned in
-            isAligned
+            isAligned && isSelected
         }
         .onChange(of: model.isAligned) { _, isAligned in
             // Für VoiceOver, wie der Live-Bereich des Prototyps.
-            if isAligned {
+            if isAligned, isSelected {
                 AccessibilityNotification.Announcement(L10n.facing).post()
             }
         }
@@ -77,12 +79,15 @@ struct QiblaPage: View {
 
     /// Die Kursanzeige: „98°“ groß und dünn, daneben die Himmelsrichtung. Bis der erste Kurs kommt,
     /// bleibt ihr Platz frei, damit nichts springt.
+    ///
+    /// Die Ziffern haben ihre natürliche Breite, wie im Referenzbild: `.q-readout` verlangt zwar gleich
+    /// breite Ziffern, aber `.q-deg` setzt die Schrift neu und nimmt das damit zurück.
     private var readout: some View {
         let size = QiblaMetrics.degreesSize * min(max(typeScale, 0), QiblaMetrics.degreesMaxScale)
         let readout = model.readout
         return HStack(alignment: .firstTextBaseline, spacing: QiblaMetrics.readoutGap) {
             Text(readout?.degrees ?? "0°")
-                .font(.system(size: size, weight: .thin).monospacedDigit())
+                .font(.system(size: size, weight: .thin))
                 .tracking(QiblaMetrics.degreesTracking)
                 .lineHeight(QiblaMetrics.readoutLineHeight, fontSize: size)
                 .foregroundStyle(Palette.label)
@@ -171,10 +176,10 @@ enum QiblaMetrics {
     static let statusGap: CGFloat = 6
     static let statusMinHeight: CGFloat = 26
     static let statusLineHeight: CGFloat = 1.3
-    /// Der Haken vor „Du blickst Richtung Qibla“ – `ic('check', 18)`. Als Schriftgröße eines SF Symbols
-    /// so gewählt, dass er so breit erscheint wie die Zeichnung des Prototyps (rund 11 pt).
+    /// Der Haken vor „Du blickst Richtung Qibla“ – `ic('check', 18)`, als SF Symbol so groß wie das
+    /// Häkchen im Stadt-Sheet. Die Zeichnung des Prototyps ist flacher: 12 × 8,5 pt.
     static let checkBox: CGFloat = 18
-    static let checkSize: CGFloat = 12
+    static let checkSize: CGFloat = 12.5
     static let checkWeight: Font.Weight = .semibold
 
     /// Info-Zeile (`.q-info`: `margin: 6px 0 24px`, Zeilenhöhe 1,3 von `.screen`).

@@ -36,7 +36,7 @@ SHOT ?= screenshots-out/screenshot.png
 
 XCODEBUILD := xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' -derivedDataPath '$(DERIVED)'
 
-.PHONY: help project strings check-strings build test test-core coverage boot run statusbar screenshot compare compare-today clean
+.PHONY: help project strings check-strings build test test-core coverage boot run statusbar screenshot compare compare-today compare-qibla clean
 
 help: ## Diese Übersicht
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -90,6 +90,10 @@ compare: build boot ## Bausteine wie in den Referenzbildern aufnehmen und danebe
 compare-today: build boot ## Zeiten-Seite wie in den Referenzbildern aufnehmen und danebenlegen (STATES='10 17' für einzelne)
 	xcrun simctl install '$(SIM)' '$(APP)'
 	SIM='$(SIM)' scripts/compare-today $(STATES)
+
+compare-qibla: build boot ## Qibla-Seite wie in den Referenzbildern aufnehmen und danebenlegen (STATES='31' für einzelne)
+	xcrun simctl install '$(SIM)' '$(APP)'
+	SIM='$(SIM)' scripts/compare-qibla $(STATES)
 
 clean: ## Build-Daten dieses Projekts löschen
 	rm -rf '$(DERIVED)' '$(CORE_BUILD)'

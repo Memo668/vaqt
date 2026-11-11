@@ -1,0 +1,113 @@
+#!/bin/bash
+# Abgleich der Qibla-Seite mit den Referenzbildern design/screenshots/iphone/30–32 (Phase 4).
+#
+# Startet die App im Simulator in jedem Zustand der Referenzbilder, nimmt den Bildschirm auf und legt
+# Ausschnitte mit scripts/compare-shot neben die Referenz: obere Leiste, Kopf (Titelzeile und
+# Kursanzeige), Kompass, Statuszeile mit Info-Zeile und die Kalibrierungskarte. Die App muss gebaut und
+# installiert sein:
+#
+#   make run
+#   scripts/compare-qibla            alle Zustände
+#   scripts/compare-qibla 31         nur dieses Referenzbild
+#
+# Ergebnis in screenshots-out/phase-4/: qibla-<nr>.png (Aufnahme), compare-<Ausschnitt>-<nr>.png
+# (oben Referenz, Mitte Aufnahme, unten Unterschied) und catalog-compass.png mit compare-card-catalog.png.
+#
+# Der Simulator hat keinen Kompass. Der Kurs kommt deshalb aus -debugQiblaHeading, mit den Werten, die
+# die Referenzbilder zeigen: Der Prototyp startet bei 99° und zittert um ±0,9°, die Bilder zeigen 98°
+# (iphone/30), 137° (31) und 138° (32).
+#
+# Die Referenzbilder zeigen die Karte „Kompass kalibrieren“ immer, die App laut Spec nur bei schlechter
+# Genauigkeit. -debugQiblaAccuracy 40 stellt einen ungenauen Kompass nach, damit die Karte erscheint.
+#
+# Der Simulator (iPhone 18 Pro, 402 × 874 pt) ist 12 pt breiter und 30 pt höher als die Referenzbilder
+# (390 × 844 pt). Verglichen werden deshalb Ausschnitte:
+#   - Der sichere Bereich beginnt bei 62 statt 58 pt: Alles sitzt 4 pt tiefer.
+#   - Die Seite ist mittig gesetzt: Kopf, Kompass und Zeilen sitzen 6 pt weiter rechts.
+#   - Die Kalibrierungskarte ist 12 pt breiter. Ihre linke und ihre rechte Hälfte werden getrennt
+#     verglichen, jede an ihrem Rand ausgerichtet. Weil ihr Text in der breiteren Karte anders umbricht,
+#     kommt die Karte zusätzlich aus dem Katalog (-debugCatalog compass), dort in Referenzbreite.
+#
+# Der Simulator lässt sich mit SIM='…' wählen, wie im Makefile.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SIM="${SIM:-iPhone 18 Pro}"
+BUNDLE_ID=com.example.gebetszeiten
+REF="$ROOT/design/screenshots/iphone"
+OUT="${OUT:-$ROOT/screenshots-out/phase-4}"
+ZOOM="${ZOOM:-3}"
+WAIT="${WAIT:-2}"
+
+# Nummer | Datei | Argumente
+STATES='
+30|30-qibla|-debugTime 14:25 -debugQiblaHeading 98
+31|31-qibla-aligned|-debugTime 14:25 -debugQiblaHeading 137
+32|32-qibla-mecca|-debugCity mecca -debugTime 15:42 -debugQiblaHeading 138
+'
+
+# Ausschnitte in pt (x,y,Breite,Höhe), erst im Referenzbild, dann in der Aufnahme.
+#   Leiste     wie bei der Zeiten-Seite, links ausgerichtet.
+#   Kopf       Titelzeile (ab 124 pt) und Kursanzeige (bis 209,5 pt).
+#   Kompass    280 × 280 pt ab 249,5 pt, mittig; dazu oben die Peilmarke (18 pt) und rundum die
+#              Kaaba-Marke, die bis zu 20 pt über den Rand hinausragt.
+#   Zeilen     Statuszeile (549,5 bis 575,5 pt) und Info-Zeile (581,5 bis 601 pt).
+#   Karte      ab 625 pt, 86,6 pt hoch; linke und rechte Hälfte.
+BAR_REF=0,50,390,76;          BAR_SHOT=0,54,390,76
+HEAD_REF=0,118,390,96;        HEAD_SHOT=6,122,390,96
+COMPASS_REF=35,223.5,320,326; COMPASS_SHOT=41,227.5,320,326
+LINES_REF=0,545.5,390,62;     LINES_SHOT=6,549.5,390,62
+CARD_L_REF=0,617,230,104;     CARD_L_SHOT=0,621,230,104
+CARD_R_REF=160,617,230,104;   CARD_R_SHOT=172,621,230,104
+# Im Katalog steht der Kompass 140 pt unter der Oberkante, die Karte 40 pt unter ihm, in einem 390 pt
+# breiten Feld, das 6 pt vom Rand sitzt.
+CARD_REF=8,617,374,104;       CARD_CATALOG=14,452,374,104
+
+# compare Name Nummer Datei Referenz-Ausschnitt Aufnahme-Ausschnitt [Aufnahme]
+compare() {
+  printf '  %-9s ' "$1"
+  "$ROOT/scripts/compare-shot" --ref "$REF/$3.png" --ref-rect "$4" \
+    --shot "${6:-$OUT/qibla-$2.png}" --shot-rect "$5" \
+    --out "$OUT/compare-$1-$2.png" --zoom "$ZOOM" | head -1
+}
+
+mkdir -p "$OUT"
+xcrun simctl bootstatus "$SIM" -b >/dev/null
+xcrun simctl ui "$SIM" appearance light
+xcrun simctl ui "$SIM" content_size large
+# Der erste Start nach einer Pause dauert länger als die Wartezeit vor der Aufnahme. Deshalb einmal vorab.
+xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" -debugSkipOnboarding -debugFixtureTimes >/dev/null
+sleep 3
+
+echo "$STATES" | while IFS='|' read -r number file arguments; do
+  [ -n "$number" ] || continue
+  if [ $# -gt 0 ] && ! printf '%s\n' "$@" | grep -qx "$number"; then continue; fi
+
+  # shellcheck disable=SC2086
+  xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" \
+    -AppleLanguages '(de)' -AppleLocale de_DE \
+    -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTab qibla \
+    -debugQiblaAccuracy 40 $arguments >/dev/null
+  sleep "$WAIT"
+  xcrun simctl io "$SIM" screenshot "$OUT/qibla-$number.png" >/dev/null 2>&1
+  echo "iphone/$number:"
+
+  compare bar "$number" "$file" "$BAR_REF" "$BAR_SHOT"
+  compare head "$number" "$file" "$HEAD_REF" "$HEAD_SHOT"
+  compare compass "$number" "$file" "$COMPASS_REF" "$COMPASS_SHOT"
+  compare lines "$number" "$file" "$LINES_REF" "$LINES_SHOT"
+  compare card-l "$number" "$file" "$CARD_L_REF" "$CARD_L_SHOT"
+  compare card-r "$number" "$file" "$CARD_R_REF" "$CARD_R_SHOT"
+done
+
+# Die Kalibrierungskarte in Referenzbreite, aus dem Katalog.
+if [ $# -eq 0 ]; then
+  xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" \
+    -AppleLanguages '(de)' -AppleLocale de_DE \
+    -debugCatalog compass -debugFixtureTimes -debugQiblaHeading 98 >/dev/null
+  sleep "$WAIT"
+  xcrun simctl io "$SIM" screenshot "$OUT/catalog-compass.png" >/dev/null 2>&1
+  echo "Katalog:"
+  compare card catalog 30-qibla "$CARD_REF" "$CARD_CATALOG" "$OUT/catalog-compass.png"
+fi
+
+echo "Ergebnis in $OUT"

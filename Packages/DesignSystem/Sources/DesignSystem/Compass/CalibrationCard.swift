@@ -54,8 +54,8 @@ enum CalibrationMetrics {
     static let titleGap: CGFloat = 2
     /// Feld des Symbols – `ic('infinity', 30)`.
     static let symbolBox: CGFloat = 30
-    /// Das Symbol als Schriftgröße eines SF Symbols, so breit wie die Zeichnung des Prototyps
-    /// (rund 24 pt).
-    static let symbolSize: CGFloat = 20
+    /// Das Symbol als Schriftgröße eines SF Symbols, so groß wie die Zeichnung des Prototyps
+    /// (24 × 11 pt).
+    static let symbolSize: CGFloat = 18.5
     static let symbolWeight: Font.Weight = .medium
 }
