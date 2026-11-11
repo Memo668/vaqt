@@ -3,8 +3,11 @@ import Foundation
 import Observation
 import PrayerCore
 
-/// Der Zustand der Zeiten-Seite: welcher Ort gilt, seine Zeiten, die sechs Gebetskarten und die
+/// Der Zustand der Zeiten-Seite: die Zeiten des Ortes, der gilt, die sechs Gebetskarten und die
 /// Hinweise – der Rechenteil von `homePage()` im Prototyp.
+///
+/// Welcher Ort gilt, weiß `PlaceModel`; die Qibla-Seite fragt dasselbe Modell. Hier steht, was die
+/// Zeiten-Seite daraus macht.
 ///
 /// Das Modell baut sich nur bei einem Wechsel neu auf (`refresh()`): neuer Ort, neue Tagesphase, neuer
 /// Tag. Dazwischen laufen nur Countdown und Bogen weiter; die rechnet `TodayHero` im Sekundentakt aus
@@ -14,21 +17,19 @@ import PrayerCore
 public final class TodayModel {
 
     public let settings: SettingsStore
+    /// Welcher Ort gilt: aktueller Standort oder gewählte Stadt. Die Qibla-Seite teilt sich das Modell.
+    public let location: PlaceModel
     /// Die Uhr der App. Der Bogen liest sie im Sekundentakt.
     public let clock: any AppClock
     /// Die Ortssuche für das Stadt-Sheet.
     public let citySearch: any CitySearching
 
     @ObservationIgnored private let timesSource: any PrayerTimesSource
-    @ObservationIgnored private let locationSource: any LocationSource
     @ObservationIgnored private let connectivity: any ConnectivitySource
     @ObservationIgnored private let toast: ToastCenter
     @ObservationIgnored private let locale: Locale
     @ObservationIgnored private let deviceTimeZone: TimeZone
-    @ObservationIgnored private var isActivating = false
 
-    /// Stand der Standortfreigabe, zuletzt gelesen in `activate()`.
-    public private(set) var authorization: LocationAuthorization = .notDetermined
     /// Ob das Gerät kein Netz hat. Dann steht der Hinweis unter dem Datum.
     public private(set) var isOffline = false
     /// Der Kalendertag am Ort; ohne Ort der des Geräts.
@@ -44,9 +45,33 @@ public final class TodayModel {
     public var isCitySheetPresented = false
 
     /// - Parameters:
+    ///   - location: welcher Ort gilt; die Einstellungen sind die dieses Modells.
     ///   - locale: Sprache für Datum und Hijri-Datum; ohne Angabe die der Texte.
     ///   - deviceTimeZone: Zeitzone für das Datum, solange es keinen Ort gibt.
     public init(
+        clock: any AppClock,
+        timesSource: any PrayerTimesSource,
+        location: PlaceModel,
+        connectivity: any ConnectivitySource,
+        citySearch: any CitySearching = NoCitySearch(),
+        toast: ToastCenter,
+        locale: Locale = L10n.locale,
+        deviceTimeZone: TimeZone = .current
+    ) {
+        self.clock = clock
+        self.timesSource = timesSource
+        self.location = location
+        self.connectivity = connectivity
+        self.citySearch = citySearch
+        settings = location.settings
+        self.toast = toast
+        self.locale = locale
+        self.deviceTimeZone = deviceTimeZone
+        day = CalendarDay(clock.now, in: deviceTimeZone)
+    }
+
+    /// Die Seite mit eigenem Ort-Modell, aus Einstellungen und Standortquelle.
+    public convenience init(
         clock: any AppClock,
         timesSource: any PrayerTimesSource,
         locationSource: any LocationSource,
@@ -57,45 +82,43 @@ public final class TodayModel {
         locale: Locale = L10n.locale,
         deviceTimeZone: TimeZone = .current
     ) {
-        self.clock = clock
-        self.timesSource = timesSource
-        self.locationSource = locationSource
-        self.connectivity = connectivity
-        self.citySearch = citySearch
-        self.settings = settings
-        self.toast = toast
-        self.locale = locale
-        self.deviceTimeZone = deviceTimeZone
-        day = CalendarDay(clock.now, in: deviceTimeZone)
+        self.init(
+            clock: clock, timesSource: timesSource,
+            location: PlaceModel(settings: settings, locationSource: locationSource),
+            connectivity: connectivity, citySearch: citySearch, toast: toast,
+            locale: locale, deviceTimeZone: deviceTimeZone
+        )
     }
 
     // MARK: - Ort
 
-    /// Ob der aktuelle Standort gilt – `auto` im Prototyp (`S.autoLocation && !S.locDenied`). Ohne
-    /// Freigabe gilt die von Hand gewählte Stadt, auch wenn die Automatik eingeschaltet ist.
+    /// Stand der Standortfreigabe, zuletzt gelesen in `activate()`.
+    public var authorization: LocationAuthorization {
+        location.authorization
+    }
+
+    /// Ob der aktuelle Standort gilt. Ohne Freigabe gilt die von Hand gewählte Stadt, auch wenn die
+    /// Automatik eingeschaltet ist.
     public var isAutomatic: Bool {
-        settings.autoLocation && authorization != .denied
+        location.isAutomatic
     }
 
     /// Der Ort, für den die Seite Zeiten zeigt: der aktuelle Standort oder die gewählte Stadt.
     public var place: Place? {
-        isAutomatic ? settings.devicePlace : settings.manualPlace
+        location.place
     }
 
     /// Der Ort, in dessen Umgebung die Ortssuche zuerst sucht: der, für den die Seite Zeiten zeigt,
     /// sonst der zuletzt bestimmte Standort.
     public var searchCenter: Coordinates? {
-        (place ?? settings.devicePlace ?? settings.manualPlace)?.coordinates
+        location.searchCenter
     }
 
     /// Die Zeile mit der Stadt. Solange der Name des aktuellen Standorts fehlt – noch nicht bestimmt
     /// oder ohne Netz –, steht dort „Aktueller Standort“; gibt es weder Freigabe noch Stadt,
     /// „Stadt wählen“.
     public var cityTitle: String {
-        if let place, place.hasName {
-            return place.name
-        }
-        return isAutomatic ? L10n.currentLocation : L10n.citySheetTitle
+        location.cityTitle
     }
 
     /// Text des Stadt-Buttons für VoiceOver: „Stadt: Berlin. Ändern“. Ohne Stadt sagt der Titel schon,
@@ -164,27 +187,10 @@ public final class TodayModel {
     /// Standort. Wird er verweigert und ist noch keine Stadt gewählt, öffnet sich das Stadt-Sheet – wie
     /// im Ablauf des Prototyps nach „Nicht erlauben“.
     public func activate() async {
-        guard !isActivating else { return }
-        isActivating = true
-        defer { isActivating = false }
-
-        authorization = await locationSource.authorization()
-        refresh()
-        guard settings.autoLocation else { return }
-
-        if authorization == .notDetermined {
-            authorization = await locationSource.requestAuthorization()
-            refresh()
-        }
-        switch authorization {
-        case .authorized:
-            await updateDevicePlace()
-        case .denied:
-            if settings.manualPlace == nil {
-                isCitySheetPresented = true
-            }
-        case .notDetermined:
-            break
+        // Nach jedem Schritt, der den Ort ändern kann, baut sich die Seite neu auf.
+        guard await location.activate(onChange: { [self] in refresh() }) else { return }
+        if settings.autoLocation, authorization == .denied, settings.manualPlace == nil {
+            isCitySheetPresented = true
         }
     }
 
@@ -193,8 +199,9 @@ public final class TodayModel {
     public func observeConnectivity() async {
         for await isOnline in connectivity.updates() {
             isOffline = !isOnline
-            if isOnline, isAutomatic, authorization == .authorized, settings.devicePlace?.hasName == false {
-                await updateDevicePlace()
+            if isOnline, isAutomatic, authorization == .authorized, settings.devicePlace?.hasName == false,
+               await location.updateDevicePlace() {
+                refresh()
             }
         }
     }
@@ -217,13 +224,6 @@ public final class TodayModel {
         rows = timeline.phase(at: now).map {
             PrayerRowModel.rows(for: $0, showKerahat: settings.showKerahat, isHighLatitude: isHighLatitude)
         } ?? []
-    }
-
-    private func updateDevicePlace() async {
-        guard let fresh = await locationSource.currentPlace() else { return }
-        // Ohne Netz kommt der Standort ohne Namen: Liegt er beim zuletzt bestimmten Ort, gilt der weiter.
-        settings.setDevicePlace(fresh.named(after: settings.devicePlace))
-        refresh()
     }
 
     // MARK: - Aktionen
