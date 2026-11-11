@@ -29,6 +29,40 @@ public struct AdhanTimesSource: PrayerTimesSource {
         )
     }
 
+    /// Ob die Regel für hohe Breiten an dem Tag Fadschr oder Ischa bestimmt.
+    ///
+    /// Adhan Swift sagt das nicht selbst. Es rechnet beide Zeiten zuerst aus dem Dämmerungswinkel und
+    /// begrenzt sie dann mit der Regel: Fadschr liegt nie früher, Ischa nie später als die Grenze der
+    /// Regel. Erreicht die Sonne den Winkel gar nicht, gilt die Grenze selbst. Daraus folgt die Probe:
+    ///
+    /// - „Nachtmitte“ ist die weiteste der drei Grenzen. Ändert sich Fadschr oder Ischa, wenn man statt
+    ///   der gewählten Regel mit ihr rechnet, hat die gewählte Regel gegriffen.
+    /// - Ist „Nachtmitte“ selbst gewählt, greift sie genau dann, wenn Ischa und das Fadschr des Folgetags
+    ///   an der Nachtmitte zusammenfallen.
+    ///
+    /// Die Minutenkorrekturen bleiben außen vor: Sie verschieben die Zeiten, ändern aber nichts daran, ob
+    /// sie geschätzt sind. Moonsighting rechnet mit eigenen jahreszeitlichen Grenzen und übergeht die
+    /// Regel (docs/OPEN-QUESTIONS.md).
+    public func usesHighLatitudeRule(on day: CalendarDay, at place: Place, settings: CalculationSettings) -> Bool {
+        guard settings.effectiveMethod(for: place) != .moonsighting else { return false }
+        var chosen = settings
+        chosen.adjustments = MinuteAdjustments()
+        guard let today = times(on: day, at: place, settings: chosen) else { return false }
+
+        if chosen.highLatitudeRule == .middle {
+            guard let tomorrow = times(on: day.adding(days: 1), at: place, settings: chosen) else { return false }
+            return abs(tomorrow.fajr.timeIntervalSince(today.isha)) <= Self.middleOfNightTolerance
+        }
+        var widest = chosen
+        widest.highLatitudeRule = .middle
+        guard let reference = times(on: day, at: place, settings: widest) else { return false }
+        return today.fajr != reference.fajr || today.isha != reference.isha
+    }
+
+    /// So nah liegen Ischa und das Fadschr des Folgetags beieinander, wenn beide auf die Nachtmitte
+    /// fallen: Die Nächte zweier Tage sind nicht gleich lang, und jede Zeit ist auf die Minute gerundet.
+    private static let middleOfNightTolerance: TimeInterval = 180
+
     /// Die Parameter von Adhan Swift zu einer Methode und den Einstellungen.
     static func parameters(for method: CalculationMethod, settings: CalculationSettings) -> CalculationParameters {
         var parameters = preset(for: method)

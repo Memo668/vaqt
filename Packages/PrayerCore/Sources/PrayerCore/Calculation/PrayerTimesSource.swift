@@ -9,4 +9,19 @@ public protocol PrayerTimesSource: Sendable {
     /// `nil`, wenn sich für den Tag keine Zeiten bestimmen lassen – etwa dort, wo die Sonne an dem Tag
     /// nicht auf- oder untergeht.
     func times(on day: CalendarDay, at place: Place, settings: CalculationSettings) -> DayTimes?
+
+    /// Ob Fadschr oder Ischa des Tages aus der Regel für hohe Breiten kommen statt aus dem
+    /// Dämmerungswinkel – dann sind sie geschätzt. Die Zeiten-Seite zeigt in dem Fall die Info-Marken an
+    /// Fadschr und Ischa und den Hinweis mit der Regel (Design Spec § 5, „High latitude“).
+    ///
+    /// Der Prototyp hat dafür nur einen Schalter (`S.highLat`).
+    func usesHighLatitudeRule(on day: CalendarDay, at place: Place, settings: CalculationSettings) -> Bool
+}
+
+extension PrayerTimesSource {
+
+    /// Ohne eigene Auskunft greift die Regel nicht.
+    public func usesHighLatitudeRule(on day: CalendarDay, at place: Place, settings: CalculationSettings) -> Bool {
+        false
+    }
 }

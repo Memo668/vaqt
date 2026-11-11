@@ -7,6 +7,26 @@ import Foundation
 /// (Der Name vermeidet die Verwechslung mit `Swift.Clock`.)
 public protocol AppClock: Sendable {
     var now: Date { get }
+
+    /// Der Zeitpunkt der Gerätezeit, zu dem diese Uhr `date` zeigt.
+    ///
+    /// Das System taktet nach der Gerätezeit (`TimelineView`, `Text(timerInterval:)`). Wer zu einem
+    /// Zeitpunkt der App-Uhr etwas anstoßen will – etwa den Sekundentakt des Countdowns –, rechnet ihn
+    /// hiermit um. Für die Uhr des Geräts ist es derselbe Zeitpunkt.
+    func deviceDate(for date: Date) -> Date
+}
+
+extension AppClock {
+
+    /// Ohne eigene Umrechnung läuft die Uhr mit der Gerätezeit.
+    public func deviceDate(for date: Date) -> Date { date }
+
+    /// Die nächste volle Sekunde dieser Uhr, als Zeitpunkt der Gerätezeit – der Beginn eines
+    /// Sekundentakts, der genau dann schlägt, wenn die App-Uhr auf eine neue Sekunde springt.
+    public var nextWholeSecondOnDevice: Date {
+        let seconds = now.timeIntervalSinceReferenceDate.rounded(.up)
+        return deviceDate(for: Date(timeIntervalSinceReferenceDate: seconds))
+    }
 }
 
 /// Die echte Uhr des Geräts.
@@ -38,4 +58,8 @@ public struct DebugClock: AppClock {
     }
 
     public var now: Date { Date().addingTimeInterval(offset) }
+
+    public func deviceDate(for date: Date) -> Date {
+        date.addingTimeInterval(-offset)
+    }
 }

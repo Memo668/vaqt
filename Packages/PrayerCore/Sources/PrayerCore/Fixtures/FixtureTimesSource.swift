@@ -45,6 +45,12 @@ public struct FixtureTimesSource: PrayerTimesSource {
         )
     }
 
+    /// Wie der Schalter `S.highLat` im Prototyp: Mit `-debugHighLatitude` gelten Fadschr und Ischa als
+    /// geschätzt, sonst nie.
+    public func usesHighLatitudeRule(on day: CalendarDay, at place: Place, settings: CalculationSettings) -> Bool {
+        highLatitude
+    }
+
     /// Die Uhrzeiten vor den Korrekturen – `d` in `todayTimes()`.
     private func rawTimes(at place: Place, rule: HighLatitudeRule) -> FixtureTimes.Times? {
         guard highLatitude else {
