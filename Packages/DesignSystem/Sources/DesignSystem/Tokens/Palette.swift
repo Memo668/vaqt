@@ -39,6 +39,9 @@ public enum Palette {
     /// `--label-3`: z. B. das Symbol einer vergangenen Zeile oder eine ausgeschaltete Glocke.
     public static let labelTertiary = Color(uiColor: .tertiaryLabel)
 
+    /// `--label-4`: die Balken der Wellenform im Adhan-Player und die übrigen Punkte im Onboarding.
+    public static let labelQuaternary = Color(uiColor: .quaternaryLabel)
+
     /// `--red`: das Rot des Systems – das „N“ auf der Skala des Kompasses.
     public static let red = Color(uiColor: .systemRed)
 

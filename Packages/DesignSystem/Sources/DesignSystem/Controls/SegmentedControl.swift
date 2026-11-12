@@ -14,9 +14,12 @@ public struct SegmentedControl<Value: Hashable>: View {
     /// Ein Teil der Segmente.
     public struct Segment: Identifiable {
         public let value: Value
+        /// Titel des Teils; bei einem Teil mit Symbol nur der VoiceOver-Text.
         public let title: String
         /// Ob der Teil den Punkt trägt, und was VoiceOver dazu sagt, z. B. „Jetzt“. `nil`: kein Punkt.
         public let mark: String?
+        /// SF Symbol, das statt des Titels erscheint – z. B. die Glocken unter Einstellungen › Pro Gebet.
+        public let systemImage: String?
 
         public var id: Value { value }
 
@@ -24,6 +27,15 @@ public struct SegmentedControl<Value: Hashable>: View {
             self.value = value
             self.title = title
             self.mark = mark
+            systemImage = nil
+        }
+
+        /// Ein Teil mit Symbol statt Titel; `title` sagt VoiceOver.
+        public init(value: Value, title: String, systemImage: String) {
+            self.value = value
+            self.title = title
+            mark = nil
+            self.systemImage = systemImage
         }
     }
 
@@ -31,6 +43,7 @@ public struct SegmentedControl<Value: Hashable>: View {
     private let segments: [Segment]
     private let selection: Value
     private let focus: AccessibilityFocusState<Value?>.Binding?
+    private let segmentWidth: CGFloat?
     private let onSelect: (Value) -> Void
 
     @ScaledMetric(relativeTo: .body) private var typeScale: CGFloat = 1
@@ -42,15 +55,19 @@ public struct SegmentedControl<Value: Hashable>: View {
     ///   - label: Name der Auswahl für VoiceOver, z. B. „Anleitung“ (`aria-label` der `radiogroup`).
     ///   - selection: der gewählte Teil.
     ///   - focus: Fokus von VoiceOver, um ihn auf einen Teil zu setzen – etwa nach „Zum aktuellen Gebet“.
+    ///   - segmentWidth: feste Breite jedes Teils, z. B. 44 pt für die Glocken (`.seg button`:
+    ///     `min-width: 44px`); ohne Angabe teilen sich die Teile die Breite (`.seg-wide`).
     ///   - onSelect: Tippen auf einen Teil; die Seite entscheidet, was gewählt ist.
     public init(
         _ label: String, segments: [Segment], selection: Value,
-        focus: AccessibilityFocusState<Value?>.Binding? = nil, onSelect: @escaping (Value) -> Void
+        focus: AccessibilityFocusState<Value?>.Binding? = nil, segmentWidth: CGFloat? = nil,
+        onSelect: @escaping (Value) -> Void
     ) {
         self.label = label
         self.segments = segments
         self.selection = selection
         self.focus = focus
+        self.segmentWidth = segmentWidth
         self.onSelect = onSelect
     }
 
@@ -86,8 +103,8 @@ public struct SegmentedControl<Value: Hashable>: View {
             onSelect(segment.value)
         } label: {
             content(for: segment)
-                .frame(maxWidth: .infinity)
-                .frame(height: SegmentMetrics.segmentHeight)
+                .frame(maxWidth: segmentWidth == nil ? .infinity : nil)
+                .frame(width: segmentWidth, height: SegmentMetrics.segmentHeight)
                 .background {
                     if segment.value == (thumb ?? selection) {
                         thumbView
@@ -113,7 +130,19 @@ public struct SegmentedControl<Value: Hashable>: View {
     ///
     /// Im Prototyp ist der Knopf ein Raster (`display: grid; place-items: center`): Titel und Punkt sind
     /// zwei Zeilen, die sich den freien Platz der 30 pt teilen, und jedes steht mittig in seiner Zeile.
+    @ViewBuilder
     private func content(for segment: Segment) -> some View {
+        if let systemImage = segment.systemImage {
+            Image(systemName: systemImage)
+                .font(.system(size: SegmentMetrics.symbolSize, weight: SegmentMetrics.symbolWeight))
+                .foregroundStyle(Palette.label)
+                .accessibilityHidden(true)
+        } else {
+            titleContent(for: segment)
+        }
+    }
+
+    private func titleContent(for segment: Segment) -> some View {
         let rows = SegmentMetrics.rows(fontSize: fontSize, isMarked: segment.mark != nil)
         return VStack(spacing: 0) {
             Text(segment.title)
@@ -209,4 +238,11 @@ enum SegmentMetrics {
 
     /// Der Daumen blendet über (`transition: background .2s, box-shadow .2s`).
     static let transitionDuration: TimeInterval = 0.2
+
+    /// Symbol eines Teils – die Glocken unter „Pro Gebet“ (`ic(BELL_ICON[v], 18)`); als Schriftgröße eines
+    /// SF Symbols so gewählt wie die Glocke der Gebetskarten (`ic(…, 20)`), auf 18 pt verkleinert.
+    static let symbolSize: CGFloat = 12.2
+    static let symbolWeight: Font.Weight = .semibold
+    /// Breite eines Teils mit Symbol (`.seg button`: `min-width: 44px`).
+    static let symbolSegmentWidth: CGFloat = 44
 }
