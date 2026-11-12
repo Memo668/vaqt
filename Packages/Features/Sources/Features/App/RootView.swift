@@ -19,9 +19,13 @@ public struct RootView: View {
         // Die gespeicherte Sprache gilt, bevor der erste Text gelesen wird.
         L10n.chosenLanguage = settings.language
         _settings = State(initialValue: settings)
+        // Das Onboarding erscheint beim ersten Start; `-debugOnboarding` zeigt es auch danach,
+        // `-debugSkipOnboarding` übergeht es.
+        let showsOnboarding = !settings.onboardingCompleted && !environment.skipsOnboarding
         _navigation = State(initialValue: AppNavigation(
             tab: environment.initialTab, prayersPage: environment.initialPage,
-            settingsPath: environment.settingsPath, isAdhanSheetPresented: environment.opensAdhanSheet
+            settingsPath: environment.settingsPath, isAdhanSheetPresented: environment.opensAdhanSheet,
+            onboardingStep: environment.onboardingStep ?? (showsOnboarding ? .welcome : nil)
         ))
     }
 
@@ -46,12 +50,14 @@ public struct RootView: View {
     }
 }
 
-/// Der Inhalt der App: die System-`TabView` mit den drei Tabs Gebete, Verse und Nachholen, darüber das
-/// Stadt-Sheet und der Toast. Hier entstehen die Modelle der Seiten – in der Sprache, die gerade gilt.
+/// Der Inhalt der App: beim ersten Start das Onboarding, sonst die System-`TabView` mit den drei Tabs
+/// Gebete, Verse und Nachholen; darüber das Stadt-Sheet und der Toast. Hier entstehen die Modelle der
+/// Seiten – in der Sprache, die gerade gilt.
 struct AppContent: View {
     let environment: AppEnvironment
     @Bindable var navigation: AppNavigation
 
+    @State private var onboarding: OnboardingModel
     @State private var toast: ToastCenter
     @State private var today: TodayModel
     @State private var qibla: QiblaModel
@@ -86,10 +92,35 @@ struct AppContent: View {
             timesSource: environment.timesSource, notificationAuthorizer: environment.notificationAuthorizer,
             sourceCodeURL: AppInfo.sourceCodeURL, version: AppInfo.version
         ))
+        _onboarding = State(initialValue: OnboardingModel(
+            navigation: navigation, today: today, notificationAuthorizer: environment.notificationAuthorizer
+        ))
     }
 
     var body: some View {
         @Bindable var today = today
+        Group {
+            if navigation.onboardingStep != nil {
+                OnboardingView(model: onboarding)
+                    .transition(.opacity)
+            } else {
+                tabs
+                    .transition(.opacity)
+            }
+        }
+        .animation(.easeInOut(duration: 0.35), value: navigation.onboardingStep == nil)
+        // Das Stadt-Sheet öffnen die Zeiten-Seite, die Qibla-Seite, die Einstellungen jedes Tabs und das
+        // Onboarding.
+        .sheet(isPresented: $today.isCitySheetPresented) {
+            CitySheet(today: today, search: today.citySearch)
+        }
+        .environment(settingsModel)
+        .toasts(from: toast)
+        .environment(\.appClock, environment.clock)
+        .environment(\.locationSource, environment.locationSource)
+    }
+
+    private var tabs: some View {
         TabView(selection: $navigation.tab) {
             ForEach(AppTab.allCases, id: \.self) { tab in
                 Tab(tab.title, systemImage: tab.systemImage, value: tab) {
@@ -107,14 +138,6 @@ struct AppContent: View {
                 }
             }
         }
-        // Das Stadt-Sheet öffnen die Zeiten-Seite, die Qibla-Seite und die Einstellungen jedes Tabs.
-        .sheet(isPresented: $today.isCitySheetPresented) {
-            CitySheet(today: today, search: today.citySearch)
-        }
-        .environment(settingsModel)
-        .toasts(from: toast)
-        .environment(\.appClock, environment.clock)
-        .environment(\.locationSource, environment.locationSource)
     }
 }
 

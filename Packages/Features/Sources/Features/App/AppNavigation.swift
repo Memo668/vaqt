@@ -16,15 +16,18 @@ final class AppNavigation {
     var qadaPath: [SettingsRoute] = []
     /// Das Adhan-Sheet (`openSheet('adhan')`), erreichbar über „Adhan anhören“.
     var isAdhanSheetPresented: Bool
+    /// Der Schritt des Onboardings (`S.obStep`); `nil`, wenn die App zu sehen ist (`S.onboarded`).
+    var onboardingStep: OnboardingStep?
 
     init(
         tab: AppTab = .prayers, prayersPage: PrayersPage = .today, settingsPath: [SettingsRoute] = [],
-        isAdhanSheetPresented: Bool = false
+        isAdhanSheetPresented: Bool = false, onboardingStep: OnboardingStep? = nil
     ) {
         self.tab = tab
         self.prayersPage = prayersPage
         prayersPath = settingsPath
         self.isAdhanSheetPresented = isAdhanSheetPresented
+        self.onboardingStep = onboardingStep
     }
 
     /// Der Stapel des Tabs, der gerade gewählt ist.

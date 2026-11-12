@@ -90,6 +90,19 @@ public final class PlaceModel {
         return true
     }
 
+    /// Fragt nach dem Standort, falls noch nicht gefragt wurde – „Standort erlauben“ im Onboarding
+    /// (`ob-loc`). Ist er schon erlaubt oder verweigert, kommt kein Dialog (iOS fragt nur einmal).
+    ///
+    /// - Returns: der Stand der Freigabe danach.
+    @discardableResult
+    public func requestAuthorization() async -> LocationAuthorization {
+        authorization = await locationSource.authorization()
+        if authorization == .notDetermined {
+            authorization = await locationSource.requestAuthorization()
+        }
+        return authorization
+    }
+
     /// Bestimmt den aktuellen Standort neu und merkt ihn sich.
     ///
     /// - Returns: ob ein Standort gekommen ist.

@@ -47,6 +47,9 @@ public enum Palette {
 
     // MARK: - Flächen
 
+    /// `--bg`: der Hintergrund des Onboardings, `#FFFFFF` hell und `#000000` dunkel.
+    public static let background = Color(uiColor: .systemBackground)
+
     /// `--bg-grouped`: der Hintergrund der Seiten, `#F2F2F7` hell und `#000000` dunkel.
     public static let backgroundGrouped = Color(uiColor: .systemGroupedBackground)
 

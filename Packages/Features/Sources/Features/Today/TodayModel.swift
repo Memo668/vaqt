@@ -43,6 +43,9 @@ public final class TodayModel {
     public private(set) var isHighLatitude = false
     /// Ob das Stadt-Sheet offen ist.
     public var isCitySheetPresented = false
+    /// Wie oft im Stadt-Sheet ein Ort gewählt wurde – eine Stadt oder „Aktueller Standort“. Daran erkennt
+    /// das Onboarding, dass das Sheet mit einer Wahl geschlossen wurde und nicht mit „Abbrechen“.
+    public private(set) var cityChoices = 0
 
     /// - Parameters:
     ///   - location: welcher Ort gilt; die Einstellungen sind die dieses Modells.
@@ -183,9 +186,10 @@ public final class TodayModel {
     /// Beim Erscheinen der Seite und immer, wenn die App wieder nach vorn kommt: Freigabe lesen, mit dem
     /// bekannten Ort sofort Zeiten zeigen, dann den aktuellen Standort neu bestimmen.
     ///
-    /// Solange es das Onboarding noch nicht gibt (Phase 7), fragt die Seite hier selbst nach dem
-    /// Standort. Wird er verweigert und ist noch keine Stadt gewählt, öffnet sich das Stadt-Sheet – wie
-    /// im Ablauf des Prototyps nach „Nicht erlauben“.
+    /// Nach dem Onboarding ist der Standort schon erfragt oder eine Stadt gewählt. Wurde es übersprungen,
+    /// fragt die Seite hier selbst nach dem Standort, weil sie ohne Ort nichts zeigen kann (Annahme mit dem
+    /// Plan für Phase 7). Wird er verweigert und ist noch keine Stadt gewählt, öffnet sich das
+    /// Stadt-Sheet – wie im Ablauf des Prototyps nach „Nicht erlauben“.
     public func activate() async {
         // Nach jedem Schritt, der den Ort ändern kann, baut sich die Seite neu auf.
         guard await location.activate(onChange: { [self] in refresh() }) else { return }
@@ -242,6 +246,7 @@ public final class TodayModel {
     /// Eine Stadt im Stadt-Sheet wählen: Sie gilt ab jetzt statt des aktuellen Standorts.
     public func select(_ place: Place) {
         settings.select(place)
+        cityChoices += 1
         isCitySheetPresented = false
         refresh()
     }
@@ -250,6 +255,7 @@ public final class TodayModel {
     public func useCurrentLocation() async {
         guard authorization != .denied else { return }
         settings.useCurrentLocation()
+        cityChoices += 1
         isCitySheetPresented = false
         refresh()
         await activate()
