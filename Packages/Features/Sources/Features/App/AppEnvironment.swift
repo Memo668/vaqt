@@ -24,6 +24,9 @@ public struct AppEnvironment: Sendable {
     /// Wo die Einstellungen liegen: in den UserDefaults der App Group, mit `-debugFixtureTimes` nur im
     /// Speicher.
     public var settings: SettingsStore.Storage
+    /// Wo der Stand des Nachholens liegt: in den UserDefaults der App, mit `-debugFixtureTimes` nur im
+    /// Speicher und mit den Zahlen des Prototyps.
+    public var qadaStorage: QadaModel.Storage
     public var initialTab: AppTab
     /// Die Seite des Gebete-Tabs beim Start.
     public var initialPage: PrayersPage
@@ -42,6 +45,7 @@ public struct AppEnvironment: Sendable {
         connectivity: any ConnectivitySource = NetworkConnectivity(),
         citySearch: any CitySearching = NoCitySearch(),
         settings: SettingsStore.Storage = .userDefaults(suiteName: nil),
+        qadaStorage: QadaModel.Storage = .userDefaults(suiteName: nil),
         initialTab: AppTab = .prayers,
         initialPage: PrayersPage = .today,
         opensSettings: Bool = false
@@ -53,19 +57,22 @@ public struct AppEnvironment: Sendable {
         self.connectivity = connectivity
         self.citySearch = citySearch
         self.settings = settings
+        self.qadaStorage = qadaStorage
         self.initialTab = initialTab
         self.initialPage = initialPage
         self.opensSettings = opensSettings
     }
 
     /// Die Umgebung der ausgelieferten App: Gerätezeit, Standort und Kurs über Core Location, echte
-    /// Rechnung, Ortssuche über MapKit, Einstellungen in der App Group.
+    /// Rechnung, Ortssuche über MapKit, Einstellungen in der App Group, das Nachholen in den
+    /// UserDefaults der App.
     public static var live: AppEnvironment {
         AppEnvironment(
             clock: SystemClock(), locationSource: CoreLocationSource(),
             headingSource: CoreLocationHeadingSource(),
             citySearch: MapKitCitySearch(),
-            settings: .userDefaults(suiteName: appGroupIdentifier)
+            settings: .userDefaults(suiteName: appGroupIdentifier),
+            qadaStorage: .userDefaults(suiteName: nil)
         )
     }
 
@@ -108,7 +115,8 @@ extension AppEnvironment {
     /// Die Umgebung zu einem Satz Debug-Startargumente.
     ///
     /// - `-debugFixtureTimes`: Mock-Zeiten, festes Netz, keine Ortssuche und flüchtige Einstellungen mit
-    ///   den Startwerten von `S` im Prototyp – so sieht jede Aufnahme gleich aus.
+    ///   den Startwerten von `S` im Prototyp – so sieht jede Aufnahme gleich aus. Das Nachholen zeigt dann
+    ///   die Zahlen des Prototyps (`QadaLedger.prototypeSample`), ebenfalls nur im Speicher.
     /// - `-debugCity`, `-debugHighLatitude`, `-debugLocationDenied`: feste Standortquelle; sonst
     ///   Core Location.
     /// - `-debugQiblaHeading`, `-debugQiblaAccuracy`: fester Kompasskurs; mit `-debugFixtureTimes` auch
@@ -134,11 +142,13 @@ extension AppEnvironment {
             connectivity = FixedConnectivity(isOnline: !options.offline)
             citySearch = NoCitySearch()
             settings = .ephemeral(.prototype(city: options.effectiveCity))
+            qadaStorage = .ephemeral(.prototypeSample)
         } else {
             timesSource = AdhanTimesSource()
             connectivity = options.offline ? FixedConnectivity(isOnline: false) : NetworkConnectivity()
             citySearch = MapKitCitySearch()
             settings = .userDefaults(suiteName: Self.appGroupIdentifier)
+            qadaStorage = .userDefaults(suiteName: nil)
         }
         initialTab = AppTab(options.page)
         initialPage = PrayersPage(options.page)

@@ -155,6 +155,8 @@ struct AppEnvironmentTests {
         // Die Ortssuche bleibt stumm: Das Sheet filtert nur die fünf Städte, wie der Prototyp.
         #expect(environment.citySearch is NoCitySearch)
         #expect(environment.locationSource is FixedLocationSource)
+        // Das Nachholen zeigt die Zahlen des Prototyps (iphone/60), nur im Speicher.
+        #expect(environment.qadaStorage == .ephemeral(.prototypeSample))
     }
 
     @Test("-debugFixtureTimes mit -debugCity: Die Stadt ist auch die gewählte")
@@ -180,6 +182,8 @@ struct AppEnvironmentTests {
         #expect(environment.timesSource is AdhanTimesSource)
         #expect(environment.connectivity is NetworkConnectivity)
         #expect(environment.settings == .userDefaults(suiteName: nil))
+        // Das Nachholen liegt in den UserDefaults der App, nicht in der App Group.
+        #expect(environment.qadaStorage == .userDefaults(suiteName: nil))
         #expect(environment.citySearch is MapKitCitySearch)
         // Die Stadt aus -debugCity bleibt fest; ohne sie fragt die App Core Location.
         #expect(environment.locationSource is FixedLocationSource)

@@ -220,3 +220,26 @@ public struct QadaLedger: Hashable, Codable, Sendable {
         min(max(value, range.lowerBound), range.upperBound)
     }
 }
+
+extension QadaLedger {
+
+    private enum CodingKeys: String, CodingKey {
+        case years, months, days, perDay, includesWitr, total, open
+    }
+
+    /// Liest einen gespeicherten Stand. Wie beim Anlegen gelten die Grenzen der Stepper; was fehlt, hat
+    /// den Wert eines leeren Standes.
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let empty = QadaLedger()
+        self.init(
+            years: try container.decodeIfPresent(Int.self, forKey: .years) ?? empty.years,
+            months: try container.decodeIfPresent(Int.self, forKey: .months) ?? empty.months,
+            days: try container.decodeIfPresent(Int.self, forKey: .days) ?? empty.days,
+            perDay: try container.decodeIfPresent(Int.self, forKey: .perDay) ?? empty.perDay,
+            includesWitr: try container.decodeIfPresent(Bool.self, forKey: .includesWitr) ?? empty.includesWitr,
+            total: try container.decodeIfPresent([QadaPrayer: Int].self, forKey: .total) ?? [:],
+            open: try container.decodeIfPresent([QadaPrayer: Int].self, forKey: .open) ?? [:]
+        )
+    }
+}

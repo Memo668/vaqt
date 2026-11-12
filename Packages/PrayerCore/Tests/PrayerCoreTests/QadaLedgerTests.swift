@@ -388,4 +388,28 @@ struct QadaLedgerTests {
         let json = String(decoding: try encoder.encode(ledger), as: UTF8.self)
         #expect(json == #"{"days":0,"includesWitr":false,"months":0,"open":{"fajr":501},"perDay":5,"total":{"fajr":545},"years":0}"#)
     }
+
+    @Test("ein gespeicherter Stand hält die Grenzen der Stepper ein")
+    func decodingClamps() throws {
+        let json = #"{"days":45,"includesWitr":true,"months":-3,"open":{"fajr":250000,"isha":-4},"perDay":0,"total":{"fajr":-1},"years":99}"#
+        let ledger = try JSONDecoder().decode(QadaLedger.self, from: Data(json.utf8))
+        #expect(ledger[.years] == 60)
+        #expect(ledger[.months] == 0)
+        #expect(ledger[.days] == 30)
+        #expect(ledger[.perDay] == 1)
+        #expect(ledger.includesWitr)
+        #expect(ledger.openCount(of: .fajr) == 99_999)
+        #expect(ledger.openCount(of: .isha) == 0)
+        #expect(ledger.totalCount(of: .fajr) == 0)
+    }
+
+    @Test("was im gespeicherten Stand fehlt, ist leer")
+    func decodingMissingValues() throws {
+        let ledger = try JSONDecoder().decode(QadaLedger.self, from: Data(#"{"open":{"asr":3}}"#.utf8))
+        #expect(ledger[.perDay] == 5)
+        #expect(!ledger.includesWitr)
+        #expect(ledger.openCount(of: .asr) == 3)
+        #expect(ledger.totalCount == 0)
+        #expect(try JSONDecoder().decode(QadaLedger.self, from: Data("{}".utf8)) == QadaLedger())
+    }
 }

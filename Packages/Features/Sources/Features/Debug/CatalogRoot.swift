@@ -24,8 +24,17 @@ struct CatalogRoot: View {
             phase: Self.phase(for: environment),
             isHighLatitude: environment.launchOptions.highLatitude,
             compass: Self.compass(for: environment),
-            guide: Self.guide(for: environment)
+            guide: Self.guide(for: environment),
+            today: Self.today(for: environment)
         )
+    }
+
+    /// Der heutige Tag für Verse und Plan: der Tag der Debug-Uhr in der Zeitzone der Stadt, ohne Stadt in
+    /// der des Geräts.
+    nonisolated static func today(for environment: AppEnvironment, deviceTimeZone: TimeZone = .current) -> CalendarDay {
+        let city = environment.launchOptions.effectiveCity
+        let timeZone = city.flatMap { TimeZone(identifier: $0.timeZoneIdentifier) } ?? deviceTimeZone
+        return CalendarDay(environment.clock.now, in: timeZone)
     }
 
     /// Auswahl und Kopfkarte der Anleitung zu den Debug-Argumenten: das Gebet, dem die Anleitung zu

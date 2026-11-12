@@ -13,6 +13,8 @@ public struct RootView: View {
     @State private var today: TodayModel
     @State private var qibla: QiblaModel
     @State private var guide: GuideModel
+    @State private var verses: VersesModel
+    @State private var qada: QadaModel
 
     public init(environment: AppEnvironment) {
         self.environment = environment
@@ -32,6 +34,11 @@ public struct RootView: View {
         _qibla = State(initialValue: QiblaModel(location: location, headingSource: environment.headingSource))
         // Die Anleitung nimmt ihre Zeiten aus dem Zeitstrahl der Zeiten-Seite.
         _guide = State(initialValue: GuideModel(today: today))
+        // Verse und Nachholen beginnen ihren Tag um Mitternacht am Ort der Zeiten-Seite.
+        _verses = State(initialValue: VersesModel(clock: environment.clock, location: location, toast: toast))
+        _qada = State(initialValue: QadaModel(
+            storage: environment.qadaStorage, clock: environment.clock, location: location, toast: toast
+        ))
     }
 
     public var body: some View {
@@ -57,9 +64,10 @@ public struct RootView: View {
                             today: today, qibla: qibla, guide: guide, initialPage: environment.initialPage,
                             opensSettings: environment.opensSettings
                         )
-                    case .verses, .qada:
-                        // Noch leer: Verse und Nachholen folgen in Phase 6.
-                        Color.clear
+                    case .verses:
+                        VersesTab(model: verses)
+                    case .qada:
+                        QadaTab(model: qada)
                     }
                 }
             }

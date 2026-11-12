@@ -84,7 +84,7 @@ Nur in DEBUG-Builds. Damit lässt sich jeder Referenz-Screenshot nachstellen:
 -debugTab today|qibla|guide|verses|qada|settings
 -debugQiblaHeading 137
 -debugQiblaAccuracy 40        Genauigkeit des Kompasses in Grad; über 25 erscheint die Kalibrierungskarte
--debugCatalog arc|rows|glass|cards|compass|guide|steps|all   Katalog der Bausteine statt der App, für den Abgleich
+-debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|all   Katalog der Bausteine statt der App, für den Abgleich
 ```
 
 Die Sprache kommt über die Systemargumente `-AppleLanguages '(tr)' -AppleLocale tr_TR`. Welche Argumente zu welchem Screenshot gehören, steht in `docs/PROMPTS.md`.
