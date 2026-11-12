@@ -163,6 +163,10 @@ Der Plan für Phase 4 wurde am 11.11.2026 freigegeben („Freigeben“). Damit g
 | Entfernung unter 10 km | auf ganze Kilometer | Mit der Rundung auf 10 km stünde 1 bis 5 km vor der Kaaba „0 km“. Ab 10 km gilt die entschiedene Rundung auf 10 km. |
 | Standort noch nicht bestimmt | „Qibla · Aktueller Standort“, Skala ohne Nadel | bis der Ort da ist |
 
+## Abnahme von Phase 4 am 12.11.2026
+
+Phase 4 wurde am 12.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-4` stand (Stand `56f6bb2`). Zu den Punkten 1 bis 5 unter „Braucht eine Entscheidung“ gab es dabei keine Antwort; dort gilt weiter der jeweilige Standard. Offen bleibt die Prüfung des Kompasses am echten Gerät (oben unter „Vor der Veröffentlichung zu prüfen“).
+
 ## Annahmen in Phase 4
 
 Gemessen ist auf dem iPhone 18 Pro mit iOS 27.2, Zustände wie in `scripts/compare-qibla`. Der Simulator hat keinen Kompass: Alles hier ist mit festem Kurs geprüft (`-debugQiblaHeading`).
