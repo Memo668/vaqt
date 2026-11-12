@@ -184,6 +184,18 @@ Mit dem Plan freigegeben sind auch: die Haltungsfiguren als SwiftUI-Shapes mit d
 
 Phase 5 wurde am 12.11.2026 abgenommen („Abnehmen, zusammenführen“), so wie sie auf dem Zweig `phase-5` stand (Stand `8d1726a`). Zu den Punkten 1 bis 5 unter „Braucht eine Entscheidung“ gab es dabei keine Antwort; dort gilt weiter der jeweilige Standard. Offen bleibt die fachliche Prüfung der Texte der Anleitung (oben unter „Vor der Veröffentlichung zu prüfen“). Noch nicht geprüft sind VoiceOver von Hand (bisher nur der Baum der Bedienungshilfen) und die Anleitung am echten Gerät.
 
+## Entschieden mit dem Plan für Phase 6 am 12.11.2026
+
+Der Plan für Phase 6 wurde am 12.11.2026 freigegeben („Freigeben, bauen“), mit den drei empfohlenen Antworten:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Speicher des Nachholens | „UserDefaults“ | Der Stand (`QadaLedger`) liegt als ein JSON-Eintrag in den UserDefaults der App, nicht in SwiftData – es ist ein einziger kleiner Datensatz. `CLAUDE.md` ist angepasst. |
+| Nachholen ohne Einträge | „Ohne Zusammenfassung“ | Solange nichts eingetragen ist, fehlen Prozentkarte und Plan; Einleitung, „Nach Gebet“ und der Rechner stehen da. Ein neuer Text ist nicht nötig. Der Prototyp zeigte in diesem Fall „0 %“ und „Alles nachgeholt.“ |
+| Texte der Verse | „String Catalog“ | `scripts/import-strings` liest neben `T` auch `VERSES` und `SURAH`. Übersetzungen und Surennamen stehen als Platzhalter im Katalog, jeder Eintrag mit dem Kommentar `TODO(placeholder)`. Der arabische Text und die Stellen (Sure, Vers) stehen in `PrayerCore`, weil sie in allen Sprachen gleich sind. |
+
+Mit dem Plan freigegeben sind auch seine Annahmen. Die offenen Fragen der Spec § 6.12 und § 6.13 bleiben wie im Prototyp: sechs Platzhalter-Verse, ein Jahr zählt 365 Tage, Witr ist aus, keine Erinnerung, der Bereich lässt sich nicht ausblenden.
+
 ## Annahmen in Phase 5
 
 Gemessen ist auf dem iPhone 18 Pro mit iOS 27.2, Zustände wie in `scripts/compare-guide`; `iphone/41` und `42` mit dem UI-Hilfsprojekt (`s20-guide.txt`, `s21-guide-steps.txt`).

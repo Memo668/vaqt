@@ -30,8 +30,8 @@ Werte und Formeln von dort übernehmen, nicht schätzen. Bei Widerspruch gilt: S
   - `DesignSystem` – Tokens (Palette, Layout, Typography), Glass-Bausteine, `DayArc`, Karten.
   - `Features` – Bildschirme: Today, Qibla, Guide, Verses, Qada, Settings, Onboarding.
 - Einzige Fremdabhängigkeit: **Adhan Swift** (MIT) für die Gebetszeiten. Keine Analytics, keine Crash-Reporter von Dritten, kein eigener Server. Netzwerk nur über Apple-Dienste (Ortssuche, Geocoding).
-- Daten bleiben auf dem Gerät (`@AppStorage`/UserDefaults, SwiftData für Nachholen). App Group für Widgets und Live Activity.
-- Texte: String Catalog `Localizable.xcstrings` mit DE, TR, EN, ES, erzeugt aus `T`. Keine fest verdrahteten Texte.
+- Daten bleiben auf dem Gerät (`@AppStorage`/UserDefaults, auch für das Nachholen – entschieden am 12.11.2026 statt SwiftData). App Group für Widgets und Live Activity.
+- Texte: String Catalog `Localizable.xcstrings` mit DE, TR, EN, ES, erzeugt aus `T` – dazu die Platzhalter der Verse aus `VERSES` und `SURAH`. Keine fest verdrahteten Texte.
 - Systemkomponenten bevorzugen: `TabView`, `NavigationStack`, `.glassEffect`, `GlassEffectContainer`, `.buttonStyle(.glass)`, `.searchable`, `.sheet`, `Text(timerInterval:)`, `Calendar(identifier: .islamicUmmAlQura)`. Eigene Leisten nur dort, wo die Spec sie verlangt (Chips oben im Gebete-Tab).
 - Barrierefreiheit wie in der Spec: Dynamic Type bis AX, VoiceOver-Labels, 44-pt-Tippziele, Reduce Motion, Farbe nie als einziges Signal.
 
