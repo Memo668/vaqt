@@ -196,6 +196,10 @@ Der Plan für Phase 6 wurde am 12.11.2026 freigegeben („Freigeben, bauen“), 
 
 Mit dem Plan freigegeben sind auch seine Annahmen. Die offenen Fragen der Spec § 6.12 und § 6.13 bleiben wie im Prototyp: sechs Platzhalter-Verse, ein Jahr zählt 365 Tage, Witr ist aus, keine Erinnerung, der Bereich lässt sich nicht ausblenden.
 
+## Abnahme von Phase 6 am 12.11.2026
+
+Phase 6 wurde am 12.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-6` stand (Stand `b432fc7`). Zu den Punkten 1 bis 5 unter „Braucht eine Entscheidung“ und zu Spec § 6.12 und § 6.13 gab es dabei keine Antwort; dort gilt weiter der jeweilige Standard bzw. der Prototyp. Noch nicht geprüft sind VoiceOver von Hand (bisher nur der Baum der Bedienungshilfen) und die beiden Tabs am echten Gerät.
+
 ## Annahmen in Phase 6
 
 Gemessen ist auf dem iPhone 18 Pro mit iOS 27.2, Zustände wie in `scripts/compare-verses` und `scripts/compare-qada`; `iphone/61` und die Aktionen mit dem UI-Hilfsprojekt (`s23-verses-qada.txt` bis `s27-qada-witr.txt`).
