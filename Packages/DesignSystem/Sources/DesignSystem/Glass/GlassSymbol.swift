@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /// Das Symbol eines Chips: ein SF Symbol oder eine eigene Zeichnung.
 public enum GlassSymbol: Hashable, Sendable {
@@ -85,4 +86,31 @@ struct GlassSymbolView: View {
                 .frame(width: box, height: box)
         }
     }
+}
+
+extension GlassSymbol {
+
+    /// Das Symbol als Bild für die Leisten des Systems, etwa für die senkrechte Leiste des iPhone Duo:
+    /// ein SF Symbol oder die Zeichnung des Gebetsteppichs als Vorlage, die die Leiste einfärbt. Eine
+    /// eigene Ansicht nähme die Leiste nicht als Symbol; sie zeigte dann den Titel.
+    @MainActor
+    public var barImage: Image {
+        switch self {
+        case .system(let name):
+            Image(systemName: name)
+        case .prayerRug:
+            Image(uiImage: PrayerRugImage.template)
+        }
+    }
+}
+
+/// Der Gebetsteppich als Bildvorlage in der Größe eines Symbols in den Leisten – einmal gezeichnet.
+@MainActor
+private enum PrayerRugImage {
+    static let template: UIImage = {
+        let box = GlassMetrics.chipSymbolBox
+        let renderer = ImageRenderer(content: GlassSymbolView(symbol: .prayerRug, pointSize: 0, box: box))
+        renderer.scale = 3
+        return (renderer.uiImage ?? UIImage()).withRenderingMode(.alwaysTemplate)
+    }()
 }

@@ -6,6 +6,8 @@ public struct OnboardingPage<Icon: View>: View {
     private let message: String
     private let icon: Icon
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     /// - Parameter icon: das große Zeichen der App (`AppMark(size: .large)`) oder ein Symbol auf
     ///   getöntem Kreis (`IconBadge`).
     public init(title: String, message: String, @ViewBuilder icon: () -> Icon) {
@@ -30,7 +32,7 @@ public struct OnboardingPage<Icon: View>: View {
         }
         .multilineTextAlignment(.center)
         .fixedSize(horizontal: false, vertical: true)
-        .padding(.horizontal, OnboardingMetrics.pageInsetX)
+        .padding(.horizontal, OnboardingMetrics.pageInset(regular: horizontalSizeClass == .regular))
         .frame(maxWidth: .infinity)
     }
 }
@@ -74,8 +76,10 @@ public enum OnboardingMetrics {
     public static let topBarHeight: CGFloat = 44
     public static let topBarInsetX: CGFloat = 8
     public static let skipPaddingX: CGFloat = 12
-    /// Seite (`.onb-page`: `padding: 0 34px 30px`).
+    /// Seite (`.onb-page`: `padding: 0 34px 30px`); innen auf dem iPhone Duo 150 pt Rand
+    /// (`.screen[data-dev="duo-open"] .onb-page`: `padding-inline: 150px`).
     public static let pageInsetX: CGFloat = 34
+    public static let pageInsetXRegular: CGFloat = 150
     public static let pageBottom: CGFloat = 30
     /// Titel (`.onb-page h1`: `margin: 30px 0 12px; font: 700 28px/1.2; letter-spacing: .36px`).
     static let titleTop: CGFloat = 30
@@ -96,7 +100,25 @@ public enum OnboardingMetrics {
     public static let actionsTop: CGFloat = 14
     public static let actionsInsetX: CGFloat = 24
     public static let actionsBottom: CGFloat = 46 - 34
+    /// Knöpfe innen auf dem iPhone Duo (`.screen[data-dev="duo-open"] .onb-actions`:
+    /// `padding: 10px 210px 26px`). Unten bleibt der sichere Bereich des Systems (34 pt), der schon
+    /// größer ist als die 26 pt.
+    public static let actionsTopRegular: CGFloat = 10
+    public static let actionsInsetXRegular: CGFloat = 210
+    public static let actionsBottomRegular: CGFloat = 0
     public static let buttonHeight: CGFloat = 50
     /// Seitenwechsel (`.onb-track`: `transition: transform .55s`).
     public static let pageDuration: TimeInterval = 0.55
+
+    /// Rand der Seite links und rechts – innen auf dem iPhone Duo (regular) breiter.
+    public static func pageInset(regular: Bool) -> CGFloat {
+        regular ? pageInsetXRegular : pageInsetX
+    }
+
+    /// Ränder der Knöpfe (oben, links und rechts, unten) – innen auf dem iPhone Duo (regular) schmaler.
+    public static func actionsInsets(regular: Bool) -> EdgeInsets {
+        regular
+            ? EdgeInsets(top: actionsTopRegular, leading: actionsInsetXRegular, bottom: actionsBottomRegular, trailing: actionsInsetXRegular)
+            : EdgeInsets(top: actionsTop, leading: actionsInsetX, bottom: actionsBottom, trailing: actionsInsetX)
+    }
 }

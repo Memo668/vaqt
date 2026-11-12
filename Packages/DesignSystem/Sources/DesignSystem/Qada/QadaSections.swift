@@ -77,6 +77,8 @@ public struct QadaDetails: View {
     private let ledger: QadaLedger
     private let onAction: (QadaAction) -> Void
 
+    @Environment(\.pageArrangement) private var arrangement
+
     public init(ledger: QadaLedger, onAction: @escaping (QadaAction) -> Void) {
         self.ledger = ledger
         self.onAction = onAction
@@ -85,7 +87,7 @@ public struct QadaDetails: View {
     public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             SectionHeader(L10n.qadaByPrayer)
-                .padding(.top, QadaLayout.byPrayerTop(afterPlan: ledger.hasEntries))
+                .padding(.top, QadaLayout.byPrayerTop(afterPlan: ledger.hasEntries, inColumns: arrangement.isColumns))
                 .padding(.bottom, SectionHeader.spacingBelow)
             VStack(spacing: QadaRowMetrics.rowGap) {
                 ForEach(ledger.prayers, id: \.self) { prayer in
@@ -154,13 +156,16 @@ enum QadaLayout {
 
     /// Abstand über „Nach Gebet“. Im CSS fallen der Abstand unter dem Teil davor und der über der
     /// Überschrift (24 pt) zusammen: unter dem Plan gelten dessen 32 pt (`.group-wrap`), ohne Plan – im
-    /// leeren Zustand – die 24 pt der Überschrift, weil die Einleitung nur 18 pt hält.
+    /// leeren Zustand – die 24 pt der Überschrift, weil die Einleitung nur 18 pt hält. Innen auf dem
+    /// iPhone Duo beginnt „Nach Gebet“ die rechte Spalte: dann gelten die 24 pt der Überschrift, wie bei
+    /// „Ablauf“ und „Letzte Tage“.
     ///
     /// Auf dem Main Actor, weil die Abstände von `SectionHeader` und `PageLede` als Teil eines `View`
     /// dort liegen.
     @MainActor
-    static func byPrayerTop(afterPlan: Bool) -> CGFloat {
-        afterPlan ? max(InsetGroupMetrics.spacingBelow, SectionHeader.spacingAbove)
+    static func byPrayerTop(afterPlan: Bool, inColumns: Bool = false) -> CGFloat {
+        if inColumns { return SectionHeader.spacingAbove }
+        return afterPlan ? max(InsetGroupMetrics.spacingBelow, SectionHeader.spacingAbove)
             : max(PageLede.spacingBelow, SectionHeader.spacingAbove)
     }
 }

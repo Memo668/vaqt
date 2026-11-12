@@ -45,6 +45,9 @@ public enum Layout {
     /// Abstand des Toasts zur Unterkante des Bildschirms (`.toast`: `bottom: 100px`) – 16 pt über
     /// der Tableiste.
     public static let toastBottom: CGFloat = 100
+    /// Abstand des Toasts zur Unterkante, wenn die Leisten senkrecht am Rand stehen (iPhone Duo):
+    /// `.screen[data-dev^="duo"] .toast`: `bottom: 28px`.
+    public static let toastBottomWithVerticalBar: CGFloat = 28
     /// So lange steht ein Toast, in Sekunden (`setTimeout(…, 1700)`).
     public static let toastDuration: TimeInterval = 1.7
 }
