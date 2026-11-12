@@ -143,6 +143,8 @@ Gebaut am 12.11.2026. Abgleich mit `make compare-guide`, `iphone/41` und `42` mi
 
 **Referenzen:** `iphone/50`, `51`, `60`, `61`.
 
+Gebaut am 12.11.2026. Abgleich mit `make compare-verses` und `make compare-qada`, `iphone/61` mit dem UI-Hilfsprojekt; was übereinstimmt, was abweicht und was angenommen ist, steht in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 6“). Das Nachholen liegt in den UserDefaults der App und startet leer; ohne Einträge fehlen Zusammenfassung und Plan (entschieden am 12.11.2026). Die Übersetzungen der Verse sind Platzhalter (Spec § 6.12).
+
 ## Phase 7 – Einstellungen, Onboarding, Adhan
 
 - Einstellungen als `NavigationStack` mit allen Unterseiten aus `PAGES`:

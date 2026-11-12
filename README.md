@@ -4,7 +4,7 @@ Gemeinnützige Gebetszeiten-App für iOS: werbefrei, ohne Tracking, ohne Konto. 
 
 Die Regeln für die Arbeit stehen in `CLAUDE.md`, der Bauplan in `docs/BUILD-PLAN.md`, offene Punkte in `docs/OPEN-QUESTIONS.md`.
 
-**Stand:** Phase 0 (Projektgerüst), Phase 1 (`PrayerCore`, die Logik ohne UI), Phase 2 (`DesignSystem`: Tokens und Bausteine), Phase 3 (Gebete-Tab: Zeiten), Phase 4 (Qibla) und Phase 5 (Anleitung) sind fertig. Der Tab „Gebete“ zeigt die obere Leiste mit den Chips Zeiten, Qibla und Anleitung, die Zeiten-Seite – Stadt, Datum, Bogen mit laufendem Countdown, sechs Gebetskarten mit Glocke, Stadt-Sheet –, die Qibla-Seite mit Kompass, Statuszeile, Richtung und Entfernung zur Kaaba und die Anleitung mit der Auswahl der fünf Gebete, der Kopfkarte (Status, Zeitfenster, Fakten, Rakʿa-Folge), „Vorher“ und „Ablauf“ mit Haltungsfiguren und arabischen Formeln. Die Einstellungen und die Tabs Verse und Nachholen sind noch leer; sie folgen ab Phase 6. Die Bausteine lassen sich als Previews in Xcode ansehen und in der App mit `-debugCatalog`.
+**Stand:** Phase 0 (Projektgerüst), Phase 1 (`PrayerCore`, die Logik ohne UI), Phase 2 (`DesignSystem`: Tokens und Bausteine), Phase 3 (Gebete-Tab: Zeiten), Phase 4 (Qibla), Phase 5 (Anleitung) und Phase 6 (Verse und Nachholen) sind fertig. Der Tab „Gebete“ zeigt die obere Leiste mit den Chips Zeiten, Qibla und Anleitung, die Zeiten-Seite – Stadt, Datum, Bogen mit laufendem Countdown, sechs Gebetskarten mit Glocke, Stadt-Sheet –, die Qibla-Seite mit Kompass, Statuszeile, Richtung und Entfernung zur Kaaba und die Anleitung mit der Auswahl der fünf Gebete, der Kopfkarte (Status, Zeitfenster, Fakten, Rakʿa-Folge), „Vorher“ und „Ablauf“ mit Haltungsfiguren und arabischen Formeln. Der Tab „Verse“ zeigt den Vers des Tages auf Arabisch mit Übersetzung (Platzhalter) und Quelle, Teilen und Kopieren und die letzten Tage; der Tab „Nachholen“ den Anteil nachgeholt, je Gebet einen Stepper, den Plan pro Tag mit voraussichtlichem Ende und den Rechner für einen verpassten Zeitraum. Die Einstellungen sind noch leer; sie folgen in Phase 7. Die Bausteine lassen sich als Previews in Xcode ansehen und in der App mit `-debugCatalog`.
 
 ## Voraussetzungen
 
@@ -41,6 +41,8 @@ open Gebetszeiten.xcodeproj
 | `make compare-today` | Zeiten-Seite in den Zuständen der Referenzbilder `iphone/10` bis `22` aufnehmen und neben die Referenz legen |
 | `make compare-qibla` | Qibla-Seite in den Zuständen der Referenzbilder `iphone/30` bis `32` aufnehmen und neben die Referenz legen |
 | `make compare-guide` | Anleitung im Zustand von `iphone/40` aufnehmen und neben die Referenz legen, dazu `41` und `42`, wenn aufgenommen |
+| `make compare-verses` | Verse in den Zuständen von `iphone/50` (hell) und `51` (dunkel) aufnehmen und neben die Referenz legen |
+| `make compare-qada` | Nachholen im Zustand von `iphone/60` aufnehmen und neben die Referenz legen, dazu `61`, wenn aufgenommen |
 | `make strings` | String Catalog und `L10n.swift` aus dem Prototyp neu erzeugen |
 
 Simulator für Build, Tests und Abgleich ist das iPhone 18 Pro. Ein anderer lässt sich je Aufruf wählen, z. B. `make test SIM='iPhone 17'`.
@@ -94,7 +96,7 @@ Versteht die App ein Debug-Argument nicht, schreibt sie das beim Start in die Ko
 | Argument | Wirkung |
 |---|---|
 | `-debugDate`, `-debugTime` | Die Uhr der App beginnt dort und läuft weiter. |
-| `-debugFixtureTimes` | Mock-Zeiten statt echter Rechnung. Dazu: festes Netz, keine Ortssuche und flüchtige Einstellungen mit den Startwerten von `S` im Prototyp (Glocken, die fünf Städte) – so sieht jede Aufnahme gleich aus, egal was vorher angetippt wurde. |
+| `-debugFixtureTimes` | Mock-Zeiten statt echter Rechnung. Dazu: festes Netz, keine Ortssuche und flüchtige Einstellungen mit den Startwerten von `S` im Prototyp (Glocken, die fünf Städte) – so sieht jede Aufnahme gleich aus, egal was vorher angetippt wurde. Das Nachholen zeigt die Zahlen des Prototyps (`iphone/60`), ebenfalls nur im Speicher. |
 | `-debugCity`, `-debugHighLatitude` | feste Standortquelle mit dieser Stadt, Standort erlaubt |
 | `-debugLocationDenied` | Standort verweigert: Banner auf der Zeiten-Seite, „Aktueller Standort“ im Stadt-Sheet gesperrt |
 | `-debugOffline` | fest „kein Netz“: Hinweis unter dem Datum, im Stadt-Sheet nur gespeicherte Städte |
@@ -113,11 +115,13 @@ Widgets/                Widget-Extension für Widgets und Live-Aktivität (bis P
 Packages/PrayerCore     reine Logik ohne UI, mit Adhan Swift als einziger Fremdabhängigkeit
 Packages/DesignSystem   Tokens und Bausteine (ab Phase 2) und der String Catalog
 Packages/Features       Bildschirme, AppEnvironment, Debug-Startargumente
-scripts/import-strings  erzeugt den String Catalog und die Texte der Info.plist aus dem Prototyp
+scripts/import-strings  erzeugt den String Catalog, die Texte der Info.plist und die Liste der Verse aus dem Prototyp
 scripts/compare-catalog nimmt die Bausteine in den Zuständen der Referenzbilder auf
 scripts/compare-today   nimmt die Zeiten-Seite in den Zuständen der Referenzbilder auf
 scripts/compare-qibla   nimmt die Qibla-Seite in den Zuständen der Referenzbilder auf
 scripts/compare-guide   nimmt die Anleitung in den Zuständen der Referenzbilder auf
+scripts/compare-verses  nimmt die Seite „Verse“ in den Zuständen der Referenzbilder auf
+scripts/compare-qada    nimmt die Seite „Nachholen“ in den Zuständen der Referenzbilder auf
 scripts/compare-shot    legt einen Ausschnitt einer Aufnahme neben die Referenz
 project.yml             Beschreibung des Xcode-Projekts für XcodeGen
 design/                 Prototyp, Design Spec, Referenz-Screenshots
@@ -138,7 +142,8 @@ docs/                   Bauplan, Prompts, offene Fragen
 | `CompassPoint`, `QiblaAlignment` | acht Himmelsrichtungen wie `dirName()`; wie das Gerät zur Qibla steht – ausgerichtet bis 3°, sonst links oder rechts und um wie viel |
 | `HijriDate` | Datum nach Umm al-Qura und sein Text je Sprache |
 | `Guide`, `GuideState`, `GuideSelection`, `Rakahs` | Daten der Anleitung, gezeigtes Gebet, manuelle Wahl und wann sie verfällt, Rakʿa-Folge; ohne Zeiten Fadschr ohne Status |
-| `QadaLedger` | Stand des Nachholens: offen, nachgeholt, Anteil, voraussichtliches Ende |
+| `QadaLedger` | Stand des Nachholens: offen, nachgeholt, Anteil, voraussichtliches Ende, ob etwas eingetragen ist; hält beim Lesen die Grenzen der Stepper ein |
+| `Verse` | Stelle und arabischer Text der Verse (`VERSES`, Liste erzeugt von `scripts/import-strings`), Vers des Tages im Kreis – am 10.11.2026 der erste –, die Tage der Liste „Letzte Tage“ |
 
 So kommt eine Seite an die Tagesphase:
 
@@ -171,6 +176,10 @@ Die Referenzwerte für die Berechnung liegen unter `Packages/PrayerCore/Tests/Pr
 | `GuideHeader`, `GuideHeaderCard`, `RakahSequence` | Auswahl und Kopfkarte der Anleitung: Status, Zeitfenster, Fakten-Kacheln, Rakʿa-Folge, „Zum aktuellen Gebet“ |
 | `PoseFigure`, `PoseShape`, `StepCard`, `FormulaBox`, `RepeatNoteCard` | Haltungsfiguren aus `POSE`, Karte eines Schritts, arabische Formel mit Umschrift, gestrichelte Karte |
 | `GuideOverview`, `GuideSteps`, `GuidePreparationList`, `GuideStepList` | die beiden Teile der Anleitung (`.col-a`, `.col-b`), „Vorher“ und „Ablauf“ |
+| `PageTitle`, `PageLede` | großer Titel einer Seite der Tabs Verse und Nachholen (`.page-title`), Einleitung darunter (`.lede`) |
+| `InsetGroup`, `StepperRow`, `SwitchRow`, `LinkRow` | Gruppe mit Kopf, Zeilen mit Haarlinie und Fußzeile (`group()`); Zeile mit Wert und Stepper, mit dem Schalter des Systems, als Link in Akzentfarbe |
+| `VerseDay`, `VerseCard`, `VerseListItem`, `VersesOverview`, `RecentVerses` | ein Tag der Seite „Verse“ mit Namen und Datum (`relDay()`, `shortDate()`), die Karte mit dem Vers, Teilen und Kopieren, ein Eintrag der letzten Tage, die beiden Teile der Seite |
+| `QadaSummary`, `QadaSummaryCard`, `QadaPrayerRow`, `QadaOverview`, `QadaDetails`, `QadaAction` | Texte der Zusammenfassung und des Plans (`num()`, Monat und Jahr), die Prozentkarte mit Balken, die Zeile je Gebet, die beiden Teile der Seite „Nachholen“, die Aktionen der Seite |
 | `ComponentCatalog` (nur DEBUG) | alle Bausteine zum Ansehen: Previews hell und dunkel, in der App über `-debugCatalog` |
 
 So kommt der Bogen auf eine Seite:
@@ -193,13 +202,18 @@ DayArc(phase: phase, showKerahat: settings.showKerahat) {
 | `QiblaModel`, `QiblaPage` | Qibla-Seite: Kursanzeige, Kompass, Statuszeile („Nach rechts drehen 39°“, ausgerichtet mit Haptik), Richtung und Entfernung, in Mekka die Meldung, ohne Ort „Stadt wählen“, ohne Kompass „Kein Kompass verfügbar“, Kalibrierungskarte nur bei ungenauem Kompass |
 | `GuideModel`, `GuidePage` | Anleitung: öffnet beim aktuellen Gebet, manuelle Wahl bis zum nächsten Gebetswechsel oder bis man die Seite verlässt, „Qibla öffnen“ wechselt zur Qibla-Seite; gleicht sich nur beim nächsten Ereignis ab, nicht im Sekundentakt |
 | `SettingsStore` | die Einstellungen in den UserDefaults der App Group: Glocke je Gebet, Standort oder Stadt, gespeicherte Städte, Rechen-Einstellungen, Kerahat-Schalter |
+| `SettingsBar` | die obere Leiste der Tabs Verse und Nachholen: nur der Einstellungskreis; er öffnet die Einstellungen im Stapel des Tabs |
+| `VersesModel`, `VersesTab`, `VersesPage` | Seite „Verse“: Vers des Tages (wechselt um Mitternacht am Ort), Antippen eines Eintrags zeigt ihn oben und springt nach oben, Teilen über `ShareLink`, Kopieren mit Toast |
+| `QadaModel`, `QadaTab`, `QadaPage` | Seite „Nachholen“: Stand des Nachholens, jede Änderung sofort als JSON in den UserDefaults der App (nicht in der App Group), Toast nach „Als offen übernehmen“; ohne Einträge ohne Zusammenfassung und Plan |
 | `CoreLocationSource`, `MapKitPlaceResolver` | aktueller Ort über Core Location („Beim Verwenden der App“), Stadtname über `MKReverseGeocodingRequest` |
 | `CoreLocationHeadingSource` | Kompasskurs über Core Location: geografisch Nord, ohne Standortfreigabe magnetisch Nord; läuft nur, solange die Qibla-Seite zu sehen ist |
 | `MapKitCitySearch` | Ortssuche mit `MKLocalSearchCompleter` |
 | `NetworkConnectivity` | ob das Gerät ein Netz hat (`NWPathMonitor`) |
 | `ToastCenter` | zeigt den Toast über der Tableiste, 1,7 Sekunden |
 
-Alles, was nach außen geht, hängt in `AppEnvironment`: Uhr, Standortquelle, Kursquelle, Zeitenquelle, Netz-Zustand, Ortssuche und der Ort der Einstellungen. Views sprechen nie selbst mit `Date()`, `CLLocationManager` oder MapKit.
+Alles, was nach außen geht, hängt in `AppEnvironment`: Uhr, Standortquelle, Kursquelle, Zeitenquelle, Netz-Zustand, Ortssuche, der Ort der Einstellungen und der des Nachholens. Views sprechen nie selbst mit `Date()`, `CLLocationManager` oder MapKit.
+
+Die Zahlen des Nachholens bleiben auf dem Gerät: ein JSON-Eintrag (`qada.ledger`) in den UserDefaults der App, nicht in der App Group, weil Widgets sie nicht brauchen. Die App startet leer; mit `-debugFixtureTimes` zeigt sie die Zahlen des Prototyps und speichert nichts.
 
 Ins Netz geht die App nur über Apple-Dienste und nur dafür: die Koordinaten des Standorts an den Geocoder (für den Stadtnamen) und der Suchtext an die Ortssuche. Gerechnet wird auf dem Gerät; ohne Netz gilt der zuletzt bestimmte Ort weiter. Der Kompass braucht kein Netz. Für geografisch Nord bestimmt Core Location nebenbei grob den Standort, solange die Qibla-Seite zu sehen ist; der bleibt auf dem Gerät.
 
@@ -207,7 +221,7 @@ Solange es das Onboarding noch nicht gibt (Phase 7), fragt die Zeiten-Seite beim
 
 ### Abgleich mit den Referenzbildern
 
-Previews lassen sich nicht mit `simctl` aufnehmen. Deshalb zeigt die App mit `-debugCatalog` den Katalog statt der Tabs: `arc` den Bogen, `rows` die Gebetskarten, `compass` den Kompass mit der Kalibrierungskarte und `guide` Auswahl, Kopfkarte und „Vorher“ der Anleitung im Zustand der übrigen Debug-Argumente, `steps` den Ablauf der Anleitung, `glass` und `cards` die übrigen Bausteine, `all` alles untereinander.
+Previews lassen sich nicht mit `simctl` aufnehmen. Deshalb zeigt die App mit `-debugCatalog` den Katalog statt der Tabs: `arc` den Bogen, `rows` die Gebetskarten, `compass` den Kompass mit der Kalibrierungskarte und `guide` Auswahl, Kopfkarte und „Vorher“ der Anleitung im Zustand der übrigen Debug-Argumente, `steps` den Ablauf der Anleitung, `verses` und `qada` die Seiten „Verse“ und „Nachholen“ am Tag der Debug-Uhr (das Nachholen mit den Zahlen des Prototyps), `glass` und `cards` die übrigen Bausteine, `all` alles untereinander.
 
 ```bash
 make run ARGS='-debugCatalog arc -debugFixtureTimes -debugCity jakarta -debugDate 2026-11-10 -debugTime 17:57'
@@ -247,11 +261,25 @@ make compare-qibla
 make compare-guide
 ```
 
-Einzelne Ausschnitte vergleicht `scripts/compare-shot`; die Optionen stehen im Kopf von `scripts/compare-shot.swift`. Was vom Referenzbild abweicht und warum, steht in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 2“ bis „Annahmen in Phase 5“.
+`make compare-verses` stellt `iphone/50` (Verse, hell) und `51` (dunkel) nach und schreibt die Aufnahmen (`verses-50.png`, `verses-51.png`) und Ausschnitte von Leiste, Titel, Karte, Fußnote und Liste nach `screenshots-out/phase-6/`, dazu die Seite aus dem Katalog (`-debugCatalog verses`) in der Breite der Referenzbilder.
+
+```bash
+make compare-verses
+```
+
+`make compare-qada` stellt `iphone/60` nach (Nachholen mit den Zahlen des Prototyps) und schreibt die Aufnahme (`qada-60.png`) und Ausschnitte von Leiste, Kopf, Zusammenfassung, Plan und „Nach Gebet“ nach `screenshots-out/phase-6/`, dazu die Seite aus dem Katalog (`-debugCatalog qada`). `iphone/61` ist die Seite ganz nach unten gescrollt; liegt ihre Aufnahme `qada-61.png` dort – aufgenommen mit dem UI-Hilfsprojekt –, vergleicht das Skript sie mit.
+
+```bash
+make compare-qada
+```
+
+Einzelne Ausschnitte vergleicht `scripts/compare-shot`; die Optionen stehen im Kopf von `scripts/compare-shot.swift`. Was vom Referenzbild abweicht und warum, steht in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 2“ bis „Annahmen in Phase 6“.
 
 ## Texte
 
 Alle Texte stehen im Prototyp im Objekt `T` (DE, TR, EN, ES). `scripts/import-strings` erzeugt daraus `Localizable.xcstrings` und `L10n.swift` im Paket `DesignSystem` und `App/InfoPlist.xcstrings`. Die Dateien werden nicht von Hand geändert: Text im Prototyp ändern, dann `make strings`. Im Code heißt `t('navPrayers')` aus dem Prototyp `L10n.navPrayers`.
+
+Die Verse kommen aus `VERSES` und `SURAH` im Prototyp: Übersetzungen und Namen der Suren als `verse_<Sure>_<Vers>` und `surah_<Sure>` in den String Catalog (`L10n.verseTranslation(surah:ayah:)`, `L10n.surahName(_:)`), Stelle und arabischer Text nach `Packages/PrayerCore/Sources/PrayerCore/Verses/VerseList.swift`. Die Übersetzungen sind Platzhalter und tragen im Katalog den Kommentar `TODO(placeholder)` (Spec § 6.12).
 
 `App/InfoPlist.xcstrings` enthält die Begründung der Standortabfrage im System-Dialog (`NSLocationWhenInUseUsageDescription`) – der Text `alLocBody` aus `T`. Die Info.plist braucht ihn zusätzlich als Grundwert; der steht in `project.yml`, und `make check-strings` prüft, dass er dem deutschen Text entspricht.
 

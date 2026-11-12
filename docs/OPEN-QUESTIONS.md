@@ -31,7 +31,7 @@ Die Ortssuche fragt bei Apple nach Städten und Verwaltungsgebieten. Mit „nur 
 
 ### 5. Antippen beim Abgleich
 
-`xcrun simctl` kann starten und aufnehmen, aber nicht tippen. Zustände, die einen Tipp brauchen – `iphone/85` (Stadt-Sheet), später Qibla, Anleitung, Nachholen und die Einstellungen –, lassen sich damit nicht automatisch nachstellen. In Phase 3 hat ein kleines Hilfsprojekt außerhalb des Repos getippt: ein UI-Test, der die installierte App startet, antippt, wischt, tippt und aufnimmt (`/Volumes/Extern/Builds/NamazVakti/ui-harness`). In Phase 5 hat es `iphone/41` (gescrollt) und `42` (Maghrib angetippt) nachgestellt; dazu kam der Befehl `scroll`: ziehen ohne Schwung. Jede Geste verliert dabei 10 pt Anlauf, die das Skript dazurechnet.
+`xcrun simctl` kann starten und aufnehmen, aber nicht tippen. Zustände, die einen Tipp brauchen – `iphone/85` (Stadt-Sheet), später Qibla, Anleitung, Nachholen und die Einstellungen –, lassen sich damit nicht automatisch nachstellen. In Phase 3 hat ein kleines Hilfsprojekt außerhalb des Repos getippt: ein UI-Test, der die installierte App startet, antippt, wischt, tippt und aufnimmt (`/Volumes/Extern/Builds/NamazVakti/ui-harness`). In Phase 5 hat es `iphone/41` (gescrollt) und `42` (Maghrib angetippt) nachgestellt; dazu kam der Befehl `scroll`: ziehen ohne Schwung. Jede Geste verliert dabei 10 pt Anlauf, die das Skript dazurechnet. In Phase 6 hat es `iphone/61` (ganz nach unten gescrollt) nachgestellt und die Aktionen von Verse und Nachholen durchgespielt.
 
 - **Standard:** Das Hilfsprojekt bleibt außerhalb des Repos. Vorschlag: als `scripts/ui-harness` ins Repo übernehmen, damit `make` auch Zustände mit Tipp nachstellen kann.
 
@@ -195,6 +195,57 @@ Der Plan für Phase 6 wurde am 12.11.2026 freigegeben („Freigeben, bauen“), 
 | Texte der Verse | „String Catalog“ | `scripts/import-strings` liest neben `T` auch `VERSES` und `SURAH`. Übersetzungen und Surennamen stehen als Platzhalter im Katalog, jeder Eintrag mit dem Kommentar `TODO(placeholder)`. Der arabische Text und die Stellen (Sure, Vers) stehen in `PrayerCore`, weil sie in allen Sprachen gleich sind. |
 
 Mit dem Plan freigegeben sind auch seine Annahmen. Die offenen Fragen der Spec § 6.12 und § 6.13 bleiben wie im Prototyp: sechs Platzhalter-Verse, ein Jahr zählt 365 Tage, Witr ist aus, keine Erinnerung, der Bereich lässt sich nicht ausblenden.
+
+## Annahmen in Phase 6
+
+Gemessen ist auf dem iPhone 18 Pro mit iOS 27.2, Zustände wie in `scripts/compare-verses` und `scripts/compare-qada`; `iphone/61` und die Aktionen mit dem UI-Hilfsprojekt (`s23-verses-qada.txt` bis `s27-qada-witr.txt`).
+
+### Was mit den Referenzbildern übereinstimmt
+
+- **Zustände:** `iphone/50` „VERS DES TAGES · 10. NOV.“ mit Al-Baqara 2:45, darunter sechs Einträge von „Heute · 10. Nov.“ bis „Donnerstag · 5. Nov.“, der heutige getönt; `51` dasselbe dunkel. `60` „4,9 %“, „133 von 2.725 nachgeholt“ · „Noch 2.592 offen“, Plan 5 pro Tag, „Voraussichtlich fertig: April 2028“, Fadschr 501 bis Ischa 526. `61` Rechner mit 1 Jahr, 6 Monaten, 0 Tagen („−“ gesperrt), Witr aus, „545 Tage · 2.725 Gebete“, „Als offen übernehmen“ mit Häkchen, beide Fußtexte.
+- **Farben:** Karten, Kapsel-Knöpfe, Balken, Akzent und die Tönung des gewählten Eintrags (`#E2EEEC` hell, `#223231` dunkel) bis auf 1 von 255.
+- **Lage und Größe:** Wie in den Phasen davor sitzt alles 4 pt tiefer (sicherer Bereich ab 62 statt 58 pt); Karten, Einträge und Gruppen sind 12 pt breiter.
+
+| Baustein | Referenz (y in pt) | App (y in pt) |
+|---|---|---|
+| Titel „Verse“, „Nachholen“ (Kasten) | 120 bis 160,8 | 124,1 bis 164,8 |
+| Karte mit dem Vers (250 pt) | 175 bis 425 | 179 bis 429,3 |
+| Teilen und Kopieren (44 pt hoch, 98 und 119 pt breit) | 361 bis 405 | 365,3 bis 409,3, 98,3 und 119,7 pt breit |
+| erster und zweiter Eintrag der Liste (86 und 107 pt) | 530 bis 616, 624 bis 731 | 534 bis 620,3, 628,3 bis 735 |
+| Zusammenfassung (173 pt) | 229 bis 402 | 233 bis 406,7 |
+| Balken (8 pt, nachgeholter Teil 16 pt breit) | 350 bis 358 | 353,7 bis 361,7 |
+| Plan (Gruppe, 54 pt) | 437 bis 491 | 441,7 bis 495,7 |
+| erste Zeile unter „Nach Gebet“ (52 pt) | 583 bis 635 | 588 bis 640 |
+| `61`, ganz unten: Ischa, Rechner (225 pt), „Als offen übernehmen“ (44 pt) | 168, 269 bis 494, 551 bis 595 | 200, 301 bis 526,3, 583,3 bis 627,7 |
+
+In `61` liegt alles 32 pt tiefer: Beide Seiten stehen ganz unten, und der Bildschirm des Simulators ist 30 pt höher.
+
+### Was abweicht und bleibt
+
+- **Schrift:** wie in den Phasen 2 bis 5. Die Prozentzahl steht in SF Pro Rounded: „4,9 %“ ist 144 statt 150 pt breit und 1,8 pt niedriger; das geschützte Leerzeichen vor dem Prozentzeichen ist in SF Pro Rounded schmaler.
+- **Arabisch:** in SF Arabic, wie die Formeln der Anleitung (Phase 5). Das Referenzbild ist mit einer Ersatzschrift gesetzt; der Vers ist dort anders geformt.
+- **Laufweite kleiner Texte:** die des Systems statt der geerbten −0,41 px, wie in Phase 5. Datum, Übersetzung und Quelle der Einträge sind deshalb etwas breiter.
+- **Breite:** Die Fußzeile unter „Als offen übernehmen“ bricht nach „ein“ statt nach „Tage,“ um, die Fußnote am Ende nach „Zweifel“ statt nach „im“.
+- **Witr-Schalter:** der Schalter des Systems, in iOS 27.2 63 × 28 pt statt 51 × 31 pt, ausgeschaltet heller. Er schaltet beim Tippen auf den Schalter, nicht auf den Titel – wie in den Listen des Systems; VoiceOver schaltet über das ganze Element.
+- **Trennlinien:** in der Farbe des Systems und eine Haarlinie (1 Pixel), heller als im Prototyp – wie der Strich im Stepper (Phase 2).
+- **Höhe der Zusammenfassung:** 173,7 statt 173 pt, weil jeder Text seine Höhe auf Gerätepixel rundet. Was darunter liegt, sitzt 0,7 bis 1 pt tiefer als im Referenzbild.
+- **Symbole:** SF Symbols wie auf der Zeiten-Seite (Fadschr `sun.horizon` …); Witr trägt das Symbol von Ischa. Teilen `square.and.arrow.up`, Kopieren `square.on.square` – zwei überlappende Quadrate wie die Zeichnung des Prototyps; das Teilen-Menü des Systems nimmt für Kopieren `doc.on.doc` –, Übernehmen `checkmark`.
+- **Oben unter der Leiste** (`61`): der Randeffekt des Systems statt des Verlaufs im Prototyp, wie in Phase 3.
+
+### Annahmen in der Umsetzung
+
+- **Vers des Tages:** Die sechs Verse laufen im Kreis (Spec § 4). Am 10.11.2026 steht der erste Vers des Prototyps, an den Tagen davor die folgenden – so zeigen `iphone/50` und die App auch ohne Mock-Zeiten dieselbe Folge; vom 11.11.2026 an kommen die Verse vom Ende der Liste her. Der Tag wechselt um Mitternacht am Ort der Zeiten-Seite, ohne Ort in der Zeitzone des Geräts. „Letzte Tage“ sind heute und die fünf Tage davor.
+- **Antippen:** Ein Eintrag zeigt seinen Vers oben, und die Seite springt nach oben, ohne Bewegung wie im Prototyp. Die Wahl bleibt beim Tabwechsel und über Mitternacht stehen – der Tag heißt dann z. B. „Gestern“ –, bis sie aus der Liste fällt oder die App neu startet. Der heutige Eintrag hebt sie auf.
+- **Teilen und Kopieren:** derselbe Text in drei Zeilen, Arabisch, Übersetzung und Quelle (Spec § 4). Kopieren zeigt den Toast „Kopiert“ mit dem Symbol des Knopfs. `shareToast` bleibt ungenutzt; der Text beschreibt nur den Prototyp.
+- **Speichern:** jede Änderung sofort, als JSON-Eintrag `qada.ledger`. Beim Lesen gelten die Grenzen der Stepper; ein beschädigter Eintrag ergibt einen leeren Stand.
+- **Leerer Zustand:** solange kein Gebet, das zählt, nachzuholen ist (`QadaLedger.hasEntries`) – auch wenn im Rechner schon ein Zeitraum steht. „Nach Gebet“ liegt dann 24 pt unter der Einleitung (`.section-h`), sonst 32 pt unter dem Plan.
+- **„Als offen übernehmen“:** ohne Rückfrage, wie im Prototyp; es ersetzt auch schon Nachgeholtes, wie der Fußtext sagt. Der Toast nennt die Zahl, z. B. „3.270 Gebete als offen übernommen“ mit Witr.
+- **Tag für den Plan:** wie beim Vers, Mitternacht am Ort.
+- **Einstellungskreis:** Verse und Nachholen haben je einen eigenen Stapel; der Kreis öffnet die noch leeren Einstellungen. Ein Tabwechsel lässt sie offen (Systemverhalten); im Prototyp schließt er sie.
+- **VoiceOver:** Prozent und „nachgeholt“ sind ein Element, der Balken ein Fortschritt mit dem Namen „133 von 2.725 nachgeholt“; die Zeilen heißen „Fadschr, 501“, jede Taste der Stepper hat ihren Text („Ein Fadschr nachgeholt“). Die Karte heißt „Vers des Tages“ oder wie ihr Tag, der Vers ist als Arabisch markiert, der gewählte Eintrag trägt „ausgewählt“. Geprüft ist nur der Baum der Bedienungshilfen.
+- **Große Schrift:** Die Prozentzahl wächst höchstens auf das 1,2-Fache, der Vers ohne Grenze, wie im CSS. Passen „133 von …“ und „Noch … offen“ nicht nebeneinander, stehen sie untereinander. Bei AX5 scrollt die Seite; abgeschnitten wird nichts.
+- **Rechts nach links:** gespiegelt; der Balken füllt sich von rechts, der Vers bleibt rechtsbündig.
+- **Katalog:** `-debugCatalog verses` und `qada` zeigen die Seiten ohne Leiste in Referenzbreite und voller Höhe, am Tag der Debug-Uhr; `all` zeigt dazu das Nachholen leer, mit Witr und mit allem nachgeholt.
 
 ## Annahmen in Phase 5
 

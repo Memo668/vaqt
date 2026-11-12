@@ -78,6 +78,9 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 | `iphone/40` | … `-debugTab guide` |
 | `iphone/41` | wie `40`, dann nach unten scrollen, bis die erste Karte des Ablaufs 133 pt unter der Oberkante steht (UI-Hilfsprojekt, `s21-guide-steps.txt`) |
 | `iphone/42` | wie `40`, dann „Maghrib“ in der Auswahl antippen (UI-Hilfsprojekt, `s20-guide.txt`) |
-| `iphone/50` / `60` | … `-debugTab verses` / `-debugTab qada` |
+| `iphone/50` | … `-debugTime 14:25 -debugTab verses` |
+| `iphone/51` | wie `50` (Dark Mode) |
+| `iphone/60` | … `-debugTime 14:25 -debugTab qada` – mit `-debugFixtureTimes` die Zahlen des Prototyps |
+| `iphone/61` | wie `60`, dann ganz nach unten scrollen (UI-Hilfsprojekt, `s24-qada-scrolled.txt`) |
 
 Sprache im Simulator: Scheme › Run › Options › App Language, oder `-AppleLanguages "(tr)"`.
