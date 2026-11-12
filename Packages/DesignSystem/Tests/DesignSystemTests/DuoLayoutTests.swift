@@ -117,12 +117,33 @@ struct DuoLayoutTests {
         #expect(CenteredColumn.margin(horizontalSizeClass: sizeClass, width: width) == margin)
     }
 
-    @Test("„Nach Gebet“ beginnt innen die rechte Spalte mit 24 pt, untereinander je nach Plan")
+    @Test("„Nach Gebet“ beginnt innen die rechte Spalte oder den unteren Teil mit 24 pt, untereinander je nach Plan")
     @MainActor
     func byPrayerTop() {
         #expect(QadaLayout.byPrayerTop(afterPlan: true) == 32)
         #expect(QadaLayout.byPrayerTop(afterPlan: false) == 24)
-        #expect(QadaLayout.byPrayerTop(afterPlan: true, inColumns: true) == 24)
-        #expect(QadaLayout.byPrayerTop(afterPlan: false, inColumns: true) == 24)
+        #expect(QadaLayout.byPrayerTop(afterPlan: true, startsPart: true) == 24)
+        #expect(QadaLayout.byPrayerTop(afterPlan: false, startsPart: true) == 24)
+    }
+
+    @Test("Onboarding: auf dem iPhone die Ränder des Prototyps, innen höchstens 575 und 455 pt breit")
+    func onboardingWidths() {
+        #expect(OnboardingMetrics.pageMaxWidth(regular: false) == nil)
+        #expect(OnboardingMetrics.actionsMaxWidth(regular: false) == nil)
+        #expect(OnboardingMetrics.actionsInsets(regular: false)
+            == EdgeInsets(top: 14, leading: 24, bottom: 12, trailing: 24))
+        // `.onb-page`: `padding-inline: 150px`, `.onb-actions`: `padding: 10px 210px 26px` neben 875 pt.
+        #expect(OnboardingMetrics.pageMaxWidth(regular: true) == 575)
+        #expect(OnboardingMetrics.actionsMaxWidth(regular: true) == 455)
+        #expect(OnboardingMetrics.actionsInsets(regular: true)
+            == EdgeInsets(top: 10, leading: 24, bottom: 0, trailing: 24))
+    }
+
+    @Test("Tischhaltung und Spalten teilen die Seite, untereinander nicht")
+    func splitFlags() {
+        #expect(!PageArrangement.stacked.isSplit)
+        #expect(PageArrangement.columns(leading: 400, trailing: 400).isSplit)
+        #expect(PageArrangement.rows(top: 300, gap: 40, bottom: 300).isSplit)
+        #expect(!PageArrangement.rows(top: 300, gap: 40, bottom: 300).isColumns)
     }
 }

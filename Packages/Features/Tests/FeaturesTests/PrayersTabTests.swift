@@ -19,6 +19,17 @@ struct PrayersPageTests {
         #expect(Set(PrayersPage.allCases.map(\.title)).count == 3)
     }
 
+    @Test("Abstand über dem Inhalt: 8 pt unter der oberen Leiste, neben der senkrechten Leiste 14 pt vom Rand, nicht über dem sicheren Bereich")
+    func contentTop() {
+        // iPhone: unter der Leiste, egal wie hoch der Rand des Systems ist.
+        #expect(PageMetrics.contentTop(hasVerticalBar: false, safeAreaTop: 116) == 8)
+        // iPhone Duo: 14 pt vom oberen Rand (`padding-top: 14px`) …
+        #expect(PageMetrics.contentTop(hasVerticalBar: true, safeAreaTop: 0) == 14)
+        #expect(PageMetrics.contentTop(hasVerticalBar: true, safeAreaTop: 10) == 4)
+        // … liegt der sichere Bereich tiefer (außen und innen 24 pt), gleich an seinem Rand.
+        #expect(PageMetrics.contentTop(hasVerticalBar: true, safeAreaTop: 24) == 0)
+    }
+
     @Test("Symbole: Uhr und Kompass aus den SF Symbols, für die Anleitung der Gebetsteppich des Prototyps")
     func symbols() {
         #expect(PrayersPage.allCases.map(\.symbol) == [.system("clock"), .system("safari"), .prayerRug])

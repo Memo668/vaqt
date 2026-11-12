@@ -87,7 +87,7 @@ public struct QadaDetails: View {
     public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             SectionHeader(L10n.qadaByPrayer)
-                .padding(.top, QadaLayout.byPrayerTop(afterPlan: ledger.hasEntries, inColumns: arrangement.isColumns))
+                .padding(.top, QadaLayout.byPrayerTop(afterPlan: ledger.hasEntries, startsPart: arrangement.isSplit))
                 .padding(.bottom, SectionHeader.spacingBelow)
             VStack(spacing: QadaRowMetrics.rowGap) {
                 ForEach(ledger.prayers, id: \.self) { prayer in
@@ -157,14 +157,14 @@ enum QadaLayout {
     /// Abstand über „Nach Gebet“. Im CSS fallen der Abstand unter dem Teil davor und der über der
     /// Überschrift (24 pt) zusammen: unter dem Plan gelten dessen 32 pt (`.group-wrap`), ohne Plan – im
     /// leeren Zustand – die 24 pt der Überschrift, weil die Einleitung nur 18 pt hält. Innen auf dem
-    /// iPhone Duo beginnt „Nach Gebet“ die rechte Spalte: dann gelten die 24 pt der Überschrift, wie bei
-    /// „Ablauf“ und „Letzte Tage“.
+    /// iPhone Duo beginnt „Nach Gebet“ die rechte Spalte, in der Tischhaltung den unteren Teil: dann
+    /// gelten die 24 pt der Überschrift, wie bei „Ablauf“ und „Letzte Tage“.
     ///
     /// Auf dem Main Actor, weil die Abstände von `SectionHeader` und `PageLede` als Teil eines `View`
     /// dort liegen.
     @MainActor
-    static func byPrayerTop(afterPlan: Bool, inColumns: Bool = false) -> CGFloat {
-        if inColumns { return SectionHeader.spacingAbove }
+    static func byPrayerTop(afterPlan: Bool, startsPart: Bool = false) -> CGFloat {
+        if startsPart { return SectionHeader.spacingAbove }
         return afterPlan ? max(InsetGroupMetrics.spacingBelow, SectionHeader.spacingAbove)
             : max(PageLede.spacingBelow, SectionHeader.spacingAbove)
     }

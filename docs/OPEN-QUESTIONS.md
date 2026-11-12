@@ -57,6 +57,7 @@ Entschieden am 12.11.2026 mit der Abnahme von Phase 8 („Systemton“), siehe u
   - Widgets im getönten und klaren Erscheinungsbild des Home-Bildschirms (iOS 26) und mit großer Schrift.
 - **iPhone Duo am Gerät** (Phase 10): Im Simulator geprüft sind außen, innen quer und hoch, die Tischhaltung, Split View, RTL und dunkel – das Scharnier nur über den Schieberegler von Device Hub. Am Gerät zu prüfen:
   - Auf- und Zuklappen mit laufender App, auch mitten im Scrollen und mit offenem Sheet;
+  - der Wechsel in die Tischhaltung und zurück bei laufender App – im Simulator ist jede Haltung mit neu gestarteter App aufgenommen; die App liest den Falz, wenn sich der Platz der Seite ändert;
   - die Tischhaltung mit echtem Winkel (ab wann iOS den Falz als aktiv meldet) und die Haltung wie ein Buch;
   - der Kompass außen und innen;
   - Widgets und Live-Aktivität (nur für das iPhone gezeichnet, Spec § 6.17).
@@ -331,7 +332,7 @@ Der Plan für Phase 10 wurde am 12.11.2026 freigegeben („Freigeben, bauen (Emp
 
 ## Annahmen in Phase 10
 
-Geprüft ist auf dem Simulator „iPhone Duo“ (iOS 27.2, Build 24B91016s) mit `make compare-duo` und Aufnahmen über `simctl`; auf dem iPhone 18 Pro sind alle Aufnahmen von 17 Zuständen pixelgleich mit `main` (bis auf die laufenden Sekunden des Countdowns).
+Geprüft ist auf dem Simulator „iPhone Duo“ (iOS 27.2, Build 24B91016s) mit `make compare-duo` und Aufnahmen über `simctl`; auf dem iPhone 18 Pro sind alle Aufnahmen von 17 Zuständen pixelgleich mit `main` – bis auf die laufenden Sekunden des Countdowns und den Home-Indikator, den iOS in den Aufnahmen mal zeichnet und mal nicht.
 
 ### Was mit den Referenzbildern übereinstimmt
 
@@ -354,7 +355,7 @@ Das zeichnet iOS selbst; geprüft wird es, nachgebaut nicht.
   - Verse innen: „Und verrichte das Gebet zu Meinem Gedenken.“ bricht um; die Einträge darunter rücken tiefer.
 - **Sicherer Bereich oben:** außen und innen 24 pt. Oben ausgerichtete Seiten (Anleitung, Verse, Nachholen, Einstellungen) beginnen dort, 10 pt tiefer als die 14 pt des Prototyps.
 - **Titel der Einstellungen:** Den großen Titel und auf Unterseiten Titel und Suchfeld setzt das System an den linken Rand (21 pt), nicht in die 600-pt-Spalte; außen stehen Titel und Gruppen 20 statt 16 pt vom Rand.
-- **Sheets:** innen 617 statt 597 pt hoch (26–643 statt 36–633 pt) mit Ecken von etwa 38 statt 24 pt, abgedunkelt vom System. Außen legt iOS das Sheet über die ganze Breite unter die senkrechte Leiste, statt vor ihr zu enden.
+- **Sheets:** innen 617 statt 597 pt hoch (26–643 statt 36–633 pt) mit Ecken von etwa 38 statt 24 pt, abgedunkelt vom System. Außen legt iOS das Sheet über die ganze Breite unter die senkrechte Leiste, statt vor ihr zu enden; den Schließen-Knopf des Adhan-Sheets legt es dort in die senkrechte Leiste.
 - **Falz:** Den Schatten des Prototyps (`.crease`) gibt es nicht; das ist der Falz des Geräts.
 
 ### Annahmen in der Umsetzung
@@ -368,7 +369,7 @@ Das zeichnet iOS selbst; geprüft wird es, nachgebaut nicht.
 - **Leiste:** Einstellungskreis und Seiten sind Einträge der Leiste des Systems (`axisBehavior(.verticalPreferred)`), getrennt durch `ToolbarSpacer`, damit jeder ein eigener Kreis ist; der Gebetsteppich ist dafür ein Bild (`GlassSymbol.barImage`). Die gewählte Seite ist in Akzent getönt – eine getönte Fläche wie beim Chip bietet die Leiste nicht.
 - **Pager:** Neben der senkrechten Leiste endet er an ihr; sonst schaute die nächste Seite hinter der Leiste hervor.
 - **Toast:** Mit senkrechter Leiste 28 pt über dem Rand und mittig über dem Inhalt (`.toast` beim Duo). Außen geprüft mit dem UI-Hilfsprojekt (`s57-duo-toast.txt`): 29 pt über dem Rand, Mitte bei 191 pt.
-- **Onboarding innen:** Seite 150 pt und Knöpfe 210 pt vom Rand wie im HTML (`.onb-page`, `.onb-actions`); unten gilt der sichere Bereich (34 pt) statt 26 pt. Ein Referenzbild gibt es dafür nicht.
+- **Onboarding innen:** Text höchstens 575 pt und Knöpfe höchstens 455 pt breit, mittig – die Breiten, die das HTML innen quer neben 875 pt lässt (`.onb-page`: 150 pt, `.onb-actions`: 210 pt Rand). Als feste Ränder blieben hochkant (669 pt, ebenfalls regular) für die Knöpfe nur 249 pt, weniger als auf dem iPhone. Oben 10 pt über den Knöpfen wie im HTML, unten gilt der sichere Bereich (34 pt) statt 26 pt. Ein Referenzbild gibt es dafür nicht.
 - **Protokoll:** In DEBUG nennt die App Platz, Falz und Größenklasse (Kategorie `duo`).
 - **Widgets und Live-Aktivität:** unverändert (Spec § 8: „Live Activities need no changes“).
 

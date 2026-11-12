@@ -107,7 +107,8 @@ struct OnboardingView: View {
                 plainButton(L10n.ob3Later, action: model.finish)
             }
         }
-        // Innen auf dem iPhone Duo schmaler und mittig (`.onb-actions`).
+        // Innen auf dem iPhone Duo (regular) schmaler und mittig (`.onb-actions`).
+        .frame(maxWidth: OnboardingMetrics.actionsMaxWidth(regular: horizontalSizeClass == .regular))
         .padding(OnboardingMetrics.actionsInsets(regular: horizontalSizeClass == .regular))
     }
 
