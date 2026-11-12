@@ -13,6 +13,10 @@ public struct GuideState: Hashable, Sendable {
     /// untergeht. Dann gibt es weder Punkt noch Status noch Zeitfenster.
     public let automatic: Prayer?
 
+    /// Ob das automatische Gebet gerade läuft. Zwischen Sonnenaufgang und Dhuhr kommt es erst; der Punkt
+    /// meint dann „Als Nächstes“ statt „Jetzt“. Ohne Zeiten `false`.
+    public let isAutomaticCurrent: Bool
+
     /// Das gezeigte Gebet läuft gerade – Status „Jetzt“ (`isCur`).
     public let isCurrent: Bool
 
@@ -36,6 +40,7 @@ public struct GuideState: Hashable, Sendable {
 
         self.prayer = prayer
         self.automatic = automatic
+        self.isAutomaticCurrent = phase?.current != nil
         self.isCurrent = isCurrent
         self.isNext = !isCurrent && prayer == automatic
         self.showsReturnButton = automatic != nil && pick != nil && pick != automatic

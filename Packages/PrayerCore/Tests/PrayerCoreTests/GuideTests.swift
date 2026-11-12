@@ -449,11 +449,21 @@ struct GuideStateTests {
 
     // MARK: - Ohne Zeiten
 
+    @Test("der Punkt meint „Jetzt“, solange ein Gebet läuft, und „Als Nächstes“ am Vormittag")
+    func automaticIsCurrent() throws {
+        #expect(try GuideState(phase: phase("14:25")).isAutomaticCurrent)
+        #expect(try GuideState(phase: phase("14:25"), pick: .maghrib).isAutomaticCurrent)
+        #expect(try GuideState(phase: phase("04:01")).isAutomaticCurrent)
+        #expect(try !GuideState(phase: phase("08:04")).isAutomaticCurrent)
+        #expect(try !GuideState(phase: phase("08:04"), pick: .fajr).isAutomaticCurrent)
+    }
+
     @Test("ohne Zeiten zeigt die Anleitung Fadschr – ohne Punkt, Status und Knopf")
     func withoutTimes() {
         let state = GuideState(phase: nil)
         #expect(state.prayer == .fajr)
         #expect(state.automatic == nil)
+        #expect(!state.isAutomaticCurrent)
         #expect(!state.isCurrent)
         #expect(!state.isNext)
         #expect(!state.showsReturnButton)
