@@ -18,10 +18,11 @@ struct NotificationPreferencesTests {
         #expect(AdhanVoice.allCases.map(\.place) == ["Makkah", "Madinah", "Istanbul"])
     }
 
-    @Test("die Wahlmöglichkeiten sind REMINDERS und LIVE_OPTS")
+    @Test("die Wahlmöglichkeiten sind REMINDERS und die längere Liste der Live-Aktivität (Plan für Phase 9)")
     func choices() {
         #expect(NotificationPreferences.reminderChoices == [0, 5, 10, 15, 20, 30])
-        #expect(NotificationPreferences.liveActivityChoices == [0, 30, 60])
+        // Der Prototyp bietet Aus, 30 und 60 (`LIVE_OPTS`); der Nutzer wollte den Vorlauf freier wählen.
+        #expect(NotificationPreferences.liveActivityChoices == [0, 10, 15, 20, 30, 45, 60, 90, 120])
     }
 
     @Test("die Startwerte sind die von S: 10 Min., 30 Min., kurzer Adhan, Stimme 1")
@@ -33,7 +34,7 @@ struct NotificationPreferencesTests {
         #expect(preferences.voice == .one)
     }
 
-    @Test("Werte außerhalb der Wahlmöglichkeiten gelten als nicht gesetzt", arguments: [7, -5, 45, 1000])
+    @Test("Werte außerhalb der Wahlmöglichkeiten gelten als nicht gesetzt", arguments: [7, -5, 25, 1000])
     func invalidValues(minutes: Int) {
         var preferences = NotificationPreferences(reminderMinutes: minutes, liveActivityMinutes: minutes)
         #expect(preferences.reminderMinutes == 10)

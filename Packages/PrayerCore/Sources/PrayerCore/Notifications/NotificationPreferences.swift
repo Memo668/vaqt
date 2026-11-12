@@ -37,13 +37,14 @@ public enum AdhanVoice: Int, CaseIterable, Codable, Sendable {
 /// Was neben der Glocke je Gebet zu den Mitteilungen gehört – `S.reminder`, `S.liveAct`, `S.sound` und
 /// die Stimme des Adhan (`S.adhan.voice`).
 ///
-/// Mitteilungen plant `NotificationPlanner` damit, die Live-Aktivität kommt mit Phase 9. Werte, die
+/// Mitteilungen plant `NotificationPlanner` damit, Live-Aktivitäten `LiveActivityPlanner`. Werte, die
 /// keine der Wahlmöglichkeiten sind, gelten als nicht gesetzt: Es bleibt der Startwert des Prototyps.
 public struct NotificationPreferences: Hashable, Sendable {
     /// Vorab-Erinnerung in Minuten, 0 heißt aus (`REMINDERS`).
     public static let reminderChoices = [0, 5, 10, 15, 20, 30]
-    /// Vorlauf der Live-Aktivität in Minuten, 0 heißt aus (`LIVE_OPTS`).
-    public static let liveActivityChoices = [0, 30, 60]
+    /// Vorlauf der Live-Aktivität in Minuten, 0 heißt aus. Der Prototyp bietet Aus, 30 und 60 (`LIVE_OPTS`);
+    /// die längere Liste ist entschieden mit dem Plan für Phase 9 („Vorlauf beliebig einstellbar“).
+    public static let liveActivityChoices = [0, 10, 15, 20, 30, 45, 60, 90, 120]
 
     public static let standardReminderMinutes = 10
     public static let standardLiveActivityMinutes = 30

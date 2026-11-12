@@ -73,3 +73,33 @@ func fixtureTimeline(
 }
 
 #endif
+
+/// Feste Uhrzeiten an jedem Tag oder die einer anderen Quelle – an den Tagen in `missing` keine.
+struct StubTimesSource: PrayerTimesSource {
+    var base: (any PrayerTimesSource)?
+    var times: [String] = []
+    var missing: Set<CalendarDay> = []
+    var missingAll = false
+
+    init(times: [String]) {
+        self.times = times
+    }
+
+    init(base: any PrayerTimesSource, missing: Set<CalendarDay> = [], missingAll: Bool = false) {
+        self.base = base
+        self.missing = missing
+        self.missingAll = missingAll
+    }
+
+    func times(on day: CalendarDay, at place: Place, settings: CalculationSettings) -> DayTimes? {
+        guard !missingAll, !missing.contains(day) else { return nil }
+        if let base {
+            return base.times(on: day, at: place, settings: settings)
+        }
+        let dates = times.map { day.at($0, in: place.timeZone) }
+        return DayTimes(
+            day: day, timeZone: place.timeZone,
+            fajr: dates[0], sunrise: dates[1], dhuhr: dates[2], asr: dates[3], maghrib: dates[4], isha: dates[5]
+        )
+    }
+}

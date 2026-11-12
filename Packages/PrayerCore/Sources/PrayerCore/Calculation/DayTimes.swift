@@ -4,7 +4,7 @@ import Foundation
 ///
 /// Die Minutenkorrekturen sind schon enthalten. Die Zeiten gehören zum Kalendertag `day`, liegen aber
 /// nicht zwingend darauf: Bei hohen Breiten fällt Ischa mit der Regel „Nachtmitte“ auf den Folgetag.
-public struct DayTimes: Hashable, Sendable {
+public struct DayTimes: Hashable, Codable, Sendable {
     /// Der Kalendertag in `timeZone`, zu dem die Zeiten gehören.
     public let day: CalendarDay
     /// Zeitzone des Ortes; in ihr werden die Zeiten angezeigt.

@@ -115,4 +115,15 @@ struct CalendarDayTests {
         #expect(try #require(CalendarDay("2026-11-09")) < earlier)
         #expect(try #require(CalendarDay("2026-10-31")) < earlier)
     }
+
+    @Test("gespeichert als „yyyy-MM-dd“; ein Tag, den es nicht gibt, lässt sich nicht lesen")
+    func codable() throws {
+        let day = calendarDay("2026-11-10")
+        let data = try JSONEncoder().encode([day])
+        #expect(String(decoding: data, as: UTF8.self) == "[\"2026-11-10\"]")
+        #expect(try JSONDecoder().decode([CalendarDay].self, from: data) == [day])
+        #expect(throws: DecodingError.self) {
+            try JSONDecoder().decode([CalendarDay].self, from: Data("[\"2026-02-30\"]".utf8))
+        }
+    }
 }

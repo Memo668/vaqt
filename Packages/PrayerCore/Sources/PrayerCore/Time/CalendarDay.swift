@@ -78,3 +78,22 @@ public struct CalendarDay: Hashable, Comparable, Sendable, CustomStringConvertib
         return calendar
     }
 }
+
+/// Gespeichert als Text „yyyy-MM-dd“, z. B. im Inhalt einer Live-Aktivität. Ein Tag, den es nicht gibt,
+/// lässt sich nicht lesen.
+extension CalendarDay: Codable {
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let text = try container.decode(String.self)
+        guard let day = CalendarDay(text) else {
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Kein Tag: \(text)")
+        }
+        self = day
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(description)
+    }
+}

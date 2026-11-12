@@ -4,10 +4,10 @@ import Foundation
 /// was als Nächstes kommt, welche Zeilen schon vorbei sind.
 ///
 /// Eine Phase entsteht aus einem Zeitstrahl über drei Tage: `PrayerTimeline.phase(at:)`.
-public struct DayPhase: Hashable, Sendable {
+public struct DayPhase: Hashable, Codable, Sendable {
 
     /// Ein Ereignis auf dem Zeitstrahl.
-    public struct Event: Hashable, Sendable {
+    public struct Event: Hashable, Codable, Sendable {
         public let prayer: Prayer
         /// Tag des Ereignisses: −1 gestern, 0 heute, 1 morgen (`d`).
         public let dayOffset: Int

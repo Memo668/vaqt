@@ -38,6 +38,15 @@ public struct PrayerTimeline: Hashable, Sendable {
         )
     }
 
+    /// Die Zeiten des Tages mit dem Abstand `dayOffset` zu `today`: −1 gestern, 0 heute, 1 morgen.
+    public func times(dayOffset: Int) -> DayTimes {
+        switch dayOffset {
+        case ..<0: yesterday
+        case 0: today
+        default: tomorrow
+        }
+    }
+
     /// Die 18 Ereignisse der drei Tage in ihrer Tagesfolge.
     var events: [DayPhase.Event] {
         [(yesterday, -1), (today, 0), (tomorrow, 1)].flatMap { times, dayOffset in
