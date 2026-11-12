@@ -188,6 +188,26 @@ struct FixtureTimesSourceTests {
         #expect(summerSource.highLatitude)
         #expect(!source.highLatitude)
     }
+
+    // MARK: - Automatische Methode
+
+    @Test("die Automatik ist die der Fixture-Stadt (CITIES[…].auto)", arguments: [
+        ("berlin", CalculationMethod.mwl), ("istanbul", .diyanet), ("madrid", .mwl), ("mecca", .ummAlQura),
+        ("jakarta", .kemenag),
+    ])
+    func automaticMethod(city: String, expected: CalculationMethod) {
+        #expect(source.automaticMethod(for: fixturePlace(city)) == expected)
+    }
+
+    @Test("ein anderer Ort hat die Automatik von Berlin, auch mit -debugHighLatitude")
+    func automaticMethodElsewhere() {
+        let vienna = Place(
+            name: "Wien", countryCode: "AT", coordinates: Coordinates(latitude: 48.21, longitude: 16.37),
+            timeZoneIdentifier: "Europe/Vienna"
+        )
+        #expect(source.automaticMethod(for: vienna) == .mwl)
+        #expect(summerSource.automaticMethod(for: fixturePlace("jakarta")) == .mwl)
+    }
 }
 
 /// `ClockTime(minutesSinceMidnight:)` läuft um wie `fmt()` im Prototyp.

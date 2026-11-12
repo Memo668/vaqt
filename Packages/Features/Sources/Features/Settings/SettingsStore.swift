@@ -1,3 +1,4 @@
+import DesignSystem
 import Foundation
 import Observation
 import PrayerCore
@@ -5,9 +6,9 @@ import PrayerCore
 /// Die Einstellungen der App – der Teil von `S` im Prototyp, den die App auf dem Gerät behält.
 ///
 /// Sie liegen in den UserDefaults der App Group, damit Widgets und Live-Aktivität sie ab Phase 9 lesen
-/// können. Nichts davon verlässt das Gerät. Phase 3 braucht den Stand der Glocke je Gebet, die Wahl
-/// zwischen aktuellem Standort und Stadt und die gespeicherten Städte; die Rechen-Einstellungen und der
-/// Kerahat-Schalter stehen schon hier, ihre Bildschirme folgen in Phase 7.
+/// können. Nichts davon verlässt das Gerät: Glocke je Gebet, Standort oder Stadt, gespeicherte Städte,
+/// Rechen-Einstellungen, Mitteilungen, Erscheinungsbild, Sprache, Kerahat-Schalter und ob das
+/// Onboarding durchlaufen ist.
 @MainActor
 @Observable
 public final class SettingsStore {
@@ -38,6 +39,15 @@ public final class SettingsStore {
         public var calculation = CalculationSettings()
         /// Der Schalter „Kerahat-Zeiten zeigen“ (`S.kerahat`).
         public var showKerahat = true
+        /// Vorab-Erinnerung, Live-Aktivität, Klang und Stimme (`S.reminder`, `S.liveAct`, `S.sound`,
+        /// `S.adhan.voice`).
+        public var notifications = NotificationPreferences()
+        /// Erscheinungsbild (`S.appearance`).
+        public var appearance = Appearance.system
+        /// Die in der App gewählte Sprache (`S.lang`); `nil` heißt: wie das Gerät.
+        public var language: AppLanguage?
+        /// Ob das Onboarding durchlaufen oder übersprungen ist (`S.onboarded`).
+        public var onboardingCompleted = false
 
         public init() {}
     }
@@ -54,6 +64,10 @@ public final class SettingsStore {
     public private(set) var bells: [Prayer: BellState]
     public private(set) var calculation: CalculationSettings
     public private(set) var showKerahat: Bool
+    public private(set) var notifications: NotificationPreferences
+    public private(set) var appearance: Appearance
+    public private(set) var language: AppLanguage?
+    public private(set) var onboardingCompleted: Bool
 
     @ObservationIgnored private let defaults: UserDefaults?
 
@@ -76,6 +90,10 @@ public final class SettingsStore {
         bells = snapshot.bells
         calculation = snapshot.calculation
         showKerahat = snapshot.showKerahat
+        notifications = snapshot.notifications
+        appearance = snapshot.appearance
+        language = snapshot.language
+        onboardingCompleted = snapshot.onboardingCompleted
     }
 
     /// Der Stand aller Einstellungen.
@@ -88,6 +106,10 @@ public final class SettingsStore {
         snapshot.bells = bells
         snapshot.calculation = calculation
         snapshot.showKerahat = showKerahat
+        snapshot.notifications = notifications
+        snapshot.appearance = appearance
+        snapshot.language = language
+        snapshot.onboardingCompleted = onboardingCompleted
         return snapshot
     }
 
@@ -136,6 +158,18 @@ public final class SettingsStore {
         defaults?.set(autoLocation, forKey: Key.autoLocation)
     }
 
+    /// Der Schalter „Aktuellen Standort verwenden“ aus (`toggle-loc` im Prototyp): Die Stadt des
+    /// aktuellen Standorts bleibt als gewählte Stadt stehen – im Prototyp ist `S.city` dann die
+    /// `S.deviceCity`. Fehlt ihr Name (ohne Netz bestimmt), bleibt die zuletzt gewählte Stadt.
+    public func useChosenCity() {
+        if let devicePlace, devicePlace.hasName {
+            select(devicePlace)
+        } else {
+            autoLocation = false
+            defaults?.set(autoLocation, forKey: Key.autoLocation)
+        }
+    }
+
     /// Merkt sich den zuletzt bestimmten aktuellen Ort.
     public func setDevicePlace(_ place: Place?) {
         guard devicePlace != place else { return }
@@ -172,6 +206,54 @@ public final class SettingsStore {
         defaults?.set(showKerahat, forKey: Key.showKerahat)
     }
 
+    /// Ändert einen Teil der Rechen-Einstellungen, z. B. `{ $0.asr = .hanafi }`.
+    public func updateCalculation(_ change: (inout CalculationSettings) -> Void) {
+        var calculation = calculation
+        change(&calculation)
+        setCalculation(calculation)
+    }
+
+    // MARK: - Mitteilungen
+
+    public func setNotifications(_ notifications: NotificationPreferences) {
+        self.notifications = notifications
+        save(notifications, forKey: Key.notifications)
+    }
+
+    /// Ändert einen Teil der Mitteilungs-Einstellungen, z. B. `{ $0.reminderMinutes = 5 }`.
+    public func updateNotifications(_ change: (inout NotificationPreferences) -> Void) {
+        var notifications = notifications
+        change(&notifications)
+        setNotifications(notifications)
+    }
+
+    // MARK: - Darstellung und Sprache
+
+    public func setAppearance(_ appearance: Appearance) {
+        self.appearance = appearance
+        defaults?.set(appearance.rawValue, forKey: Key.appearance)
+    }
+
+    /// Wählt die Sprache der App. Die Texte folgen sofort (`L10n.chosenLanguage`); die Seiten bauen sich
+    /// dafür neu auf (`RootView`).
+    public func setLanguage(_ language: AppLanguage?) {
+        L10n.chosenLanguage = language
+        self.language = language
+        if let language {
+            defaults?.set(language.rawValue, forKey: Key.language)
+        } else {
+            defaults?.removeObject(forKey: Key.language)
+        }
+    }
+
+    // MARK: - Onboarding
+
+    /// Das Onboarding ist durchlaufen oder übersprungen; es erscheint nicht wieder.
+    public func completeOnboarding() {
+        onboardingCompleted = true
+        defaults?.set(onboardingCompleted, forKey: Key.onboardingCompleted)
+    }
+
     // MARK: - Lesen und Schreiben
 
     /// Die Schlüssel in den UserDefaults.
@@ -182,6 +264,10 @@ public final class SettingsStore {
         static let devicePlace = "settings.deviceCity"
         static let calculation = "settings.calculation"
         static let showKerahat = "settings.showKerahat"
+        static let notifications = "settings.notifications"
+        static let appearance = "settings.appearance"
+        static let language = "settings.language"
+        static let onboardingCompleted = "settings.onboarded"
 
         static func bell(_ prayer: Prayer) -> String {
             "settings.notification." + prayer.rawValue
@@ -207,6 +293,14 @@ public final class SettingsStore {
         if defaults.object(forKey: Key.showKerahat) != nil {
             snapshot.showKerahat = defaults.bool(forKey: Key.showKerahat)
         }
+        if let notifications = decode(NotificationPreferences.self, from: defaults, forKey: Key.notifications) {
+            snapshot.notifications = notifications
+        }
+        if let appearance = defaults.string(forKey: Key.appearance).flatMap(Appearance.init(rawValue:)) {
+            snapshot.appearance = appearance
+        }
+        snapshot.language = defaults.string(forKey: Key.language).flatMap(AppLanguage.init(rawValue:))
+        snapshot.onboardingCompleted = defaults.bool(forKey: Key.onboardingCompleted)
         return snapshot
     }
 

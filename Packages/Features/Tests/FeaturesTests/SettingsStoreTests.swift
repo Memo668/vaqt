@@ -195,6 +195,79 @@ struct SettingsStoreTests {
         }
     }
 
+    // MARK: - Phase 7: Mitteilungen, Darstellung, Sprache, Onboarding
+
+    @Test("die neuen Startwerte sind die von S: 10 Min., 30 Min., kurzer Adhan, System, keine eigene Sprache")
+    func phase7Defaults() {
+        let store = ephemeral()
+        #expect(store.notifications == NotificationPreferences())
+        #expect(store.appearance == .system)
+        #expect(store.language == nil)
+        #expect(!store.onboardingCompleted)
+    }
+
+    @Test("Mitteilungen, Erscheinungsbild, Rechnung und Onboarding stehen nach dem Neustart wieder da")
+    func phase7Persistence() {
+        withSuite { name in
+            let store = SettingsStore(storage: .userDefaults(suiteName: name))
+            store.updateNotifications {
+                $0.reminderMinutes = 5
+                $0.liveActivityMinutes = 60
+                $0.sound = .system
+                $0.voice = .two
+            }
+            store.setAppearance(.dark)
+            store.updateCalculation {
+                $0.asr = .hanafi
+                $0.adjustments.step(.fajr, by: 3)
+            }
+            store.completeOnboarding()
+
+            let reloaded = SettingsStore(storage: .userDefaults(suiteName: name))
+            #expect(reloaded.notifications == NotificationPreferences(
+                reminderMinutes: 5, liveActivityMinutes: 60, sound: .system, voice: .two
+            ))
+            #expect(reloaded.appearance == .dark)
+            #expect(reloaded.calculation.asr == .hanafi)
+            #expect(reloaded.calculation.adjustments[.fajr] == 3)
+            #expect(reloaded.onboardingCompleted)
+        }
+    }
+
+    @Test("die gespeicherte Sprache gilt beim Start; eine unbekannte zählt nicht")
+    func languageFromDefaults() throws {
+        try withSuite { name in
+            let defaults = try #require(UserDefaults(suiteName: name))
+            defaults.set("tr", forKey: SettingsStore.Key.language)
+            #expect(SettingsStore(storage: .userDefaults(suiteName: name)).language == .tr)
+            defaults.set("fr", forKey: SettingsStore.Key.language)
+            #expect(SettingsStore(storage: .userDefaults(suiteName: name)).language == nil)
+        }
+    }
+
+    @Test("Standort aus: Die Stadt des Standorts bleibt als gewählte stehen (S.city = S.deviceCity)")
+    func useChosenCity() {
+        let store = ephemeral {
+            $0.devicePlace = .berlin
+            $0.manualPlace = .istanbul
+        }
+        store.useChosenCity()
+        #expect(!store.autoLocation)
+        #expect(store.manualPlace == .berlin)
+        #expect(store.savedPlaces.contains(.berlin))
+    }
+
+    @Test("Standort aus ohne Namen des Standorts: Es bleibt die zuletzt gewählte Stadt")
+    func useChosenCityWithoutName() {
+        let store = ephemeral {
+            $0.devicePlace = .unnamed(latitude: 52.5, longitude: 13.4)
+            $0.manualPlace = .istanbul
+        }
+        store.useChosenCity()
+        #expect(!store.autoLocation)
+        #expect(store.manualPlace == .istanbul)
+    }
+
     @Test("flüchtige Einstellungen schreiben nichts in die UserDefaults")
     func ephemeralWritesNothing() {
         let before = UserDefaults.standard.dictionaryRepresentation().keys.filter { $0.hasPrefix("settings.") }

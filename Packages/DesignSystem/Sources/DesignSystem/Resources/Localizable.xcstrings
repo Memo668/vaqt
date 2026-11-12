@@ -2650,6 +2650,35 @@
         }
       }
     },
+    "hlMoonsighting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bei Moonsighting gilt diese Regel nicht – die Methode legt Fadschr und Ischa je nach Jahreszeit selbst fest."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This rule doesn’t apply with Moonsighting – the method sets Fajr and Isha by season itself."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Con Moonsighting esta regla no se aplica: el método fija Fajr e Isha según la estación."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moonsighting yönteminde bu kural uygulanmaz – yöntem imsak ve yatsıyı mevsime göre kendisi belirler."
+          }
+        }
+      }
+    },
     "hlSeventh" : {
       "extractionState" : "manual",
       "localizations" : {

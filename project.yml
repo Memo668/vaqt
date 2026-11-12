@@ -24,6 +24,9 @@ settings:
     # Die App Group steht nur hier; die Entitlements beider Targets lesen sie von hier.
     APP_BUNDLE_ID: com.example.gebetszeiten
     APP_GROUP_ID: group.com.example.gebetszeiten
+    # TODO(placeholder): Adresse hinter Einstellungen › Quellcode („Open Source auf GitHub“). Das Repo hat
+    # noch keine öffentliche Adresse; vor dem ersten Archiv eintragen.
+    SOURCE_CODE_URL: https://example.com/gebetszeiten
     DEVELOPMENT_TEAM: ""
     CODE_SIGN_STYLE: Automatic
     TARGETED_DEVICE_FAMILY: "1"
@@ -70,6 +73,8 @@ targets:
         # Die App Group, in deren UserDefaults die Einstellungen liegen (Features: SettingsStore),
         # damit Widgets und Live-Aktivität sie ab Phase 9 lesen können.
         AppGroupIdentifier: $(APP_GROUP_ID)
+        # Adresse hinter Einstellungen › Quellcode (Features: AppInfo.sourceCodeURL).
+        SourceCodeURL: $(SOURCE_CODE_URL)
     entitlements:
       path: App/Gebetszeiten.entitlements
       properties:

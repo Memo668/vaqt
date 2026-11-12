@@ -41,11 +41,33 @@ struct L10nTests {
         #expect(["de", "tr", "en", "es"].contains(L10n.locale.language.languageCode?.identifier ?? ""))
     }
 
-    @Test("der Katalog hat 272 Schlüssel und keinen doppelt")
+    @Test("die Sprachen der App heißen wie LANG_NAMES im Prototyp")
+    func languageNames() {
+        #expect(AppLanguage.allCases.map(\.rawValue) == ["de", "tr", "en", "es"])
+        #expect(AppLanguage.allCases.map(\.name) == ["Deutsch", "Türkçe", "English", "Español"])
+    }
+
+    @Test("eine in der App gewählte Sprache liest ihre Texte aus ihrem Teil-Bundle", arguments: [
+        (AppLanguage.de, "Fadschr"), (.tr, "İmsak"), (.en, "Fajr"), (.es, "Fajr"),
+    ])
+    func chosenLanguageBundle(language: AppLanguage, fajr: String) {
+        let bundle = L10n.textBundle(for: language)
+        #expect(bundle.localizedString(forKey: "p_fajr", value: nil, table: nil) == fajr)
+        #expect(bundle.localizedString(forKey: "language", value: nil, table: nil) != "language")
+    }
+
+    @Test("ohne gewählte Sprache gilt das Bundle des Pakets, und die Sprache ist die des Systems")
+    func systemLanguage() {
+        #expect(L10n.textBundle(for: nil) == L10n.bundle)
+        #expect(AppLanguage.allCases.contains(L10n.systemLanguage))
+    }
+
+    @Test("der Katalog hat 273 Schlüssel und keinen doppelt")
     func keyCount() {
-        // 260 aus der Design-Übergabe v0.7, dazu `noTimes` (Phase 3) und `noCompass` (Phase 4,
-        // docs/OPEN-QUESTIONS.md), dazu aus `SURAH` und `VERSES` vier Suren und sechs Verse (Phase 6).
-        #expect(L10n.allKeys.count == 272)
+        // 260 aus der Design-Übergabe v0.7, dazu `noTimes` (Phase 3), `noCompass` (Phase 4) und
+        // `hlMoonsighting` (Phase 7, docs/OPEN-QUESTIONS.md), dazu aus `SURAH` und `VERSES` vier Suren und
+        // sechs Verse (Phase 6).
+        #expect(L10n.allKeys.count == 273)
         #expect(Set(L10n.allKeys).count == L10n.allKeys.count)
     }
 

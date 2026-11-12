@@ -83,6 +83,8 @@ struct AdhanTimesSourceTests {
         var place = Place.berlin
         place.countryCode = country
         #expect(try times(at: place) == times(at: place, CalculationSettings(method: method)))
+        // Die Einstellungen nennen dieselbe Methode („Automatisch · Diyanet“).
+        #expect(AdhanTimesSource().automaticMethod(for: place) == method)
     }
 
     @Test("ohne Land gilt MWL")

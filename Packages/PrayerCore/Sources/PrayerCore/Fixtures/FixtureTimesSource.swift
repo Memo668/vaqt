@@ -51,12 +51,24 @@ public struct FixtureTimesSource: PrayerTimesSource {
         highLatitude
     }
 
+    /// Die Automatik der Fixture-Stadt (`CITIES[…].auto`) – für Berlin MWL wie in den Referenzbildern
+    /// `iphone/70` und `73`, auch wenn die App für Deutschland Diyanet nimmt (docs/OPEN-QUESTIONS.md,
+    /// „Automatische Methode je Land“).
+    public func automaticMethod(for place: Place) -> CalculationMethod {
+        CalculationMethod(rawValue: city(at: place).automaticMethodID) ?? .automatic(forCountryCode: place.countryCode)
+    }
+
+    /// Die Fixture-Stadt an den Koordinaten von `place`; für jeden anderen Ort Berlin, das an erster Stelle
+    /// der Liste steht (`CITY_IDS`).
+    private func city(at place: Place) -> FixtureTimes.City {
+        guard !highLatitude else { return FixtureTimes.cities[0] }
+        return FixtureTimes.cities.first { $0.coordinates == place.coordinates } ?? FixtureTimes.cities[0]
+    }
+
     /// Die Uhrzeiten vor den Korrekturen – `d` in `todayTimes()`.
     private func rawTimes(at place: Place, rule: HighLatitudeRule) -> FixtureTimes.Times? {
         guard highLatitude else {
-            // Berlin steht an erster Stelle der Liste (`CITY_IDS`).
-            let city = FixtureTimes.cities.first { $0.coordinates == place.coordinates } ?? FixtureTimes.cities[0]
-            return city.times
+            return city(at: place).times
         }
         let summer = FixtureTimes.berlinSummer
         guard let fajr = summer.fajr[rule], let isha = summer.isha[rule] else { return nil }

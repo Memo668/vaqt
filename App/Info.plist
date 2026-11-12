@@ -33,6 +33,8 @@
 	<string>Dein Standort wird nur auf diesem Gerät zur Berechnung der Gebetszeiten verwendet.</string>
 	<key>NSSupportsLiveActivities</key>
 	<true/>
+	<key>SourceCodeURL</key>
+	<string>$(SOURCE_CODE_URL)</string>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>

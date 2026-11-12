@@ -341,6 +341,8 @@ public enum L10n {
     public static var hlMiddleSub: String { text("hlMiddleSub") }
     /// „Gilt im Sommer ab etwa 48° Breite, z. B. in Deutschland.“
     public static var hlFooter: String { text("hlFooter") }
+    /// „Bei Moonsighting gilt diese Regel nicht – die Methode legt Fadschr und Ischa je nach Jahreszeit selbst fest.“
+    public static var hlMoonsighting: String { text("hlMoonsighting") }
     /// „Die Zeiten werden lokal auf dem Gerät berechnet.“
     public static var calcFooter: String { text("calcFooter") }
     /// „Berechnungsmethode“
@@ -693,6 +695,7 @@ public enum L10n {
         "hlMiddle",
         "hlMiddleSub",
         "hlFooter",
+        "hlMoonsighting",
         "calcFooter",
         "methodTitle",
         "recommended",

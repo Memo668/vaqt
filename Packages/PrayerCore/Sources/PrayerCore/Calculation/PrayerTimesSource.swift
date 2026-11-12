@@ -16,6 +16,10 @@ public protocol PrayerTimesSource: Sendable {
     ///
     /// Der Prototyp hat dafür nur einen Schalter (`S.highLat`).
     func usesHighLatitudeRule(on day: CalendarDay, at place: Place, settings: CalculationSettings) -> Bool
+
+    /// Die Methode, die für `place` gilt, solange keine gewählt ist – „Automatisch · Diyanet“ in den
+    /// Einstellungen (`CITIES[…].auto` im Prototyp).
+    func automaticMethod(for place: Place) -> CalculationMethod
 }
 
 extension PrayerTimesSource {
@@ -23,5 +27,10 @@ extension PrayerTimesSource {
     /// Ohne eigene Auskunft greift die Regel nicht.
     public func usesHighLatitudeRule(on day: CalendarDay, at place: Place, settings: CalculationSettings) -> Bool {
         false
+    }
+
+    /// Ohne eigene Auskunft die Methode des Landes (`CalculationMethod.automatic(forCountryCode:)`).
+    public func automaticMethod(for place: Place) -> CalculationMethod {
+        .automatic(forCountryCode: place.countryCode)
     }
 }
