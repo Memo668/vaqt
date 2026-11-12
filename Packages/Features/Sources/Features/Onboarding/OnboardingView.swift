@@ -16,12 +16,20 @@ struct OnboardingView: View {
     var body: some View {
         VStack(spacing: 0) {
             topBar
-            ZStack {
-                page(model.step)
-                    .id(model.step)
-                    .transition(reduceMotion ? .opacity : .push(from: .trailing))
+            // Die Seite steht mittig; reicht der Platz nicht – bei sehr großer Schrift –, scrollt sie, und
+            // Punkte und Knöpfe bleiben unten stehen.
+            GeometryReader { proxy in
+                ScrollView {
+                    ZStack {
+                        page(model.step)
+                            .id(model.step)
+                            .transition(reduceMotion ? .opacity : .push(from: .trailing))
+                    }
+                    .frame(maxWidth: .infinity, minHeight: proxy.size.height)
+                }
+                .scrollBounceBehavior(.basedOnSize)
+                .scrollIndicators(.automatic)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(.bottom, OnboardingMetrics.pageBottom)
             .clipped()
             PageDots(count: OnboardingStep.allCases.count, current: model.step.rawValue)
@@ -58,7 +66,8 @@ struct OnboardingView: View {
             }
         }
         .padding(.horizontal, OnboardingMetrics.topBarInsetX)
-        .frame(height: OnboardingMetrics.topBarHeight)
+        // Mindestens 44 pt; bei sehr großer Schrift wächst die Leiste mit „Überspringen“.
+        .frame(minHeight: OnboardingMetrics.topBarHeight)
     }
 
     @ViewBuilder
