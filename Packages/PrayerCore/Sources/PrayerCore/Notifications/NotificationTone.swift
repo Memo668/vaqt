@@ -13,7 +13,8 @@ public enum NotificationTone: Hashable, Sendable {
     /// „Ton“ spielt den gewählten Klang, „Lautlos“ zeigt nur die Mitteilung (`perPrayerFooter`). Der kurze
     /// Adhan ist die Aufnahme der gewählten Stimme; zu Fadschr ihre Fadschr-Variante, sobald es dafür eine
     /// Aufnahme gibt, bis dahin der normale Ausschnitt. Hat die Stimme keine Aufnahme, spielt der Ton des
-    /// Systems (entschieden mit dem Plan für Phase 8).
+    /// Systems (entschieden mit dem Plan für Phase 8). Der Sonnenaufgang ist kein Gebet und hat keinen
+    /// Adhan: Er spielt den Ton des Systems (entschieden mit der Abnahme von Phase 8).
     public static func prayer(_ prayer: Prayer, bell: BellState, preferences: NotificationPreferences) -> NotificationTone? {
         switch bell {
         case .off:
@@ -25,6 +26,8 @@ public enum NotificationTone: Hashable, Sendable {
             case .silent:
                 return .silent
             case .system:
+                return .system
+            case .adhan where prayer == .sunrise:
                 return .system
             case .adhan:
                 let voice = preferences.voice

@@ -163,11 +163,12 @@ struct NotificationPlannerTests {
         #expect(notifications.prefix(2).map(\.tone) == [.silent, .silent])
     }
 
-    @Test("der Sonnenaufgang bekommt eine Mitteilung, wenn seine Glocke an ist")
+    @Test("der Sonnenaufgang bekommt eine Mitteilung, wenn seine Glocke an ist – mit dem Systemton, nicht dem Adhan")
     func sunrise() {
         let notifications = plan(at: "06:00", bells: [.sunrise: .sound])
         #expect(summary(notifications.prefix(2)) == ["reminder sunrise 2026-11-10 07:04", "prayer sunrise 2026-11-10 07:14"])
         #expect(notifications[1].title == "sunrise · 07:14")
+        #expect(notifications.prefix(2).map(\.tone) == [.system, .system])
     }
 
     @Test("der Klang gilt für alle Gebete mit „Ton“")

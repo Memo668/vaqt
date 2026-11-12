@@ -50,6 +50,17 @@ struct NotificationToneTests {
         }
     }
 
+    @Test("der Sonnenaufgang hat keinen Adhan: Systemton, beim Klang „Lautlos“ keiner")
+    func sunrise() {
+        for voice in AdhanVoice.allCases {
+            #expect(NotificationTone.prayer(.sunrise, bell: .sound, preferences: preferences(.adhan, voice: voice)) == .system)
+        }
+        #expect(NotificationTone.prayer(.sunrise, bell: .sound, preferences: preferences(.system)) == .system)
+        #expect(NotificationTone.prayer(.sunrise, bell: .sound, preferences: preferences(.silent)) == .silent)
+        #expect(NotificationTone.prayer(.sunrise, bell: .silent, preferences: preferences(.adhan)) == .silent)
+        #expect(NotificationTone.prayer(.sunrise, bell: .off, preferences: preferences(.adhan)) == nil)
+    }
+
     @Test("die Erinnerung spielt nie den Adhan: Systemton bei „Ton“, keiner beim Klang „Lautlos“")
     func reminder() {
         #expect(NotificationTone.reminder(bell: .sound, preferences: preferences(.adhan)) == .system)

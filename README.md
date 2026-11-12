@@ -322,7 +322,7 @@ Die App merkt lokale Mitteilungen bei iOS vor, ohne Server. Je Ereignis gibt es 
 
 | Glocke | Mitteilung zur Gebetszeit | Erinnerung |
 |---|---|---|
-| Ton | Klang „Kurzer Adhan“: die Aufnahme der gewählten Stimme (`App/Sounds`), zu Fadschr die Fadschr-Variante, sobald es sie gibt; Stimme 3 ohne Aufnahme: Systemton. Klang „Systemton“: Systemton. Klang „Lautlos“: ohne Ton | Systemton, beim Klang „Lautlos“ ohne Ton |
+| Ton | Klang „Kurzer Adhan“: die Aufnahme der gewählten Stimme (`App/Sounds`), zu Fadschr die Fadschr-Variante, sobald es sie gibt; Stimme 3 ohne Aufnahme und der Sonnenaufgang: Systemton. Klang „Systemton“: Systemton. Klang „Lautlos“: ohne Ton | Systemton, beim Klang „Lautlos“ ohne Ton |
 | Lautlos | ohne Ton | ohne Ton |
 | Aus | keine | keine |
 
