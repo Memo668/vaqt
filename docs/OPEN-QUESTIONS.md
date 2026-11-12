@@ -180,6 +180,10 @@ Der Plan für Phase 5 wurde am 12.11.2026 freigegeben („Freigeben, bauen“), 
 
 Mit dem Plan freigegeben sind auch: die Haltungsfiguren als SwiftUI-Shapes mit der Geometrie von `POSE` (Spec § 6.14 bleibt offen); ohne Zeiten zeigt die Anleitung Fadschr ohne Punkt, Status und Zeitfenster; der Daumen der Auswahl blendet in 0,2 s über, statt zu gleiten; die Katalog-Abschnitte `guide` und `steps`. Neue Texte brauchte die Phase nicht.
 
+## Abnahme von Phase 5 am 12.11.2026
+
+Phase 5 wurde am 12.11.2026 abgenommen („Abnehmen, zusammenführen“), so wie sie auf dem Zweig `phase-5` stand (Stand `8d1726a`). Zu den Punkten 1 bis 5 unter „Braucht eine Entscheidung“ gab es dabei keine Antwort; dort gilt weiter der jeweilige Standard. Offen bleibt die fachliche Prüfung der Texte der Anleitung (oben unter „Vor der Veröffentlichung zu prüfen“). Noch nicht geprüft sind VoiceOver von Hand (bisher nur der Baum der Bedienungshilfen) und die Anleitung am echten Gerät.
+
 ## Annahmen in Phase 5
 
 Gemessen ist auf dem iPhone 18 Pro mit iOS 27.2, Zustände wie in `scripts/compare-guide`; `iphone/41` und `42` mit dem UI-Hilfsprojekt (`s20-guide.txt`, `s21-guide-steps.txt`).
