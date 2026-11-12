@@ -99,6 +99,22 @@ struct LiveActivityPlannerTests {
         ])
     }
 
+    @Test("iOS nimmt höchstens fünf an: um 15:45 mit 60 Min. Vorlauf fällt Maghrib von morgen weg")
+    func systemLimit() {
+        #expect(LiveActivityPlanner.systemLimit == 5)
+        #expect(summary(plan(at: "15:45", lead: 60)).map { String($0.prefix(18)) } == [
+            "maghrib 2026-11-10", "isha 2026-11-10 17", "fajr 2026-11-11 04", "dhuhr 2026-11-11 1", "asr 2026-11-11 13:",
+        ])
+    }
+
+    @Test("eine Aktivität, deren Gebet begonnen hat, zählt nicht mit – um 16:30 kommen noch fünf dazu")
+    func begunDoesNotCount() {
+        let plans = plan(at: "16:30")
+        #expect(plans.count == 6)
+        #expect(plans.first?.prayer == .maghrib)
+        #expect(plans.last?.id == "live.2026-11-11.maghrib")
+    }
+
     // MARK: - Laufende Aktivitäten
 
     @Test("läuft der Vorlauf schon, beginnt die Aktivität sofort; ihr Bogen zeigt den Stand von jetzt")

@@ -43,11 +43,18 @@ public struct LiveActivityPlanner: Sendable {
     public static let endDelay: TimeInterval = 15 * 60
     /// So weit voraus plant die App: Aktivitäten, die in dieser Zeit beginnen.
     public static let horizon: TimeInterval = 24 * 60 * 60
+    /// So viele Aktivitäten nimmt iOS je App an, geplante mitgezählt; die sechste lehnt es ab
+    /// (`targetMaximumExceeded`, im Simulator mit iOS 27.2 beobachtet). Wie bei den Mitteilungen rollt das
+    /// Fenster weiter, wenn die App wieder plant.
+    public static let systemLimit = 5
 
     public let source: any PrayerTimesSource
+    /// Höchstzahl der Aktivitäten im Plan, deren Gebet noch nicht begonnen hat.
+    public let limit: Int
 
-    public init(source: any PrayerTimesSource) {
+    public init(source: any PrayerTimesSource, limit: Int = LiveActivityPlanner.systemLimit) {
         self.source = source
+        self.limit = limit
     }
 
     /// Was in die Aktivitäten eingeht, außer Zeit und Ort.
@@ -71,7 +78,8 @@ public struct LiveActivityPlanner: Sendable {
         }
     }
 
-    /// Die Aktivitäten, die jetzt laufen oder in den nächsten 24 Stunden beginnen, in zeitlicher Folge.
+    /// Die Aktivitäten, die jetzt laufen oder in den nächsten 24 Stunden beginnen, in zeitlicher Folge –
+    /// höchstens fünf, deren Gebet noch kommt (`systemLimit`).
     ///
     /// Dazu gehören auch Aktivitäten, deren Gebet schon begonnen hat und die noch keine 15 Minuten alt
     /// sind – an ihnen erkennt die App, was sie noch stehen lässt (`LiveActivityLifecycle`).
@@ -102,7 +110,13 @@ public struct LiveActivityPlanner: Sendable {
         let lead = TimeInterval(options.leadMinutes) * 60
         let latestStart = now.addingTimeInterval(Self.horizon)
         var plans: [LiveActivityPlan] = []
+        // Eine Aktivität, deren Gebet schon begonnen hat, beendet die App sogleich (sie bleibt nur auf dem
+        // Sperrbildschirm stehen); sie zählt deshalb nicht zur Höchstzahl.
+        var upcoming = 0
         for (index, prayer) in prayers.enumerated() {
+            if prayer.date > now {
+                guard upcoming < limit else { break }
+            }
             var start = prayer.date.addingTimeInterval(-lead)
             if index > 0 {
                 // Frühestens, wenn die Aktivität des vorigen Gebets endet – außer die beiden liegen so dicht,
@@ -117,6 +131,9 @@ public struct LiveActivityPlanner: Sendable {
             guard start <= latestStart else { break }
             if let plan = makePlan(prayer, start: start, now: now, place: place, settings: settings, options: options) {
                 plans.append(plan)
+                if prayer.date > now {
+                    upcoming += 1
+                }
             }
         }
         return plans
