@@ -62,6 +62,9 @@ public enum Palette {
     /// `--fill-4`: z. B. die Fakten-Kachel und die gedrückte Glocke.
     public static let fillQuaternary = Color(uiColor: .quaternarySystemFill)
 
+    /// `--seg-thumb`: der gewählte Teil der Segmente, `#FFFFFF` hell und `#636366` dunkel.
+    public static let segmentThumb = Color(light: Values.segmentThumbLight, dark: Values.segmentThumbDark)
+
     // MARK: - Bogen und Gebetskarte
 
     /// `--arc-track`: der noch kommende Teil des Bogens und die Marker kommender Gebete – Akzent zu
@@ -118,6 +121,9 @@ public enum Palette {
         public static let backgroundGroupedDark = RGBA(hex: 0x000000)
         public static let backgroundCellLight = RGBA(hex: 0xFFFFFF)
         public static let backgroundCellDark = RGBA(hex: 0x1C1C1E)
+
+        public static let segmentThumbLight = RGBA(hex: 0xFFFFFF)
+        public static let segmentThumbDark = RGBA(hex: 0x636366)
 
         public static let arcTrackShareLight = 0.20
         public static let arcTrackShareDark = 0.30

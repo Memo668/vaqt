@@ -140,7 +140,9 @@ struct ComponentTests {
 
     @Test("die Abschnitte des Katalogs heißen wie die Werte von -debugCatalog")
     func catalogSections() {
-        #expect(ComponentCatalog.Section.allCases.map(\.rawValue) == ["arc", "rows", "glass", "cards", "compass", "all"])
+        #expect(ComponentCatalog.Section.allCases.map(\.rawValue) == [
+            "arc", "rows", "glass", "cards", "compass", "guide", "steps", "all",
+        ])
     }
     #endif
 }

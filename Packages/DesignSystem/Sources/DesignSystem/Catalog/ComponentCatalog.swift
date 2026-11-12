@@ -25,6 +25,10 @@ public struct ComponentCatalog: View {
         case cards
         /// Der Kompass der Qibla-Seite und die Kalibrierungskarte.
         case compass
+        /// Die Anleitung oben: Auswahl der Gebete, Kopfkarte und „Vorher“.
+        case guide
+        /// Die Anleitung unten: „Ablauf“ mit Haltungsfiguren und Formeln, die Fußnote.
+        case steps
         /// Alles untereinander, zum Durchblättern.
         case all
     }
@@ -33,19 +37,22 @@ public struct ComponentCatalog: View {
     private let phase: DayPhase
     private let isHighLatitude: Bool
     private let compass: CatalogFixtures.CompassState
+    private let guide: GuideHeader
 
     /// - Parameters:
     ///   - phase: der Zustand für Bogen und Gebetskarten; ohne Angabe Berlin um 14:25 wie `iphone/10`.
     ///   - isHighLatitude: ob Fadschr und Ischa die Info-Marke für hohe Breiten tragen.
     ///   - compass: der Zustand des Kompasses; ohne Angabe Berlin mit Kurs 98° wie `iphone/30`.
+    ///   - guide: Auswahl und Kopfkarte der Anleitung; ohne Angabe Berlin um 14:25 wie `iphone/40`.
     public init(
         section: Section = .all, phase: DayPhase? = nil, isHighLatitude: Bool = false,
-        compass: CatalogFixtures.CompassState? = nil
+        compass: CatalogFixtures.CompassState? = nil, guide: GuideHeader? = nil
     ) {
         self.section = section
         self.phase = phase ?? CatalogFixtures.phase(time: "14:25:01")
         self.isHighLatitude = isHighLatitude
         self.compass = compass ?? CatalogFixtures.compassStates[0]
+        self.guide = guide ?? CatalogFixtures.guideHeader()
     }
 
     public var body: some View {
@@ -60,6 +67,10 @@ public struct ComponentCatalog: View {
             capture { CatalogCards() }
         case .compass:
             capture { CatalogCompass(state: compass) }
+        case .guide:
+            capture { CatalogGuide(header: guide) }
+        case .steps:
+            capture { GuideSteps() }
         case .all:
             everything
         }
@@ -108,6 +119,16 @@ public struct ComponentCatalog: View {
                         CatalogCompassState(state: state)
                     }
                     CalibrationCard(title: L10n.calibrate, text: L10n.calibrateBody)
+                }
+                CatalogGroup("Anleitung – 14:25 Asr, 08:04 Dhuhr als nächstes, Maghrib von Hand, ohne Zeiten") {
+                    CatalogGuide(header: CatalogFixtures.guideHeader(time: "14:25"), inset: 0)
+                    ForEach(CatalogFixtures.guideStates, id: \.self) { header in
+                        GuideHeaderCard(header) {}
+                    }
+                }
+                CatalogGroup("Anleitung – Ablauf") {
+                    GuideSteps()
+                        .padding(.horizontal, -Layout.inset)
                 }
                 CatalogGroup("Tokens") {
                     CatalogTokens()
@@ -364,6 +385,18 @@ private struct CatalogCompassState: View {
                 .padding(.vertical, Spacing.x6)
             CatalogNote(state.reference.isEmpty ? state.id : "\(state.id) · \(state.reference)")
         }
+    }
+}
+
+/// Der obere Teil der Anleitung – Auswahl, Kopfkarte, „Vorher“ – so wie er auf der Seite steht. Der
+/// Katalog zeigt einen stehenden Zustand; die Auswahl wechselt hier nicht.
+struct CatalogGuide: View {
+    let header: GuideHeader
+    var inset: CGFloat = Layout.inset
+
+    var body: some View {
+        GuideOverview(header: header, onSelect: { _ in }, onReturn: {}, onOpenQibla: {})
+            .padding(.horizontal, inset - Layout.inset)
     }
 }
 

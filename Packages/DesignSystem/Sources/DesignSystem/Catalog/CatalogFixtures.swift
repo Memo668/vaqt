@@ -41,6 +41,37 @@ public enum CatalogFixtures {
 
     /// Die Tagesphase einer Fixture-Stadt am 10.11.2026 zur Uhrzeit `time` („HH:mm“ oder „HH:mm:ss“).
     public static func phase(city: String = "berlin", time: String = "14:25") -> DayPhase {
+        let moment = moment(city: city, time: time)
+        guard let phase = moment.timeline.phase(at: moment.now) else {
+            preconditionFailure("Die Fixture liefert für jeden Zeitpunkt des Tages eine Phase")
+        }
+        return phase
+    }
+
+    /// Auswahl und Kopfkarte der Anleitung in einer Fixture-Stadt am 10.11.2026 zur Uhrzeit `time`.
+    ///
+    /// - Parameter pick: die manuelle Wahl; ohne Angabe folgt die Anleitung der Zeit.
+    public static func guideHeader(city: String = "berlin", time: String = "14:25", pick: Prayer? = nil) -> GuideHeader {
+        let moment = moment(city: city, time: time)
+        let state = GuideState(phase: moment.timeline.phase(at: moment.now), pick: pick)
+        return GuideHeader(
+            state: state, window: Guide.window(of: state.prayer, in: moment.timeline, at: moment.now),
+            timeZone: moment.timeline.today.timeZone
+        )
+    }
+
+    /// Weitere Zustände der Kopfkarte: am Vormittag Dhuhr als nächstes Gebet, Maghrib von Hand gewählt
+    /// wie in `iphone/42`, und ohne Zeiten.
+    public static var guideStates: [GuideHeader] {
+        [
+            guideHeader(time: "08:04"),
+            guideHeader(time: "14:25", pick: .maghrib),
+            GuideHeader(state: GuideState(phase: nil), window: nil, timeZone: .gmt),
+        ]
+    }
+
+    /// Zeitstrahl und Zeitpunkt einer Fixture-Stadt am 10.11.2026 zur Uhrzeit `time`.
+    private static func moment(city: String, time: String) -> (timeline: PrayerTimeline, now: Date) {
         guard let fixture = FixtureTimes.city(city) else {
             preconditionFailure("Unbekannte Fixture-Stadt: \(city)")
         }
@@ -53,11 +84,10 @@ public enum CatalogFixtures {
         let place = fixture.place(named: city)
         let day = FixtureTimes.referenceDay
         let now = day.date(at: clock, in: place.timeZone).addingTimeInterval(TimeInterval(seconds))
-        let timeline = FixtureTimesSource().timeline(around: day, at: place, settings: CalculationSettings())
-        guard let phase = timeline?.phase(at: now) else {
-            preconditionFailure("Die Fixture liefert für jeden Zeitpunkt des Tages eine Phase")
+        guard let timeline = FixtureTimesSource().timeline(around: day, at: place, settings: CalculationSettings()) else {
+            preconditionFailure("Die Fixture liefert für jeden Tag Zeiten")
         }
-        return phase
+        return (timeline, now)
     }
 
     // MARK: - Kompass
