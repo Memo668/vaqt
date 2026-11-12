@@ -48,7 +48,7 @@ Nur in DEBUG: Startargumente, mit denen sich jeder Referenz-Screenshot nachstell
 -debugHighLatitude            # Berlin, 21. Juni
 -debugLocationDenied  -debugOffline
 -debugTab today|qibla|guide|verses|qada|settings
-          method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|adhan   # Seiten der Einstellungen (PAGES), adhan = Adhan-Sheet
+          method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|adhan|city   # Seiten der Einstellungen (PAGES), adhan = Adhan-Sheet, city = Stadt-Sheet
 -debugOnboarding 1|2|3        # Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
 -debugQiblaHeading 137
 -debugQiblaAccuracy 40        # Genauigkeit des Kompasses; über 25° erscheint die Kalibrierungskarte (iphone/30–32)

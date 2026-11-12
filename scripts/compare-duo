@@ -1,0 +1,147 @@
+#!/bin/bash
+# Abgleich mit den Referenzbildern design/screenshots/duo/ (Phase 10, iPhone Duo).
+#
+# Startet die App auf dem Simulator „iPhone Duo“ im Zustand jedes Referenzbilds, nimmt das Display auf
+# und legt Ausschnitte mit scripts/compare-shot neben die Referenz. Auf- und zugeklappt wird nicht hier:
+# Das Scharnier stellt nur der Schieberegler in Device Hub (simctl und XCUITest können es nicht).
+# Deshalb nimmt das Skript je Lauf eine Haltung auf:
+#
+#   scripts/compare-duo open            innen, flach aufgeklappt und quer: open-10 … open-85
+#   scripts/compare-duo closed          außen, zugeklappt: closed-10 … closed-85
+#   scripts/compare-duo open 10 85      nur diese Referenzbilder
+#
+# Die App muss gebaut und auf dem Duo installiert sein (make compare-duo MODE=open).
+#
+# Ergebnis in screenshots-out/phase-10/: <haltung>-<nr>.png (Aufnahmen) und compare-<haltung>-<nr>-<teil>.png
+# (oben Referenz, Mitte Aufnahme, unten Unterschied).
+#
+# Was iOS selbst zeichnet – die senkrechte Leiste mit Status, Einträgen und Tabs, die Größe und Lage
+# der Sheets, der große Titel der Einstellungen –, wird nur danebengelegt, nicht nachgebaut
+# (docs/OPEN-QUESTIONS.md, „Annahmen in Phase 10“). Die Referenzbilder sind 466 × 679 pt (zu) und
+# 952 × 669 pt (auf) bei 2x, die Aufnahmen 466 × 678 und 951 × 669 pt bei 3x.
+#
+# Der Simulator lässt sich mit SIM='…' wählen.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SIM="${SIM:-iPhone Duo}"
+BUNDLE_ID=com.example.gebetszeiten
+REF="$ROOT/design/screenshots/duo"
+OUT="${OUT:-$ROOT/screenshots-out/phase-10}"
+ZOOM="${ZOOM:-2}"
+WAIT="${WAIT:-5}"
+
+MODE="${1:-}"
+case "$MODE" in
+  open) DISPLAY_ID=3; REF_W=952; SHOT_W=951 ;;
+  closed) DISPLAY_ID=1; REF_W=466; SHOT_W=466 ;;
+  *) echo "Aufruf: scripts/compare-duo open|closed [Nummern …]" >&2; exit 2 ;;
+esac
+shift
+
+# Die Kennung des Simulators: genau dieser Name, nicht „iPhone Duo (…)“.
+UDID="$(xcrun simctl list devices | sed -nE "s/^    $SIM \(([0-9A-F-]{36})\) \(Booted\).*/\1/p" | head -1)"
+[ -n "$UDID" ] || { echo "Simulator „$SIM“ läuft nicht – erst in Device Hub starten." >&2; exit 1; }
+
+# Nummer | Datei des Referenzbilds (ohne Haltung) | hell oder dunkel | Debug-Argumente
+STATES='
+10|10-home|light|
+11|11-home-dark|dark|
+30|30-qibla|light|-debugTab qibla -debugQiblaHeading 136 -debugQiblaAccuracy 40
+40|40-guide|light|-debugTab guide
+50|50-verses|light|-debugTab verses
+60|60-qada|light|-debugTab qada
+70|70-settings|light|-debugTab settings
+85|85-sheet-city|light|-debugTab city
+'
+BASE=(-debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25)
+
+# Ausschnitte in pt: Teil | x und Breite in der Referenz | x in der Aufnahme. Die Höhe ist die des
+# Bildschirms bis auf den Rand, um den die Aufnahme senkrecht verschoben ist (dy, siehe unten).
+#   innen   links    die linke Spalte bis zum Falz
+#           rechts-l, rechts-r   die rechte Spalte, an ihrem linken bzw. rechten Rand ausgerichtet:
+#                    Die Leiste des Systems ist 84 statt 76 pt breit, die Spalte deshalb 8 pt schmaler.
+#           leiste   die senkrechte Leiste (zeichnet iOS)
+#   außen   links, rechts   der Inhalt, an seinem linken bzw. rechten Rand ausgerichtet: Neben der
+#                    Leiste des Systems (84 pt) bleiben 382 statt 390 pt.
+#           leiste   die senkrechte Leiste (zeichnet iOS)
+parts_open='
+links|0,476|0
+rechts-l|476,200|476
+rechts-r|676,200|668
+leiste|872,80|871
+'
+parts_closed='
+links|0,200|0
+rechts|190,200|RX
+leiste|386,80|386
+'
+HEIGHT_open=669; HEIGHT_closed=678
+
+# Senkrechte Verschiebung der Aufnahme gegen die Referenz je Haltung und Zustand (pt). Innen und außen
+# liegt der sichere Bereich oben 24 pt tief; oben ausgerichtete Seiten beginnen dort statt 14 pt unter
+# dem Rand.
+dy() {
+  case "$MODE-$1" in
+    open-10|open-11|open-30) echo -2 ;;
+    open-85) echo 0 ;;
+    open-*) echo 10 ;;
+    closed-85) echo "${CLOSED_SHEET_DY:-0}" ;;
+    *) echo "${CLOSED_DY:-10}" ;;
+  esac
+}
+
+# rects Teil-Zeile dy → "Ref-Ausschnitt Aufnahme-Ausschnitt"
+rects() {
+  local refx refw shotx d="$2" h ry sy
+  IFS=',' read -r refx refw <<<"$(echo "$1" | cut -d'|' -f2)"
+  shotx="$(echo "$1" | cut -d'|' -f3 | sed "s/RX/${CLOSED_RX:-182}/")"
+  h=$([ "$MODE" = open ] && echo $HEIGHT_open || echo $HEIGHT_closed)
+  if [ "${d#-}" != "$d" ]; then ry=${d#-}; sy=0; else ry=0; sy=$d; fi
+  h=$((h - ${d#-}))
+  echo "$refx,$ry,$refw,$h $shotx,$sy,$refw,$h"
+}
+
+compare() { # Teil Referenzbild Ref-Ausschnitt Aufnahme Aufnahme-Ausschnitt Name
+  printf '  %-10s ' "$1"
+  "$ROOT/scripts/compare-shot" --ref "$2" --ref-rect "$3" --ref-points "$REF_W" \
+    --shot "$4" --shot-rect "$5" --shot-points "$SHOT_W" --out "$OUT/compare-$6-$1.png" --zoom "$ZOOM" | head -1
+}
+
+mkdir -p "$OUT"
+xcrun simctl ui "$UDID" content_size large
+xcrun simctl status_bar "$UDID" override --time 14:25 --batteryState discharging --batteryLevel 100 \
+  --cellularBars 4 --wifiBars 3
+# Der erste Start nach einer Pause dauert länger als die Wartezeit vor der Aufnahme.
+xcrun simctl launch --terminate-running-process "$UDID" "$BUNDLE_ID" "${BASE[@]}" >/dev/null
+sleep 3
+
+# Zeigt das Display der Haltung etwas? Ein schwarzes Bild ist klein.
+probe="$OUT/.probe.png"
+xcrun simctl io "$UDID" screenshot --display="$DISPLAY_ID" "$probe" >/dev/null 2>&1
+if [ "$(stat -f %z "$probe")" -lt 60000 ]; then
+  echo "Das Display für „$MODE“ ist dunkel – das Duo in Device Hub erst $( [ "$MODE" = open ] && echo auf- || echo zu)klappen." >&2
+  rm -f "$probe"; exit 1
+fi
+rm -f "$probe"
+
+echo "$STATES" | while IFS='|' read -r nr file appearance args; do
+  [ -n "$nr" ] || continue
+  if [ $# -gt 0 ] && ! printf '%s\n' "$@" | grep -qx "$nr"; then continue; fi
+  shot="$OUT/$MODE-$nr.png"
+  xcrun simctl ui "$UDID" appearance "$appearance"
+  # shellcheck disable=SC2086
+  xcrun simctl launch --terminate-running-process "$UDID" "$BUNDLE_ID" -AppleLanguages '(de)' -AppleLocale de_DE \
+    "${BASE[@]}" $args >/dev/null
+  sleep "$WAIT"
+  xcrun simctl io "$UDID" screenshot --display="$DISPLAY_ID" "$shot" >/dev/null 2>&1
+  echo "duo/$MODE-$nr ($appearance):"
+  d="$(dy "$nr")"
+  parts="$( [ "$MODE" = open ] && echo "$parts_open" || echo "$parts_closed")"
+  echo "$parts" | while read -r line; do
+    [ -n "$line" ] || continue
+    read -r refrect shotrect <<<"$(rects "$line" "$d")"
+    compare "$(echo "$line" | cut -d'|' -f1)" "$REF/$MODE-$file.png" "$refrect" "$shot" "$shotrect" "$MODE-$nr"
+  done
+done
+xcrun simctl ui "$UDID" appearance light
+echo "Ergebnis in $OUT"

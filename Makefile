@@ -13,6 +13,10 @@ BUNDLE_ID := com.example.gebetszeiten
 # (docs/OPEN-QUESTIONS.md). Ein anderer Simulator: make test SIM='iPhone 17'
 SIM  ?= iPhone 18 Pro
 DEST := platform=iOS Simulator,name=$(SIM)
+# Simulator für den Abgleich mit design/screenshots/duo/ (Phase 10) und seine Haltung: open (innen, flach
+# und quer) oder closed (außen). Auf- und zuklappen geht nur in Device Hub.
+DUO_SIM ?= iPhone Duo
+MODE    ?= open
 
 EXTERN     := /Volumes/Extern
 BUILD_ROOT ?= $(if $(wildcard $(EXTERN)),$(EXTERN)/Builds/NamazVakti,$(HOME)/Library/Developer/Xcode/DerivedData/NamazVakti)
@@ -36,7 +40,7 @@ SHOT ?= screenshots-out/screenshot.png
 
 XCODEBUILD := xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' -derivedDataPath '$(DERIVED)'
 
-.PHONY: help project strings check-strings build test test-core coverage boot run statusbar screenshot compare compare-today compare-qibla compare-guide compare-verses compare-qada compare-settings compare-system clean
+.PHONY: help project strings check-strings build test test-core coverage boot run statusbar screenshot compare compare-today compare-qibla compare-guide compare-verses compare-qada compare-settings compare-system compare-duo clean
 
 help: ## Diese Übersicht
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -114,6 +118,10 @@ compare-settings: build boot ## Einstellungen, Onboarding und Adhan wie in iphon
 compare-system: build boot ## Widgets und Live-Aktivität wie in system/90, 91, 93–96 im Katalog aufnehmen und danebenlegen (STATES='93 96' für einzelne)
 	xcrun simctl install '$(SIM)' '$(APP)'
 	SIM='$(SIM)' scripts/compare-system $(STATES)
+
+compare-duo: build ## iPhone Duo wie in duo/* aufnehmen und danebenlegen (MODE=open|closed, STATES='10 85'); auf- und zuklappen in Device Hub
+	xcrun simctl install '$(DUO_SIM)' '$(APP)'
+	SIM='$(DUO_SIM)' scripts/compare-duo $(MODE) $(STATES)
 
 clean: ## Build-Daten dieses Projekts löschen
 	rm -rf '$(DERIVED)' '$(CORE_BUILD)'

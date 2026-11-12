@@ -17,6 +17,7 @@ import SwiftUI
 /// 14 pt unter dem oberen Rand (`padding-top: 14px`), aber nicht über dem sicheren Bereich des Systems.
 struct PageScroll<First: View, Second: View>: View {
     private let centersParts: Bool
+    private let splitsInTablePose: Bool
     private let alignment: VerticalAlignment
     private let secondPadding: CGFloat
     private let position: Binding<ScrollPosition>?
@@ -31,15 +32,18 @@ struct PageScroll<First: View, Second: View>: View {
 
     /// - Parameters:
     ///   - centersParts: Spalten und Teile senkrecht mittig zeigen (Zeiten, Qibla).
+    ///   - splitsInTablePose: in der Tischhaltung über und unter dem Falz teilen; sonst stehen die Teile
+    ///     dort untereinander wie im Hochformat (Qibla: Der Kompass passt nicht über den Falz).
     ///   - alignment: senkrechte Lage der Spalten zueinander.
     ///   - secondPadding: Innenrand der zweiten Spalte links und rechts.
     ///   - position: Scroll-Position der Seite – in der Tischhaltung die des oberen Teils.
     init(
-        centersParts: Bool = false, alignment: VerticalAlignment = .top,
+        centersParts: Bool = false, splitsInTablePose: Bool = true, alignment: VerticalAlignment = .top,
         secondPadding: CGFloat = FoldColumnsMetrics.secondPadding, position: Binding<ScrollPosition>? = nil,
         @ViewBuilder first: () -> First, @ViewBuilder second: () -> Second
     ) {
         self.centersParts = centersParts
+        self.splitsInTablePose = splitsInTablePose
         self.alignment = alignment
         self.secondPadding = secondPadding
         self.position = position
@@ -49,7 +53,7 @@ struct PageScroll<First: View, Second: View>: View {
 
     var body: some View {
         Group {
-            if case .rows(let top, let gap, let bottom) = arrangement {
+            if splitsInTablePose, case .rows(let top, let gap, let bottom) = arrangement {
                 VStack(spacing: gap) {
                     part(height: top, bottomPadding: PageMetrics.rowGap) { first }
                         .scrollPosition(position)

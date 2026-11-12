@@ -98,6 +98,7 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 | `iphone/79` | … `-debugTab live` |
 | `iphone/80` | … `-debugTab sound` |
 | `iphone/81` | … `-debugTab privacy` |
+| `iphone/85` | … `-debugTime 14:25 -debugTab city` (seit Phase 10; vorher ein Tipp auf die Stadt) |
 | `iphone/86` | … `-debugTime 14:25 -debugTab adhan` |
 | `system/92` | `-debugSkipOnboarding -debugFixtureTimes -debugNotifications -debugDate 2026-11-10 -debugTime 11:41`, Systemsprache des Simulators Deutsch, `make statusbar TIME=11:52`; Gerät sperren, gut elf Minuten warten, den Stapel aufklappen, aufnehmen (UI-Hilfsprojekt, `s37-notifications-92.txt`). Die Erinnerung kommt nach einer Minute, Dhuhr nach elf |
 | `system/90` | `-debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25` – ohne `-debugLiveActivity` endet eine noch laufende Aktivität; Widgets vorher anlegen: Sperrbildschirm anpassen, Rechteck und Ring von „Gebetszeiten“, Zeile über der Uhr (UI-Hilfsprojekt, `s45-lock-widgets.txt`); App starten, sperren, aufnehmen (`s47-system-90-91.txt`). Im Katalog: `make compare-system STATES=90` |
@@ -106,5 +107,7 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 | `system/94` | wie `93`, statt sperren Home: die kompakte Insel über den Widgets von `91` (`s48-system-93-95.txt`) |
 | `system/95` | wie `94`, dann lange auf die Insel drücken (`sbpress 201 30 1.2`, `s48-system-93-95.txt`) |
 | `system/96` | `… -debugLiveActivity -debugDate 2026-11-10 -debugTime 16:35`, Simulator dunkel (`xcrun simctl ui 'iPhone 18 Pro' appearance dark`), `make statusbar TIME=16:35`; sperren, aufnehmen (`s49-system-96.txt`), danach hell und `make statusbar` |
+| `duo/closed-*`, `duo/open-*` | Simulator „iPhone Duo“ (Runtime iOS 27.2, Build 24B91016s), in Device Hub zugeklappt bzw. flach aufgeklappt und quer; Argumente wie `iphone/` mit derselben Nummer: `10` (`-debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25`), `11` wie `10` dunkel, `30` … `-debugTab qibla -debugQiblaHeading 136 -debugQiblaAccuracy 40`, `40` … `-debugTab guide`, `50` … `-debugTab verses`, `60` … `-debugTab qada`, `70` … `-debugTab settings`, `85` … `-debugTab city`. Aufnehmen und danebenlegen: `make compare-duo MODE=open` bzw. `MODE=closed`. RTL innen: dazu `-AppleTextDirection YES -NSForceRightToLeftWritingDirection YES` |
+| Duo hochkant, Tischhaltung, Split View | ohne Referenzbild: in Device Hub drehen, das Scharnier halb öffnen bzw. eine zweite App daneben öffnen; Argumente wie `duo/open-*` |
 
 Sprache im Simulator: Scheme › Run › Options › App Language, oder `-AppleLanguages "(tr)"`.

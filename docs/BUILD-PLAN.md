@@ -204,6 +204,13 @@ Entscheidungen, Annahmen und was abweicht stehen in `docs/OPEN-QUESTIONS.md` (�
 
 **Referenzen:** `duo/*`.
 
+Gebaut am 12. und 13.11.2026 in drei Schritten.
+- **DesignSystem:** `PageArrangement` und `Fold` – untereinander, zwei Spalten am Falz (auch in RTL), Tischhaltung über und unter dem Falz; gemessen mit `readsPageArrangement()` am Falz, den das System meldet (`ReservedRegion` `.division`, iOS 27.1). Dazu die senkrechte Leiste (`readsVerticalBarEdge()`), die mittige 600-pt-Spalte, die Sheet-Karte und Tests.
+- **Features:** die fünf Seiten in zwei Teilen (`PageScroll`), Einstellungskreis und Chips als Einträge der senkrechten Leiste, Einstellungen und Sheets innen mittig, Toast und Onboarding für das Duo; neues Debug-Argument `-debugTab city`. Spec-Frage 17 ist mit „Alle drei“ entschieden: Hochformat innen, Tischhaltung und Split View laufen.
+- **Abgleich:** `make compare-duo MODE=open|closed` auf dem Simulator „iPhone Duo“ (Runtime iOS 27.2, Build 24B91016s); Auf- und Zuklappen in Device Hub. Auf dem iPhone 18 Pro bleibt alles pixelgleich.
+
+Entscheidungen, Annahmen und was abweicht stehen in `docs/OPEN-QUESTIONS.md` („Entschieden mit dem Plan für Phase 10“, „Annahmen in Phase 10“).
+
 ## Phase 11 – Feinschliff
 
 - **Sprachen:** TR, EN und ES auf Textlängen prüfen.

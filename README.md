@@ -4,7 +4,7 @@ Gemeinnützige Gebetszeiten-App für iOS: werbefrei, ohne Tracking, ohne Konto. 
 
 Die Regeln für die Arbeit stehen in `CLAUDE.md`, der Bauplan in `docs/BUILD-PLAN.md`, offene Punkte in `docs/OPEN-QUESTIONS.md`.
 
-**Stand:** Phase 0 (Projektgerüst), Phase 1 (`PrayerCore`, die Logik ohne UI), Phase 2 (`DesignSystem`: Tokens und Bausteine), Phase 3 (Gebete-Tab: Zeiten), Phase 4 (Qibla), Phase 5 (Anleitung), Phase 6 (Verse und Nachholen), Phase 7 (Einstellungen, Onboarding, Adhan), Phase 8 (Mitteilungen) und Phase 9 (Widgets und Live-Aktivität) sind fertig. Der Tab „Gebete“ zeigt die obere Leiste mit den Chips Zeiten, Qibla und Anleitung, die Zeiten-Seite – Stadt, Datum, Bogen mit laufendem Countdown, sechs Gebetskarten mit Glocke, Stadt-Sheet –, die Qibla-Seite mit Kompass, Statuszeile, Richtung und Entfernung zur Kaaba und die Anleitung mit der Auswahl der fünf Gebete, der Kopfkarte (Status, Zeitfenster, Fakten, Rakʿa-Folge), „Vorher“ und „Ablauf“ mit Haltungsfiguren und arabischen Formeln. Der Tab „Verse“ zeigt den Vers des Tages auf Arabisch mit Übersetzung (Platzhalter) und Quelle, Teilen und Kopieren und die letzten Tage; der Tab „Nachholen“ den Anteil nachgeholt, je Gebet einen Stepper, den Plan pro Tag mit voraussichtlichem Ende und den Rechner für einen verpassten Zeitraum. Der Einstellungskreis jedes Tabs öffnet die Einstellungen mit allen Unterseiten – Standort, Berechnung, Mitteilungen, Darstellung samt Sprache, Über –; Änderungen wirken sofort in der ganzen App. Beim ersten Start führt das Onboarding in drei Schritten zu Standort und Mitteilungen. „Adhan anhören“ öffnet den Player mit Wellenform und drei Stimmen (Platzhalter). Die App plant lokale Mitteilungen zu jedem Gebet nach seiner Glocke, dazu die Vorab-Erinnerung, im rollierenden Fenster der nächsten 64 und neu nach jeder Änderung. Das Widget gibt es in fünf Größen – klein und mittel auf dem Home-Bildschirm, rund, als Rechteck und als Zeile auf dem Sperrbildschirm –, dazu die Live-Aktivität zu jedem Gebet auf dem Sperrbildschirm und in der Dynamic Island. Die Bausteine lassen sich als Previews in Xcode ansehen und in der App mit `-debugCatalog`.
+**Stand:** Phase 0 (Projektgerüst), Phase 1 (`PrayerCore`, die Logik ohne UI), Phase 2 (`DesignSystem`: Tokens und Bausteine), Phase 3 (Gebete-Tab: Zeiten), Phase 4 (Qibla), Phase 5 (Anleitung), Phase 6 (Verse und Nachholen), Phase 7 (Einstellungen, Onboarding, Adhan), Phase 8 (Mitteilungen), Phase 9 (Widgets und Live-Aktivität) und Phase 10 (iPhone Duo) sind fertig. Der Tab „Gebete“ zeigt die obere Leiste mit den Chips Zeiten, Qibla und Anleitung, die Zeiten-Seite – Stadt, Datum, Bogen mit laufendem Countdown, sechs Gebetskarten mit Glocke, Stadt-Sheet –, die Qibla-Seite mit Kompass, Statuszeile, Richtung und Entfernung zur Kaaba und die Anleitung mit der Auswahl der fünf Gebete, der Kopfkarte (Status, Zeitfenster, Fakten, Rakʿa-Folge), „Vorher“ und „Ablauf“ mit Haltungsfiguren und arabischen Formeln. Der Tab „Verse“ zeigt den Vers des Tages auf Arabisch mit Übersetzung (Platzhalter) und Quelle, Teilen und Kopieren und die letzten Tage; der Tab „Nachholen“ den Anteil nachgeholt, je Gebet einen Stepper, den Plan pro Tag mit voraussichtlichem Ende und den Rechner für einen verpassten Zeitraum. Der Einstellungskreis jedes Tabs öffnet die Einstellungen mit allen Unterseiten – Standort, Berechnung, Mitteilungen, Darstellung samt Sprache, Über –; Änderungen wirken sofort in der ganzen App. Beim ersten Start führt das Onboarding in drei Schritten zu Standort und Mitteilungen. „Adhan anhören“ öffnet den Player mit Wellenform und drei Stimmen (Platzhalter). Die App plant lokale Mitteilungen zu jedem Gebet nach seiner Glocke, dazu die Vorab-Erinnerung, im rollierenden Fenster der nächsten 64 und neu nach jeder Änderung. Das Widget gibt es in fünf Größen – klein und mittel auf dem Home-Bildschirm, rund, als Rechteck und als Zeile auf dem Sperrbildschirm –, dazu die Live-Aktivität zu jedem Gebet auf dem Sperrbildschirm und in der Dynamic Island. Auf dem iPhone Duo zeigt die App außen die iPhone-Seiten neben der senkrechten Leiste des Systems und innen quer zwei Spalten, die sich am Falz treffen; Einstellungen stehen innen als mittige Spalte, Sheets als mittige Karte, hochkant und in der Tischhaltung passen sich die Seiten an. Die Bausteine lassen sich als Previews in Xcode ansehen und in der App mit `-debugCatalog`.
 
 ## Voraussetzungen
 
@@ -45,6 +45,7 @@ open Gebetszeiten.xcodeproj
 | `make compare-qada` | Nachholen im Zustand von `iphone/60` aufnehmen und neben die Referenz legen, dazu `61`, wenn aufgenommen |
 | `make compare-settings` | Einstellungen, Onboarding und Adhan-Sheet in den Zuständen von `iphone/01`–`03`, `70`, `73`–`81` und `86` aufnehmen und neben die Referenz legen, dazu `71` und `72`, wenn aufgenommen |
 | `make compare-system` | Widgets und Live-Aktivität im Katalog in den Zuständen von `system/90`, `91` und `93`–`96` aufnehmen und neben die Referenz legen |
+| `make compare-duo` | auf dem Simulator „iPhone Duo“ die Zustände von `duo/open-*` (`MODE=open`, aufgeklappt und quer) oder `duo/closed-*` (`MODE=closed`) aufnehmen und neben die Referenz legen; auf- und zuklappen in Device Hub |
 | `make strings` | String Catalog und `L10n.swift` aus dem Prototyp neu erzeugen |
 
 Simulator für Build, Tests und Abgleich ist das iPhone 18 Pro. Ein anderer lässt sich je Aufruf wählen, z. B. `make test SIM='iPhone 17'`.
@@ -86,7 +87,7 @@ Nur in DEBUG-Builds. Damit lässt sich jeder Referenz-Screenshot nachstellen:
 -debugHighLatitude            Berlin, 21. Juni 2027
 -debugLocationDenied  -debugOffline
 -debugTab today|qibla|guide|verses|qada|settings
-          method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|adhan
+          method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|adhan|city
 -debugOnboarding 1|2|3        Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
 -debugQiblaHeading 137
 -debugQiblaAccuracy 40        Genauigkeit des Kompasses in Grad; über 25 erscheint die Kalibrierungskarte
@@ -108,7 +109,7 @@ Versteht die App ein Debug-Argument nicht, schreibt sie das beim Start in die Ko
 | `-debugCity`, `-debugHighLatitude` | feste Standortquelle mit dieser Stadt, Standort erlaubt |
 | `-debugLocationDenied` | Standort verweigert: Banner auf der Zeiten-Seite, „Aktueller Standort“ im Stadt-Sheet gesperrt |
 | `-debugOffline` | fest „kein Netz“: Hinweis unter dem Datum, im Stadt-Sheet nur gespeicherte Städte |
-| `-debugTab` | `verses` und `qada` wählen den Tab; `qibla` und `guide` die Seite im Tab „Gebete“; `settings` öffnet dort die Einstellungen, die Kennungen aus `PAGES` im Prototyp (`method`, `asr`, `hl`, `adjust`, `perPrayer`, `reminder`, `live`, `sound`, `appearance`, `language`, `privacy`) eine ihrer Seiten darüber; `adhan` öffnet das Adhan-Sheet über den Einstellungen |
+| `-debugTab` | `verses` und `qada` wählen den Tab; `qibla` und `guide` die Seite im Tab „Gebete“; `settings` öffnet dort die Einstellungen, die Kennungen aus `PAGES` im Prototyp (`method`, `asr`, `hl`, `adjust`, `perPrayer`, `reminder`, `live`, `sound`, `appearance`, `language`, `privacy`) eine ihrer Seiten darüber; `adhan` öffnet das Adhan-Sheet über den Einstellungen, `city` das Stadt-Sheet über der Zeiten-Seite |
 | `-debugOnboarding` | zeigt das Onboarding ab Schritt 1, 2 oder 3, auch wenn es schon durchlaufen ist; geht vor `-debugSkipOnboarding` |
 | `-debugQiblaHeading` | fester Kompasskurs statt des Kompasses des Geräts. Mit `-debugFixtureTimes` gilt ohne Angabe 99°, der Startwert des Prototyps (`S.qibla.heading`) |
 | `-debugQiblaAccuracy` | Genauigkeit dieses Kurses in Grad, wie `CLHeading.headingAccuracy` (negativ heißt ungültig). Über 25° erscheint die Karte „Kompass kalibrieren“ – die Referenzbilder zeigen sie immer, die App nur bei ungenauem Kompass |
@@ -133,6 +134,7 @@ scripts/compare-verses  nimmt die Seite „Verse“ in den Zuständen der Refere
 scripts/compare-qada    nimmt die Seite „Nachholen“ in den Zuständen der Referenzbilder auf
 scripts/compare-settings nimmt Einstellungen, Onboarding und Adhan-Sheet in den Zuständen der Referenzbilder auf
 scripts/compare-system  nimmt Widgets und Live-Aktivität im Katalog in den Zuständen der Referenzbilder auf
+scripts/compare-duo     nimmt die Seiten auf dem iPhone Duo (außen oder innen) in den Zuständen der Referenzbilder auf
 scripts/compare-shot    legt einen Ausschnitt einer Aufnahme neben die Referenz
 scripts/adhan-clip.swift schneidet die Adhan-Ausschnitte für Player und Mitteilungen (Quellen im Kopf der Datei)
 project.yml             Beschreibung des Xcode-Projekts für XcodeGen
@@ -206,6 +208,10 @@ Die Referenzwerte für die Berechnung liegen unter `Packages/PrayerCore/Tests/Pr
 | `PrayerActivityAttributes` | die Live-Aktivität für ActivityKit; ihr Inhalt ist `LiveActivityContent` |
 | `SmallPrayerWidget`, `MediumPrayerWidget`, `CircularPrayerWidget`, `RectangularPrayerWidget`, `InlinePrayerWidget`, `PrayerWidgetContent`, `WidgetMetrics` | die fünf Widgets (`.w-*`, `.acc-*` im Prototyp) und was sie zeigen; `TimerText` setzt den laufenden Countdown in `wIn` ein |
 | `LiveActivityLockScreen`, `LiveActivityBackground`, `LiveActivityCompactLeading`/`Trailing`, `LiveActivityMinimal`, `LiveActivityExpanded…`, `LiveActivityMetrics` | die Live-Aktivität auf dem Sperrbildschirm (Bogen in Weiß auf Akzent) und in der Dynamic Island (`.la-*`, `.di-*`) |
+| `PageArrangement`, `Fold`, `FoldColumns`, `readsPageArrangement()` | wie eine Seite ihre beiden Teile zeigt (`.cols`, `.col-a`, `.col-b`): untereinander, innen quer als zwei Spalten am Falz (auch in RTL), in der Tischhaltung über und unter dem Falz; Platz und Falz (`ReservedRegion` `.division`, iOS 27.1) misst `readsPageArrangement()` |
+| `readsVerticalBarEdge()`, `verticalBarEdge` | wo das System die senkrechte Leiste hinlegt (iPhone Duo, `toolbarVerticalEdge`, iOS 27.1); `nil` bei waagerechten Leisten |
+| `centeredColumn()`, `centeredSheetCard(isRegular:)`, `CenteredColumn` | innen die Einstellungen als mittige 600-pt-Spalte, Sheets als mittige Karte, 600 pt breit |
+| `GlassSymbol.barImage` | Symbol eines Chips als Bild für die Leisten des Systems, auch der Gebetsteppich |
 | `ComponentCatalog` (nur DEBUG) | alle Bausteine zum Ansehen: Previews hell und dunkel, in der App über `-debugCatalog`; Widgets und Live-Aktivität über `CatalogOutsideState` |
 
 So kommt der Bogen auf eine Seite:
@@ -243,7 +249,9 @@ DayArc(phase: phase, showKerahat: settings.showKerahat) {
 | `CoreLocationHeadingSource` | Kompasskurs über Core Location: geografisch Nord, ohne Standortfreigabe magnetisch Nord; läuft nur, solange die Qibla-Seite zu sehen ist |
 | `MapKitCitySearch` | Ortssuche mit `MKLocalSearchCompleter` |
 | `NetworkConnectivity` | ob das Gerät ein Netz hat (`NWPathMonitor`) |
-| `ToastCenter` | zeigt den Toast über der Tableiste, 1,7 Sekunden |
+| `ToastCenter` | zeigt den Toast über der Tableiste, 1,7 Sekunden; neben einer senkrechten Leiste 28 pt über dem Rand, mittig über dem Inhalt |
+| `PageScroll` | die scrollende Seite mit ihren beiden Teilen: untereinander, in Spalten oder in der Tischhaltung in zwei Bereichen; Abstand oben unter der Leiste oder neben der senkrechten Leiste |
+| `TopBar`, `VerticalTopBar`, `prayersTopBar`, `settingsBar` | die obere Leiste auf dem iPhone, mit senkrechter Leiste ihre Einträge in der Leiste des Systems |
 
 Alles, was nach außen geht, hängt in `AppEnvironment`: Uhr, Standortquelle, Kursquelle, Zeitenquelle, Netz-Zustand, Ortssuche, Erlaubnis für Mitteilungen und wo sie vorgemerkt werden, der Ort der Einstellungen und der des Nachholens. Views sprechen nie selbst mit `Date()`, `CLLocationManager`, MapKit oder `UNUserNotificationCenter`.
 
@@ -289,7 +297,7 @@ make compare-today
 make compare-today STATES='17 22'
 ```
 
-`iphone/85` (Stadt-Sheet) entsteht mit den Argumenten von `iphone/10` und einem Tipp auf die Stadt; ein Debug-Argument dafür gibt es nicht.
+`iphone/85` (Stadt-Sheet) entsteht mit den Argumenten von `iphone/10` und einem Tipp auf die Stadt, seit Phase 10 auch mit `-debugTab city`.
 
 `make compare-qibla` stellt die Zustände `iphone/30` bis `32` der Qibla-Seite nach – mit festem Kurs, weil der Simulator keinen Kompass hat, und mit `-debugQiblaAccuracy 40`, damit die Kalibrierungskarte erscheint – und schreibt je Zustand die Aufnahme (`qibla-<nr>.png`) und Ausschnitte von Leiste, Kopf, Kompass, Status- und Info-Zeile und Kalibrierungskarte nach `screenshots-out/phase-4/`. Die Karte kommt zusätzlich aus dem Katalog (`-debugCatalog compass`), dort in der Breite der Referenzbilder.
 
@@ -388,6 +396,36 @@ Das Protokoll der App nennt in DEBUG, welche Aktivitäten es gibt und was die Ap
 
 ```bash
 xcrun simctl spawn booted log show --last 15m --predicate 'subsystem == "com.example.gebetszeiten" AND (category == "liveActivity" OR category == "widgets")'
+```
+
+## iPhone Duo
+
+Das Duo (seit 23.10.2026) hat außen ein Display mit 466 × 678 pt und innen eines mit 951 × 669 pt quer. Die App zeigt dieselben Seiten wie auf dem iPhone (Design Spec § 8); was sich ändert, steuern das System und die Größenklasse:
+
+- **Leisten:** Tableiste, Zurück-Knopf und Status legt iOS in eine senkrechte Leiste am rechten Rand, auch in RTL; im Split View liegt sie am Rand der App. Einstellungskreis und Seiten-Chips werden dort Einträge der Leiste des Systems (`VerticalTopBar`); auf dem iPhone bleibt die eigene Leiste oben.
+- **Außen (compact):** die Seiten wie auf dem iPhone, 382 pt breit neben der Leiste.
+- **Innen quer (regular):** Zeiten, Qibla, Anleitung, Verse und Nachholen in zwei Spalten, die sich am Falz treffen; den Falz meldet das System (`ReservedRegion` `.division`). Einstellungen und Unterseiten als mittige 600-pt-Spalte, Stadt- und Adhan-Sheet als mittige 600-pt-Karte.
+- **Innen hoch:** Die Leisten stehen waagerecht wie auf dem iPhone, die Seiten untereinander. **Tischhaltung** (halb aufgeklappt, Falz waagerecht): der erste Teil über dem Falz, der zweite darunter, jeder für sich scrollbar; die Qibla-Seite bleibt untereinander.
+- **Split View:** compact, die Seiten wie auf dem iPhone.
+
+Mindestversion bleibt iOS 26; alles, was das Duo betrifft, steht hinter `#available(iOS 27.1, *)`. Auf dem iPhone ändert sich nichts.
+
+### Abgleich mit `duo/*`
+
+Den Simulator „iPhone Duo“ gibt es erst mit dem Runtime „iOS 27.2“ Build 24B91016s (eigene Kennung `com.apple.CoreSimulator.SimRuntime.iOS-27-2-iPhone19-4`); der Runtime 24B8117 der übrigen Simulatoren schließt das Duo aus. Auf- und zugeklappt, halb geöffnet und gedreht wird in Device Hub (Schieberegler des Scharniers) – `simctl` und XCUITest können das Scharnier nicht stellen. `make compare-duo` nimmt deshalb je Lauf eine Haltung auf:
+
+```bash
+make compare-duo MODE=open
+```
+
+```bash
+make compare-duo MODE=closed STATES='10 85'
+```
+
+Aufnahmen und Vergleiche liegen in `screenshots-out/phase-10/`. Startet der Duo nach einem Neustart, ist er zugeklappt. Was abweicht und warum, steht in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 10“). Das Protokoll der App nennt in DEBUG Platz, Falz und Größenklasse:
+
+```bash
+xcrun simctl spawn 'iPhone Duo' log stream --level debug --predicate 'subsystem == "com.example.gebetszeiten" AND category == "duo"'
 ```
 
 ## Texte

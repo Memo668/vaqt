@@ -25,8 +25,12 @@ struct QiblaPage: View {
         // (`padding: 0`), die rechte Spalte hält dann 28 pt.
         let inset = inColumns ? 0 : Layout.inset
         // Innen auf dem iPhone Duo: Titel, Kurs, Kompass und Status links, Richtung, Entfernung und die
-        // Kalibrierungskarte rechts, beide senkrecht mittig (`.qibla .cols`).
-        PageScroll(centersParts: true, alignment: .center, secondPadding: QiblaMetrics.infoColumnPadding) {
+        // Kalibrierungskarte rechts, beide senkrecht mittig (`.qibla .cols`). In der Tischhaltung stehen sie
+        // untereinander: Der Kompass passt nicht über den Falz, und in der stehenden Hälfte zeigt er nicht.
+        PageScroll(
+            centersParts: true, splitsInTablePose: false, alignment: .center,
+            secondPadding: QiblaMetrics.infoColumnPadding
+        ) {
             VStack(spacing: 0) {
                 Text(model.title)
                     .textStyle(.subheadline, lineHeight: QiblaMetrics.titleLineHeight)

@@ -29,7 +29,7 @@ Die Ortssuche fragt bei Apple nach Städten und Verwaltungsgebieten. Mit „nur 
 
 ### 5. Antippen beim Abgleich
 
-`xcrun simctl` kann starten und aufnehmen, aber nicht tippen. Zustände, die einen Tipp brauchen – `iphone/85` (Stadt-Sheet), später Qibla, Anleitung, Nachholen und die Einstellungen –, lassen sich damit nicht automatisch nachstellen. In Phase 3 hat ein kleines Hilfsprojekt außerhalb des Repos getippt: ein UI-Test, der die installierte App startet, antippt, wischt, tippt und aufnimmt (`/Volumes/Extern/Builds/NamazVakti/ui-harness`). In Phase 5 hat es `iphone/41` (gescrollt) und `42` (Maghrib angetippt) nachgestellt; dazu kam der Befehl `scroll`: ziehen ohne Schwung. Jede Geste verliert dabei 10 pt Anlauf, die das Skript dazurechnet. In Phase 6 hat es `iphone/61` (ganz nach unten gescrollt) nachgestellt und die Aktionen von Verse und Nachholen durchgespielt. In Phase 7 hat es `iphone/71` und `72` (gescrollt) nachgestellt, das Onboarding durchlaufen, den Player abgespielt und die Sprachwahl geprüft; die übrigen Zustände der Phase erreichen die Debug-Argumente ohne Tippen. In Phase 8 hat es den Dialog der Erlaubnis beantwortet, das Gerät gesperrt und den Sperrbildschirm mit den Mitteilungen aufgenommen und ausgelesen (`system/92`, `s37-notifications-92.txt`). Dazu kamen die Befehle `lock`, `home`, `sbtapif`, `sbtree`, `sbdrag` sowie `open`, `opentap`, `openswitch` und `opendump` für die iOS-Einstellungen. In Phase 9 hat es die Widgets auf Home- und Sperrbildschirm gelegt, die Live-Aktivität auf dem Sperrbildschirm und in der Dynamic Island aufgenommen und die Insel lang gedrückt (`system/90`, `91`, `93`–`96`); dazu kamen `sbpress`, `sbtaplabel`, `sbtaplabelif`, `sbtapcell`, `sbtype`, `sbmove` und `sbdeletewidget`, das nur Widgets von „Gebetszeiten“ entfernt.
+`xcrun simctl` kann starten und aufnehmen, aber nicht tippen. Zustände, die einen Tipp brauchen – `iphone/85` (Stadt-Sheet), später Qibla, Anleitung, Nachholen und die Einstellungen –, lassen sich damit nicht automatisch nachstellen. In Phase 3 hat ein kleines Hilfsprojekt außerhalb des Repos getippt: ein UI-Test, der die installierte App startet, antippt, wischt, tippt und aufnimmt (`/Volumes/Extern/Builds/NamazVakti/ui-harness`). In Phase 5 hat es `iphone/41` (gescrollt) und `42` (Maghrib angetippt) nachgestellt; dazu kam der Befehl `scroll`: ziehen ohne Schwung. Jede Geste verliert dabei 10 pt Anlauf, die das Skript dazurechnet. In Phase 6 hat es `iphone/61` (ganz nach unten gescrollt) nachgestellt und die Aktionen von Verse und Nachholen durchgespielt. In Phase 7 hat es `iphone/71` und `72` (gescrollt) nachgestellt, das Onboarding durchlaufen, den Player abgespielt und die Sprachwahl geprüft; die übrigen Zustände der Phase erreichen die Debug-Argumente ohne Tippen. In Phase 8 hat es den Dialog der Erlaubnis beantwortet, das Gerät gesperrt und den Sperrbildschirm mit den Mitteilungen aufgenommen und ausgelesen (`system/92`, `s37-notifications-92.txt`). Dazu kamen die Befehle `lock`, `home`, `sbtapif`, `sbtree`, `sbdrag` sowie `open`, `opentap`, `openswitch` und `opendump` für die iOS-Einstellungen. In Phase 9 hat es die Widgets auf Home- und Sperrbildschirm gelegt, die Live-Aktivität auf dem Sperrbildschirm und in der Dynamic Island aufgenommen und die Insel lang gedrückt (`system/90`, `91`, `93`–`96`); dazu kamen `sbpress`, `sbtaplabel`, `sbtaplabelif`, `sbtapcell`, `sbtype`, `sbmove` und `sbdeletewidget`, das nur Widgets von „Gebetszeiten“ entfernt. In Phase 10 lief es auf dem Simulator „iPhone Duo“ (Ziel mit dessen Kennung statt Name) und hat außen den Toast ausgelöst (`s57-duo-toast.txt`); das Scharnier kann es nicht stellen.
 
 - **Standard:** Das Hilfsprojekt bleibt außerhalb des Repos. Vorschlag: als `scripts/ui-harness` ins Repo übernehmen, damit `make` auch Zustände mit Tipp nachstellen kann.
 
@@ -55,6 +55,11 @@ Entschieden am 12.11.2026 mit der Abnahme von Phase 8 („Systemton“), siehe u
   - der Hinweis beim Start ohne Ton (`AlertConfiguration` mit stiller Tondatei), auf der Apple Watch und im StandBy;
   - die Grenze von fünf Aktivitäten je App, die im Simulator galt;
   - Widgets im getönten und klaren Erscheinungsbild des Home-Bildschirms (iOS 26) und mit großer Schrift.
+- **iPhone Duo am Gerät** (Phase 10): Im Simulator geprüft sind außen, innen quer und hoch, die Tischhaltung, Split View, RTL und dunkel – das Scharnier nur über den Schieberegler von Device Hub. Am Gerät zu prüfen:
+  - Auf- und Zuklappen mit laufender App, auch mitten im Scrollen und mit offenem Sheet;
+  - die Tischhaltung mit echtem Winkel (ab wann iOS den Falz als aktiv meldet) und die Haltung wie ein Buch;
+  - der Kompass außen und innen;
+  - Widgets und Live-Aktivität (nur für das iPhone gezeichnet, Spec § 6.17).
 - **Türkische Endung in `notifReminderBody`** (Phase 8): „{p} vakti {time}’de başlıyor.“ passt nur zu manchen Uhrzeiten. Richtig wäre etwa „15:36’da“ oder „12:53’te“. Der Text steht so in `T`; Phase 11 prüft die Sprachen.
 - **JAKIM und Kemenag** rechnen mit reinen Winkeln 20°/18°, ohne Sicherheitsminuten (entschieden am 10.11.2026, siehe unten). Beide sind gegen offizielle Tabellen zu prüfen, bevor die App erscheint. Bisher gibt es nur den Vergleich mit dem Mock für Jakarta: Kemenag liegt bis zu 3 Minuten daneben (Dhuhr 11:36 statt 11:39). Die Voreinstellung `singapore` von Adhan Swift – dieselben Winkel, Dhuhr +1, aufgerundet – läge näher (11:38).
 
@@ -129,7 +134,7 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 | Name der App | „Überall ‚Gebetszeiten‘“ | Unter dem App-Symbol steht in jeder Sprache „Gebetszeiten“, auch wenn `T` vier Namen enthält (Spec § 6.9). |
 | Tableiste | „Systemverhalten“ | Die System-`TabView` bleibt. Sie weicht von den Referenzbildern ab: 274 pt breit und mittig statt 346 pt, gefüllte Symbole statt Umrissen, 21 pt statt 22 pt Abstand zum unteren Rand (gemessen auf dem iPhone 17, iOS 27.2). Die Höhe stimmt mit 62 pt. |
 | Entfernung zur Kaaba | „Ja, so lassen“ | Die Anzeige rundet auf 10 km, wie die Werte des Prototyps (4130, 2410, 4600, 7920 km). `PrayerCore` liefert die Entfernung ungerundet, für Berlin 4130,2 km. |
-| Ausrichtung | „Ja, so lassen“ | nur Hochformat. Ob das innere Display des iPhone Duo Querformat braucht, klärt Phase 10 (Spec § 6.17). |
+| Ausrichtung | „Ja, so lassen“ | nur Hochformat. Phase 10: Die Info.plist bleibt so; auf dem inneren Display des iPhone Duo zeigt iOS die App trotzdem quer und hoch (siehe „Annahmen in Phase 10“). |
 | Nachholen | „Ja, so lassen“ | Die App startet leer: kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr. `iphone/60` und `61` zeigen die Beispielzahlen des Prototyps; die gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Annahme für Phase 6: Mit `-debugFixtureTimes` zeigt die Seite sie. |
 | JAKIM und Kemenag | „Ja, so lassen“ | reine Winkel 20°/18°. Vor der Veröffentlichung gegen offizielle Tabellen zu prüfen, siehe oben. |
 
@@ -312,6 +317,60 @@ Mit dem Plan freigegeben sind auch seine Annahmen:
 ## Abnahme von Phase 9 am 12.11.2026
 
 Phase 9 wurde am 12.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-9` stand (Stand `402627e`). Offen bleibt, was nur ein echtes Gerät zeigt: der geplante Start über Stunden, das Ende ohne laufende App, wie schnell iOS „Jetzt“ zeichnet, der stille Hinweis, Watch und StandBy (oben unter „Vor der Veröffentlichung zu prüfen“).
+
+## Entschieden mit dem Plan für Phase 10 am 12.11.2026
+
+Der Plan für Phase 10 wurde am 12.11.2026 freigegeben („Freigeben, bauen (Empfohlen)“), über die Auswahl-Fragen:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Duo-Simulator | „Ja, intern (Empfohlen)“, auf Rückfrage zum Runtime „Laden, alten behalten (Empfohlen)“ | Der installierte Runtime iOS 27.2 (Build 24B8117) schließt das Duo aus. Geladen ist zusätzlich iOS 27.2 Build 24B91016s (8,3 GB, eigene Kennung `…iOS-27-2-iPhone19-4`); iPhone 18 Pro und iPhone 17 laufen weiter mit 24B8117. Den Simulator „iPhone Duo“ hat CoreSimulator beim Installieren selbst angelegt. |
+| Spec-Frage 17: Hochformat innen, Tischhaltung, Split View | „Alle drei“ | Alle drei laufen; wie sie aussehen, steht unten unter „Annahmen in Phase 10“ – ohne Entwurf und Referenzbild. |
+| Stadt-Sheet für `duo/*-85` | „-debugTab city (Empfohlen)“ | Neues Debug-Argument: Das Stadt-Sheet öffnet sich beim Start über der Zeiten-Seite, einmal; so lassen sich auch `iphone/85` ohne Tipp nachstellen. Steht in `CLAUDE.md`, README und PROMPTS. |
+| Auf- und Zuklappen | „Ich klappe selbst (Empfohlen)“ | Das Scharnier stellt nur der Schieberegler in Device Hub (`simctl` und XCUITest können es nicht). Die Freigabe der Bildschirmsteuerung für Device Hub kam zweimal als abgelehnt zurück; der Nutzer hat deshalb gedreht, halb geöffnet, Split View eingerichtet und zugeklappt. |
+
+## Annahmen in Phase 10
+
+Geprüft ist auf dem Simulator „iPhone Duo“ (iOS 27.2, Build 24B91016s) mit `make compare-duo` und Aufnahmen über `simctl`; auf dem iPhone 18 Pro sind alle Aufnahmen von 17 Zuständen pixelgleich mit `main` (bis auf die laufenden Sekunden des Countdowns).
+
+### Was mit den Referenzbildern übereinstimmt
+
+- **Innen quer** (`open-*`):
+  - Die Spalten treffen sich am Falz, den das System meldet: ein 40 pt breiter Streifen um 475,5 pt, wie `--fold`. Links 475,5 pt, rechts bis zur senkrechten Leiste.
+  - Zeiten und Qibla stehen senkrecht mittig: die Stadt bei 201 statt 202,5 pt, die Karten ab 147 statt 150 pt; Qibla-Titel bei 114 statt 112,5 pt, Richtung und Entfernung bei 262 statt 261,5 pt, Kalibrierungskarte bis 382 pt wie in der Referenz.
+  - Einstellungskreis und die drei Seiten stehen als einzelne Glass-Kreise in der senkrechten Leiste, die gewählte Seite in Akzent; in Verse und Nachholen nur der Kreis; in den Einstellungen der Zurück-Knopf oben in der Leiste.
+  - Einstellungen: Die Gruppen stehen in der mittigen 600-pt-Spalte. Stadt- und Adhan-Sheet sind mittige Karten, 600 pt breit (176–776 pt wie die Referenz).
+  - Im Vergleich weichen die Spalten im Mittel um 2 bis 9 von 255 ab; mehr nur dort, wo unten eine Abweichung steht (rechte Spalte der Verse 19, linke der Einstellungen 14, das Sheet mit der Abdunklung des Systems bis 32). Die Leiste weicht um 14 bis 26 ab.
+- **Außen** (`closed-*`): die Seiten wie auf dem iPhone neben der senkrechten Leiste mit Status, Kreis, Chips und Tabs; im Mittel 7 bis 15 von 255, die Einstellungen links 26 (Titel und Ränder des Systems).
+- **RTL innen:** Die Spalten tauschen und treffen sich weiter am Falz (die erste rechts von 475,5 bis 867 pt); die Leiste bleibt rechts. Das System meldet den Falz in RTL gespiegelt.
+- **Dunkel:** `open-11` und `closed-11` wie die Referenz.
+
+### Was abweicht und bleibt
+
+Das zeichnet iOS selbst; geprüft wird es, nachgebaut nicht.
+
+- **Senkrechte Leiste:** 84 statt 76 pt breit, Tabs nur mit Symbol, oben Uhrzeit und Netz als Ring. Deshalb ist der Inhalt außen 382 statt 390 pt breit und die rechte Spalte innen 391,5 statt 399,5 pt. Folgen:
+  - Anleitung außen: Die Rakʿa-Folge bricht um, „Sitzen · Salām“ steht in einer zweiten Zeile; was darunter steht, rückt etwa 30 pt tiefer.
+  - Verse innen: „Und verrichte das Gebet zu Meinem Gedenken.“ bricht um; die Einträge darunter rücken tiefer.
+- **Sicherer Bereich oben:** außen und innen 24 pt. Oben ausgerichtete Seiten (Anleitung, Verse, Nachholen, Einstellungen) beginnen dort, 10 pt tiefer als die 14 pt des Prototyps.
+- **Titel der Einstellungen:** Den großen Titel und auf Unterseiten Titel und Suchfeld setzt das System an den linken Rand (21 pt), nicht in die 600-pt-Spalte; außen stehen Titel und Gruppen 20 statt 16 pt vom Rand.
+- **Sheets:** innen 617 statt 597 pt hoch (26–643 statt 36–633 pt) mit Ecken von etwa 38 statt 24 pt, abgedunkelt vom System. Außen legt iOS das Sheet über die ganze Breite unter die senkrechte Leiste, statt vor ihr zu enden.
+- **Falz:** Den Schatten des Prototyps (`.crease`) gibt es nicht; das ist der Falz des Geräts.
+
+### Annahmen in der Umsetzung
+
+- **Unterscheidung:** Spalten nach `horizontalSizeClass` (regular), die Leisten nach der senkrechten Leiste des Systems (`toolbarVerticalEdge`), Lage und Haltung nach dem Falz (`ReservedRegion` `.division`) – keine festen Breiten außer den 600 pt der Spec für Einstellungen und Sheets. Eine Spalte wird nicht schmaler als 300 pt; ohne Falz teilt die Mitte. Alles Duo-Eigene steht hinter `#available(iOS 27.1, *)`.
+- **Falz flach:** Flach aufgeklappt meldet das System den Falz als inaktiv; die Spalten treffen sich trotzdem dort. Halb aufgeklappt quer (wie ein Buch) bleiben es dieselben Spalten.
+- **Hochformat innen** (Frage 17): Die Leisten stehen waagerecht wie auf dem iPhone, die Seiten untereinander in voller Breite (669 pt). iOS meldet auch hochkant regular; Einstellungen stehen deshalb auch hier als 600-pt-Spalte, Sheets als Karte.
+- **Tischhaltung** (Frage 17, eigener Entwurf): Halb aufgeklappt und hochkant meldet das System den waagerechten Falz als aktiv. Dann steht der erste Teil jeder Seite über dem Falz und der zweite darunter, jeder für sich scrollbar und ohne den 40-pt-Streifen: Stadt und Bogen über den Karten, Auswahl, Kopfkarte und „Vorher“ über dem „Ablauf“, die Karte des Verses über „Letzte Tage“, Zusammenfassung und Plan über „Nach Gebet“ und dem Rechner. Die Qibla-Seite bleibt untereinander: Der Kompass passt nicht über den Falz und zeigt in der stehenden Hälfte nicht sinnvoll. Ist eine Hälfte niedriger als 160 pt, steht alles untereinander.
+- **Split View** (Frage 17): compact, die Seiten wie auf dem iPhone; die senkrechte Leiste legt iOS an den Rand der App, links, wenn die App links steht.
+- **Ausrichtung:** Die Info.plist bleibt bei Hochformat. iOS zeigt die App auf dem inneren Display trotzdem quer und hoch; eigener Code war dafür nicht nötig.
+- **Leiste:** Einstellungskreis und Seiten sind Einträge der Leiste des Systems (`axisBehavior(.verticalPreferred)`), getrennt durch `ToolbarSpacer`, damit jeder ein eigener Kreis ist; der Gebetsteppich ist dafür ein Bild (`GlassSymbol.barImage`). Die gewählte Seite ist in Akzent getönt – eine getönte Fläche wie beim Chip bietet die Leiste nicht.
+- **Pager:** Neben der senkrechten Leiste endet er an ihr; sonst schaute die nächste Seite hinter der Leiste hervor.
+- **Toast:** Mit senkrechter Leiste 28 pt über dem Rand und mittig über dem Inhalt (`.toast` beim Duo). Außen geprüft mit dem UI-Hilfsprojekt (`s57-duo-toast.txt`): 29 pt über dem Rand, Mitte bei 191 pt.
+- **Onboarding innen:** Seite 150 pt und Knöpfe 210 pt vom Rand wie im HTML (`.onb-page`, `.onb-actions`); unten gilt der sichere Bereich (34 pt) statt 26 pt. Ein Referenzbild gibt es dafür nicht.
+- **Protokoll:** In DEBUG nennt die App Platz, Falz und Größenklasse (Kategorie `duo`).
+- **Widgets und Live-Aktivität:** unverändert (Spec § 8: „Live Activities need no changes“).
 
 ## Annahmen in Phase 9
 
