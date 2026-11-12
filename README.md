@@ -4,7 +4,7 @@ Gemeinnützige Gebetszeiten-App für iOS: werbefrei, ohne Tracking, ohne Konto. 
 
 Die Regeln für die Arbeit stehen in `CLAUDE.md`, der Bauplan in `docs/BUILD-PLAN.md`, offene Punkte in `docs/OPEN-QUESTIONS.md`.
 
-**Stand:** Phase 0 (Projektgerüst), Phase 1 (`PrayerCore`, die Logik ohne UI), Phase 2 (`DesignSystem`: Tokens und Bausteine), Phase 3 (Gebete-Tab: Zeiten) und Phase 4 (Qibla) sind fertig. Der Tab „Gebete“ zeigt die obere Leiste mit den Chips Zeiten, Qibla und Anleitung, die Zeiten-Seite – Stadt, Datum, Bogen mit laufendem Countdown, sechs Gebetskarten mit Glocke, Stadt-Sheet – und die Qibla-Seite mit Kompass, Statuszeile, Richtung und Entfernung zur Kaaba. Die Anleitung, die Einstellungen und die Tabs Verse und Nachholen sind noch leer; sie folgen ab Phase 5. Die Bausteine lassen sich als Previews in Xcode ansehen und in der App mit `-debugCatalog`.
+**Stand:** Phase 0 (Projektgerüst), Phase 1 (`PrayerCore`, die Logik ohne UI), Phase 2 (`DesignSystem`: Tokens und Bausteine), Phase 3 (Gebete-Tab: Zeiten), Phase 4 (Qibla) und Phase 5 (Anleitung) sind fertig. Der Tab „Gebete“ zeigt die obere Leiste mit den Chips Zeiten, Qibla und Anleitung, die Zeiten-Seite – Stadt, Datum, Bogen mit laufendem Countdown, sechs Gebetskarten mit Glocke, Stadt-Sheet –, die Qibla-Seite mit Kompass, Statuszeile, Richtung und Entfernung zur Kaaba und die Anleitung mit der Auswahl der fünf Gebete, der Kopfkarte (Status, Zeitfenster, Fakten, Rakʿa-Folge), „Vorher“ und „Ablauf“ mit Haltungsfiguren und arabischen Formeln. Die Einstellungen und die Tabs Verse und Nachholen sind noch leer; sie folgen ab Phase 6. Die Bausteine lassen sich als Previews in Xcode ansehen und in der App mit `-debugCatalog`.
 
 ## Voraussetzungen
 
@@ -40,6 +40,7 @@ open Gebetszeiten.xcodeproj
 | `make compare` | Bausteine in den Zuständen der Referenzbilder aufnehmen und neben die Referenz legen |
 | `make compare-today` | Zeiten-Seite in den Zuständen der Referenzbilder `iphone/10` bis `22` aufnehmen und neben die Referenz legen |
 | `make compare-qibla` | Qibla-Seite in den Zuständen der Referenzbilder `iphone/30` bis `32` aufnehmen und neben die Referenz legen |
+| `make compare-guide` | Anleitung im Zustand von `iphone/40` aufnehmen und neben die Referenz legen, dazu `41` und `42`, wenn aufgenommen |
 | `make strings` | String Catalog und `L10n.swift` aus dem Prototyp neu erzeugen |
 
 Simulator für Build, Tests und Abgleich ist das iPhone 18 Pro. Ein anderer lässt sich je Aufruf wählen, z. B. `make test SIM='iPhone 17'`.
@@ -83,7 +84,7 @@ Nur in DEBUG-Builds. Damit lässt sich jeder Referenz-Screenshot nachstellen:
 -debugTab today|qibla|guide|verses|qada|settings
 -debugQiblaHeading 137
 -debugQiblaAccuracy 40        Genauigkeit des Kompasses in Grad; über 25 erscheint die Kalibrierungskarte
--debugCatalog arc|rows|glass|cards|compass|all   Katalog der Bausteine statt der App, für den Abgleich
+-debugCatalog arc|rows|glass|cards|compass|guide|steps|all   Katalog der Bausteine statt der App, für den Abgleich
 ```
 
 Die Sprache kommt über die Systemargumente `-AppleLanguages '(tr)' -AppleLocale tr_TR`. Welche Argumente zu welchem Screenshot gehören, steht in `docs/PROMPTS.md`.
@@ -116,6 +117,7 @@ scripts/import-strings  erzeugt den String Catalog und die Texte der Info.plist 
 scripts/compare-catalog nimmt die Bausteine in den Zuständen der Referenzbilder auf
 scripts/compare-today   nimmt die Zeiten-Seite in den Zuständen der Referenzbilder auf
 scripts/compare-qibla   nimmt die Qibla-Seite in den Zuständen der Referenzbilder auf
+scripts/compare-guide   nimmt die Anleitung in den Zuständen der Referenzbilder auf
 scripts/compare-shot    legt einen Ausschnitt einer Aufnahme neben die Referenz
 project.yml             Beschreibung des Xcode-Projekts für XcodeGen
 design/                 Prototyp, Design Spec, Referenz-Screenshots
@@ -135,7 +137,7 @@ docs/                   Bauplan, Prompts, offene Fragen
 | `Heading`, `HeadingSource` | Kompasskurs mit Genauigkeit und Bezug (geografisch oder magnetisch Nord); die Quelle des Kurses, `FixedHeadingSource` für Debug und Tests |
 | `CompassPoint`, `QiblaAlignment` | acht Himmelsrichtungen wie `dirName()`; wie das Gerät zur Qibla steht – ausgerichtet bis 3°, sonst links oder rechts und um wie viel |
 | `HijriDate` | Datum nach Umm al-Qura und sein Text je Sprache |
-| `Guide`, `GuideState`, `GuideSelection` | Daten der Anleitung, gezeigtes Gebet, manuelle Wahl |
+| `Guide`, `GuideState`, `GuideSelection`, `Rakahs` | Daten der Anleitung, gezeigtes Gebet, manuelle Wahl und wann sie verfällt, Rakʿa-Folge; ohne Zeiten Fadschr ohne Status |
 | `QadaLedger` | Stand des Nachholens: offen, nachgeholt, Anteil, voraussichtliches Ende |
 
 So kommt eine Seite an die Tagesphase:
@@ -163,6 +165,12 @@ Die Referenzwerte für die Berechnung liegen unter `Packages/PrayerCore/Tests/Pr
 | `GlassSymbol`, `PrayerRugShape` | Symbol eines Chips: SF Symbol oder der Gebetsteppich des Prototyps für „Anleitung“ |
 | `Compass`, `CompassLayout`, `CompassMetrics` | der Kompass der Qibla-Seite (`dialSVG()`): Skala, aufrechte Himmelsrichtungen, Nadel, Kaaba-Marke, Peilmarke, Puls beim Ausrichten |
 | `CalibrationCard` | die Karte „Kompass kalibrieren“ |
+| `SegmentedControl` | Segmente wie `.seg` im Prototyp, mit Punkt unter einem Teil; Tippziel 44 pt |
+| `PillButton`, `PillButtonStyle`, `FlowLayout` | Kapsel-Knopf mit Symbol (`.pill-btn`); Reihen, die umbrechen (`flex-wrap`) |
+| `SectionHeader`, `CardEyebrow`, `CardFootnote`, `SymbolBadge` | Abschnittsüberschrift, Zeile in Großbuchstaben oben in einer Karte, Fußnote, Symbol im getönten Kreis |
+| `GuideHeader`, `GuideHeaderCard`, `RakahSequence` | Auswahl und Kopfkarte der Anleitung: Status, Zeitfenster, Fakten-Kacheln, Rakʿa-Folge, „Zum aktuellen Gebet“ |
+| `PoseFigure`, `PoseShape`, `StepCard`, `FormulaBox`, `RepeatNoteCard` | Haltungsfiguren aus `POSE`, Karte eines Schritts, arabische Formel mit Umschrift, gestrichelte Karte |
+| `GuideOverview`, `GuideSteps`, `GuidePreparationList`, `GuideStepList` | die beiden Teile der Anleitung (`.col-a`, `.col-b`), „Vorher“ und „Ablauf“ |
 | `ComponentCatalog` (nur DEBUG) | alle Bausteine zum Ansehen: Previews hell und dunkel, in der App über `-debugCatalog` |
 
 So kommt der Bogen auf eine Seite:
@@ -183,6 +191,7 @@ DayArc(phase: phase, showKerahat: settings.showKerahat) {
 | `TodayPage`, `TodayHeader`, `TodayHero` | die Seite; `TodayHero` holt die Tagesphase im Sekundentakt der App-Uhr, die Karten bauen sich nur beim Phasenwechsel neu auf |
 | `CitySheet`, `CitySheetModel` | Stadt-Sheet: aktueller Standort, gespeicherte Städte, Ortssuche |
 | `QiblaModel`, `QiblaPage` | Qibla-Seite: Kursanzeige, Kompass, Statuszeile („Nach rechts drehen 39°“, ausgerichtet mit Haptik), Richtung und Entfernung, in Mekka die Meldung, ohne Ort „Stadt wählen“, ohne Kompass „Kein Kompass verfügbar“, Kalibrierungskarte nur bei ungenauem Kompass |
+| `GuideModel`, `GuidePage` | Anleitung: öffnet beim aktuellen Gebet, manuelle Wahl bis zum nächsten Gebetswechsel oder bis man die Seite verlässt, „Qibla öffnen“ wechselt zur Qibla-Seite; gleicht sich nur beim nächsten Ereignis ab, nicht im Sekundentakt |
 | `SettingsStore` | die Einstellungen in den UserDefaults der App Group: Glocke je Gebet, Standort oder Stadt, gespeicherte Städte, Rechen-Einstellungen, Kerahat-Schalter |
 | `CoreLocationSource`, `MapKitPlaceResolver` | aktueller Ort über Core Location („Beim Verwenden der App“), Stadtname über `MKReverseGeocodingRequest` |
 | `CoreLocationHeadingSource` | Kompasskurs über Core Location: geografisch Nord, ohne Standortfreigabe magnetisch Nord; läuft nur, solange die Qibla-Seite zu sehen ist |
@@ -198,7 +207,7 @@ Solange es das Onboarding noch nicht gibt (Phase 7), fragt die Zeiten-Seite beim
 
 ### Abgleich mit den Referenzbildern
 
-Previews lassen sich nicht mit `simctl` aufnehmen. Deshalb zeigt die App mit `-debugCatalog` den Katalog statt der Tabs: `arc` den Bogen, `rows` die Gebetskarten und `compass` den Kompass mit der Kalibrierungskarte im Zustand der übrigen Debug-Argumente, `glass` und `cards` die übrigen Bausteine, `all` alles untereinander.
+Previews lassen sich nicht mit `simctl` aufnehmen. Deshalb zeigt die App mit `-debugCatalog` den Katalog statt der Tabs: `arc` den Bogen, `rows` die Gebetskarten, `compass` den Kompass mit der Kalibrierungskarte und `guide` Auswahl, Kopfkarte und „Vorher“ der Anleitung im Zustand der übrigen Debug-Argumente, `steps` den Ablauf der Anleitung, `glass` und `cards` die übrigen Bausteine, `all` alles untereinander.
 
 ```bash
 make run ARGS='-debugCatalog arc -debugFixtureTimes -debugCity jakarta -debugDate 2026-11-10 -debugTime 17:57'
@@ -232,7 +241,13 @@ make compare-today STATES='17 22'
 make compare-qibla
 ```
 
-Einzelne Ausschnitte vergleicht `scripts/compare-shot`; die Optionen stehen im Kopf von `scripts/compare-shot.swift`. Was vom Referenzbild abweicht und warum, steht in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 2“, „Annahmen in Phase 3“ und „Annahmen in Phase 4“.
+`make compare-guide` stellt `iphone/40` nach (Anleitung, 14:25, Asr läuft) und schreibt die Aufnahme (`guide-40.png`) und Ausschnitte von Leiste, Auswahl, Kopfkarte und „Vorher“ nach `screenshots-out/phase-5/`, dazu die Bausteine aus dem Katalog (`-debugCatalog guide` und `steps`) in der Breite der Referenzbilder. `iphone/41` (gescrollt) und `42` (Maghrib angetippt) brauchen Wischen und Tippen; liegen ihre Aufnahmen `guide-41.png` und `guide-42.png` dort, vergleicht das Skript sie mit. Aufgenommen werden sie mit dem UI-Hilfsprojekt (siehe `docs/OPEN-QUESTIONS.md`, „Antippen beim Abgleich“).
+
+```bash
+make compare-guide
+```
+
+Einzelne Ausschnitte vergleicht `scripts/compare-shot`; die Optionen stehen im Kopf von `scripts/compare-shot.swift`. Was vom Referenzbild abweicht und warum, steht in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 2“ bis „Annahmen in Phase 5“.
 
 ## Texte
 

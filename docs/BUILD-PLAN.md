@@ -127,6 +127,8 @@ Gebaut am 11.11.2026. Abgleich mit `make compare-qibla`; was übereinstimmt, was
 
 **Referenzen:** `iphone/40`–`42`.
 
+Gebaut am 12.11.2026. Abgleich mit `make compare-guide`, `iphone/41` und `42` mit dem UI-Hilfsprojekt; was übereinstimmt, was abweicht und was angenommen ist, steht in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 5“). Die Haltungsfiguren sind die Strichpiktogramme des Prototyps; ob es echte Illustrationen werden und wer die Texte fachlich prüft, ist offen (Spec § 6.14).
+
 ## Phase 6 – Verse und Nachholen
 
 - **Verse:**

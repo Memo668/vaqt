@@ -31,13 +31,14 @@ Die Ortssuche fragt bei Apple nach Städten und Verwaltungsgebieten. Mit „nur 
 
 ### 5. Antippen beim Abgleich
 
-`xcrun simctl` kann starten und aufnehmen, aber nicht tippen. Zustände, die einen Tipp brauchen – `iphone/85` (Stadt-Sheet), später Qibla, Anleitung, Nachholen und die Einstellungen –, lassen sich damit nicht automatisch nachstellen. In Phase 3 hat ein kleines Hilfsprojekt außerhalb des Repos getippt: ein UI-Test, der die installierte App startet, antippt, wischt, tippt und aufnimmt (`/Volumes/Extern/Builds/NamazVakti/ui-harness`).
+`xcrun simctl` kann starten und aufnehmen, aber nicht tippen. Zustände, die einen Tipp brauchen – `iphone/85` (Stadt-Sheet), später Qibla, Anleitung, Nachholen und die Einstellungen –, lassen sich damit nicht automatisch nachstellen. In Phase 3 hat ein kleines Hilfsprojekt außerhalb des Repos getippt: ein UI-Test, der die installierte App startet, antippt, wischt, tippt und aufnimmt (`/Volumes/Extern/Builds/NamazVakti/ui-harness`). In Phase 5 hat es `iphone/41` (gescrollt) und `42` (Maghrib angetippt) nachgestellt; dazu kam der Befehl `scroll`: ziehen ohne Schwung. Jede Geste verliert dabei 10 pt Anlauf, die das Skript dazurechnet.
 
 - **Standard:** Das Hilfsprojekt bleibt außerhalb des Repos. Vorschlag: als `scripts/ui-harness` ins Repo übernehmen, damit `make` auch Zustände mit Tipp nachstellen kann.
 
 ## Vor der Veröffentlichung zu prüfen
 
 - **Kompass am echten Gerät** (Phase 4): Der Simulator hat keinen Kompass; geprüft ist dort alles nur mit festem Kurs. Am Gerät zu prüfen: dass die Skala ruhig und in die richtige Richtung dreht, dass mit Standortfreigabe geografisch Nord gilt und ohne sie magnetisch Nord, ab welcher Abweichung die Karte „Kompass kalibrieren“ erscheint (angenommen sind 25°), die Haptik beim Ausrichten und der Verbrauch, solange die Seite offen ist.
+- **Texte der Anleitung** (Phase 5, Spec § 6.14): Niemand hat sie bisher fachlich geprüft (Imam oder Gelehrter je Sprache); sie stehen unverändert wie im Prototyp. Ebenso offen: eine neutrale Fassung oder Varianten je Rechtsschule und für Frauen, echte Illustrationen statt der Strichfiguren, Audio für die Formeln.
 - **JAKIM und Kemenag** rechnen mit reinen Winkeln 20°/18°, ohne Sicherheitsminuten (entschieden am 10.11.2026, siehe unten). Beide sind gegen offizielle Tabellen zu prüfen, bevor die App erscheint. Bisher gibt es nur den Vergleich mit dem Mock für Jakarta: Kemenag liegt bis zu 3 Minuten daneben (Dhuhr 11:36 statt 11:39). Die Voreinstellung `singapore` von Adhan Swift – dieselben Winkel, Dhuhr +1, aufgerundet – läge näher (11:38).
 
 ## Entschieden am 10.11.2026
@@ -166,6 +167,65 @@ Der Plan für Phase 4 wurde am 11.11.2026 freigegeben („Freigeben“). Damit g
 ## Abnahme von Phase 4 am 12.11.2026
 
 Phase 4 wurde am 12.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-4` stand (Stand `56f6bb2`). Zu den Punkten 1 bis 5 unter „Braucht eine Entscheidung“ gab es dabei keine Antwort; dort gilt weiter der jeweilige Standard. Offen bleibt die Prüfung des Kompasses am echten Gerät (oben unter „Vor der Veröffentlichung zu prüfen“).
+
+## Entschieden mit dem Plan für Phase 5 am 12.11.2026
+
+Der Plan für Phase 5 wurde am 12.11.2026 freigegeben („Freigeben, bauen“), mit den drei empfohlenen Antworten:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Auswahl der Gebete | „Eigener Baustein“ | `SegmentedControl` sieht aus wie im Referenzbild: graue Spur, weißer Daumen, Punkt unter dem aktuellen Gebet. Der Segment-Picker des Systems kann den Punkt nicht zeigen, den die Spec verlangt (§ 3, „Prayer guide“). |
+| VoiceOver beim Punkt | „Ja, ansagen“ | Das Segment des aktuellen Gebets sagt zusätzlich „Jetzt“, zwischen Sonnenaufgang und Dhuhr „Als Nächstes“ (die vorhandenen Texte `now` und `guideNext`). Im Prototyp ist der Punkt für Screenreader ausgeblendet. |
+| Symbole unter „Vorher“ | „SF Symbols“ | `drop`, `sparkles`, `safari` (wie der Chip Qibla), `heart`; die gestrichelte Karte trägt `clock.arrow.circlepath` (wie der Tab Nachholen). Der Prototyp zeichnet eigene Linien. |
+
+Mit dem Plan freigegeben sind auch: die Haltungsfiguren als SwiftUI-Shapes mit der Geometrie von `POSE` (Spec § 6.14 bleibt offen); ohne Zeiten zeigt die Anleitung Fadschr ohne Punkt, Status und Zeitfenster; der Daumen der Auswahl blendet in 0,2 s über, statt zu gleiten; die Katalog-Abschnitte `guide` und `steps`. Neue Texte brauchte die Phase nicht.
+
+## Annahmen in Phase 5
+
+Gemessen ist auf dem iPhone 18 Pro mit iOS 27.2, Zustände wie in `scripts/compare-guide`; `iphone/41` und `42` mit dem UI-Hilfsprojekt (`s20-guide.txt`, `s21-guide-steps.txt`).
+
+### Was mit den Referenzbildern übereinstimmt
+
+- **Zustände:** `iphone/40` Asr mit „Jetzt“ und 14:00–16:27, Punkt unter Asr; `41` der Ablauf mit Figuren, Formeln und Umschrift; `42` Maghrib von Hand: kein Status, 16:27–18:17, „1.–2. laut“, „2 danach“, Kreise 1 und 2 gefüllt, Knopf „Zum aktuellen Gebet“ mit dem Symbol von Asr, der Punkt bleibt bei Asr.
+- **Haltungsfiguren:** deckungsgleich mit der Referenz, der Unterschied der Kacheln ist im Mittel 1,1 bis 1,3 von 255 (nur Kantenglättung). Tests prüfen die Geometrie gegen die Pfade von `POSE`.
+- **Lage und Größe:** Der sichere Bereich beginnt bei 62 statt 58 pt, alles sitzt deshalb 4 pt tiefer; Karten und Auswahl sind 12 pt breiter.
+
+| Baustein | Referenz (y in pt) | App (y in pt) |
+|---|---|---|
+| Auswahl, Spur (34 pt) | 123 bis 157 | 126 bis 160 |
+| Punkt unter Asr, Mitte | 150 | 153 |
+| Kopfkarte `40` (303 pt) | 171 bis 474 | 174 bis 477,7 |
+| Fakten-Kacheln | 277 bis 353 | 280,3 bis 357 |
+| Rakʿa-Kreise (34 pt) | 371 bis 405 | 375 bis 409 |
+| „Vorher“, Grundlinie | 517 | 521 |
+| erste Karte unter „Vorher“ (95 pt) | 533 bis 628 | 536,7 bis 632 |
+| Kopfkarte `42` (347 pt) | 171 bis 518 | 174 bis 522,3 |
+| Knopf „Zum aktuellen Gebet“ (44 pt) | 454 bis 498, 202 pt breit | 458,3 bis 502,3, 204,7 pt breit |
+| Ablauf `41`, Karten 1 bis 3 | 129, 310, 413 | 133, 315, 418 |
+
+Die Auswahl liegt nur 3 pt tiefer: Das Referenzbild setzt sie 1 pt unter die Stelle, die das CSS ergibt (58 + 52 + 8 + 4 = 122 pt); die App folgt dem CSS. Die Kopfkarte ist 0,7 bis 1,3 pt höher als im Referenzbild; mit den Maßen von SF Pro gerechnet ergibt das CSS 303,1 und 347,8 pt, auf 0,5 pt das, was die App zeigt.
+
+### Was abweicht und bleibt
+
+- **Schrift:** wie in den Phasen 2 bis 4. Die Titel in den Karten stehen 1 bis 1,7 pt tiefer als im Referenzbild – dort, wo das CSS sie mit den Maßen von SF Pro hinsetzt.
+- **Laufweite kleiner Texte:** Der Prototyp gibt jedem Text ohne eigene Angabe `letter-spacing: -.41px` mit (`.screen`), die Laufweite des iOS-Fließtexts bei 17 pt. Die App lässt jeder Größe die Laufweite des Systems (Spec § 2: Textstile des Systems), wie in den Phasen 2 bis 4; ausdrückliche Angaben gelten (`.card-eyebrow` .4px, `.step h3` −.3px). Kleine Texte sind deshalb breiter als im Referenzbild: „Sitzen“ um 2,7 pt, „Sitzen · Salām“ um 8,3 pt, „Ab der 3. Rakʿa nur al-Fātiha.“ um 10 pt. Auf dem iPhone 18 Pro passt die Rakʿa-Folge von Asr in eine Reihe (0,3 pt Luft); auf 390 pt breiten Geräten rutscht „Sitzen · Salām“ in eine zweite – mit SF Pro täte der Prototyp das auch.
+- **Arabisch:** in SF Arabic, der Schrift des Systems und ersten Wahl im CSS. Das Referenzbild ist mit einer Ersatzschrift gesetzt: „اللّٰهُ أَكْبَرُ“ ist dort 68 × 28,5 pt groß, in der App 62,3 × 24,3 pt. Eine Zeile Arabisch ist in SF Arabic 0,24 pt höher als in SF Pro; die Formelkarten sind dadurch 0,6 pt höher.
+- **Symbole:** SF Symbols statt der Zeichnungen (entschieden), jedes in der Größe seiner Zeichnung: Tropfen 11,7 × 17 pt (Referenz 12 × 17), Funken 12,7 × 15,3 (15 × 15,5), Sonne in der Kopfkarte 15,7 × 15,7 (16 × 16), Symbol im Knopf 12,7 × 12,7 (12 × 12).
+- **Breite:** Die Karten sind 370 statt 358 pt breit; ihre Texte brechen deshalb teils anders um (`41`: „Rücken gerade, Hände auf den Knien.“). Im Katalog in Referenzbreite brechen sie um wie im Referenzbild.
+- **Oben unter der Leiste** (`41`): der Randeffekt des Systems statt des Verlaufs im Prototyp, wie in Phase 3.
+
+### Annahmen in der Umsetzung
+
+- **Auswahl:** Das Tippziel ist 44 pt hoch; es ragt oben und unten 5 pt über die 34 pt hohe Spur, das Layout zählt nur die Spur. Titel 13 pt medium, mit Dynamic Type höchstens 1,2-fach (`.seg-wide`), bei Platzmangel bis auf 70 % kleiner statt abgeschnitten. Titel und Punkt teilen sich die 30 pt wie gestreckte Rasterzeilen (`display: grid` im Prototyp); so liegt der Punkt wie im Referenzbild 27 pt unter der Oberkante der Spur. Der Daumen blendet beim Antippen über; wechselt die Auswahl von selbst – Zeiten kommen, Gebetswechsel –, springt er.
+- **Automatik:** Die Seite braucht keinen Sekundentakt. Sie gleicht ab, wenn die App nach vorn kommt, wenn sich der Zeitstrahl ändert und 0,5 s nach jedem Ereignis. Schon das erste Bild zeigt das richtige Gebet. Deckt der Zeitstrahl „jetzt“ nicht mehr ab (nach Mitternacht), baut die Zeiten-Seite einen neuen.
+- **Wahl verfällt:** wenn das automatische Gebet wechselt, auch beim Sonnenaufgang zu Dhuhr, und wenn man die Seite verlässt – Chip, Wischen, „Qibla öffnen“. Ein anderer Tab unten und die Einstellungen lassen sie stehen, wie im Prototyp (`goPane()` und `section`). Über einen Neustart bleibt sie nicht.
+- **Zeitfenster:** Ischa endet mit Fadschr von morgen (entschieden am 10.11.2026), vor Fadschr gilt das Fenster des Ischa von gestern. Uhrzeiten in der Zeitzone des Ortes, Ziffern gleich breit (`.tabnum`).
+- **Ohne Zeiten** (kein Ort, oder die Sonne geht nicht auf oder unter): Fadschr, ohne Punkt, ohne Knopf und ohne die Zeile mit Status und Zeitfenster; wählen geht.
+- **VoiceOver:** Segmente mit „ausgewählt“, beim Punkt „Jetzt“ oder „Als Nächstes“; nach „Zum aktuellen Gebet“ springt der Fokus auf dessen Segment (`focusNext`). Die Rakʿa-Folge ist ein Bild mit dem Text aus `rakSeq`, wie im Prototyp; die Titel der Schritte sind Überschriften („1 Takbīr“). Die Formeln tragen die Sprache „ar“. Geprüft ist nur der Baum der Bedienungshilfen, nicht VoiceOver von Hand.
+- **Große Schrift:** Texte wachsen, die Rakʿa-Folge bricht um. Die Kacheln bleiben drei nebeneinander und trennen Wörter, wie das CSS-Raster; Kreise der Rakʿa-Folge (34 pt), Haltungsfiguren (58 pt) und Symbolkreise bleiben fest. Passen Status und Zeitfenster nicht nebeneinander, steht das Zeitfenster darunter, statt mitten in der Uhrzeit umzubrechen. Bei AX5 sind die Kacheln sehr schmal – ein Fall für Phase 11.
+- **Rechts nach links:** gespiegelte Anordnung, auch die Rakʿa-Folge. Haltungsfiguren und das Arabische werden nicht gespiegelt; die Umschrift folgt der Leserichtung.
+- **Gestrichelte Karte:** Strich und Lücke je 4,5 pt, das Dreifache der Linie, wie Browser `dashed` zeichnen. Kein Referenzbild zeigt die Karte; verglichen ist sie mit dem Prototyp im Browser.
+- **Katalog:** `-debugCatalog guide` zeigt Auswahl, Kopfkarte und „Vorher“ im Zustand der Debug-Argumente, `steps` den Ablauf, beide in Referenzbreite und in voller Höhe; was nicht auf den Bildschirm passt, läuft unten hinaus.
 
 ## Annahmen in Phase 4
 

@@ -76,6 +76,8 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 | `iphone/31` | … `-debugTime 14:25 -debugTab qibla -debugQiblaHeading 137 -debugQiblaAccuracy 40` |
 | `iphone/32` | … `-debugCity mecca -debugTime 15:42 -debugTab qibla -debugQiblaHeading 138 -debugQiblaAccuracy 40` |
 | `iphone/40` | … `-debugTab guide` |
+| `iphone/41` | wie `40`, dann nach unten scrollen, bis die erste Karte des Ablaufs 133 pt unter der Oberkante steht (UI-Hilfsprojekt, `s21-guide-steps.txt`) |
+| `iphone/42` | wie `40`, dann „Maghrib“ in der Auswahl antippen (UI-Hilfsprojekt, `s20-guide.txt`) |
 | `iphone/50` / `60` | … `-debugTab verses` / `-debugTab qada` |
 
 Sprache im Simulator: Scheme › Run › Options › App Language, oder `-AppleLanguages "(tr)"`.
