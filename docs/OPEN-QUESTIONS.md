@@ -309,6 +309,10 @@ Mit dem Plan freigegeben sind auch seine Annahmen:
 - **Ende:** ActivityKit kennt kein geplantes Ende. Die App beendet eine Aktivität, sobald sie nach Gebetsbeginn läuft, und lässt sie bis 15 Minuten danach auf dem Sperrbildschirm stehen.
 - **Name in der Widget-Galerie:** `appName`, ohne Beschreibung.
 
+## Abnahme von Phase 9 am 12.11.2026
+
+Phase 9 wurde am 12.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-9` stand (Stand `402627e`). Offen bleibt, was nur ein echtes Gerät zeigt: der geplante Start über Stunden, das Ende ohne laufende App, wie schnell iOS „Jetzt“ zeichnet, der stille Hinweis, Watch und StandBy (oben unter „Vor der Veröffentlichung zu prüfen“).
+
 ## Annahmen in Phase 9
 
 Geprüft ist auf dem iPhone 18 Pro mit iOS 27.2. Die Bausteine in den Maßen des Prototyps zeigt der Katalog (`make compare-system`); die Aufnahmen im System – Widgets auf Home- und Sperrbildschirm, Live-Aktivität, Insel – liefen mit dem UI-Hilfsprojekt (`s41`–`s55`). Die Systemsprache des Simulators blieb Englisch.
