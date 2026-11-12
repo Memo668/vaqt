@@ -119,7 +119,7 @@ struct VersesQadaComponentTests {
     }
 
     @Test("die Symbole der Seiten gibt es im System", arguments: [
-        "square.and.arrow.up", "doc.on.doc", "checkmark", "moon.stars", "sunset",
+        "square.and.arrow.up", "square.on.square", "checkmark", "moon.stars", "sunset",
     ])
     func symbolExists(name: String) {
         #expect(UIImage(systemName: name) != nil)

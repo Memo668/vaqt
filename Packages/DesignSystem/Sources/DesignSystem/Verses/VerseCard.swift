@@ -132,9 +132,10 @@ enum VerseCardMetrics {
     /// `.card-actions`: `gap: 8px; margin-top: 18px`.
     static let actionGap: CGFloat = 8
     static let actionsTop: CGFloat = 18
-    /// Symbole der Knöpfe (`ic('share')`, `ic('copy')`).
+    /// Symbole der Knöpfe (`ic('share')`, `ic('copy')`). Die Spec nennt keine; die Zeichnung des Prototyps
+    /// für Kopieren sind zwei überlappende abgerundete Quadrate wie `square.on.square`.
     static let shareSymbol = "square.and.arrow.up"
-    static let copySymbol = "doc.on.doc"
+    static let copySymbol = "square.on.square"
 }
 
 /// Maße eines Eintrags (`.vitem`: `padding: 13px 16px`; `.vitem-tr`: `margin: 3px 0; line-height: 1.35`,

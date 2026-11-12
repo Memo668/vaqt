@@ -74,7 +74,7 @@ struct VersesModelTests {
         fixture.model.copyShownVerse()
         #expect(fixture.copied.texts == [Verse.all[1].shareText])
         #expect(fixture.toast.message?.text == L10n.copied)
-        #expect(fixture.toast.message?.systemImage == "doc.on.doc")
+        #expect(fixture.toast.message?.systemImage == "square.on.square")
     }
 
     @Test("der Tag ist der am Ort: 23:30 in Berlin ist in Jakarta schon morgen")

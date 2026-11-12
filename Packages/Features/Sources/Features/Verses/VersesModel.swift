@@ -109,5 +109,5 @@ public final class VersesModel {
     nonisolated static let wakeDelay: TimeInterval = 0.5
 
     /// Symbol des Toasts „Kopiert“ – das Symbol des Knopfs (`toast(t('copied'), 'copy')`).
-    nonisolated static let copySymbol = "doc.on.doc"
+    nonisolated static let copySymbol = "square.on.square"
 }

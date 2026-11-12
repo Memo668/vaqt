@@ -1,0 +1,112 @@
+#!/bin/bash
+# Abgleich der Seite „Nachholen“ mit den Referenzbildern design/screenshots/iphone/60 und 61 (Phase 6).
+#
+# Startet die App im Zustand von iphone/60 (Nachholen mit den Zahlen des Prototyps, 10.11.2026), nimmt
+# den Bildschirm auf und legt Ausschnitte mit scripts/compare-shot neben die Referenz: obere Leiste,
+# Titel mit Einleitung, Zusammenfassung, Plan und „Nach Gebet“. Dazu kommt die Seite aus dem Katalog in
+# der Breite der Referenzbilder (-debugCatalog qada). Die App muss gebaut und installiert sein:
+#
+#   make run
+#   scripts/compare-qada
+#
+# iphone/61 ist die Seite, ganz nach unten gescrollt; das kann simctl nicht. Liegt die Aufnahme schon in
+# screenshots-out/phase-6/ – qada-61.png, aufgenommen mit dem UI-Hilfsprojekt (Skript
+# s24-qada-scrolled.txt, docs/OPEN-QUESTIONS.md, „Antippen beim Abgleich“) –, vergleicht das Skript sie
+# mit: Ischa, Rechner, „Als offen übernehmen“ und Fußnote.
+#
+# Ergebnis in screenshots-out/phase-6/: qada-60.png, catalog-qada.png (Aufnahmen) und
+# compare-<Ausschnitt>.png (oben Referenz, Mitte Aufnahme, unten Unterschied).
+#
+# Der Simulator (iPhone 18 Pro, 402 × 874 pt) ist 12 pt breiter und 30 pt höher als die Referenzbilder
+# (390 × 844 pt). Verglichen werden deshalb Ausschnitte:
+#   - Der sichere Bereich beginnt bei 62 statt 58 pt: Alles sitzt 4 pt tiefer. Die Zusammenfassung ist
+#     0,7 pt höher als im Referenzbild (Rundung der Texthöhen); was darunter liegt, sitzt 4,7 bis 5 pt
+#     tiefer.
+#   - Karten und Gruppen sind 12 pt breiter. Ihre linke und ihre rechte Hälfte werden getrennt
+#     verglichen, jede an ihrem Rand ausgerichtet.
+#   - Ganz unten gescrollt (61) steht alles 32 pt tiefer: 30 pt höherer Bildschirm, dazu die Rundung.
+#   - Im Katalog steht die Seite in Referenzbreite, 6 pt vom Rand und 22 pt tiefer als in iphone/60.
+#
+# Der Simulator lässt sich mit SIM='…' wählen, wie im Makefile.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SIM="${SIM:-iPhone 18 Pro}"
+BUNDLE_ID=com.example.gebetszeiten
+REF="$ROOT/design/screenshots/iphone"
+OUT="${OUT:-$ROOT/screenshots-out/phase-6}"
+ZOOM="${ZOOM:-3}"
+WAIT="${WAIT:-2.5}"
+
+# Ausschnitte in pt (x,y,Breite,Höhe), erst im Referenzbild, dann in der Aufnahme.
+#   Leiste     wie bei der Zeiten-Seite, links ausgerichtet.
+#   Kopf       Titel „Nachholen“ und Einleitung, 120 bis 211 pt.
+#   Karte      Zusammenfassung 229 bis 402 pt (App 233 bis 406,7), linke und rechte Hälfte.
+#   Plan       Kopf, Zeile und Fußzeile 412 bis 520 pt (App 4,7 pt tiefer).
+#   Gebete     „Nach Gebet“ und die Zeilen ab 545 pt (App 5 pt tiefer), bis über die Tableiste.
+#   61         Ischa ab 168 pt, Rechner 269 bis 494 pt, Übernehmen und Fußnote bis 724 pt (App 32 pt tiefer).
+BAR_REF=0,50,390,76;           BAR_SHOT=0,54,390,76
+TOP_REF=0,110,390,108;         TOP_SHOT=0,114,390,108
+SUM_L_REF=0,223,230,185;       SUM_L_SHOT=0,227,230,185
+SUM_R_REF=160,223,230,185;     SUM_R_SHOT=172,227,230,185
+PLAN_L_REF=0,408,230,116;      PLAN_L_SHOT=0,412.67,230,116
+PLAN_R_REF=160,408,230,116;    PLAN_R_SHOT=172,412.67,230,116
+BYP_L_REF=0,540,230,216;       BYP_L_SHOT=0,545,230,216
+BYP_R_REF=160,540,230,216;     BYP_R_SHOT=172,545,230,216
+CALC_L_REF=0,160,230,345;      CALC_L_SHOT=0,192,230,345
+CALC_R_REF=160,160,230,345;    CALC_R_SHOT=172,192,230,345
+APPLY_L_REF=0,540,230,190;     APPLY_L_SHOT=0,572.33,230,190
+APPLY_R_REF=160,540,230,190;   APPLY_R_SHOT=172,572.33,230,190
+# Katalog: in Referenzbreite, 6 pt vom Rand, 22 pt tiefer.
+PAGE_REF=0,110,390,640;        PAGE_CATALOG=6,132,390,640
+
+# compare Name Referenzbild Referenz-Ausschnitt Aufnahme Aufnahme-Ausschnitt
+compare() {
+  printf '  %-12s ' "$1"
+  "$ROOT/scripts/compare-shot" --ref "$REF/$2.png" --ref-rect "$3" --shot "$4" --shot-rect "$5" \
+    --out "$OUT/compare-$1.png" --zoom "$ZOOM" | head -1
+}
+
+# launch Aufnahme Argumente …
+launch() {
+  local shot="$1"
+  shift
+  xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" \
+    -AppleLanguages '(de)' -AppleLocale de_DE "$@" >/dev/null
+  sleep "$WAIT"
+  xcrun simctl io "$SIM" screenshot "$shot" >/dev/null 2>&1
+}
+
+mkdir -p "$OUT"
+xcrun simctl bootstatus "$SIM" -b >/dev/null
+xcrun simctl ui "$SIM" appearance light
+xcrun simctl ui "$SIM" content_size large
+# Der erste Start nach einer Pause dauert länger als die Wartezeit vor der Aufnahme. Deshalb einmal vorab.
+xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" -debugSkipOnboarding -debugFixtureTimes >/dev/null
+sleep 3
+
+STATE=(-debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25)
+
+launch "$OUT/qada-60.png" "${STATE[@]}" -debugTab qada
+echo "iphone/60:"
+compare bar-60 60-qada "$BAR_REF" "$OUT/qada-60.png" "$BAR_SHOT"
+compare top-60 60-qada "$TOP_REF" "$OUT/qada-60.png" "$TOP_SHOT"
+compare sum-l-60 60-qada "$SUM_L_REF" "$OUT/qada-60.png" "$SUM_L_SHOT"
+compare sum-r-60 60-qada "$SUM_R_REF" "$OUT/qada-60.png" "$SUM_R_SHOT"
+compare plan-l-60 60-qada "$PLAN_L_REF" "$OUT/qada-60.png" "$PLAN_L_SHOT"
+compare plan-r-60 60-qada "$PLAN_R_REF" "$OUT/qada-60.png" "$PLAN_R_SHOT"
+compare byp-l-60 60-qada "$BYP_L_REF" "$OUT/qada-60.png" "$BYP_L_SHOT"
+compare byp-r-60 60-qada "$BYP_R_REF" "$OUT/qada-60.png" "$BYP_R_SHOT"
+
+if [ -f "$OUT/qada-61.png" ]; then
+  echo "iphone/61 (Aufnahme des UI-Hilfsprojekts):"
+  compare calc-l-61 61-qada-calculator "$CALC_L_REF" "$OUT/qada-61.png" "$CALC_L_SHOT"
+  compare calc-r-61 61-qada-calculator "$CALC_R_REF" "$OUT/qada-61.png" "$CALC_R_SHOT"
+  compare apply-l-61 61-qada-calculator "$APPLY_L_REF" "$OUT/qada-61.png" "$APPLY_L_SHOT"
+  compare apply-r-61 61-qada-calculator "$APPLY_R_REF" "$OUT/qada-61.png" "$APPLY_R_SHOT"
+fi
+
+echo "Katalog:"
+launch "$OUT/catalog-qada.png" -debugCatalog qada "${STATE[@]}"
+compare catalog-qada 60-qada "$PAGE_REF" "$OUT/catalog-qada.png" "$PAGE_CATALOG"
+
+echo "Ergebnis in $OUT"

@@ -1,0 +1,101 @@
+#!/bin/bash
+# Abgleich der Seite „Verse“ mit den Referenzbildern design/screenshots/iphone/50 und 51 (Phase 6).
+#
+# Startet die App im Zustand von iphone/50 (Verse, 10.11.2026, 14:25) hell und dunkel (51), nimmt den
+# Bildschirm auf und legt Ausschnitte mit scripts/compare-shot neben die Referenz: obere Leiste, Titel,
+# Karte mit dem Vers, Fußnote mit „Letzte Tage“ und die Einträge der Liste. Dazu kommt die Seite aus
+# dem Katalog in der Breite der Referenzbilder (-debugCatalog verses). Die App muss gebaut und
+# installiert sein:
+#
+#   make run
+#   scripts/compare-verses
+#
+# Ergebnis in screenshots-out/phase-6/: verses-50.png, verses-51.png, catalog-verses.png (Aufnahmen)
+# und compare-<Ausschnitt>.png (oben Referenz, Mitte Aufnahme, unten Unterschied).
+#
+# Der Simulator (iPhone 18 Pro, 402 × 874 pt) ist 12 pt breiter und 30 pt höher als die Referenzbilder
+# (390 × 844 pt). Verglichen werden deshalb Ausschnitte:
+#   - Der sichere Bereich beginnt bei 62 statt 58 pt: Alles sitzt 4 pt tiefer.
+#   - Karten und Einträge sind 12 pt breiter. Ihre linke und ihre rechte Hälfte werden getrennt
+#     verglichen, jede an ihrem Rand ausgerichtet.
+#   - Im Katalog steht die Seite in Referenzbreite, 6 pt vom Rand und 22 pt tiefer als in iphone/50.
+#
+# Der Simulator lässt sich mit SIM='…' wählen, wie im Makefile.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SIM="${SIM:-iPhone 18 Pro}"
+BUNDLE_ID=com.example.gebetszeiten
+REF="$ROOT/design/screenshots/iphone"
+OUT="${OUT:-$ROOT/screenshots-out/phase-6}"
+ZOOM="${ZOOM:-3}"
+WAIT="${WAIT:-2.5}"
+
+# Ausschnitte in pt (x,y,Breite,Höhe), erst im Referenzbild, dann in der Aufnahme.
+#   Leiste     wie bei der Zeiten-Seite, links ausgerichtet.
+#   Titel      „Verse“, 120 bis 161 pt (App 124 bis 165).
+#   Karte      175 bis 425 pt (App 179 bis 429), linke und rechte Hälfte.
+#   Fußnote    Fußnote und „Letzte Tage“, 431 bis 526 pt.
+#   Liste      die Einträge ab 530 pt bis über die Tableiste, linke und rechte Hälfte.
+BAR_REF=0,50,390,76;          BAR_SHOT=0,54,390,76
+TITLE_REF=0,110,260,60;       TITLE_SHOT=0,114,260,60
+CARD_L_REF=0,169,230,262;     CARD_L_SHOT=0,173,230,262
+CARD_R_REF=160,169,230,262;   CARD_R_SHOT=172,173,230,262
+FOOT_REF=0,431,390,95;        FOOT_SHOT=0,435,390,95
+LIST_L_REF=0,524,230,232;     LIST_L_SHOT=0,528,230,232
+LIST_R_REF=160,524,230,232;   LIST_R_SHOT=172,528,230,232
+# Katalog: in Referenzbreite, 6 pt vom Rand, 22 pt tiefer.
+PAGE_REF=0,110,390,632;       PAGE_CATALOG=6,132,390,632
+
+# compare Name Referenzbild Referenz-Ausschnitt Aufnahme Aufnahme-Ausschnitt
+compare() {
+  printf '  %-12s ' "$1"
+  "$ROOT/scripts/compare-shot" --ref "$REF/$2.png" --ref-rect "$3" --shot "$4" --shot-rect "$5" \
+    --out "$OUT/compare-$1.png" --zoom "$ZOOM" | head -1
+}
+
+# launch Aufnahme Argumente …
+launch() {
+  local shot="$1"
+  shift
+  xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" \
+    -AppleLanguages '(de)' -AppleLocale de_DE "$@" >/dev/null
+  sleep "$WAIT"
+  xcrun simctl io "$SIM" screenshot "$shot" >/dev/null 2>&1
+}
+
+# page Zustand Referenzbild Aufnahme
+page() {
+  compare "bar-$1" "$2" "$BAR_REF" "$3" "$BAR_SHOT"
+  compare "title-$1" "$2" "$TITLE_REF" "$3" "$TITLE_SHOT"
+  compare "card-l-$1" "$2" "$CARD_L_REF" "$3" "$CARD_L_SHOT"
+  compare "card-r-$1" "$2" "$CARD_R_REF" "$3" "$CARD_R_SHOT"
+  compare "foot-$1" "$2" "$FOOT_REF" "$3" "$FOOT_SHOT"
+  compare "list-l-$1" "$2" "$LIST_L_REF" "$3" "$LIST_L_SHOT"
+  compare "list-r-$1" "$2" "$LIST_R_REF" "$3" "$LIST_R_SHOT"
+}
+
+mkdir -p "$OUT"
+xcrun simctl bootstatus "$SIM" -b >/dev/null
+xcrun simctl ui "$SIM" content_size large
+# Der erste Start nach einer Pause dauert länger als die Wartezeit vor der Aufnahme. Deshalb einmal vorab.
+xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" -debugSkipOnboarding -debugFixtureTimes >/dev/null
+sleep 3
+
+STATE=(-debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25)
+
+xcrun simctl ui "$SIM" appearance light
+launch "$OUT/verses-50.png" "${STATE[@]}" -debugTab verses
+echo "iphone/50:"
+page 50 50-verses "$OUT/verses-50.png"
+
+xcrun simctl ui "$SIM" appearance dark
+launch "$OUT/verses-51.png" "${STATE[@]}" -debugTab verses
+echo "iphone/51 (dunkel):"
+page 51 51-verses-dark "$OUT/verses-51.png"
+xcrun simctl ui "$SIM" appearance light
+
+echo "Katalog:"
+launch "$OUT/catalog-verses.png" -debugCatalog verses "${STATE[@]}"
+compare catalog-verses 50-verses "$PAGE_REF" "$OUT/catalog-verses.png" "$PAGE_CATALOG"
+
+echo "Ergebnis in $OUT"
