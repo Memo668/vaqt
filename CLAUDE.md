@@ -53,7 +53,8 @@ Nur in DEBUG: Startargumente, mit denen sich jeder Referenz-Screenshot nachstell
 -debugQiblaHeading 137
 -debugQiblaAccuracy 40        # Genauigkeit des Kompasses; über 25° erscheint die Kalibrierungskarte (iphone/30–32)
 -debugNotifications           # echte Mitteilungen auch mit Mock-Zeiten, fragt beim Start nach der Erlaubnis (system/92)
--debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|all   # Katalog der Bausteine statt der App, für den Abgleich (make compare)
+-debugLiveActivity            # Live-Aktivität zum nächsten Gebet sofort, auch außerhalb des Vorlaufs und mit Mock-Zeiten (system/93–96)
+-debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|widgets|live|all   # Katalog der Bausteine statt der App, für den Abgleich (make compare, make compare-system)
 ```
 
 Uhrzeit, Datum und Ort laufen über eine injizierbare `Clock`/`LocationSource`, nie direkt über `Date()` oder `CLLocationManager` in den Views.

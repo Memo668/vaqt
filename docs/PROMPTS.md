@@ -100,5 +100,11 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 | `iphone/81` | … `-debugTab privacy` |
 | `iphone/86` | … `-debugTime 14:25 -debugTab adhan` |
 | `system/92` | `-debugSkipOnboarding -debugFixtureTimes -debugNotifications -debugDate 2026-11-10 -debugTime 11:41`, Systemsprache des Simulators Deutsch, `make statusbar TIME=11:52`; Gerät sperren, gut elf Minuten warten, den Stapel aufklappen, aufnehmen (UI-Hilfsprojekt, `s37-notifications-92.txt`). Die Erinnerung kommt nach einer Minute, Dhuhr nach elf |
+| `system/90` | `-debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25` – ohne `-debugLiveActivity` endet eine noch laufende Aktivität; Widgets vorher anlegen: Sperrbildschirm anpassen, Rechteck und Ring von „Gebetszeiten“, Zeile über der Uhr (UI-Hilfsprojekt, `s45-lock-widgets.txt`); App starten, sperren, aufnehmen (`s47-system-90-91.txt`). Im Katalog: `make compare-system STATES=90` |
+| `system/91` | wie `90`; Widgets vorher anlegen: erst das kleine, dann das mittlere, dann rutscht das kleine darunter (UI-Hilfsprojekt, `s43-home-widgets.txt`); App starten, Home, aufnehmen (`s47-system-90-91.txt`). Im Katalog: `make compare-system STATES=91` |
+| `system/93` | `-debugSkipOnboarding -debugFixtureTimes -debugLiveActivity -debugDate 2026-11-10 -debugTime 14:25`, Widgets wie `90`; sperren, aufnehmen (UI-Hilfsprojekt, `s48-system-93-95.txt`) |
+| `system/94` | wie `93`, statt sperren Home: die kompakte Insel über den Widgets von `91` (`s48-system-93-95.txt`) |
+| `system/95` | wie `94`, dann lange auf die Insel drücken (`sbpress 201 30 1.2`, `s48-system-93-95.txt`) |
+| `system/96` | `… -debugLiveActivity -debugDate 2026-11-10 -debugTime 16:35`, Simulator dunkel (`xcrun simctl ui 'iPhone 18 Pro' appearance dark`), `make statusbar TIME=16:35`; sperren, aufnehmen (`s49-system-96.txt`), danach hell und `make statusbar` |
 
 Sprache im Simulator: Scheme › Run › Options › App Language, oder `-AppleLanguages "(tr)"`.

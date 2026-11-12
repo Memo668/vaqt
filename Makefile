@@ -36,7 +36,7 @@ SHOT ?= screenshots-out/screenshot.png
 
 XCODEBUILD := xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' -derivedDataPath '$(DERIVED)'
 
-.PHONY: help project strings check-strings build test test-core coverage boot run statusbar screenshot compare compare-today compare-qibla compare-guide compare-verses compare-qada compare-settings clean
+.PHONY: help project strings check-strings build test test-core coverage boot run statusbar screenshot compare compare-today compare-qibla compare-guide compare-verses compare-qada compare-settings compare-system clean
 
 help: ## Diese Übersicht
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -110,6 +110,10 @@ compare-qada: build boot ## Nachholen wie in iphone/60 aufnehmen und danebenlege
 compare-settings: build boot ## Einstellungen, Onboarding und Adhan wie in iphone/01–03, 70–81, 86 aufnehmen und danebenlegen (STATES='70 86' für einzelne)
 	xcrun simctl install '$(SIM)' '$(APP)'
 	SIM='$(SIM)' scripts/compare-settings $(STATES)
+
+compare-system: build boot ## Widgets und Live-Aktivität wie in system/90, 91, 93–96 im Katalog aufnehmen und danebenlegen (STATES='93 96' für einzelne)
+	xcrun simctl install '$(SIM)' '$(APP)'
+	SIM='$(SIM)' scripts/compare-system $(STATES)
 
 clean: ## Build-Daten dieses Projekts löschen
 	rm -rf '$(DERIVED)' '$(CORE_BUILD)'

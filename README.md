@@ -4,7 +4,7 @@ Gemeinnützige Gebetszeiten-App für iOS: werbefrei, ohne Tracking, ohne Konto. 
 
 Die Regeln für die Arbeit stehen in `CLAUDE.md`, der Bauplan in `docs/BUILD-PLAN.md`, offene Punkte in `docs/OPEN-QUESTIONS.md`.
 
-**Stand:** Phase 0 (Projektgerüst), Phase 1 (`PrayerCore`, die Logik ohne UI), Phase 2 (`DesignSystem`: Tokens und Bausteine), Phase 3 (Gebete-Tab: Zeiten), Phase 4 (Qibla), Phase 5 (Anleitung), Phase 6 (Verse und Nachholen), Phase 7 (Einstellungen, Onboarding, Adhan) und Phase 8 (Mitteilungen) sind fertig. Der Tab „Gebete“ zeigt die obere Leiste mit den Chips Zeiten, Qibla und Anleitung, die Zeiten-Seite – Stadt, Datum, Bogen mit laufendem Countdown, sechs Gebetskarten mit Glocke, Stadt-Sheet –, die Qibla-Seite mit Kompass, Statuszeile, Richtung und Entfernung zur Kaaba und die Anleitung mit der Auswahl der fünf Gebete, der Kopfkarte (Status, Zeitfenster, Fakten, Rakʿa-Folge), „Vorher“ und „Ablauf“ mit Haltungsfiguren und arabischen Formeln. Der Tab „Verse“ zeigt den Vers des Tages auf Arabisch mit Übersetzung (Platzhalter) und Quelle, Teilen und Kopieren und die letzten Tage; der Tab „Nachholen“ den Anteil nachgeholt, je Gebet einen Stepper, den Plan pro Tag mit voraussichtlichem Ende und den Rechner für einen verpassten Zeitraum. Der Einstellungskreis jedes Tabs öffnet die Einstellungen mit allen Unterseiten – Standort, Berechnung, Mitteilungen, Darstellung samt Sprache, Über –; Änderungen wirken sofort in der ganzen App. Beim ersten Start führt das Onboarding in drei Schritten zu Standort und Mitteilungen. „Adhan anhören“ öffnet den Player mit Wellenform und drei Stimmen (Platzhalter). Die App plant lokale Mitteilungen zu jedem Gebet nach seiner Glocke, dazu die Vorab-Erinnerung, im rollierenden Fenster der nächsten 64 und neu nach jeder Änderung. Widgets und Live-Aktivität kommen in Phase 9. Die Bausteine lassen sich als Previews in Xcode ansehen und in der App mit `-debugCatalog`.
+**Stand:** Phase 0 (Projektgerüst), Phase 1 (`PrayerCore`, die Logik ohne UI), Phase 2 (`DesignSystem`: Tokens und Bausteine), Phase 3 (Gebete-Tab: Zeiten), Phase 4 (Qibla), Phase 5 (Anleitung), Phase 6 (Verse und Nachholen), Phase 7 (Einstellungen, Onboarding, Adhan), Phase 8 (Mitteilungen) und Phase 9 (Widgets und Live-Aktivität) sind fertig. Der Tab „Gebete“ zeigt die obere Leiste mit den Chips Zeiten, Qibla und Anleitung, die Zeiten-Seite – Stadt, Datum, Bogen mit laufendem Countdown, sechs Gebetskarten mit Glocke, Stadt-Sheet –, die Qibla-Seite mit Kompass, Statuszeile, Richtung und Entfernung zur Kaaba und die Anleitung mit der Auswahl der fünf Gebete, der Kopfkarte (Status, Zeitfenster, Fakten, Rakʿa-Folge), „Vorher“ und „Ablauf“ mit Haltungsfiguren und arabischen Formeln. Der Tab „Verse“ zeigt den Vers des Tages auf Arabisch mit Übersetzung (Platzhalter) und Quelle, Teilen und Kopieren und die letzten Tage; der Tab „Nachholen“ den Anteil nachgeholt, je Gebet einen Stepper, den Plan pro Tag mit voraussichtlichem Ende und den Rechner für einen verpassten Zeitraum. Der Einstellungskreis jedes Tabs öffnet die Einstellungen mit allen Unterseiten – Standort, Berechnung, Mitteilungen, Darstellung samt Sprache, Über –; Änderungen wirken sofort in der ganzen App. Beim ersten Start führt das Onboarding in drei Schritten zu Standort und Mitteilungen. „Adhan anhören“ öffnet den Player mit Wellenform und drei Stimmen (Platzhalter). Die App plant lokale Mitteilungen zu jedem Gebet nach seiner Glocke, dazu die Vorab-Erinnerung, im rollierenden Fenster der nächsten 64 und neu nach jeder Änderung. Das Widget gibt es in fünf Größen – klein und mittel auf dem Home-Bildschirm, rund, als Rechteck und als Zeile auf dem Sperrbildschirm –, dazu die Live-Aktivität zu jedem Gebet auf dem Sperrbildschirm und in der Dynamic Island. Die Bausteine lassen sich als Previews in Xcode ansehen und in der App mit `-debugCatalog`.
 
 ## Voraussetzungen
 
@@ -44,6 +44,7 @@ open Gebetszeiten.xcodeproj
 | `make compare-verses` | Verse in den Zuständen von `iphone/50` (hell) und `51` (dunkel) aufnehmen und neben die Referenz legen |
 | `make compare-qada` | Nachholen im Zustand von `iphone/60` aufnehmen und neben die Referenz legen, dazu `61`, wenn aufgenommen |
 | `make compare-settings` | Einstellungen, Onboarding und Adhan-Sheet in den Zuständen von `iphone/01`–`03`, `70`, `73`–`81` und `86` aufnehmen und neben die Referenz legen, dazu `71` und `72`, wenn aufgenommen |
+| `make compare-system` | Widgets und Live-Aktivität im Katalog in den Zuständen von `system/90`, `91` und `93`–`96` aufnehmen und neben die Referenz legen |
 | `make strings` | String Catalog und `L10n.swift` aus dem Prototyp neu erzeugen |
 
 Simulator für Build, Tests und Abgleich ist das iPhone 18 Pro. Ein anderer lässt sich je Aufruf wählen, z. B. `make test SIM='iPhone 17'`.
@@ -90,7 +91,8 @@ Nur in DEBUG-Builds. Damit lässt sich jeder Referenz-Screenshot nachstellen:
 -debugQiblaHeading 137
 -debugQiblaAccuracy 40        Genauigkeit des Kompasses in Grad; über 25 erscheint die Kalibrierungskarte
 -debugNotifications           echte Mitteilungen auch mit Mock-Zeiten; fragt beim Start nach der Erlaubnis
--debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|all   Katalog der Bausteine statt der App, für den Abgleich
+-debugLiveActivity            Live-Aktivität zum nächsten Gebet sofort, auch außerhalb des Vorlaufs und mit Mock-Zeiten
+-debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|widgets|live|all   Katalog der Bausteine statt der App, für den Abgleich
 ```
 
 Die Sprache kommt über die Systemargumente `-AppleLanguages '(tr)' -AppleLocale tr_TR`. Welche Argumente zu welchem Screenshot gehören, steht in `docs/PROMPTS.md`.
@@ -102,6 +104,7 @@ Versteht die App ein Debug-Argument nicht, schreibt sie das beim Start in die Ko
 | `-debugDate`, `-debugTime` | Die Uhr der App beginnt dort und läuft weiter. |
 | `-debugFixtureTimes` | Mock-Zeiten statt echter Rechnung. Dazu: festes Netz, keine Ortssuche und flüchtige Einstellungen mit den Startwerten von `S` im Prototyp (Glocken, die fünf Städte, Erinnerung, Klang, Sprache wie das Gerät) – so sieht jede Aufnahme gleich aus, egal was vorher angetippt wurde. Das Nachholen zeigt die Zahlen des Prototyps (`iphone/60`), ebenfalls nur im Speicher. Die Methode „Automatisch“ ist die der Fixture-Stadt (Berlin → MWL). Mitteilungen gelten als noch nicht erfragt, und vorgemerkt wird keine. |
 | `-debugNotifications` | Erlaubnis und Mitteilungen über das System, auch mit `-debugFixtureTimes`: Die App merkt die Mitteilungen zu den Mock-Zeiten bei iOS vor, gemessen an der Debug-Uhr. Beim Start räumt sie zugestellte Mitteilungen ab und fragt nach der Erlaubnis, falls iOS noch nie gefragt hat. Damit lässt sich `system/92` nachstellen. |
+| `-debugLiveActivity` | Genau eine Live-Aktivität: die zum nächsten Gebet, ab dem Start der App – auch außerhalb des Vorlaufs, auch bei „Aus“ und mit `-debugFixtureTimes`. Damit lassen sich `system/93`–`96` mit denselben Zahlen nachstellen. Mit `-debugFixtureTimes`, aber ohne dieses Argument, plant die App keine Live-Aktivität und beendet, was noch läuft. Die Widgets bekommen Mock-Zeiten und Debug-Uhr in DEBUG immer über die App Group. |
 | `-debugCity`, `-debugHighLatitude` | feste Standortquelle mit dieser Stadt, Standort erlaubt |
 | `-debugLocationDenied` | Standort verweigert: Banner auf der Zeiten-Seite, „Aktueller Standort“ im Stadt-Sheet gesperrt |
 | `-debugOffline` | fest „kein Netz“: Hinweis unter dem Datum, im Stadt-Sheet nur gespeicherte Städte |
@@ -117,7 +120,7 @@ Versteht die App ein Debug-Argument nicht, schreibt sie das beim Start in die Ko
 
 ```
 App/                    App-Target: Einstieg, AccentColor, Info.plist, Entitlements, Sounds (Adhan-Ausschnitte)
-Widgets/                Widget-Extension für Widgets und Live-Aktivität (bis Phase 9 leer)
+Widgets/                Widget-Extension: das Widget in fünf Größen, seine Zeitleiste und die Live-Aktivität
 Packages/PrayerCore     reine Logik ohne UI, mit Adhan Swift als einziger Fremdabhängigkeit
 Packages/DesignSystem   Tokens und Bausteine (ab Phase 2) und der String Catalog
 Packages/Features       Bildschirme, AppEnvironment, Debug-Startargumente
@@ -129,6 +132,7 @@ scripts/compare-guide   nimmt die Anleitung in den Zuständen der Referenzbilder
 scripts/compare-verses  nimmt die Seite „Verse“ in den Zuständen der Referenzbilder auf
 scripts/compare-qada    nimmt die Seite „Nachholen“ in den Zuständen der Referenzbilder auf
 scripts/compare-settings nimmt Einstellungen, Onboarding und Adhan-Sheet in den Zuständen der Referenzbilder auf
+scripts/compare-system  nimmt Widgets und Live-Aktivität im Katalog in den Zuständen der Referenzbilder auf
 scripts/compare-shot    legt einen Ausschnitt einer Aufnahme neben die Referenz
 scripts/adhan-clip.swift schneidet die Adhan-Ausschnitte für Player und Mitteilungen (Quellen im Kopf der Datei)
 project.yml             Beschreibung des Xcode-Projekts für XcodeGen
@@ -154,6 +158,9 @@ docs/                   Bauplan, Prompts, offene Fragen
 | `Guide`, `GuideState`, `GuideSelection`, `Rakahs` | Daten der Anleitung, gezeigtes Gebet, manuelle Wahl und wann sie verfällt, Rakʿa-Folge; ohne Zeiten Fadschr ohne Status |
 | `QadaLedger` | Stand des Nachholens: offen, nachgeholt, Anteil, voraussichtliches Ende, ob etwas eingetragen ist; hält beim Lesen die Grenzen der Stepper ein |
 | `Verse` | Stelle und arabischer Text der Verse (`VERSES`, Liste erzeugt von `scripts/import-strings`), Vers des Tages im Kreis – am 10.11.2026 der erste –, die Tage der Liste „Letzte Tage“ |
+| `WidgetTimeline`, `WidgetSnapshot` | Zeitleiste der Widgets: ein Eintrag für jetzt und einer zu jedem Ereignis der nächsten 24 Stunden – nächstes, übernächstes und voriges Ereignis, die Liste des Tages, was vorbei ist; ohne Zeiten der Hinweis |
+| `LiveActivityPlanner`, `LiveActivityPlan`, `LiveActivityContent` | welche Live-Aktivitäten die App anmeldet: je Pflichtgebet eine, Vorlauf wie gewählt, `staleDate` zum Gebetsbeginn, Ende 15 Minuten danach, höchstens fünf; ihr Inhalt mit dem Bogen vor und ab Beginn und dem Balken mit Kerahat |
+| `LiveActivityLifecycle` | was mit Aktivitäten geschieht, die iOS schon kennt: behalten, auffrischen, ersetzen, beenden – ab Gebetsbeginn bis 15 Minuten danach auf dem Sperrbildschirm |
 
 So kommt eine Seite an die Tagesphase:
 
@@ -195,7 +202,11 @@ Die Referenzwerte für die Berechnung liegen unter `Packages/PrayerCore/Tests/Pr
 | `AppMark`, `AppGlyph`, `IconBadge`, `Tagline` | Zeichen der App (Platzhalter des Prototyps), Symbol auf getöntem Kreis, Zeichen über „Gemeinnützig · Werbefrei · Ohne Tracking“ |
 | `OnboardingPage`, `PageDots` | Seite des Onboardings mit Zeichen, Titel und Text; die Punkte darunter |
 | `AdhanPlayerCard`, `AdhanWaveform`, `PlayPauseButton`, `AdhanTime` | Karte des Adhan-Players: Wellenform mit 44 Balken (gespielter Teil in Akzent), Schieberegler, Zeiten wie `fmtDur()`, Play/Pause 72 pt |
-| `ComponentCatalog` (nur DEBUG) | alle Bausteine zum Ansehen: Previews hell und dunkel, in der App über `-debugCatalog` |
+| `WidgetState` | was die App für Widgets und Live-Aktivität in die App Group schreibt: Ort, Name, Berechnung, Kerahat, Sprache, in DEBUG Mock-Zeiten und Debug-Uhr |
+| `PrayerActivityAttributes` | die Live-Aktivität für ActivityKit; ihr Inhalt ist `LiveActivityContent` |
+| `SmallPrayerWidget`, `MediumPrayerWidget`, `CircularPrayerWidget`, `RectangularPrayerWidget`, `InlinePrayerWidget`, `PrayerWidgetContent`, `WidgetMetrics` | die fünf Widgets (`.w-*`, `.acc-*` im Prototyp) und was sie zeigen; `TimerText` setzt den laufenden Countdown in `wIn` ein |
+| `LiveActivityLockScreen`, `LiveActivityBackground`, `LiveActivityCompactLeading`/`Trailing`, `LiveActivityMinimal`, `LiveActivityExpanded…`, `LiveActivityMetrics` | die Live-Aktivität auf dem Sperrbildschirm (Bogen in Weiß auf Akzent) und in der Dynamic Island (`.la-*`, `.di-*`) |
+| `ComponentCatalog` (nur DEBUG) | alle Bausteine zum Ansehen: Previews hell und dunkel, in der App über `-debugCatalog`; Widgets und Live-Aktivität über `CatalogOutsideState` |
 
 So kommt der Bogen auf eine Seite:
 
@@ -352,6 +363,32 @@ xcrun simctl spawn booted log show --last 15m --predicate 'subsystem == "com.exa
 ```
 
 Töne sind im Simulator auf diesem Mac nicht zu hören (kein Ausgabegerät); sie bleiben am Gerät zu prüfen.
+
+## Widgets und Live-Aktivität
+
+Die Widget-Extension (`Widgets/`) bietet ein Widget in fünf Größen und die Live-Aktivität. Beide rechnen mit PrayerCore aus dem, was die App in die App Group schreibt (`WidgetState`): Ort, Name des Ortes, Berechnung samt Minutenkorrektur, Kerahat-Schalter und die Sprache der App, auch bei der eigenen Wahl. Die App schreibt den Stand beim Start, wenn sie nach vorn kommt, nach jeder Änderung und bei der Hintergrundaktualisierung; hat er sich geändert, laden die Widgets neu. Den Ort entscheidet die App; die Extension fragt nie nach dem Standort.
+
+| Größe | zeigt |
+|---|---|
+| klein (systemSmall) | Stadt, Symbol des nächsten Ereignisses, Name, Uhrzeit, „in 2:01:29“ |
+| mittel (systemMedium) | dazu „NÄCHSTES“ und die sechs Zeiten des Tages, das nächste Ereignis hervorgehoben, Vergangenes abgeblendet |
+| rund (accessoryCircular) | Ring vom vorigen bis zum nächsten Ereignis, innen Symbol und Uhrzeit |
+| Rechteck (accessoryRectangular) | Symbol und Name, „16:27 · in 2:01:30“, das Ereignis danach |
+| Zeile (accessoryInline) | Symbol und „Maghrib 16:27“ |
+
+Wie die Zeiten-Seite nennen die Widgets das nächste Ereignis, auch den Sonnenaufgang. Die Zeitleiste hat einen Eintrag für jetzt und einen zu jedem Ereignis der nächsten 24 Stunden; Countdown und Ring laufen dazwischen von selbst (`Text(timerInterval:)`, `ProgressView(timerInterval:)`). Ohne Ort zeigen die Widgets „Stadt wählen“, ohne Zeiten den Hinweis der Zeiten-Seite (`noTimes`).
+
+Die Live-Aktivität läuft je Pflichtgebet, ohne Sonnenaufgang, standardmäßig ab 30 Minuten vorher (Einstellungen › Live-Aktivität: Aus, 10, 15, 20, 30, 45, 60, 90 oder 120 Minuten). iOS startet sie selbst (`Activity.request(…, start:)`), auch wenn die App nicht läuft. Ab Gebetsbeginn ist sie `stale` und zeigt „Jetzt“ statt des Countdowns, der Bogen das Gebet als laufend. 15 Minuten nach Beginn endet sie. Ein geplantes Ende kennt ActivityKit nicht; die App beendet die Aktivität, sobald sie läuft – zum Gebetsbeginn, wenn sie vorn ist, sonst beim Start, wenn sie nach vorn kommt, oder bei der Hintergrundaktualisierung – und lässt sie bis 15 Minuten nach Beginn auf dem Sperrbildschirm stehen. Läuft die App nicht, bleibt „Jetzt“ stehen; iOS beendet eine Aktivität nach spätestens 8 Stunden. iOS nimmt höchstens fünf Aktivitäten je App an, geplante mitgezählt; die App plant die nächsten fünf.
+
+### Abgleich von `system/90`, `91` und `93`–`96`
+
+`make compare-system` nimmt den Katalog (`-debugCatalog widgets`, `live`) in den Maßen des Prototyps auf und legt jeden Baustein neben die Referenz. Im System selbst – Widgets auf Home- und Sperrbildschirm, Live-Aktivität auf dem Sperrbildschirm und in der Dynamic Island – stellt das UI-Hilfsprojekt die Referenzbilder nach; die Schritte und Argumente stehen in `docs/PROMPTS.md`, was abweicht in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 9“).
+
+Das Protokoll der App nennt in DEBUG, welche Aktivitäten es gibt und was die App anmeldet, auffrischt und beendet:
+
+```bash
+xcrun simctl spawn booted log show --last 15m --predicate 'subsystem == "com.example.gebetszeiten" AND (category == "liveActivity" OR category == "widgets")'
+```
 
 ## Texte
 

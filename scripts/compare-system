@@ -1,0 +1,76 @@
+#!/bin/bash
+# Abgleich von Widgets und Live-Aktivität mit design/screenshots/system/90, 91 und 93–96 (Phase 9).
+#
+# Startet die App mit `-debugCatalog widgets` bzw. `live` im Zustand jedes Referenzbilds, nimmt den
+# Bildschirm auf und legt die Bausteine mit scripts/compare-shot neben die Referenz. Der Katalog zeigt
+# die Ansichten der Extension in den Maßen des Prototyps; was iOS selbst zeichnet – Fläche, Ecken und
+# Schatten der Widgets, die Form der Dynamic Island, der Sperrbildschirm –, stellt er nur nach. Verglichen
+# werden Inhalt, Schrift und Farben.
+#
+# Die Aufnahmen im System selbst (Widgets auf Home- und Sperrbildschirm, Live-Aktivität, Insel) macht das
+# UI-Hilfsprojekt; die Schritte stehen in docs/PROMPTS.md.
+#
+# Die App muss gebaut und installiert sein:
+#
+#   make compare-system               alle Zustände
+#   scripts/compare-system 93 96      nur diese Referenzbilder
+#
+# Ergebnis in screenshots-out/phase-9/: catalog-<nr>.png (Aufnahmen) und compare-<nr>-<teil>.png (oben
+# Referenz, Mitte Aufnahme, unten Unterschied).
+#
+# Der Simulator lässt sich mit SIM='…' wählen, wie im Makefile.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SIM="${SIM:-iPhone 18 Pro}"
+BUNDLE_ID=com.example.gebetszeiten
+REF="$ROOT/design/screenshots/system"
+OUT="${OUT:-$ROOT/screenshots-out/phase-9}"
+ZOOM="${ZOOM:-3}"
+
+# Nummer | Datei des Referenzbilds | hell oder dunkel | Abschnitt des Katalogs | Uhrzeit
+STATES='
+90|90-lockscreen-widgets|light|widgets|14:25
+91|91-homescreen-widgets|light|widgets|14:25
+93|93-live-activity-lockscreen|light|live|14:25
+94|94-live-activity-island-compact|light|live|14:25
+95|95-live-activity-island-expanded|light|live|14:25
+96|96-live-activity-lockscreen-dark|dark|live|16:35
+'
+
+# Ausschnitte in pt (x,y,Breite,Höhe): Teil | im Referenzbild | in der Aufnahme. Der Katalog ist 390 pt
+# breit und sitzt 6 pt vom Rand; die Lage der Bausteine steht in CatalogOutsideMetrics.
+crops() {
+  case "$1" in
+    90) printf '%s\n' "accessory|67,226,256,72|73,500,256,72" "inline|150,83,162,26|121,448,162,26" ;;
+    91) printf '%s\n' "medium|26,66,338,154|32,66,338,154" "small|26,254,154,154|32,254,154,154" ;;
+    93 | 96) printf '%s\n' "lockscreen|12,577,366,155|18,400,366,155" ;;
+    94) printf '%s\n' "compact|89,11.5,212,37|95,120,212,37" ;;
+    95) printf '%s\n' "expanded|9,9,372,156|15,180,372,156" ;;
+  esac
+}
+
+mkdir -p "$OUT"
+xcrun simctl bootstatus "$SIM" -b >/dev/null
+# Der erste Start nach einer Pause dauert länger als die Wartezeit vor der Aufnahme.
+xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" -debugCatalog live >/dev/null
+sleep 3
+
+echo "$STATES" | while IFS='|' read -r number file appearance section time; do
+  [ -n "$number" ] || continue
+  if [ $# -gt 0 ] && ! printf '%s\n' "$@" | grep -qx "$number"; then continue; fi
+  xcrun simctl ui "$SIM" appearance "$appearance"
+  xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" \
+    -AppleLanguages '(de)' -AppleLocale de_DE \
+    -debugCatalog "$section" -debugFixtureTimes -debugDate 2026-11-10 -debugTime "$time" >/dev/null
+  sleep 2
+  xcrun simctl io "$SIM" screenshot "$OUT/catalog-$number.png" >/dev/null 2>&1
+  crops "$number" | while IFS='|' read -r part ref shot; do
+    printf '%s %s: ' "$number" "$part"
+    "$ROOT/scripts/compare-shot" --ref "$REF/$file.png" --ref-rect "$ref" \
+      --shot "$OUT/catalog-$number.png" --shot-rect "$shot" \
+      --out "$OUT/compare-$number-$part.png" --zoom "$ZOOM" | head -1
+  done
+done
+
+xcrun simctl ui "$SIM" appearance light
+echo "Ergebnis in $OUT"

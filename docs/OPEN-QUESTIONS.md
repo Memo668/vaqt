@@ -29,7 +29,7 @@ Die Ortssuche fragt bei Apple nach Städten und Verwaltungsgebieten. Mit „nur 
 
 ### 5. Antippen beim Abgleich
 
-`xcrun simctl` kann starten und aufnehmen, aber nicht tippen. Zustände, die einen Tipp brauchen – `iphone/85` (Stadt-Sheet), später Qibla, Anleitung, Nachholen und die Einstellungen –, lassen sich damit nicht automatisch nachstellen. In Phase 3 hat ein kleines Hilfsprojekt außerhalb des Repos getippt: ein UI-Test, der die installierte App startet, antippt, wischt, tippt und aufnimmt (`/Volumes/Extern/Builds/NamazVakti/ui-harness`). In Phase 5 hat es `iphone/41` (gescrollt) und `42` (Maghrib angetippt) nachgestellt; dazu kam der Befehl `scroll`: ziehen ohne Schwung. Jede Geste verliert dabei 10 pt Anlauf, die das Skript dazurechnet. In Phase 6 hat es `iphone/61` (ganz nach unten gescrollt) nachgestellt und die Aktionen von Verse und Nachholen durchgespielt. In Phase 7 hat es `iphone/71` und `72` (gescrollt) nachgestellt, das Onboarding durchlaufen, den Player abgespielt und die Sprachwahl geprüft; die übrigen Zustände der Phase erreichen die Debug-Argumente ohne Tippen. In Phase 8 hat es den Dialog der Erlaubnis beantwortet, das Gerät gesperrt und den Sperrbildschirm mit den Mitteilungen aufgenommen und ausgelesen (`system/92`, `s37-notifications-92.txt`). Dazu kamen die Befehle `lock`, `home`, `sbtapif`, `sbtree`, `sbdrag` sowie `open`, `opentap`, `openswitch` und `opendump` für die iOS-Einstellungen.
+`xcrun simctl` kann starten und aufnehmen, aber nicht tippen. Zustände, die einen Tipp brauchen – `iphone/85` (Stadt-Sheet), später Qibla, Anleitung, Nachholen und die Einstellungen –, lassen sich damit nicht automatisch nachstellen. In Phase 3 hat ein kleines Hilfsprojekt außerhalb des Repos getippt: ein UI-Test, der die installierte App startet, antippt, wischt, tippt und aufnimmt (`/Volumes/Extern/Builds/NamazVakti/ui-harness`). In Phase 5 hat es `iphone/41` (gescrollt) und `42` (Maghrib angetippt) nachgestellt; dazu kam der Befehl `scroll`: ziehen ohne Schwung. Jede Geste verliert dabei 10 pt Anlauf, die das Skript dazurechnet. In Phase 6 hat es `iphone/61` (ganz nach unten gescrollt) nachgestellt und die Aktionen von Verse und Nachholen durchgespielt. In Phase 7 hat es `iphone/71` und `72` (gescrollt) nachgestellt, das Onboarding durchlaufen, den Player abgespielt und die Sprachwahl geprüft; die übrigen Zustände der Phase erreichen die Debug-Argumente ohne Tippen. In Phase 8 hat es den Dialog der Erlaubnis beantwortet, das Gerät gesperrt und den Sperrbildschirm mit den Mitteilungen aufgenommen und ausgelesen (`system/92`, `s37-notifications-92.txt`). Dazu kamen die Befehle `lock`, `home`, `sbtapif`, `sbtree`, `sbdrag` sowie `open`, `opentap`, `openswitch` und `opendump` für die iOS-Einstellungen. In Phase 9 hat es die Widgets auf Home- und Sperrbildschirm gelegt, die Live-Aktivität auf dem Sperrbildschirm und in der Dynamic Island aufgenommen und die Insel lang gedrückt (`system/90`, `91`, `93`–`96`); dazu kamen `sbpress`, `sbtaplabel`, `sbtaplabelif`, `sbtapcell`, `sbtype`, `sbmove` und `sbdeletewidget`, das nur Widgets von „Gebetszeiten“ entfernt.
 
 - **Standard:** Das Hilfsprojekt bleibt außerhalb des Repos. Vorschlag: als `scripts/ui-harness` ins Repo übernehmen, damit `make` auch Zustände mit Tipp nachstellen kann.
 
@@ -48,6 +48,13 @@ Entschieden am 12.11.2026 mit der Abnahme von Phase 8 („Systemton“), siehe u
   - die Hintergrundaktualisierung – im Simulator gibt es sie nicht –, also ob das Fenster weiterrollt, wenn man die App tagelang nicht öffnet;
   - das Verhalten im Fokus und in der geplanten Übersicht;
   - die Gruppierung auf dem Sperrbildschirm über mehrere Tage.
+- **Widgets und Live-Aktivität am Gerät** (Phase 9): Im Simulator geprüft sind Inhalt, Schrift, Farben, die Zeitleiste über die Gebetszeiten hinweg und die Abläufe der Live-Aktivität. Am Gerät zu prüfen:
+  - der geplante Start (`Activity.request(…, start:)`) über Stunden und Tage, mit gesperrtem Gerät und beendeter App;
+  - wie schnell iOS ab Gebetsbeginn „Jetzt“ zeichnet – im Simulator vergingen bis zu zwei Minuten, bis dahin stand „0:00“;
+  - das Ende 15 Minuten nach Beginn, wenn die App nicht läuft (dann beendet erst die Hintergrundaktualisierung oder der nächste Start die Aktivität, spätestens iOS nach 8 Stunden);
+  - der Hinweis beim Start ohne Ton (`AlertConfiguration` mit stiller Tondatei), auf der Apple Watch und im StandBy;
+  - die Grenze von fünf Aktivitäten je App, die im Simulator galt;
+  - Widgets im getönten und klaren Erscheinungsbild des Home-Bildschirms (iOS 26) und mit großer Schrift.
 - **Türkische Endung in `notifReminderBody`** (Phase 8): „{p} vakti {time}’de başlıyor.“ passt nur zu manchen Uhrzeiten. Richtig wäre etwa „15:36’da“ oder „12:53’te“. Der Text steht so in `T`; Phase 11 prüft die Sprachen.
 - **JAKIM und Kemenag** rechnen mit reinen Winkeln 20°/18°, ohne Sicherheitsminuten (entschieden am 10.11.2026, siehe unten). Beide sind gegen offizielle Tabellen zu prüfen, bevor die App erscheint. Bisher gibt es nur den Vergleich mit dem Mock für Jakarta: Kemenag liegt bis zu 3 Minuten daneben (Dhuhr 11:36 statt 11:39). Die Voreinstellung `singapore` von Adhan Swift – dieselben Winkel, Dhuhr +1, aufgerundet – läge näher (11:38).
 
@@ -280,6 +287,70 @@ Phase 8 wurde am 12.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zwei
 | Ton zum Sonnenaufgang | „Systemton“ | Der Sonnenaufgang ist kein Gebet und hat keinen Adhan. Steht seine Glocke auf „Ton“, spielt die Mitteilung den Systemton, auch beim Klang „Kurzer Adhan“; beim Klang „Lautlos“ keinen. Der Prototyp sagt nur „„Ton“ spielt den gewählten Klang“ und hätte den Adhan gespielt. |
 
 Offen bleiben die Prüfung am Gerät (Ton, Hintergrundaktualisierung, Fokus) und die türkische Endung in `notifReminderBody`, beide oben unter „Vor der Veröffentlichung zu prüfen“.
+
+## Entschieden mit dem Plan für Phase 9 am 12.11.2026
+
+Der Plan für Phase 9 wurde am 12.11.2026 freigegeben („Freigeben, -debugLiveActivity“). Zu Spec-Frage 16 und zum Vorlauf hat der Nutzer eigene Antworten gegeben und auf Rückfrage präzisiert.
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Spec-Frage 16: je Gebet oder je Tagesphase, auch Sonnenaufgang? | „30 min vor jedem Gebet und 10 min danach“, auf Rückfrage zum Fußtext „Doch 15 Minuten“ | Je Pflichtgebet eine Live-Aktivität, ohne Sonnenaufgang. Sie beginnt standardmäßig 30 Minuten vorher, zeigt ab Beginn „Jetzt“ und endet 15 Minuten nach Beginn – so wie Spec § 4 und der Fußtext `liveActFooter`. Der Teil zu Systemen vor iOS 26 entfällt: Die App braucht iOS 26. |
+| Vorlauf | „30min standart nutzer kann aber auch beliebig einstellen“, dann „Längere Liste“ | Unter Einstellungen › Live-Aktivität stehen Aus, 10, 15, 20, 30, 45, 60, 90 und 120 Minuten vorher, Standard 30 (`NotificationPreferences.liveActivityChoices`). Der Prototyp und `iphone/79` zeigen nur Aus, 30 und 60 (`LIVE_OPTS`); die Texte sind dieselben (`off`, `minBefore`). |
+| Ohne Ort oder ohne Zeiten | „Vorhandene Hinweise“ | Ohne Ort zeigen die Widgets „Stadt wählen“ (`citySheetTitle`), ohne Zeiten – etwa in der Polarnacht – den Hinweis der Zeiten-Seite (`noTimes`). Ring und Zeile zeigen dann nur Zeichen bzw. Namen der App. Keine Live-Aktivität. Kein neuer Text. |
+| Ab Gebetsbeginn | „„Jetzt“ statt Countdown“ | Auf dem Sperrbildschirm steht „Maghrib · 16:27“ über „Jetzt“, in der Insel „Jetzt“ statt der Zeit, erweitert „Maghrib“ über „Jetzt“; der Bogen zeigt Maghrib als laufend. Es bleibt beim vorhandenen Text `now`. |
+| Abgleich von `system/93`–`96` | „Freigeben, -debugLiveActivity“ | Neues Debug-Argument: genau eine Live-Aktivität, die zum nächsten Gebet, ab dem Start der App – auch außerhalb des Vorlaufs und mit Mock-Zeiten. Mit `-debugFixtureTimes` ohne dieses Argument plant die App keine (und beendet, was läuft), damit Aufnahmen keine auslösen. Die Widgets bekommen Mock-Zeiten und Debug-Uhr über die App Group. Neue Abschnitte im Katalog: `-debugCatalog widgets`, `live`. |
+
+Mit dem Plan freigegeben sind auch seine Annahmen:
+
+- **Nächstes Ereignis:** Die Widgets nennen dasselbe wie die Zeiten-Seite, also auch den Sonnenaufgang (`ph.next` im Prototyp). Das mittlere Widget listet die Zeiten des Tages, zu dem das nächste Ereignis gehört: nach Ischa die von morgen, nichts abgeblendet.
+- **Ortspfeil** im mittleren Widget und in der Insel nur beim aktuellen Standort, wie auf der Zeiten-Seite.
+- **Was von selbst läuft:** Countdown (`Text(timerInterval:)`), Ring, Balken und Minimal-Ring (`ProgressView(timerInterval:)`). Der Bogen der Live-Aktivität steht still, weil iOS Live-Aktivitäten nicht von selbst neu zeichnet: Er zeigt den Stand beim Start der Aktivität, ab Beginn den zum Gebetsbeginn; läuft die App, frischt sie ihn auf.
+- **Hinweis beim Start:** iOS verlangt ihn für den geplanten Start. Er hat die Texte der Vorab-Erinnerung („Maghrib in 30 Minuten“ – „Maghrib beginnt um 16:27 Uhr.“) und keinen eigenen Ton.
+- **Ende:** ActivityKit kennt kein geplantes Ende. Die App beendet eine Aktivität, sobald sie nach Gebetsbeginn läuft, und lässt sie bis 15 Minuten danach auf dem Sperrbildschirm stehen.
+- **Name in der Widget-Galerie:** `appName`, ohne Beschreibung.
+
+## Annahmen in Phase 9
+
+Geprüft ist auf dem iPhone 18 Pro mit iOS 27.2. Die Bausteine in den Maßen des Prototyps zeigt der Katalog (`make compare-system`); die Aufnahmen im System – Widgets auf Home- und Sperrbildschirm, Live-Aktivität, Insel – liefen mit dem UI-Hilfsprojekt (`s41`–`s55`). Die Systemsprache des Simulators blieb Englisch.
+
+### Was mit den Referenzbildern übereinstimmt
+
+- **Inhalt:**
+  - `91`: „Berlin“ mit Pfeil, „NÄCHSTES“, „Maghrib“, „16:27“, „in 2:01:…“, die sechs Zeiten mit Maghrib hervorgehoben und Fadschr bis Asr abgeblendet; das kleine Widget mit Stadt und Symbol.
+  - `90`: Ring mit Symbol und 16:27, Rechteck „Maghrib / 16:27 · in 2:01:… / Ischa 18:17“, Zeile „Maghrib 16:27“.
+  - `93`, `94`, `95`: Live-Aktivität mit Zeichen, „Gebetszeiten“, „Berlin“, Bogen mit laufendem Asr und Kerahat-Marken, „Maghrib · 16:27“ und Countdown; Insel kompakt mit Symbol und Countdown, erweitert mit „16:27“, „Berlin“, „Maghrib in“, Countdown, Balken mit Kerahat-Linie und „Asr 14:00“ – „Maghrib 16:27“.
+  - `96` um 16:35: Maghrib läuft, die Aktivität zählt auf Ischa; Rechteck „Ischa / 18:17 · in 1:4… / Fadschr 05:16“. Der Hintergrund der Aktivität bleibt im dunklen System der helle Akzent.
+- **Maße:** Im Katalog decken sich mittleres und kleines Widget, Rechteck, Ring, Live-Aktivität und Insel auf 1–2 pt mit der Referenz; Schriftgrößen und Farben wie im CSS.
+- **Fälle:**
+  - Vorlauf 30: Maghrib um 15:57 geplant, Ischa, Fadschr, Dhuhr und Asr danach. Auf 60 umgestellt: Maghrib startet sofort, die übrigen sind ersetzt. „Aus“: alle beendet (Protokoll der App).
+  - Ab Gebetsbeginn: Insel kompakt „Jetzt“, erweitert „Maghrib / Jetzt“ mit vollem Balken, Sperrbildschirm „Maghrib · 16:27 / Jetzt“ mit Maghrib als laufendem Gebet.
+  - Ende: Ist die App zum Gebetsbeginn vorn, beendet sie die Aktivität; „Jetzt“ steht sofort auf dem Sperrbildschirm, und die Aktivität verschwindet 15 Minuten nach Beginn.
+  - Die Widgets springen zu jedem Ereignis weiter (um 16:27 auf Ischa) und laden nach einer Änderung von Minutenkorrektur, Sprache, Stadt und Methode neu.
+  - Mit Mock-Zeiten ohne `-debugLiveActivity` endet eine noch laufende Aktivität (`90`).
+
+### Was abweicht und bleibt
+
+Das zeichnet iOS selbst; verglichen werden Inhalt, Schrift und Farben.
+
+- **Sperrbildschirm:** iOS 27 setzt Ring und Rechteck unten auf den Sperrbildschirm statt unter die Uhr; Uhr, Datum („Thu 12“ im englischen System), „Carrier“ oben links und der Hintergrund des Simulators statt `.wall` kommen vom System.
+- **Größen:** Auf dem iPhone 18 Pro sind die Widgets größer als im Prototyp – klein 164 statt 154 pt, mittel 350 × 164 statt 338 × 154, das Rechteck 162 statt 170 pt breit –, die Live-Aktivität 374 statt 366 pt breit, die erweiterte Insel 374 × 160 statt 372 × 156. Der Inhalt hält die Abstände des Prototyps; was mehr ist, bleibt Rand.
+- **Balken der Insel:** iOS zeichnet die `ProgressView` mit Zeitspanne dünner (etwa 4 pt) und mit eigener Spur statt 6 pt mit Weiß zu 18 %; eine eigene Zeichnung liefe nicht von selbst weiter.
+- **„0:00“ vor „Jetzt“:** Läuft die App zum Gebetsbeginn nicht, setzt iOS die Aktivität auf `stale`, zeichnet sie aber erst etwas später neu; im Simulator stand bis zu gut zwei Minuten „0:00“. Am Gerät zu prüfen (oben unter „Vor der Veröffentlichung zu prüfen“).
+- **Fadschr-Symbol im Bogen:** das SF Symbol `sun.horizon` wie seit Phase 2, nicht die Zeichnung des Prototyps.
+- **Zeile über der Uhr:** Schrift, Größe und Abstand des Symbols bestimmt iOS; der Katalog ahmt die Zeile nur nach. Im Vergleich weicht beim Zubehör von `90` vor allem der Hintergrund ab (Verlauf statt `.wall`).
+- **Name in der Widget-Galerie:** In einem englischen System heißt das Widget „Prayer Times“ (`appName` in der Sprache des Geräts).
+- **Einstellungsseite `iphone/79`:** zeigt jetzt neun Zeilen (Aus bis 120 Minuten) statt drei (entschieden mit dem Plan).
+
+### Annahmen in der Umsetzung
+
+- **Stand in der App Group:** ein JSON-Wert `widgets.state` (`WidgetState`) mit der Sprache, in der die App ihre Texte zeigt, auch ohne eigene Wahl – die Extension läuft sonst in der Sprache des Geräts. Er wird nur geschrieben und die Widgets nur neu geladen, wenn er sich geändert hat.
+- **Zeitleiste:** ein Eintrag für jetzt und einer zu jedem Ereignis der nächsten 24 Stunden; die nächste Zeitleiste holt das Widget beim letzten Eintrag, ohne Zeiten um Mitternacht. Fehlen die Zeiten eines der drei Tage um einen Zeitpunkt, zeigt das Widget wie die Zeiten-Seite den Hinweis.
+- **Live-Aktivität:** Eine Aktivität beginnt frühestens, wenn die des vorigen Gebets endet (bei langem Vorlauf oder Maghrib und Ischa dicht beieinander), außer die beiden Gebete liegen weniger als 15 Minuten auseinander. Höchstens fünf kommende (Grenze von iOS); eine, deren Gebet begonnen hat, zählt nicht mit. Was schon läuft, bleibt bei einer Änderung des Vorlaufs stehen; ersetzt werden die geplanten. Läuft die App, frischt sie den Bogen einer laufenden Aktivität auf.
+- **Ende ohne laufende App:** Die App bittet um die nächste Hintergrundaktualisierung zum Ende der nächsten Aktivität, sonst in zwölf Stunden; wann iOS weckt, entscheidet iOS.
+- **Debug-Uhr:** Inhalte stehen in der Zeit der App, Countdown, Ring und Balken laufen in Gerätezeit (`clockOffset`). Mit Mock-Zeiten bekommen die Widgets Mock-Zeiten und Debug-Uhr über die App Group.
+- **Schrift:** Die Widgets haben feste Schriftgrößen wie im Prototyp; große Schrift prüft Phase 11.
+- **Stiller Hinweis:** `App/Sounds/live-activity-silence.caf` (0,5 s Stille, IMA4) als Ton des Hinweises beim geplanten Start; ohne eigene Datei spielte iOS seinen Ton.
+- **Fläche auf dem Sperrbildschirm:** Ring und Rechteck tragen `AccessoryWidgetBackground` im Inhalt, das Rechteck mit Radius 18 wie `.acc-rect`; als Hintergrund des Containers ließe iOS 27 sie weg.
 
 ## Annahmen in Phase 8
 

@@ -186,6 +186,14 @@ Entscheidungen, Annahmen und was abweicht stehen in `docs/OPEN-QUESTIONS.md` (�
 
 **Referenzen:** `system/90`, `91`, `93`–`96`.
 
+Gebaut am 12.11.2026 in vier Schritten.
+- **PrayerCore:** `WidgetTimeline` liefert die Einträge der Zeitleiste. `LiveActivityPlanner` und `LiveActivityLifecycle` planen je Gebet eine Aktivität mit Vorlauf, `staleDate` zum Gebetsbeginn und Ende 15 Minuten danach, höchstens fünf, und entscheiden, was mit bestehenden geschieht. Dazu Tests mit Mock-Zeiten, Zeitzonen, hohen Breiten, Mitternacht und Sommerzeit.
+- **DesignSystem:** der Stand in der App Group (`WidgetState`), `PrayerActivityAttributes`, die fünf Widgets und die Live-Aktivität; im Katalog `-debugCatalog widgets` und `live`.
+- **Features, App, Extension:** Die App schreibt den Stand, lädt die Widgets neu und plant die Live-Aktivitäten beim Start, im Vordergrund, nach jeder Änderung und bei der Hintergrundaktualisierung; dabei enden alte. Neu sind das Debug-Argument `-debugLiveActivity` und der Vorlauf Aus bis 120 Minuten.
+- **Abgleich:** `make compare-system` im Katalog, im System mit dem UI-Hilfsprojekt.
+
+Entscheidungen, Annahmen und was abweicht stehen in `docs/OPEN-QUESTIONS.md` („Entschieden mit dem Plan für Phase 9“, „Annahmen in Phase 9“).
+
 ## Phase 10 – iPhone Duo
 
 - Größenklassen: außen compact, innen regular.
