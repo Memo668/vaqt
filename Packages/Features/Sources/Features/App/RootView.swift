@@ -58,6 +58,7 @@ struct AppContent: View {
     @Bindable var navigation: AppNavigation
 
     @State private var onboarding: OnboardingModel
+    @State private var adhan: AdhanPlayerModel
     @State private var toast: ToastCenter
     @State private var today: TodayModel
     @State private var qibla: QiblaModel
@@ -95,6 +96,7 @@ struct AppContent: View {
         _onboarding = State(initialValue: OnboardingModel(
             navigation: navigation, today: today, notificationAuthorizer: environment.notificationAuthorizer
         ))
+        _adhan = State(initialValue: AdhanPlayerModel(settings: settings))
     }
 
     var body: some View {
@@ -113,6 +115,10 @@ struct AppContent: View {
         // Onboarding.
         .sheet(isPresented: $today.isCitySheetPresented) {
             CitySheet(today: today, search: today.citySearch)
+        }
+        // „Adhan anhören“ in den Einstellungen; Schließen hält die Wiedergabe an.
+        .sheet(isPresented: $navigation.isAdhanSheetPresented, onDismiss: adhan.stop) {
+            AdhanSheet(model: adhan)
         }
         .environment(settingsModel)
         .toasts(from: toast)
