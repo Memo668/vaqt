@@ -6965,6 +6965,126 @@
         }
       }
     },
+    "surah_2" : {
+      "comment" : "Name der Sure 2 aus `SURAH` im Prototyp.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al-Baqara"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al-Baqarah"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al-Baqara"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bakara"
+          }
+        }
+      }
+    },
+    "surah_13" : {
+      "comment" : "Name der Sure 13 aus `SURAH` im Prototyp.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ar-Raʿd"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ar-Ra‘d"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ar-Ra‘d"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ra‘d"
+          }
+        }
+      }
+    },
+    "surah_20" : {
+      "comment" : "Name der Sure 20 aus `SURAH` im Prototyp.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tā-Hā"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ta-Ha"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ta-Ha"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tâhâ"
+          }
+        }
+      }
+    },
+    "surah_94" : {
+      "comment" : "Name der Sure 94 aus `SURAH` im Prototyp.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asch-Scharh"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ash-Sharh"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ash-Sharh"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İnşirâh"
+          }
+        }
+      }
+    },
     "tabQibla" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -7251,6 +7371,186 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mevcut konumu kullan"
+          }
+        }
+      }
+    },
+    "verse_2_45" : {
+      "comment" : "TODO(placeholder): Übersetzung von 2:45 aus `VERSES` im Prototyp – ein Platzhalter, die lizenzierte Übersetzung fehlt noch (Spec § 6.12).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sucht Hilfe in der Geduld und im Gebet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seek help through patience and prayer."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscad ayuda en la paciencia y en la oración."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sabır ve namaz ile yardım dileyin."
+          }
+        }
+      }
+    },
+    "verse_2_152" : {
+      "comment" : "TODO(placeholder): Übersetzung von 2:152 aus `VERSES` im Prototyp – ein Platzhalter, die lizenzierte Übersetzung fehlt noch (Spec § 6.12).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "So gedenkt Meiner, dann gedenke Ich euer."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "So remember Me; I will remember you."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recordadme y Yo os recordaré."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siz beni anın ki ben de sizi anayım."
+          }
+        }
+      }
+    },
+    "verse_2_286" : {
+      "comment" : "TODO(placeholder): Übersetzung von 2:286 aus `VERSES` im Prototyp – ein Platzhalter, die lizenzierte Übersetzung fehlt noch (Spec § 6.12).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allah erlegt keiner Seele mehr auf, als sie zu tragen vermag."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allah does not burden a soul beyond what it can bear."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allah no impone a ningún alma más de lo que puede soportar."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allah hiç kimseye gücünün yeteceğinden fazlasını yüklemez."
+          }
+        }
+      }
+    },
+    "verse_13_28" : {
+      "comment" : "TODO(placeholder): Übersetzung von 13:28 aus `VERSES` im Prototyp – ein Platzhalter, die lizenzierte Übersetzung fehlt noch (Spec § 6.12).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wahrlich, im Gedenken Allahs finden die Herzen Ruhe."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Truly, in the remembrance of Allah do hearts find rest."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ciertamente, en el recuerdo de Allah encuentran sosiego los corazones."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilesiniz ki kalpler ancak Allah’ı anmakla huzur bulur."
+          }
+        }
+      }
+    },
+    "verse_20_14" : {
+      "comment" : "TODO(placeholder): Übersetzung von 20:14 aus `VERSES` im Prototyp – ein Platzhalter, die lizenzierte Übersetzung fehlt noch (Spec § 6.12).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Und verrichte das Gebet zu Meinem Gedenken."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "And establish prayer for My remembrance."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Y establece la oración para recordarme."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beni anmak için namaz kıl."
+          }
+        }
+      }
+    },
+    "verse_94_5" : {
+      "comment" : "TODO(placeholder): Übersetzung von 94:5 aus `VERSES` im Prototyp – ein Platzhalter, die lizenzierte Übersetzung fehlt noch (Spec § 6.12).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wahrlich, mit der Erschwernis kommt Erleichterung."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indeed, with hardship comes ease."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ciertamente, con la dificultad llega la facilidad."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şüphesiz zorlukla beraber bir kolaylık vardır."
           }
         }
       }

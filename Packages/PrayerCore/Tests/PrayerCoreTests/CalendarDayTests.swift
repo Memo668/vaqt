@@ -92,6 +92,21 @@ struct CalendarDayTests {
         #expect(try #require(CalendarDay("2027-03-27")).adding(days: 2) == CalendarDay("2027-03-29"))
     }
 
+    @Test("zählt die Tage zwischen zwei Tagen, auch rückwärts", arguments: [
+        ("2026-11-10", "2026-11-10", 0),
+        ("2026-11-11", "2026-11-10", 1),
+        ("2026-11-09", "2026-11-10", -1),
+        ("2027-01-01", "2026-12-31", 1),
+        ("2028-03-01", "2028-02-28", 2),
+        ("2026-10-26", "2026-10-24", 2),
+        ("2027-03-29", "2027-03-27", 2),
+        ("2028-04-12", "2026-11-10", 519),
+    ])
+    func countsDays(day: String, since other: String, expected: Int) {
+        #expect(calendarDay(day).days(since: calendarDay(other)) == expected)
+        #expect(calendarDay(other).adding(days: expected) == calendarDay(day))
+    }
+
     @Test("ordnet nach Jahr, Monat, Tag")
     func compares() throws {
         let earlier = try #require(CalendarDay("2026-11-10"))

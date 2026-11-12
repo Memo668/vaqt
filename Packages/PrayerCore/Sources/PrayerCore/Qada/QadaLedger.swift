@@ -107,6 +107,12 @@ public struct QadaLedger: Hashable, Codable, Sendable {
         max(0, totalCount - openCount)
     }
 
+    /// Ob etwas eingetragen ist: Mindestens ein Gebet, das zählt, ist nachzuholen – offen oder schon
+    /// nachgeholt. Ohne Eintrag zeigt die Seite weder Prozentkarte noch Plan (entschieden am 12.11.2026).
+    public var hasEntries: Bool {
+        totalCount > 0
+    }
+
     /// Anteil der nachgeholten Gebete von 0 bis 1; ohne Gebete 0.
     public var share: Double {
         totalCount == 0 ? 0 : Double(doneCount) / Double(totalCount)

@@ -89,6 +89,38 @@ struct QadaLedgerTests {
         #expect(ledger.daysToFinish == 0)
         #expect(ledger.finishDay(from: today) == nil)
         #expect(QadaPrayer.allCases.allSatisfy { ledger.openCount(of: $0) == 0 && ledger.totalCount(of: $0) == 0 })
+        #expect(!ledger.hasEntries)
+    }
+
+    @Test("eingetragen ist etwas, sobald ein Gebet, das zählt, nachzuholen ist – auch wenn alles nachgeholt ist")
+    func entries() {
+        var ledger = QadaLedger()
+        ledger.addMissed(.isha)
+        #expect(ledger.hasEntries)
+        ledger.markMadeUp(.isha)
+        #expect(ledger.openCount == 0)
+        #expect(ledger.hasEntries)
+    }
+
+    @Test("ein Zeitraum im Rechner allein ist noch kein Eintrag; erst „Als offen übernehmen“")
+    func periodIsNoEntry() {
+        var ledger = QadaLedger()
+        ledger.step(.months, by: 1)
+        #expect(!ledger.hasEntries)
+        ledger.applyPeriod()
+        #expect(ledger.hasEntries)
+        ledger.step(.months, by: -1)
+        ledger.applyPeriod()
+        #expect(!ledger.hasEntries)
+    }
+
+    @Test("Witr zählt nur mit, wenn es eingeschlossen ist")
+    func witrEntries() {
+        var ledger = QadaLedger()
+        ledger.addMissed(.witr)
+        #expect(!ledger.hasEntries)
+        ledger.includesWitr = true
+        #expect(ledger.hasEntries)
     }
 
     // MARK: - Anteil

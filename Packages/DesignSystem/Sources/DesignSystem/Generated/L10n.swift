@@ -518,6 +518,12 @@ public enum L10n {
     /// „Min.“
     public static var mShort: String { text("mShort") }
 
+    /// Name einer Sure aus `SURAH` im Prototyp, z. B. „Al-Baqara“ für 2.
+    public static func surahName(_ surah: Int) -> String { text("surah_\(surah)") }
+    /// Übersetzung eines Verses aus `VERSES` im Prototyp, z. B. „Sucht Hilfe in der Geduld und im Gebet.“ für 2:45.
+    /// TODO(placeholder): ein Platzhalter – die lizenzierte Übersetzung fehlt noch (Spec § 6.12).
+    public static func verseTranslation(surah: Int, ayah: Int) -> String { text("verse_\(surah)_\(ayah)") }
+
     /// Alle Schlüssel des String Catalogs, in der Reihenfolge des Prototyps.
     public static let allKeys: [String] = [
         "appName",
@@ -782,5 +788,15 @@ public enum L10n {
         "notifAgo",
         "hShort",
         "mShort",
+        "surah_2",
+        "surah_13",
+        "surah_20",
+        "surah_94",
+        "verse_2_45",
+        "verse_94_5",
+        "verse_13_28",
+        "verse_2_152",
+        "verse_20_14",
+        "verse_2_286",
     ]
 }

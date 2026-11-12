@@ -1,11 +1,16 @@
 // scripts/import-strings.swift
 //
-// Liest das Objekt `T` (alle App-Texte, DE/TR/EN/ES) aus
+// Liest das Objekt `T` (alle App-Texte, DE/TR/EN/ES) und die Verse (`VERSES`, `SURAH`) aus
 // design/prayer-times-prototype.html und erzeugt daraus
 //
 //   • Packages/DesignSystem/Sources/DesignSystem/Resources/Localizable.xcstrings
 //   • Packages/DesignSystem/Sources/DesignSystem/Generated/L10n.swift
 //   • App/InfoPlist.xcstrings – die Texte der Info.plist, die aus `T` kommen (siehe `infoPlistTexts`)
+//   • Packages/PrayerCore/Sources/PrayerCore/Verses/VerseList.swift – Stelle und arabischer Text der Verse
+//
+// Übersetzungen der Verse und Namen der Suren hängen von der Sprache ab und kommen deshalb in den
+// String Catalog (`verse_<Sure>_<Vers>`, `surah_<Sure>`); die Übersetzungen sind Platzhalter und tragen
+// dort den Kommentar `TODO(placeholder)` (entschieden am 12.11.2026, docs/OPEN-QUESTIONS.md).
 //
 // Aufruf über den Wrapper:
 //   scripts/import-strings            Dateien neu schreiben
@@ -63,6 +68,7 @@ let prototypeURL = rootURL.appendingPathComponent("design/prayer-times-prototype
 let catalogURL = rootURL.appendingPathComponent("Packages/DesignSystem/Sources/DesignSystem/Resources/Localizable.xcstrings")
 let swiftURL = rootURL.appendingPathComponent("Packages/DesignSystem/Sources/DesignSystem/Generated/L10n.swift")
 let infoPlistURL = rootURL.appendingPathComponent("App/InfoPlist.xcstrings")
+let verseListURL = rootURL.appendingPathComponent("Packages/PrayerCore/Sources/PrayerCore/Verses/VerseList.swift")
 let projectURL = rootURL.appendingPathComponent("project.yml")
 
 /// Texte der Info.plist, die aus `T` kommen: Schlüssel der Info.plist → Schlüssel in `T`.
@@ -74,11 +80,11 @@ let infoPlistTexts: [(plistKey: String, textKey: String)] = [
 
 // MARK: - `T` aus dem Prototyp schneiden
 
-/// Liefert das Objektliteral hinter `const <name> = `, von `{` bis zur passenden `}`.
+/// Liefert das Literal hinter `const <name> = `, von `{` bzw. `[` bis zur passenden Klammer.
 /// Zeichenketten und Kommentare werden übersprungen, damit Klammern im Text nicht zählen.
-func objectLiteral(named name: String, in source: String) -> String {
-    guard let declaration = source.range(of: "const \(name) = {") else {
-        fail("`const \(name) = {` nicht im Prototyp gefunden")
+func objectLiteral(named name: String, in source: String, opening: Character = "{") -> String {
+    guard let declaration = source.range(of: "const \(name) = \(opening)") else {
+        fail("`const \(name) = \(opening)` nicht im Prototyp gefunden")
     }
     let scalars = Array(source[source.index(before: declaration.upperBound)...].unicodeScalars)
     var depth = 0
@@ -99,9 +105,9 @@ func objectLiteral(named name: String, in source: String) -> String {
             switch scalar {
             case "'", "\"", "`":
                 quote = scalar
-            case "{":
+            case "{", "[":
                 depth += 1
-            case "}":
+            case "}", "]":
                 depth -= 1
                 if depth == 0 {
                     var view = String.UnicodeScalarView()
@@ -208,6 +214,7 @@ struct CatalogEntry {
     let names: [String]                 // Argumente in fester Reihenfolge
     let texts: [String: String]         // Sprache → fertiger Text
     let source: [String: String]        // Sprache → Text wie im Prototyp
+    let note: String?                   // Kommentar im Katalog, z. B. TODO(placeholder) bei den Versen
 }
 
 enum Accessor {
@@ -220,7 +227,7 @@ var accessors: [Accessor] = []
 var missing: [String] = []
 var notable: [String] = []
 
-func makeEntry(key: String, perLanguage: [String: String]) -> CatalogEntry {
+func makeEntry(key: String, perLanguage: [String: String], note: String? = nil) -> CatalogEntry {
     var names: [String] = []
     var repeated = false
     for language in languages {
@@ -240,7 +247,7 @@ func makeEntry(key: String, perLanguage: [String: String]) -> CatalogEntry {
     for (language, text) in perLanguage {
         texts[language] = names.isEmpty ? text : formatString(text, names: names, positional: positional)
     }
-    return CatalogEntry(key: key, names: names, texts: texts, source: perLanguage)
+    return CatalogEntry(key: key, names: names, texts: texts, source: perLanguage, note: note)
 }
 
 for key in order {
@@ -271,6 +278,76 @@ for key in order {
     }
 }
 
+// MARK: - Verse (`SURAH`, `VERSES`)
+
+/// Ein Vers aus `VERSES`: Stelle, arabischer Text und die Platzhalter-Übersetzungen je Sprache.
+struct PrototypeVerse {
+    let surah: Int
+    let ayah: Int
+    let arabic: String
+    let translations: [String: String]
+}
+
+let verseScript = """
+(function () {
+  var SURAH = \(objectLiteral(named: "SURAH", in: html));
+  var VERSES = \(objectLiteral(named: "VERSES", in: html, opening: "["));
+  return JSON.stringify({
+    surahs: Object.keys(SURAH).map(function (n) { return [n, SURAH[n]]; }),
+    verses: VERSES
+  });
+})()
+"""
+guard let verseJSON = context.evaluateScript(verseScript)?.toString(), scriptError == nil,
+      let verseData = try? JSONSerialization.jsonObject(with: Data(verseJSON.utf8)) as? [String: Any],
+      let surahPairs = verseData["surahs"] as? [[Any]],
+      let verseObjects = verseData["verses"] as? [[String: Any]]
+else {
+    fail("`SURAH` und `VERSES` ließen sich nicht auswerten: \(scriptError ?? "unbekannter Fehler")")
+}
+
+var surahNames: [(number: Int, names: [String: String])] = []
+for pair in surahPairs {
+    guard pair.count == 2, let key = pair[0] as? String, let number = Int(key), let names = pair[1] as? [String: String] else {
+        fail("Unerwartete Struktur in `SURAH`")
+    }
+    surahNames.append((number, names))
+}
+surahNames.sort { $0.number < $1.number }
+
+var verses: [PrototypeVerse] = []
+for (index, object) in verseObjects.enumerated() {
+    guard let surah = object["s"] as? Int,
+          let ayahText = object["a"] as? String, let ayah = Int(ayahText),
+          let arabic = object["ar"] as? String,
+          let translations = object["tr"] as? [String: String]
+    else {
+        fail("`VERSES[\(index)]`: erwartet werden s (Zahl), a (Zahl als Text), ar und tr")
+    }
+    guard surahNames.contains(where: { $0.number == surah }) else {
+        fail("`VERSES[\(index)]`: Sure \(surah) fehlt in `SURAH`")
+    }
+    guard !verses.contains(where: { $0.surah == surah && $0.ayah == ayah }) else {
+        fail("`VERSES[\(index)]`: \(surah):\(ayah) steht doppelt in der Liste")
+    }
+    verses.append(PrototypeVerse(surah: surah, ayah: ayah, arabic: arabic, translations: translations))
+}
+guard !verses.isEmpty else { fail("`VERSES` ist leer") }
+
+for surah in surahNames {
+    entries.append(makeEntry(
+        key: "surah_\(surah.number)", perLanguage: surah.names,
+        note: "Name der Sure \(surah.number) aus `SURAH` im Prototyp."
+    ))
+}
+for verse in verses {
+    entries.append(makeEntry(
+        key: "verse_\(verse.surah)_\(verse.ayah)", perLanguage: verse.translations,
+        note: "TODO(placeholder): Übersetzung von \(verse.surah):\(verse.ayah) aus `VERSES` im Prototyp – ein Platzhalter, "
+            + "die lizenzierte Übersetzung fehlt noch (Spec § 6.12)."
+    ))
+}
+
 // MARK: - String Catalog
 
 var strings: [String: Any] = [:]
@@ -280,9 +357,16 @@ for entry in entries {
         localizations[language] = ["stringUnit": ["state": "translated", "value": text]]
     }
     var item: [String: Any] = ["extractionState": "manual", "localizations": localizations]
+    var notes: [String] = []
     if !entry.names.isEmpty {
         let list = entry.names.enumerated().map { "\($0.offset + 1) = \($0.element)" }.joined(separator: ", ")
-        item["comment"] = "Argumente: \(list)"
+        notes.append("Argumente: \(list)")
+    }
+    if let note = entry.note {
+        notes.append(note)
+    }
+    if !notes.isEmpty {
+        item["comment"] = notes.joined(separator: " ")
     }
     strings[entry.key] = item
 }
@@ -389,12 +473,46 @@ for accessor in accessors {
     }
 }
 
+// Verse: Die Schlüssel folgen aus der Stelle, deshalb je ein Zugriff für alle Suren und alle Verse.
+let firstVerse = verses[0]
+let firstSurahName = surahNames.first { $0.number == firstVerse.surah }?.names["de"] ?? ""
+swift += """
+
+    /// Name einer Sure aus `SURAH` im Prototyp, z. B. „\(comment(firstSurahName))“ für \(firstVerse.surah).
+    public static func surahName(_ surah: Int) -> String { text("surah_\\(surah)") }
+    /// Übersetzung eines Verses aus `VERSES` im Prototyp, z. B. „\(comment(firstVerse.translations["de"] ?? ""))“ für \(firstVerse.surah):\(firstVerse.ayah).
+    /// TODO(placeholder): ein Platzhalter – die lizenzierte Übersetzung fehlt noch (Spec § 6.12).
+    public static func verseTranslation(surah: Int, ayah: Int) -> String { text("verse_\\(surah)_\\(ayah)") }
+
+"""
+
 swift += "\n    /// Alle Schlüssel des String Catalogs, in der Reihenfolge des Prototyps.\n"
 swift += "    public static let allKeys: [String] = [\n"
 for entry in entries {
     swift += "        \(literalString(entry.key)),\n"
 }
 swift += "    ]\n}\n"
+
+// MARK: - VerseList.swift
+
+var verseList = """
+// Erzeugt von scripts/import-strings aus design/prayer-times-prototype.html (`VERSES`).
+// Nicht von Hand ändern – Verse im Prototyp ändern und das Skript neu ausführen.
+
+extension Verse {
+
+    /// Die Verse der Seite „Verse“ in der Reihenfolge des Prototyps. Übersetzungen und Namen der Suren
+    /// stehen im String Catalog (`verse_<Sure>_<Vers>`, `surah_<Sure>`).
+    ///
+    /// TODO(placeholder): Welche Verse die App zeigt und woher der arabische Text kommt (z. B. Tanzil,
+    /// Uthmani-Schrift, mit Quellenangabe), ist noch offen – Spec § 6.12.
+    public static let all: [Verse] = [
+
+"""
+for verse in verses {
+    verseList += "        Verse(surah: \(verse.surah), ayah: \(verse.ayah), arabic: \(literalString(verse.arabic))),\n"
+}
+verseList += "    ]\n}\n"
 
 // MARK: - Schreiben oder prüfen
 
@@ -407,17 +525,19 @@ if checkOnly {
     if current(catalogURL) != catalogText { stale.append(catalogURL.lastPathComponent) }
     if current(swiftURL) != swift { stale.append(swiftURL.lastPathComponent) }
     if current(infoPlistURL) != infoPlistText { stale.append(infoPlistURL.lastPathComponent) }
+    if current(verseListURL) != verseList { stale.append(verseListURL.lastPathComponent) }
     guard stale.isEmpty else {
         fail("Nicht aktuell: \(stale.joined(separator: ", ")). Bitte `scripts/import-strings` ausführen.")
     }
 } else {
     do {
-        for url in [catalogURL, swiftURL, infoPlistURL] {
+        for url in [catalogURL, swiftURL, infoPlistURL, verseListURL] {
             try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         }
         try catalogText.write(to: catalogURL, atomically: true, encoding: .utf8)
         try swift.write(to: swiftURL, atomically: true, encoding: .utf8)
         try infoPlistText.write(to: infoPlistURL, atomically: true, encoding: .utf8)
+        try verseList.write(to: verseListURL, atomically: true, encoding: .utf8)
     } catch {
         fail("Schreiben fehlgeschlagen: \(error.localizedDescription)")
     }
@@ -439,6 +559,7 @@ print(checkOnly ? "String Catalog ist aktuell." : "String Catalog geschrieben.")
 print("  Schlüssel im Prototyp: \(order.count)  →  Einträge im Katalog: \(entries.count)  (\(perLanguage))")
 print("  Texte mit Argumenten: \(withArguments.count)  (Namen: \(allNames))")
 print("  Info.plist: \(infoPlistTexts.map { pair in "\(pair.plistKey) ← \(pair.textKey)" }.joined(separator: ", "))")
+print("  Verse: \(verses.count) mit \(surahNames.count) Suren  →  \(verseListURL.lastPathComponent)")
 if !missing.isEmpty {
     print("  FEHLEND (\(missing.count)): \(missing.joined(separator: ", "))")
 }

@@ -57,6 +57,13 @@ public struct CalendarDay: Hashable, Comparable, Sendable, CustomStringConvertib
         return CalendarDay(start.addingTimeInterval(TimeInterval(days) * 86_400), in: .gmt)
     }
 
+    /// Wie viele Tage dieser Tag nach `other` liegt; liegt er davor, ist die Zahl negativ.
+    public func days(since other: CalendarDay) -> Int {
+        // In GMT ist jeder Tag genau 86 400 Sekunden lang.
+        let seconds = date(at: .midnight, in: .gmt).timeIntervalSince(other.date(at: .midnight, in: .gmt))
+        return Int((seconds / 86_400).rounded())
+    }
+
     public var description: String {
         String(year) + "-" + (month < 10 ? "0" : "") + String(month) + "-" + (day < 10 ? "0" : "") + String(day)
     }

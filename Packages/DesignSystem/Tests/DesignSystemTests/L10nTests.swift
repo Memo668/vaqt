@@ -1,4 +1,5 @@
 import Foundation
+import PrayerCore
 import Testing
 @testable import DesignSystem
 
@@ -40,12 +41,43 @@ struct L10nTests {
         #expect(["de", "tr", "en", "es"].contains(L10n.locale.language.languageCode?.identifier ?? ""))
     }
 
-    @Test("der Katalog hat 262 Schlüssel und keinen doppelt")
+    @Test("der Katalog hat 272 Schlüssel und keinen doppelt")
     func keyCount() {
         // 260 aus der Design-Übergabe v0.7, dazu `noTimes` (Phase 3) und `noCompass` (Phase 4,
-        // docs/OPEN-QUESTIONS.md).
-        #expect(L10n.allKeys.count == 262)
+        // docs/OPEN-QUESTIONS.md), dazu aus `SURAH` und `VERSES` vier Suren und sechs Verse (Phase 6).
+        #expect(L10n.allKeys.count == 272)
         #expect(Set(L10n.allKeys).count == L10n.allKeys.count)
+    }
+
+    @Test("jeder Vers hat seine Übersetzung und den Namen seiner Sure in jeder Sprache", arguments: languages)
+    func verses(language: String) throws {
+        let bundle = try bundle(for: language)
+        let marker = "\u{1}fehlt"
+        for verse in Verse.all {
+            for key in ["verse_\(verse.surah)_\(verse.ayah)", "surah_\(verse.surah)"] {
+                #expect(L10n.allKeys.contains(key), "\(key) fehlt in L10n.allKeys")
+                #expect(bundle.localizedString(forKey: key, value: marker, table: nil) != marker, "\(language): \(key)")
+            }
+        }
+    }
+
+    @Test("Übersetzung und Sure wie im Prototyp", arguments: [
+        ("de", "Sucht Hilfe in der Geduld und im Gebet.", "Al-Baqara", "Asch-Scharh"),
+        ("tr", "Sabır ve namaz ile yardım dileyin.", "Bakara", "İnşirâh"),
+        ("en", "Seek help through patience and prayer.", "Al-Baqarah", "Ash-Sharh"),
+        ("es", "Buscad ayuda en la paciencia y en la oración.", "Al-Baqara", "Ash-Sharh"),
+    ])
+    func verseTexts(language: String, translation: String, surah2: String, surah94: String) throws {
+        #expect(try text("verse_2_45", in: language) == translation)
+        #expect(try text("surah_2", in: language) == surah2)
+        #expect(try text("surah_94", in: language) == surah94)
+    }
+
+    @Test("L10n liest Verse und Suren über ihre Stelle")
+    func verseAccessors() {
+        #expect(L10n.verseTranslation(surah: 2, ayah: 45) != "verse_2_45")
+        #expect(L10n.surahName(94) != "surah_94")
+        #expect(!L10n.verseTranslation(surah: 2, ayah: 45).isEmpty)
     }
 
     @Test("jeder Schlüssel hat in jeder Sprache einen Text", arguments: languages)

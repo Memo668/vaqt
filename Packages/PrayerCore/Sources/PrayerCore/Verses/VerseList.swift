@@ -1,0 +1,19 @@
+// Erzeugt von scripts/import-strings aus design/prayer-times-prototype.html (`VERSES`).
+// Nicht von Hand ändern – Verse im Prototyp ändern und das Skript neu ausführen.
+
+extension Verse {
+
+    /// Die Verse der Seite „Verse“ in der Reihenfolge des Prototyps. Übersetzungen und Namen der Suren
+    /// stehen im String Catalog (`verse_<Sure>_<Vers>`, `surah_<Sure>`).
+    ///
+    /// TODO(placeholder): Welche Verse die App zeigt und woher der arabische Text kommt (z. B. Tanzil,
+    /// Uthmani-Schrift, mit Quellenangabe), ist noch offen – Spec § 6.12.
+    public static let all: [Verse] = [
+        Verse(surah: 2, ayah: 45, arabic: "وَٱسْتَعِينُوا۟ بِٱلصَّبْرِ وَٱلصَّلَوٰةِ"),
+        Verse(surah: 94, ayah: 5, arabic: "فَإِنَّ مَعَ ٱلْعُسْرِ يُسْرًا"),
+        Verse(surah: 13, ayah: 28, arabic: "أَلَا بِذِكْرِ ٱللَّهِ تَطْمَئِنُّ ٱلْقُلُوبُ"),
+        Verse(surah: 2, ayah: 152, arabic: "فَٱذْكُرُونِىٓ أَذْكُرْكُمْ"),
+        Verse(surah: 20, ayah: 14, arabic: "وَأَقِمِ ٱلصَّلَوٰةَ لِذِكْرِىٓ"),
+        Verse(surah: 2, ayah: 286, arabic: "لَا يُكَلِّفُ ٱللَّهُ نَفْسًا إِلَّا وُسْعَهَا"),
+    ]
+}
