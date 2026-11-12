@@ -33,7 +33,9 @@ struct CatalogRootTests {
         let options = LaunchOptions(arguments: ["-debugCatalog", "bogen"])
         #expect(options.catalog == nil)
         #expect(options.problems.count == 1)
-        #expect(options.problems.first?.contains("arc, rows, glass, cards, compass, guide, steps, verses, qada, all") == true)
+        #expect(options.problems.first?.contains(
+            "arc, rows, glass, cards, compass, guide, steps, verses, qada, settings, onboarding, adhan, all"
+        ) == true)
     }
 
     @Test("fehlt der Abschnitt, wird das gemeldet und das nächste Argument trotzdem gelesen")

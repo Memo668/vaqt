@@ -15,9 +15,9 @@ public struct RootView: View {
 
     public init(environment: AppEnvironment) {
         self.environment = environment
+        // `init` läuft bei jeder Auswertung der App; nur der erste Speicher bleibt (`@State`). Deshalb hier
+        // keine Wirkung nach außen – die Sprache übernimmt `content` aus dem Speicher, der gilt.
         let settings = SettingsStore(storage: environment.settings)
-        // Die gespeicherte Sprache gilt, bevor der erste Text gelesen wird.
-        L10n.chosenLanguage = settings.language
         _settings = State(initialValue: settings)
         // Das Onboarding erscheint beim ersten Start; `-debugOnboarding` zeigt es auch danach,
         // `-debugSkipOnboarding` übergeht es.
@@ -43,7 +43,10 @@ public struct RootView: View {
     }
 
     private var content: some View {
-        AppContent(environment: environment, settings: settings, navigation: navigation)
+        // Die Texte folgen der gewählten Sprache, bevor der Inhalt sie liest. Ändert sie sich, baut sich
+        // der Inhalt neu auf (`id`); wo man steht, bleibt in `navigation`.
+        L10n.chosenLanguage = settings.language
+        return AppContent(environment: environment, settings: settings, navigation: navigation)
             .id(settings.language)
             .environment(\.locale, L10n.locale)
             .preferredColorScheme(settings.appearance.colorScheme)

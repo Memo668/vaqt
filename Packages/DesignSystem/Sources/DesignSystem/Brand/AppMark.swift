@@ -164,8 +164,8 @@ public enum IconBadgeMetrics {
     public static let locationSymbolSize: CGFloat = 34
     /// `ic('bellWave', 48)`: Glocke mit Wellen, rund 35 pt breit.
     public static let bellSymbolSize: CGFloat = 30
-    /// `ic('shield', 48)`: Schild mit Haken, rund 28 pt breit.
-    public static let shieldSymbolSize: CGFloat = 34
+    /// `ic('shield', 48)`: Schild mit Haken, rund 19 pt breit.
+    public static let shieldSymbolSize: CGFloat = 38.5
 }
 
 /// Zeichen der App über einer Zeile in Sekundärfarbe, mittig – `.tagline` am Ende der Einstellungen:
