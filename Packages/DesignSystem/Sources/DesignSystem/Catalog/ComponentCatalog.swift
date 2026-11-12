@@ -33,6 +33,12 @@ public struct ComponentCatalog: View {
         case verses
         /// Die Seite „Nachholen“: Titel, Zusammenfassung, Plan, „Nach Gebet“, Rechner und Fußnote.
         case qada
+        /// Die Zeilen der Einstellungen, die Tagline und die Seite „Datenschutz“.
+        case settings
+        /// Die drei Seiten des Onboardings mit ihren Punkten.
+        case onboarding
+        /// Die Karte des Adhan-Players: still wie `iphone/86` und beim Abspielen.
+        case adhan
         /// Alles untereinander, zum Durchblättern.
         case all
     }
@@ -86,6 +92,12 @@ public struct ComponentCatalog: View {
             captureTall { CatalogVerses(today: today) }
         case .qada:
             captureTall { CatalogQada(ledger: qada, today: today) }
+        case .settings:
+            captureTall { CatalogSettings() }
+        case .onboarding:
+            captureTall { CatalogOnboarding() }
+        case .adhan:
+            captureTall { CatalogAdhan() }
         case .all:
             everything
         }
@@ -173,6 +185,18 @@ public struct ComponentCatalog: View {
                         QadaOverview(ledger: ledger, today: today) { _ in }
                             .padding(.horizontal, -Layout.inset)
                     }
+                }
+                CatalogGroup("Einstellungen – Zeilen, Tagline, Datenschutz") {
+                    CatalogSettings()
+                        .padding(.horizontal, -Layout.inset)
+                }
+                CatalogGroup("Onboarding – drei Schritte") {
+                    CatalogOnboarding()
+                        .padding(.horizontal, -Layout.inset)
+                }
+                CatalogGroup("Adhan – still, beim Abspielen") {
+                    CatalogAdhan()
+                        .padding(.horizontal, -Layout.inset)
                 }
                 CatalogGroup("Tokens") {
                     CatalogTokens()

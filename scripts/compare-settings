@@ -1,0 +1,151 @@
+#!/bin/bash
+# Abgleich der Einstellungen, des Onboardings und des Adhan-Sheets mit den Referenzbildern
+# design/screenshots/iphone/01–03, 70, 73–81 und 86 (Phase 7).
+#
+# Startet die App in jedem Zustand mit den Debug-Argumenten (-debugTab settings|method|…|privacy|adhan,
+# -debugOnboarding 1|2|3), nimmt den Bildschirm auf und legt Ausschnitte mit scripts/compare-shot neben
+# die Referenz. Die App muss gebaut und installiert sein:
+#
+#   make run
+#   scripts/compare-settings              alle Zustände
+#   scripts/compare-settings 70 86        nur diese
+#
+# iphone/71 und 72 sind die Einstellungen in der Mitte und ganz unten; das kann simctl nicht scrollen.
+# Liegen die Aufnahmen schon in screenshots-out/phase-7/ – settings-71.png und settings-72.png,
+# aufgenommen mit dem UI-Hilfsprojekt (Skript s29-settings-scrolled.txt, docs/OPEN-QUESTIONS.md,
+# „Antippen beim Abgleich“) –, vergleicht das Skript sie mit.
+#
+# Ergebnis in screenshots-out/phase-7/: <zustand>.png (Aufnahmen) und compare-<Ausschnitt>.png (oben
+# Referenz, Mitte Aufnahme, unten Unterschied).
+#
+# Der Simulator (iPhone 18 Pro, 402 × 874 pt) ist 12 pt breiter und 30 pt höher als die Referenzbilder
+# (390 × 844 pt). Verglichen werden deshalb Ausschnitte; Gruppen und Karten in zwei Hälften, jede an
+# ihrem Rand ausgerichtet. Die Lage in der Höhe folgt den Leisten des Systems:
+#   - Startseite (70): Der große Titel des Systems sitzt tiefer als im Prototyp; alles darunter 21,7 pt.
+#   - Unterseiten (74–80): Die Leiste des Systems ist 54 statt 44 pt hoch und beginnt bei 62 statt 54 pt;
+#     die erste Gruppe liegt 17 pt tiefer.
+#   - Methode (73): Das Suchfeld des Systems ist 44 statt 38 pt hoch; die Gruppen liegen 13,3 pt tiefer.
+#   - Datenschutz (81): 17 pt tiefer wie die Unterseiten.
+#   - Adhan (86): Das Sheet beginnt tiefer; die Karte liegt 12 pt tiefer.
+#   - Onboarding (01–03): Die Seite steht mittig im höheren Bildschirm, 18 bis 19 pt tiefer; die Knöpfe
+#     stehen am unteren Rand, 29 pt tiefer.
+#
+# Der Simulator lässt sich mit SIM='…' wählen, wie im Makefile.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SIM="${SIM:-iPhone 18 Pro}"
+BUNDLE_ID=com.example.gebetszeiten
+REF="$ROOT/design/screenshots/iphone"
+OUT="${OUT:-$ROOT/screenshots-out/phase-7}"
+ZOOM="${ZOOM:-3}"
+WAIT="${WAIT:-2.5}"
+STATES=("$@")
+
+# compare Name Referenzbild Referenz-Ausschnitt Aufnahme Aufnahme-Ausschnitt
+compare() {
+  printf '  %-16s ' "$1"
+  "$ROOT/scripts/compare-shot" --ref "$REF/$2.png" --ref-rect "$3" --shot "$4" --shot-rect "$5" \
+    --out "$OUT/compare-$1.png" --zoom "$ZOOM" | head -1
+}
+
+# halves Name Referenzbild Aufnahme y-Referenz y-Aufnahme Höhe – linke und rechte Hälfte einer Gruppe
+halves() {
+  compare "$1-l" "$2" "0,$4,230,$6" "$3" "0,$5,230,$6"
+  compare "$1-r" "$2" "160,$4,230,$6" "$3" "172,$5,230,$6"
+}
+
+# launch Aufnahme Argumente …
+launch() {
+  local shot="$1"
+  shift
+  xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" \
+    -AppleLanguages '(de)' -AppleLocale de_DE "$@" >/dev/null
+  sleep "$WAIT"
+  xcrun simctl io "$SIM" screenshot "$shot" >/dev/null 2>&1
+}
+
+wanted() {
+  [ ${#STATES[@]} -eq 0 ] && return 0
+  local state
+  for state in "${STATES[@]}"; do [ "$state" = "$1" ] && return 0; done
+  return 1
+}
+
+mkdir -p "$OUT"
+xcrun simctl bootstatus "$SIM" -b >/dev/null
+xcrun simctl ui "$SIM" appearance light
+xcrun simctl ui "$SIM" content_size large
+# Der erste Start nach einer Pause dauert länger als die Wartezeit vor der Aufnahme. Deshalb einmal vorab.
+xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" -debugSkipOnboarding -debugFixtureTimes >/dev/null
+sleep 3
+
+STATE=(-debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25)
+
+if wanted 70; then
+  launch "$OUT/settings-70.png" "${STATE[@]}" -debugTab settings
+  echo "iphone/70 (Einstellungen):"
+  # Standort: Kopf bis Fußzeile 150 bis 300 pt; Berechnung 330 bis 590 pt.
+  halves location-70 70-settings "$OUT/settings-70.png" 150 171.7 150
+  halves calc-70 70-settings "$OUT/settings-70.png" 330 351.7 260
+fi
+
+if [ -f "$OUT/settings-71.png" ] && wanted 71; then
+  echo "iphone/71 (Aufnahme des UI-Hilfsprojekts):"
+  # Mitteilungen ab 115 pt, Darstellung mit Fußzeile bis 630 pt (App: Gruppe ab 133 pt).
+  halves notif-71 71-settings-middle "$OUT/settings-71.png" 115 133 520
+fi
+
+if [ -f "$OUT/settings-72.png" ] && wanted 72; then
+  echo "iphone/72 (Aufnahme des UI-Hilfsprojekts):"
+  # Über, Hinweis und Tagline, ab dem Kopf „Über“ (Referenz 410 pt, App 471,7 pt).
+  halves about-72 72-settings-bottom "$OUT/settings-72.png" 410 471.7 330
+fi
+
+if wanted 73; then
+  launch "$OUT/settings-73.png" "${STATE[@]}" -debugTab method
+  echo "iphone/73 (Berechnungsmethode):"
+  halves method-73 73-settings-method "$OUT/settings-73.png" 160 173.3 420
+fi
+
+subpage() {
+  local nr="$1" page="$2" name="$3" height="$4"
+  wanted "$nr" || return 0
+  launch "$OUT/settings-$nr.png" "${STATE[@]}" -debugTab "$page"
+  echo "iphone/$nr ($page):"
+  halves "$page-$nr" "$name" "$OUT/settings-$nr.png" 105 122 "$height"
+}
+subpage 74 asr 74-settings-asr 140
+subpage 75 hl 75-settings-hl 290
+subpage 76 adjust 76-settings-adjust 410
+subpage 77 perPrayer 77-settings-perprayer 380
+subpage 78 reminder 78-settings-reminder 270
+subpage 79 live 79-settings-live 200
+subpage 80 sound 80-settings-sound 260
+
+if wanted 81; then
+  launch "$OUT/settings-81.png" "${STATE[@]}" -debugTab privacy
+  echo "iphone/81 (Datenschutz):"
+  compare privacy-81 81-settings-privacy "0,105,390,380" "$OUT/settings-81.png" "6,122,390,380"
+fi
+
+if wanted 86; then
+  launch "$OUT/adhan-86.png" "${STATE[@]}" -debugTab adhan
+  echo "iphone/86 (Adhan):"
+  halves card-86 86-sheet-adhan "$OUT/adhan-86.png" 128 140 326
+  halves voices-86 86-sheet-adhan "$OUT/adhan-86.png" 470 482 380
+fi
+
+onboarding() {
+  local nr="$1" name="$2" shift_y="$3"
+  wanted "0$nr" || return 0
+  launch "$OUT/onboarding-0$nr.png" -debugFixtureTimes -debugDate 2026-11-10 -debugTime 09:10 -debugOnboarding "$nr"
+  echo "iphone/0$nr (Onboarding, Schritt $nr):"
+  compare "page-0$nr" "$name" "0,200,390,340" "$OUT/onboarding-0$nr.png" "6,$shift_y,390,340"
+  compare "actions-0$nr" "$name" "0,700,390,144" "$OUT/onboarding-0$nr.png" "6,729,390,144"
+  compare "skip-0$nr" "$name" "190,54,200,44" "$OUT/onboarding-0$nr.png" "202,62,200,44"
+}
+onboarding 1 01-onboarding-1-welcome 218.6
+onboarding 2 02-onboarding-2-location 218
+onboarding 3 03-onboarding-3-notifications 218
+
+echo "Ergebnis in $OUT"
