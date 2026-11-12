@@ -11,11 +11,9 @@ Die Methode legt Ischa 90 Minuten nach Maghrib (`iMin:90`). In Saudi-Arabien gil
 - **Stand:** Die Antwort vom 10.11.2026 – „So wie es in Europa normal gehandhabt wird“ – ist noch nicht eindeutig und wird geklärt.
 - **Standard bis dahin:** immer 90 Minuten, wie im Prototyp, auch im Ramadan.
 
-### 2. Moonsighting und die Regel für hohe Breiten (vertagt bis Phase 7)
+### 2. Moonsighting und die Regel für hohe Breiten
 
-Moonsighting rechnet in Adhan Swift mit eigenen jahreszeitlichen Grenzen und übergeht die Regel für hohe Breiten. Die Einstellung „Hohe Breitengrade“ wirkt bei dieser Methode also nicht.
-
-- **Standard:** so lassen. Ob die Einstellungen das sagen sollen, entscheidet Phase 7.
+Entschieden am 12.11.2026 mit dem Plan für Phase 7 („Hinweis zeigen“), siehe unten.
 
 ### 3. Banner „Standortzugriff aus – Stadt manuell gewählt“, solange noch keine Stadt gewählt ist
 
@@ -199,6 +197,29 @@ Mit dem Plan freigegeben sind auch seine Annahmen. Die offenen Fragen der Spec �
 ## Abnahme von Phase 6 am 12.11.2026
 
 Phase 6 wurde am 12.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-6` stand (Stand `b432fc7`). Zu den Punkten 1 bis 5 unter „Braucht eine Entscheidung“ und zu Spec § 6.12 und § 6.13 gab es dabei keine Antwort; dort gilt weiter der jeweilige Standard bzw. der Prototyp. Noch nicht geprüft sind VoiceOver von Hand (bisher nur der Baum der Bedienungshilfen) und die beiden Tabs am echten Gerät.
+
+## Entschieden mit dem Plan für Phase 7 am 12.11.2026
+
+Der Plan für Phase 7 wurde am 12.11.2026 freigegeben („Freigeben, Debug-Argumente“). Zum Adhan fragte der Nutzer zurück: „Gibt es nicht lizenzfreien Adhan, den du dir aus dem Internet beziehen kannst?“ – und wählte dann unter den gefundenen Aufnahmen „Beide laden“.
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Adhan-Aufnahmen | „Beide laden“ | Zwei freie Aufnahmen von Wikimedia Commons sind Platzhalter: Stimme 1 · Makkah spielt die ersten 27 s von „Beautiful adhan.ogg“ (CC0 1.0, hochgeladen 2022 von Adam-synagda, Herkunft unbekannt), Stimme 2 · Madinah „Oración Al-Azzan.ogg“ (gemeinfrei, hochgeladen von B9, aufgenommen 2005 in Medina, 30 s). Stimme 3 und die Fadschr-Variante laufen stumm wie im Prototyp; eine freie Fadschr-Aufnahme gibt es nicht. Die Lizenzangaben stammen von den Hochladenden und sind vor dem App Store zu prüfen (Spec § 6.5 bleibt offen). |
+| Sprachwahl | „Eigene Wahl in der App“ | Seite „Sprache“ mit Deutsch, Türkçe, English und Español wie im Prototyp; die Wahl wirkt sofort. Texte des Systems – die Dialoge für Standort und Mitteilungen, das Teilen-Menü, „Abbrechen“ im Suchfeld – bleiben in der Sprache des Geräts. Die Sprachwahl in den iOS-Einstellungen bietet iOS nur an, wenn auf dem Gerät mehr als eine Sprache eingerichtet ist. |
+| Moonsighting und hohe Breiten | „Hinweis zeigen“ | Ist Moonsighting gewählt, steht unter der Seite „Hohe Breitengrade“ zusätzlich: „Bei Moonsighting gilt diese Regel nicht – die Methode legt Fadschr und Ischa je nach Jahreszeit selbst fest.“ Neuer Text `hlMoonsighting` in `T` (DE, TR, EN, ES). |
+| Aufruf für den Abgleich | „Debug-Argumente“ | `-debugTab` kennt zusätzlich die Seiten der Einstellungen (`method`, `asr`, `hl`, `adjust`, `perPrayer`, `reminder`, `live`, `sound`, `appearance`, `language`, `privacy`) und das Adhan-Sheet (`adhan`); neu ist `-debugOnboarding 1|2|3`. |
+
+Mit dem Plan freigegeben sind auch seine Annahmen:
+
+- **Liste:** Die Einstellungen sind die `List` des Systems, eingestellt wie das Stadt-Sheet (Zeilen 44 pt, 32 pt zwischen den Gruppen), mit `Toggle`, großem Titel und Zurück-Knopf des Systems.
+- **„Pro Gebet“:** der eigene Segment-Baustein aus Phase 5 mit den drei Glocken, wie im Referenzbild und in der Anleitung.
+- **Standort-Schalter:** an → aktueller Standort (fragt, falls noch nie gefragt); aus → die aktuelle Stadt bleibt als gewählte (`S.city = S.deviceCity`); verweigert → gesperrt, dazu „iOS-Einstellungen öffnen“.
+- **Nach „Überspringen“:** Die Zeiten-Seite fragt beim ersten Erscheinen selbst nach dem Standort, weil sie ohne Ort nichts zeigen kann.
+- **Mitteilungen:** Die Erlaubnis wird nur im Onboarding erfragt; verweigert, steht der Fußtext unter „Mitteilungen“. Erinnerung, Live-Aktivität und Klang werden nur gespeichert (Phase 8 und 9).
+- **Stimme:** Die gewählte Stimme wird gespeichert; die Fadschr-Variante ist nur eine Vorschau im Player.
+- **Methode in den Bildern:** Mit `-debugFixtureTimes` gilt die Automatik der Fixture-Stadt (Berlin → MWL); echt rechnet die App in Deutschland mit Diyanet.
+- **Quellcode und Version:** Für „Quellcode“ gibt es noch keine Adresse (kein Remote); bis dahin ein Platzhalter in `project.yml` wie die Bundle-ID. Die Version kommt aus dem Bundle („0.1.0 (1)“; das Referenzbild zeigt „1.0 (1)“).
+- **App-Zeichen** in Onboarding und Tagline: die Platzhalter-Zeichnung des Prototyps (`appGlyph`), bis Phase 11 das Icon bringt.
 
 ## Annahmen in Phase 6
 
