@@ -37,7 +37,7 @@ public enum AdhanVoice: Int, CaseIterable, Codable, Sendable {
 /// Was neben der Glocke je Gebet zu den Mitteilungen gehört – `S.reminder`, `S.liveAct`, `S.sound` und
 /// die Stimme des Adhan (`S.adhan.voice`).
 ///
-/// Phase 7 speichert nur die Wahl; Mitteilungen plant Phase 8, die Live-Aktivität Phase 9. Werte, die
+/// Mitteilungen plant `NotificationPlanner` damit, die Live-Aktivität kommt mit Phase 9. Werte, die
 /// keine der Wahlmöglichkeiten sind, gelten als nicht gesetzt: Es bleibt der Startwert des Prototyps.
 public struct NotificationPreferences: Hashable, Sendable {
     /// Vorab-Erinnerung in Minuten, 0 heißt aus (`REMINDERS`).
