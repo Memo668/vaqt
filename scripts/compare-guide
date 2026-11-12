@@ -1,0 +1,118 @@
+#!/bin/bash
+# Abgleich der Anleitung mit den Referenzbildern design/screenshots/iphone/40–42 (Phase 5).
+#
+# Startet die App im Zustand von iphone/40 (Anleitung, 14:25, Asr läuft), nimmt den Bildschirm auf und
+# legt Ausschnitte mit scripts/compare-shot neben die Referenz: obere Leiste, Auswahl der Gebete,
+# Kopfkarte und die Karten unter „Vorher“. Dazu kommen die Bausteine aus dem Katalog in der Breite der
+# Referenzbilder (-debugCatalog guide und steps). Die App muss gebaut und installiert sein:
+#
+#   make run
+#   scripts/compare-guide
+#
+# iphone/41 (nach unten gescrollt) und 42 (Maghrib von Hand gewählt) brauchen Wischen und Tippen; das
+# kann simctl nicht. Liegen ihre Aufnahmen schon in screenshots-out/phase-5/ – guide-41.png und
+# guide-42.png, aufgenommen mit dem UI-Hilfsprojekt (docs/OPEN-QUESTIONS.md, „Antippen beim Abgleich“) –,
+# vergleicht das Skript sie mit. Für 41 muss die erste Karte des Ablaufs 133 pt unter der Oberkante
+# stehen (Referenz 129 pt).
+#
+# Ergebnis in screenshots-out/phase-5/: guide-40.png, catalog-guide.png, catalog-steps.png (Aufnahmen)
+# und compare-<Ausschnitt>.png (oben Referenz, Mitte Aufnahme, unten Unterschied).
+#
+# Der Simulator (iPhone 18 Pro, 402 × 874 pt) ist 12 pt breiter und 30 pt höher als die Referenzbilder
+# (390 × 844 pt). Verglichen werden deshalb Ausschnitte:
+#   - Der sichere Bereich beginnt bei 62 statt 58 pt: Alles sitzt 4 pt tiefer. Die Auswahl der Gebete
+#     sitzt nur 3 pt tiefer – im Referenzbild liegt sie 1 pt unter der Stelle, an die das CSS sie setzt.
+#   - Karten und Auswahl sind 12 pt breiter. Ihre linke und ihre rechte Hälfte werden getrennt
+#     verglichen, jede an ihrem Rand ausgerichtet.
+#   - Im Katalog stehen die Bausteine in Referenzbreite, 6 pt vom Rand: guide 21 pt tiefer als in
+#     iphone/40, steps 70 pt tiefer als in iphone/41.
+#
+# Der Simulator lässt sich mit SIM='…' wählen, wie im Makefile.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SIM="${SIM:-iPhone 18 Pro}"
+BUNDLE_ID=com.example.gebetszeiten
+REF="$ROOT/design/screenshots/iphone"
+OUT="${OUT:-$ROOT/screenshots-out/phase-5}"
+ZOOM="${ZOOM:-3}"
+WAIT="${WAIT:-2.5}"
+
+# Ausschnitte in pt (x,y,Breite,Höhe), erst im Referenzbild, dann in der Aufnahme.
+#   Leiste     wie bei der Zeiten-Seite, links ausgerichtet.
+#   Auswahl    Spur 123 bis 157 pt (App 126 bis 160), linke und rechte Hälfte.
+#   Karte      Kopfkarte ab 171 pt (App 174), 303 pt hoch, in iphone/42 347 pt; linke und rechte Hälfte.
+#   Vorher     Überschrift und die beiden ersten Karten ab 495 pt (App 3,67 pt tiefer, weil die Karte
+#              0,67 pt höher ist).
+#   Ablauf     iphone/41: Schritte 1 bis 3 ab 129 pt (App 133).
+BAR_REF=0,50,390,76;          BAR_SHOT=0,54,390,76
+SEG_L_REF=0,117,200,46;       SEG_L_SHOT=0,120,200,46
+SEG_R_REF=190,117,200,46;     SEG_R_SHOT=202,120,200,46
+CARD_L_REF=0,165,230,315;     CARD_L_SHOT=0,168,230,315
+CARD_R_REF=160,165,230,315;   CARD_R_SHOT=172,168,230,315
+PICK_L_REF=0,165,230,358;     PICK_L_SHOT=0,168,230,358
+PICK_R_REF=160,165,230,358;   PICK_R_SHOT=172,168,230,358
+BEFORE_L_REF=0,495,230,240;   BEFORE_L_SHOT=0,498.67,230,240
+BEFORE_R_REF=160,495,230,240; BEFORE_R_SHOT=172,498.67,230,240
+STEPS_L_REF=0,120,230,470;    STEPS_L_SHOT=0,124,230,470
+STEPS_R_REF=160,120,230,470;  STEPS_R_SHOT=172,124,230,470
+# Katalog: in Referenzbreite, 6 pt vom Rand.
+GUIDE_REF=0,117,390,620;      GUIDE_CATALOG=6,138,390,620
+STEPS_REF=0,120,390,470;      STEPS_CATALOG=6,190,390,470
+
+# compare Name Referenzbild Referenz-Ausschnitt Aufnahme Aufnahme-Ausschnitt
+compare() {
+  printf '  %-10s ' "$1"
+  "$ROOT/scripts/compare-shot" --ref "$REF/$2.png" --ref-rect "$3" --shot "$4" --shot-rect "$5" \
+    --out "$OUT/compare-$1.png" --zoom "$ZOOM" | head -1
+}
+
+# launch Aufnahme Argumente …
+launch() {
+  local shot="$1"
+  shift
+  xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" \
+    -AppleLanguages '(de)' -AppleLocale de_DE "$@" >/dev/null
+  sleep "$WAIT"
+  xcrun simctl io "$SIM" screenshot "$shot" >/dev/null 2>&1
+}
+
+mkdir -p "$OUT"
+xcrun simctl bootstatus "$SIM" -b >/dev/null
+xcrun simctl ui "$SIM" appearance light
+xcrun simctl ui "$SIM" content_size large
+# Der erste Start nach einer Pause dauert länger als die Wartezeit vor der Aufnahme. Deshalb einmal vorab.
+xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" -debugSkipOnboarding -debugFixtureTimes >/dev/null
+sleep 3
+
+STATE=(-debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25)
+
+launch "$OUT/guide-40.png" "${STATE[@]}" -debugTab guide
+echo "iphone/40:"
+compare bar-40 40-guide-asr "$BAR_REF" "$OUT/guide-40.png" "$BAR_SHOT"
+compare seg-l-40 40-guide-asr "$SEG_L_REF" "$OUT/guide-40.png" "$SEG_L_SHOT"
+compare seg-r-40 40-guide-asr "$SEG_R_REF" "$OUT/guide-40.png" "$SEG_R_SHOT"
+compare card-l-40 40-guide-asr "$CARD_L_REF" "$OUT/guide-40.png" "$CARD_L_SHOT"
+compare card-r-40 40-guide-asr "$CARD_R_REF" "$OUT/guide-40.png" "$CARD_R_SHOT"
+compare vorher-l-40 40-guide-asr "$BEFORE_L_REF" "$OUT/guide-40.png" "$BEFORE_L_SHOT"
+compare vorher-r-40 40-guide-asr "$BEFORE_R_REF" "$OUT/guide-40.png" "$BEFORE_R_SHOT"
+
+if [ -f "$OUT/guide-41.png" ]; then
+  echo "iphone/41 (Aufnahme des UI-Hilfsprojekts):"
+  compare steps-l-41 41-guide-steps "$STEPS_L_REF" "$OUT/guide-41.png" "$STEPS_L_SHOT"
+  compare steps-r-41 41-guide-steps "$STEPS_R_REF" "$OUT/guide-41.png" "$STEPS_R_SHOT"
+fi
+
+if [ -f "$OUT/guide-42.png" ]; then
+  echo "iphone/42 (Aufnahme des UI-Hilfsprojekts):"
+  compare seg-r-42 42-guide-manual-pick "$SEG_R_REF" "$OUT/guide-42.png" "$SEG_R_SHOT"
+  compare card-l-42 42-guide-manual-pick "$PICK_L_REF" "$OUT/guide-42.png" "$PICK_L_SHOT"
+  compare card-r-42 42-guide-manual-pick "$PICK_R_REF" "$OUT/guide-42.png" "$PICK_R_SHOT"
+fi
+
+echo "Katalog:"
+launch "$OUT/catalog-guide.png" -debugCatalog guide "${STATE[@]}"
+compare catalog-guide 40-guide-asr "$GUIDE_REF" "$OUT/catalog-guide.png" "$GUIDE_CATALOG"
+launch "$OUT/catalog-steps.png" -debugCatalog steps "${STATE[@]}"
+compare catalog-steps 41-guide-steps "$STEPS_REF" "$OUT/catalog-steps.png" "$STEPS_CATALOG"
+
+echo "Ergebnis in $OUT"
