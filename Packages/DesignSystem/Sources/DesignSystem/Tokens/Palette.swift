@@ -80,6 +80,13 @@ public enum Palette {
         dark: Values.accentDark.mixed(Values.currentRowShare, with: Values.backgroundCellDark)
     )
 
+    /// Gewählter Eintrag einer Liste aus Karten, z. B. der Vers, den die Karte oben zeigt: Akzent zu 13 %
+    /// auf der Kartenfarbe (`.vitem[aria-pressed="true"]`).
+    public static let selectedItem = Color(
+        light: Values.accentLight.mixed(Values.selectedItemShare, with: Values.backgroundCellLight),
+        dark: Values.accentDark.mixed(Values.selectedItemShare, with: Values.backgroundCellDark)
+    )
+
     /// `--kerahat`: die Kerahat-Marken, `#C7862A` hell und `#D9A04E` dunkel.
     public static let kerahat = Color(light: Values.kerahatLight, dark: Values.kerahatDark)
 
@@ -128,6 +135,7 @@ public enum Palette {
         public static let arcTrackShareLight = 0.20
         public static let arcTrackShareDark = 0.30
         public static let currentRowShare = 0.15
+        public static let selectedItemShare = 0.13
 
         public static let kerahatLight = RGBA(hex: 0xC7862A)
         public static let kerahatDark = RGBA(hex: 0xD9A04E)

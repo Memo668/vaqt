@@ -18,16 +18,32 @@ public struct PillButton: View {
 
     public var body: some View {
         Button(action: action) {
-            HStack(spacing: PillButtonMetrics.gap) {
-                Image(systemName: systemImage)
-                    .font(.system(size: PillButtonMetrics.symbolSize, weight: PillButtonMetrics.symbolWeight))
-                    .frame(width: PillButtonMetrics.symbolBox, height: PillButtonMetrics.symbolBox)
-                    .accessibilityHidden(true)
-                Text(title)
-                    .font(TypeScale.subheadline.font(weight: .semibold))
-            }
+            PillButtonLabel(title, systemImage: systemImage)
         }
         .buttonStyle(PillButtonStyle())
+    }
+}
+
+/// Inhalt eines Kapsel-Knopfs: Symbol und Titel. Für Knöpfe, die kein `Button` sind – etwa ein
+/// `ShareLink` mit `PillButtonStyle`.
+public struct PillButtonLabel: View {
+    private let title: String
+    private let systemImage: String
+
+    public init(_ title: String, systemImage: String) {
+        self.title = title
+        self.systemImage = systemImage
+    }
+
+    public var body: some View {
+        HStack(spacing: PillButtonMetrics.gap) {
+            Image(systemName: systemImage)
+                .font(.system(size: PillButtonMetrics.symbolSize, weight: PillButtonMetrics.symbolWeight))
+                .frame(width: PillButtonMetrics.symbolBox, height: PillButtonMetrics.symbolBox)
+                .accessibilityHidden(true)
+            Text(title)
+                .font(TypeScale.subheadline.font(weight: .semibold))
+        }
     }
 }
 

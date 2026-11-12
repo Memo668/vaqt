@@ -6,7 +6,7 @@ import SwiftUI
 /// Katalog aller Bausteine des DesignSystems – nur in DEBUG-Builds.
 ///
 /// Er dient zwei Zwecken: als Preview in Xcode (hell und dunkel) und als Bildschirm der App, wenn sie
-/// mit `-debugCatalog arc|rows|glass|cards|compass|all` startet. So lassen sich die Bausteine mit
+/// mit `-debugCatalog <Abschnitt>` startet (`Section`). So lassen sich die Bausteine mit
 /// `xcrun simctl io … screenshot` aufnehmen und neben die Referenzbilder legen.
 ///
 /// Die Überschriften im Katalog sind Notizen für die Entwicklung, keine Texte der App – sie stehen
@@ -29,6 +29,10 @@ public struct ComponentCatalog: View {
         case guide
         /// Die Anleitung unten: „Ablauf“ mit Haltungsfiguren und Formeln, die Fußnote.
         case steps
+        /// Die Seite „Verse“: Titel, Vers des Tages, Fußnote und „Letzte Tage“.
+        case verses
+        /// Die Seite „Nachholen“: Titel, Zusammenfassung, Plan, „Nach Gebet“, Rechner und Fußnote.
+        case qada
         /// Alles untereinander, zum Durchblättern.
         case all
     }
@@ -38,21 +42,28 @@ public struct ComponentCatalog: View {
     private let isHighLatitude: Bool
     private let compass: CatalogFixtures.CompassState
     private let guide: GuideHeader
+    private let today: CalendarDay
+    private let qada: QadaLedger
 
     /// - Parameters:
     ///   - phase: der Zustand für Bogen und Gebetskarten; ohne Angabe Berlin um 14:25 wie `iphone/10`.
     ///   - isHighLatitude: ob Fadschr und Ischa die Info-Marke für hohe Breiten tragen.
     ///   - compass: der Zustand des Kompasses; ohne Angabe Berlin mit Kurs 98° wie `iphone/30`.
     ///   - guide: Auswahl und Kopfkarte der Anleitung; ohne Angabe Berlin um 14:25 wie `iphone/40`.
+    ///   - today: der Tag für Verse und Plan; ohne Angabe der 10.11.2026 wie `iphone/50` und `60`.
+    ///   - qada: der Stand des Nachholens; ohne Angabe die Zahlen des Prototyps wie `iphone/60`.
     public init(
         section: Section = .all, phase: DayPhase? = nil, isHighLatitude: Bool = false,
-        compass: CatalogFixtures.CompassState? = nil, guide: GuideHeader? = nil
+        compass: CatalogFixtures.CompassState? = nil, guide: GuideHeader? = nil,
+        today: CalendarDay? = nil, qada: QadaLedger? = nil
     ) {
         self.section = section
         self.phase = phase ?? CatalogFixtures.phase(time: "14:25:01")
         self.isHighLatitude = isHighLatitude
         self.compass = compass ?? CatalogFixtures.compassStates[0]
         self.guide = guide ?? CatalogFixtures.guideHeader()
+        self.today = today ?? FixtureTimes.referenceDay
+        self.qada = qada ?? .prototypeSample
     }
 
     public var body: some View {
@@ -71,6 +82,10 @@ public struct ComponentCatalog: View {
             captureTall { CatalogGuide(header: guide) }
         case .steps:
             captureTall { GuideSteps() }
+        case .verses:
+            captureTall { CatalogVerses(today: today) }
+        case .qada:
+            captureTall { CatalogQada(ledger: qada, today: today) }
         case .all:
             everything
         }
@@ -144,6 +159,20 @@ public struct ComponentCatalog: View {
                 CatalogGroup("Anleitung – Ablauf") {
                     GuideSteps()
                         .padding(.horizontal, -Layout.inset)
+                }
+                CatalogGroup("Verse – 10.11.2026, Vers des Tages und letzte Tage") {
+                    CatalogVerses(today: today)
+                        .padding(.horizontal, -Layout.inset)
+                }
+                CatalogGroup("Nachholen – Zahlen des Prototyps") {
+                    CatalogQada(ledger: qada, today: today)
+                        .padding(.horizontal, -Layout.inset)
+                }
+                CatalogGroup("Nachholen – ohne Einträge, mit Witr, alles nachgeholt") {
+                    ForEach(CatalogFixtures.qadaStates, id: \.self) { ledger in
+                        QadaOverview(ledger: ledger, today: today) { _ in }
+                            .padding(.horizontal, -Layout.inset)
+                    }
                 }
                 CatalogGroup("Tokens") {
                     CatalogTokens()
@@ -412,6 +441,47 @@ struct CatalogGuide: View {
     var body: some View {
         GuideOverview(header: header, onSelect: { _ in }, onReturn: {}, onOpenQibla: {})
             .padding(.horizontal, inset - Layout.inset)
+    }
+}
+
+/// Die Seite „Verse“ ohne Leiste: Vers des Tages und die letzten Tage. Ein Eintrag lässt sich antippen.
+struct CatalogVerses: View {
+    let today: CalendarDay
+
+    @State private var selection: CalendarDay?
+
+    var body: some View {
+        let shown = selection ?? today
+        VStack(spacing: 0) {
+            VersesOverview(day: VerseDay(shown, today: today)) {}
+            RecentVerses(days: VerseDay.recent(endingAt: today), selection: shown) { day in
+                selection = day
+            }
+        }
+    }
+}
+
+/// Die Seite „Nachholen“ ohne Leiste. Stepper, Schalter und „Als offen übernehmen“ wirken auf einen
+/// Stand, der nur hier im Katalog lebt.
+struct CatalogQada: View {
+    let today: CalendarDay
+
+    @State private var ledger: QadaLedger
+
+    init(ledger: QadaLedger, today: CalendarDay) {
+        self.today = today
+        _ledger = State(initialValue: ledger)
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            QadaOverview(ledger: ledger, today: today, onAction: apply)
+            QadaDetails(ledger: ledger, onAction: apply)
+        }
+    }
+
+    private func apply(_ action: QadaAction) {
+        ledger.apply(action)
     }
 }
 

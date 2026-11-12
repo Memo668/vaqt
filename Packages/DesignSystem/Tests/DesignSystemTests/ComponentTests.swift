@@ -5,6 +5,8 @@ import UIKit
 @testable import DesignSystem
 
 /// Symbole, Glass-Maße und Stepper.
+// Auf dem Hauptthread, weil die Tests des Steppers Views anlegen und ihre Aktionen auslösen.
+@MainActor
 @Suite("Bausteine")
 struct ComponentTests {
 
@@ -141,7 +143,7 @@ struct ComponentTests {
     @Test("die Abschnitte des Katalogs heißen wie die Werte von -debugCatalog")
     func catalogSections() {
         #expect(ComponentCatalog.Section.allCases.map(\.rawValue) == [
-            "arc", "rows", "glass", "cards", "compass", "guide", "steps", "all",
+            "arc", "rows", "glass", "cards", "compass", "guide", "steps", "verses", "qada", "all",
         ])
     }
     #endif

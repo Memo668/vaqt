@@ -90,6 +90,24 @@ public enum CatalogFixtures {
         return (timeline, now)
     }
 
+    // MARK: - Nachholen
+
+    /// Weitere Stände des Nachholens: ohne Einträge (so startet die App), mit Witr – 545 Tage, davon
+    /// 45 Witr nachgeholt – und alles nachgeholt.
+    public static var qadaStates: [QadaLedger] {
+        var withWitr = QadaLedger.prototypeSample
+        withWitr.includesWitr = true
+        withWitr.applyPeriod()
+        for _ in 0..<45 {
+            withWitr.markMadeUp(.witr)
+        }
+        let allDone = QadaLedger(
+            years: 0, months: 1, days: 0, perDay: 5, includesWitr: false,
+            total: Dictionary(uniqueKeysWithValues: QadaPrayer.five.map { ($0, 30) }), open: [:]
+        )
+        return [QadaLedger(), withWitr, allDone]
+    }
+
     // MARK: - Kompass
 
     /// Ein Zustand des Kompasses: Kurs des Geräts und Richtung zur Kaaba.
