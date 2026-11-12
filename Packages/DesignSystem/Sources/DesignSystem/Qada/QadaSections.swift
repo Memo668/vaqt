@@ -155,6 +155,10 @@ enum QadaLayout {
     /// Abstand über „Nach Gebet“. Im CSS fallen der Abstand unter dem Teil davor und der über der
     /// Überschrift (24 pt) zusammen: unter dem Plan gelten dessen 32 pt (`.group-wrap`), ohne Plan – im
     /// leeren Zustand – die 24 pt der Überschrift, weil die Einleitung nur 18 pt hält.
+    ///
+    /// Auf dem Main Actor, weil die Abstände von `SectionHeader` und `PageLede` als Teil eines `View`
+    /// dort liegen.
+    @MainActor
     static func byPrayerTop(afterPlan: Bool) -> CGFloat {
         afterPlan ? max(InsetGroupMetrics.spacingBelow, SectionHeader.spacingAbove)
             : max(PageLede.spacingBelow, SectionHeader.spacingAbove)
