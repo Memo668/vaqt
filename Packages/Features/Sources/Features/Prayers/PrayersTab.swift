@@ -12,6 +12,7 @@ import SwiftUI
 struct PrayersTab: View {
     private let today: TodayModel
     private let qibla: QiblaModel
+    private let guide: GuideModel
 
     @State private var page: PrayersPage
     @State private var path: [SettingsRoute]
@@ -20,9 +21,13 @@ struct PrayersTab: View {
     /// - Parameters:
     ///   - initialPage: die Seite beim Start (`-debugTab qibla` …).
     ///   - opensSettings: ob die Einstellungen schon offen sind (`-debugTab settings`).
-    init(today: TodayModel, qibla: QiblaModel, initialPage: PrayersPage = .today, opensSettings: Bool = false) {
+    init(
+        today: TodayModel, qibla: QiblaModel, guide: GuideModel,
+        initialPage: PrayersPage = .today, opensSettings: Bool = false
+    ) {
         self.today = today
         self.qibla = qibla
+        self.guide = guide
         _page = State(initialValue: initialPage)
         _path = State(initialValue: opensSettings ? [.settings] : [])
     }
@@ -42,13 +47,22 @@ struct PrayersTab: View {
                         today.isCitySheetPresented = true
                     }
                 case .guide:
-                    // Noch leer: Die Anleitung folgt in Phase 5.
-                    PlaceholderPage()
+                    GuidePage(model: guide) {
+                        // „Qibla öffnen“ wechselt die Seite wie der Chip.
+                        page = .qibla
+                    }
                 }
             }
             .safeAreaBar(edge: .top, spacing: 0) {
                 TopBar(selection: $page) {
                     path.append(.settings)
+                }
+            }
+            // Wer die Anleitung verlässt – Chip, Wischen, „Qibla öffnen“ –, hebt die manuelle Wahl auf
+            // (`goPane()`). Ein anderer Tab und die Einstellungen lassen sie stehen, wie im Prototyp.
+            .onChange(of: page) { previous, _ in
+                if previous == .guide {
+                    guide.followTime()
                 }
             }
             .background(Palette.backgroundGrouped)
@@ -66,13 +80,5 @@ struct PrayersTab: View {
                 SettingsPlaceholder(route: route)
             }
         }
-    }
-}
-
-/// Eine Seite, die es noch nicht gibt: nur der Seitenhintergrund.
-struct PlaceholderPage: View {
-    var body: some View {
-        Palette.backgroundGrouped
-            .ignoresSafeArea()
     }
 }

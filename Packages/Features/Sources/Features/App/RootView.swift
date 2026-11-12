@@ -12,6 +12,7 @@ public struct RootView: View {
     @State private var toast: ToastCenter
     @State private var today: TodayModel
     @State private var qibla: QiblaModel
+    @State private var guide: GuideModel
 
     public init(environment: AppEnvironment) {
         self.environment = environment
@@ -19,15 +20,18 @@ public struct RootView: View {
         let toast = ToastCenter()
         // Zeiten- und Qibla-Seite zeigen denselben Ort.
         let location = PlaceModel(settings: settings, locationSource: environment.locationSource)
-        _selection = State(initialValue: environment.initialTab)
-        _settings = State(initialValue: settings)
-        _toast = State(initialValue: toast)
-        _today = State(initialValue: TodayModel(
+        let today = TodayModel(
             clock: environment.clock, timesSource: environment.timesSource,
             location: location, connectivity: environment.connectivity,
             citySearch: environment.citySearch, toast: toast
-        ))
+        )
+        _selection = State(initialValue: environment.initialTab)
+        _settings = State(initialValue: settings)
+        _toast = State(initialValue: toast)
+        _today = State(initialValue: today)
         _qibla = State(initialValue: QiblaModel(location: location, headingSource: environment.headingSource))
+        // Die Anleitung nimmt ihre Zeiten aus dem Zeitstrahl der Zeiten-Seite.
+        _guide = State(initialValue: GuideModel(today: today))
     }
 
     public var body: some View {
@@ -50,7 +54,7 @@ public struct RootView: View {
                     switch tab {
                     case .prayers:
                         PrayersTab(
-                            today: today, qibla: qibla, initialPage: environment.initialPage,
+                            today: today, qibla: qibla, guide: guide, initialPage: environment.initialPage,
                             opensSettings: environment.opensSettings
                         )
                     case .verses, .qada:

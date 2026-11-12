@@ -33,7 +33,7 @@ struct CatalogRootTests {
         let options = LaunchOptions(arguments: ["-debugCatalog", "bogen"])
         #expect(options.catalog == nil)
         #expect(options.problems.count == 1)
-        #expect(options.problems.first?.contains("arc, rows, glass, cards, compass, all") == true)
+        #expect(options.problems.first?.contains("arc, rows, glass, cards, compass, guide, steps, all") == true)
     }
 
     @Test("fehlt der Abschnitt, wird das gemeldet und das nächste Argument trotzdem gelesen")
@@ -114,6 +114,31 @@ struct CatalogRootTests {
     func withoutCity() {
         #expect(CatalogRoot.phase(for: environment("-debugCatalog", "all")) == nil)
         #expect(CatalogRoot.compass(for: environment("-debugCatalog", "all")) == nil)
+        #expect(CatalogRoot.guide(for: environment("-debugCatalog", "all")) == nil)
+    }
+
+    // MARK: Anleitung
+
+    @Test("die Argumente von iphone/40: Asr läuft, 14:00–16:27")
+    func guide() throws {
+        let environment = environment(
+            "-debugCatalog", "guide", "-debugFixtureTimes", "-debugDate", "2026-11-10", "-debugTime", "14:25"
+        )
+        let header = try #require(CatalogRoot.guide(for: environment))
+        #expect(header.prayer == .asr)
+        #expect(header.status == L10n.now)
+        #expect(header.window == "14:00\u{2060}–\u{2060}16:27")
+        #expect(header.returnPrayer == nil)
+    }
+
+    @Test("am Vormittag folgt die Anleitung im Katalog dem nächsten Gebet")
+    func guideMorning() throws {
+        let environment = environment(
+            "-debugCatalog", "guide", "-debugFixtureTimes", "-debugDate", "2026-11-10", "-debugTime", "08:04"
+        )
+        let header = try #require(CatalogRoot.guide(for: environment))
+        #expect(header.prayer == .dhuhr)
+        #expect(header.status == L10n.guideNext)
     }
 
     // MARK: Kompass
