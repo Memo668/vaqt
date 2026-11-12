@@ -25,7 +25,25 @@ struct CatalogRoot: View {
             isHighLatitude: environment.launchOptions.highLatitude,
             compass: Self.compass(for: environment),
             guide: Self.guide(for: environment),
-            today: Self.today(for: environment)
+            today: Self.today(for: environment),
+            outside: Self.outside(for: environment)
+        )
+    }
+
+    /// Widgets und Live-Aktivität zu den Debug-Argumenten: der Eintrag der Zeitleiste für jetzt und die
+    /// Aktivität zum nächsten Gebet, als habe sie eben begonnen. Ohne Stadt gibt es `nil`; der Katalog
+    /// zeigt dann Berlin um 14:25.
+    nonisolated static func outside(for environment: AppEnvironment) -> CatalogOutsideState? {
+        let options = environment.launchOptions
+        guard let city = options.effectiveCity else { return nil }
+        let source: any PrayerTimesSource = options.fixtureTimes
+            ? FixtureTimesSource(highLatitude: options.highLatitude)
+            : AdhanTimesSource()
+        let place = city.place(named: city.localizedName)
+        return CatalogOutsideState.make(
+            source: source, place: place, cityName: place.name, isCurrentLocation: true,
+            settings: CalculationSettings(), showKerahat: true, now: environment.clock.now,
+            clockOffset: WidgetSync.clockOffset(of: environment.clock)
         )
     }
 

@@ -1,12 +1,12 @@
 import SwiftUI
 import WidgetKit
 
-/// Einstieg der Widget-Extension.
-///
-/// Sie nimmt in Phase 9 die Widgets (WidgetKit) und die Live-Aktivität (ActivityKit) auf.
-/// Bis dahin ist das Bündel leer – die Extension bietet nichts an.
+/// Einstieg der Widget-Extension: das Widget mit seinen fünf Größen und die Live-Aktivität
+/// (Spec § 1, „Outside the app“).
 @main
 struct GebetszeitenWidgetBundle: WidgetBundle {
     var body: some Widget {
+        PrayerTimesWidget()
+        PrayerLiveActivity()
     }
 }

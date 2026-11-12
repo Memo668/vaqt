@@ -2,6 +2,7 @@ import BackgroundTasks
 import DesignSystem
 import Foundation
 import PrayerCore
+import Synchronization
 
 /// Die Hintergrundaktualisierung: iOS weckt die App etwa einmal am Tag kurz, und sie schiebt das
 /// rollierende Fenster der Mitteilungen weiter – auch wenn man sie länger nicht öffnet (Spec § 6.4,
@@ -21,11 +22,29 @@ public enum BackgroundRefresh {
     /// Frühestens so lange nach der Bitte darf iOS die App wecken.
     static let earliestDelay: TimeInterval = 12 * 60 * 60
 
+    /// Das Ende der nächsten Live-Aktivität in Gerätezeit, gesetzt von `LiveActivityModel`. Liegt es vor
+    /// den zwölf Stunden, bittet die App, schon dann geweckt zu werden: Läuft sie nicht, beendet sonst
+    /// niemand die Aktivität (Phase 9). Wann iOS weckt, entscheidet iOS.
+    static var liveActivityCheck: Date? {
+        get { pendingLiveActivityCheck.withLock { $0 } }
+        set { pendingLiveActivityCheck.withLock { $0 = newValue } }
+    }
+
+    private static let pendingLiveActivityCheck = Mutex<Date?>(nil)
+
+    /// Wann die App frühestens geweckt werden soll: in zwölf Stunden oder zum Ende der nächsten
+    /// Live-Aktivität, wenn das früher ist.
+    static func earliestBeginDate(now: Date = Date(), liveActivityCheck: Date? = liveActivityCheck) -> Date {
+        let regular = now.addingTimeInterval(earliestDelay)
+        guard let check = liveActivityCheck, check > now else { return regular }
+        return min(regular, check)
+    }
+
     /// Bittet iOS um die nächste Hintergrundaktualisierung; sie ersetzt eine frühere Bitte. Gemessen an
     /// der Gerätezeit, denn danach weckt iOS.
     public static func schedule() {
         let request = BGAppRefreshTaskRequest(identifier: identifier)
-        request.earliestBeginDate = Date(timeIntervalSinceNow: earliestDelay)
+        request.earliestBeginDate = earliestBeginDate()
         do {
             try BGTaskScheduler.shared.submit(request)
         } catch {
@@ -34,11 +53,32 @@ public enum BackgroundRefresh {
         }
     }
 
-    /// Ein Lauf im Hintergrund: um den nächsten bitten, dann neu planen.
+    /// Ein Lauf im Hintergrund: neu planen – Mitteilungen, Widgets und Live-Aktivitäten, dabei enden alte
+    /// Aktivitäten (Spec § 4) –, dann um den nächsten Lauf bitten.
     @MainActor
     public static func run(environment: AppEnvironment) async {
-        schedule()
         await reschedule(environment: environment)
+        await refreshOutsideApp(environment: environment)
+        schedule()
+    }
+
+    /// Widgets und Live-Aktivitäten ohne Oberfläche: Stand schreiben, Aktivitäten planen und alte beenden.
+    /// Einstellungen, Sprache und Ort wie bei den Mitteilungen.
+    @MainActor
+    static func refreshOutsideApp(environment: AppEnvironment) async {
+        let settings = SettingsStore(storage: environment.settings)
+        L10n.chosenLanguage = settings.language
+        let location = PlaceModel(settings: settings, locationSource: environment.locationSource)
+        await location.readAuthorization()
+        WidgetSync(
+            settings: settings, location: location, clock: environment.clock,
+            publisher: environment.widgetPublisher, debug: environment.widgetDebug
+        ).publish()
+        await LiveActivityModel(
+            settings: settings, location: location, clock: environment.clock,
+            timesSource: environment.timesSource, scheduler: environment.liveActivityScheduler,
+            isPlanning: environment.plansLiveActivities, debugStart: environment.liveActivityDebugStart
+        ).reschedule()
     }
 
     /// Plant die Mitteilungen ohne Oberfläche: Einstellungen und Sprache aus der App Group, der Ort, der

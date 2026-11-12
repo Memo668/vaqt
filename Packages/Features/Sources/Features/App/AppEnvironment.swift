@@ -34,6 +34,18 @@ public struct AppEnvironment: Sendable {
     /// Ob die App beim Start nach der Erlaubnis für Mitteilungen fragt, falls iOS noch nie gefragt hat
     /// (`-debugNotifications`). Sonst fragt nur das Onboarding und eine spätere Änderung an den Glocken.
     public var asksForNotificationsAtLaunch: Bool
+    /// Wohin der Stand für die Widgets geht: in die App Group, in Tests nirgends.
+    public var widgetPublisher: any WidgetPublishing
+    /// Was die Debug-Startargumente an den Zeiten der Widgets ändern (`-debugFixtureTimes`,
+    /// `-debugHighLatitude`); sonst `nil`.
+    public var widgetDebug: WidgetSync.Debug?
+    /// Wo die Live-Aktivitäten angemeldet werden: bei iOS, in Tests nirgends.
+    public var liveActivityScheduler: any LiveActivityScheduling
+    /// Ob die App Live-Aktivitäten plant. Mit `-debugFixtureTimes` ohne `-debugLiveActivity` nicht – damit
+    /// Aufnahmen keine auslösen; was noch läuft, endet dann.
+    public var plansLiveActivities: Bool
+    /// `-debugLiveActivity`: Ab diesem Zeitpunkt läuft genau eine Live-Aktivität, die zum nächsten Gebet.
+    public var liveActivityDebugStart: Date?
     public var initialTab: AppTab
     /// Die Seite des Gebete-Tabs beim Start.
     public var initialPage: PrayersPage
@@ -64,6 +76,11 @@ public struct AppEnvironment: Sendable {
         notificationAuthorizer: any NotificationAuthorizing = FixedNotificationAuthorizer(),
         notificationScheduler: any NotificationScheduling = NoNotificationScheduler(),
         asksForNotificationsAtLaunch: Bool = false,
+        widgetPublisher: any WidgetPublishing = NoWidgetPublisher(),
+        widgetDebug: WidgetSync.Debug? = nil,
+        liveActivityScheduler: any LiveActivityScheduling = NoLiveActivityScheduler(),
+        plansLiveActivities: Bool = true,
+        liveActivityDebugStart: Date? = nil,
         initialTab: AppTab = .prayers,
         initialPage: PrayersPage = .today,
         settingsPath: [SettingsRoute] = [],
@@ -82,6 +99,11 @@ public struct AppEnvironment: Sendable {
         self.notificationAuthorizer = notificationAuthorizer
         self.notificationScheduler = notificationScheduler
         self.asksForNotificationsAtLaunch = asksForNotificationsAtLaunch
+        self.widgetPublisher = widgetPublisher
+        self.widgetDebug = widgetDebug
+        self.liveActivityScheduler = liveActivityScheduler
+        self.plansLiveActivities = plansLiveActivities
+        self.liveActivityDebugStart = liveActivityDebugStart
         self.initialTab = initialTab
         self.initialPage = initialPage
         self.settingsPath = settingsPath
@@ -101,7 +123,9 @@ public struct AppEnvironment: Sendable {
             settings: .userDefaults(suiteName: appGroupIdentifier),
             qadaStorage: .userDefaults(suiteName: nil),
             notificationAuthorizer: SystemNotificationAuthorizer(),
-            notificationScheduler: SystemNotificationScheduler()
+            notificationScheduler: SystemNotificationScheduler(),
+            widgetPublisher: AppGroupWidgetPublisher(suiteName: appGroupIdentifier),
+            liveActivityScheduler: SystemLiveActivityScheduler()
         )
     }
 
@@ -154,6 +178,9 @@ extension AppEnvironment {
     /// - `-debugNotifications`: Erlaubnis und Mitteilungen über das System, auch mit `-debugFixtureTimes`;
     ///   beim Start fragt die App nach der Erlaubnis, falls iOS noch nie gefragt hat. So lässt sich
     ///   `system/92` mit den Mock-Zeiten nachstellen.
+    /// - `-debugLiveActivity`: genau eine Live-Aktivität, die zum nächsten Gebet, ab dem Start der App –
+    ///   auch außerhalb des Vorlaufs und mit Mock-Zeiten. So lassen sich `system/93`–`96` nachstellen.
+    ///   Die Widgets bekommen Mock-Zeiten und Debug-Uhr über die App Group.
     public init(options: LaunchOptions, system: any AppClock = SystemClock(), deviceTimeZone: TimeZone = .current) {
         clock = options.makeClock(system: system, deviceTimeZone: deviceTimeZone)
         if options.effectiveCity != nil || options.locationDenied {
@@ -192,6 +219,16 @@ extension AppEnvironment {
             notificationScheduler = SystemNotificationScheduler()
         }
         asksForNotificationsAtLaunch = options.notifications
+        // Die Widgets zeigen dieselben Zeiten wie die App: Mock-Zeiten und Debug-Uhr gehen mit in die App
+        // Group.
+        widgetPublisher = AppGroupWidgetPublisher(suiteName: Self.appGroupIdentifier)
+        widgetDebug = options.fixtureTimes
+            ? WidgetSync.Debug(fixtureTimes: true, highLatitude: options.highLatitude) : nil
+        // Mit Mock-Zeiten plant die App Live-Aktivitäten nur mit `-debugLiveActivity`, damit Aufnahmen keine
+        // auslösen – wie die Mitteilungen. Was von einem früheren Lauf noch läuft, endet.
+        liveActivityScheduler = SystemLiveActivityScheduler()
+        plansLiveActivities = !options.fixtureTimes || options.liveActivity
+        liveActivityDebugStart = options.liveActivity ? clock.now : nil
         initialTab = AppTab(options.page)
         initialPage = PrayersPage(options.page)
         settingsPath = options.page?.settingsRoute?.path ?? []

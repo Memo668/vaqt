@@ -1,0 +1,144 @@
+import DesignSystem
+import PrayerCore
+import SwiftUI
+import WidgetKit
+
+/// Ein Eintrag der Zeitleiste: ab `date` (Gerätezeit) zeigen die Widgets `content`, in der Sprache der App.
+struct PrayerEntry: TimelineEntry {
+    let date: Date
+    let content: PrayerWidgetContent
+    let language: AppLanguage?
+}
+
+/// Die Zeitleiste der Widgets (Spec § 3, „Widgets“).
+///
+/// Sie rechnet mit PrayerCore aus dem, was die App in die App Group geschrieben hat (`WidgetState`): Ort,
+/// Rechen-Einstellungen samt Minutenkorrektur und Sprache. Hat die App noch nichts geschrieben oder kennt
+/// sie keinen Ort, zeigen die Widgets „Stadt wählen“; die App lädt sie neu, sobald es einen Ort gibt.
+struct PrayerTimelineProvider: TimelineProvider {
+
+    func placeholder(in context: Context) -> PrayerEntry {
+        timeline(at: Date()).entries.first ?? Self.noPlace(at: Date(), language: nil)
+    }
+
+    func getSnapshot(in context: Context, completion: @escaping (PrayerEntry) -> Void) {
+        completion(timeline(at: Date()).entries.first ?? Self.noPlace(at: Date(), language: nil))
+    }
+
+    func getTimeline(in context: Context, completion: @escaping (Timeline<PrayerEntry>) -> Void) {
+        completion(timeline(at: Date()))
+    }
+
+    /// Die Zeitleiste ab `deviceNow`.
+    func timeline(at deviceNow: Date) -> Timeline<PrayerEntry> {
+        guard let state = WidgetState.sharedDefaults.flatMap(WidgetState.load(from:)) else {
+            return Timeline(entries: [Self.noPlace(at: deviceNow, language: nil)], policy: .never)
+        }
+        guard let place = state.place else {
+            return Timeline(entries: [Self.noPlace(at: deviceNow, language: state.language)], policy: .never)
+        }
+        // Mit `-debugTime` läuft die Uhr der App anders als die des Geräts: gerechnet wird in App-Zeit,
+        // die Einträge stehen in Gerätezeit.
+        let offset = state.clockOffset
+        let result = WidgetTimeline.entries(
+            from: deviceNow.addingTimeInterval(offset), source: Self.timesSource(for: state), place: place,
+            settings: state.calculation
+        )
+        let entries = result.entries.map { entry in
+            PrayerEntry(
+                date: entry.date.addingTimeInterval(-offset),
+                content: PrayerWidgetContent(
+                    state: Self.widgetState(entry.content), cityName: state.cityName,
+                    isCurrentLocation: state.isCurrentLocation, clockOffset: offset
+                ),
+                language: state.language
+            )
+        }
+        return Timeline(entries: entries, policy: .after(result.reloadDate.addingTimeInterval(-offset)))
+    }
+
+    /// Woher die Zeiten kommen: die echte Rechnung, in DEBUG mit `-debugFixtureTimes` die Mock-Zeiten.
+    static func timesSource(for state: WidgetState) -> any PrayerTimesSource {
+        #if DEBUG
+        if let debug = state.debug, debug.fixtureTimes {
+            return FixtureTimesSource(highLatitude: debug.highLatitude)
+        }
+        #endif
+        return AdhanTimesSource()
+    }
+
+    static func widgetState(_ content: WidgetTimeline.Content) -> PrayerWidgetContent.State {
+        switch content {
+        case .times(let snapshot): .times(snapshot)
+        case .noTimes: .noTimes
+        }
+    }
+
+    static func noPlace(at date: Date, language: AppLanguage?) -> PrayerEntry {
+        PrayerEntry(
+            date: date, content: PrayerWidgetContent(state: .noPlace, cityName: "", isCurrentLocation: false),
+            language: language
+        )
+    }
+}
+
+/// Die Ansicht je Größe.
+struct PrayerTimesWidgetView: View {
+    let entry: PrayerEntry
+
+    @Environment(\.widgetFamily) private var family
+
+    var body: some View {
+        // Die Texte in der Sprache der App, bevor die Ansichten sie lesen.
+        L10n.chosenLanguage = entry.language
+        return content
+            .environment(\.locale, L10n.locale)
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        switch family {
+        case .systemMedium:
+            MediumPrayerWidget(content: entry.content)
+                .containerBackground(Palette.backgroundCell, for: .widget)
+        // Die helle, durchscheinende Fläche des Prototyps (`.acc`) liegt im Inhalt: Als Hintergrund des
+        // Containers ließe iOS sie auf dem Sperrbildschirm weg.
+        case .accessoryCircular:
+            ZStack {
+                AccessoryWidgetBackground()
+                CircularPrayerWidget(content: entry.content)
+            }
+            .containerBackground(for: .widget) { Color.clear }
+        case .accessoryRectangular:
+            ZStack {
+                AccessoryWidgetBackground()
+                    .clipShape(.rect(cornerRadius: WidgetMetrics.rectangularRadius, style: .continuous))
+                RectangularPrayerWidget(content: entry.content)
+                    .padding(WidgetMetrics.rectangularPadding)
+            }
+            .containerBackground(for: .widget) { Color.clear }
+        case .accessoryInline:
+            InlinePrayerWidget(content: entry.content)
+                .containerBackground(for: .widget) { Color.clear }
+        default:
+            SmallPrayerWidget(content: entry.content)
+                .containerBackground(Palette.backgroundCell, for: .widget)
+        }
+    }
+}
+
+/// Das Widget der App in fünf Größen: klein und mittel auf dem Home-Bildschirm, rund, rechteckig und als
+/// Zeile auf dem Sperrbildschirm (Spec § 3).
+struct PrayerTimesWidget: Widget {
+    static let kind = "PrayerTimes"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: Self.kind, provider: PrayerTimelineProvider()) { entry in
+            PrayerTimesWidgetView(entry: entry)
+        }
+        .configurationDisplayName(L10n.appName)
+        .supportedFamilies([.systemSmall, .systemMedium, .accessoryCircular, .accessoryRectangular, .accessoryInline])
+        // Die Abstände setzt das Widget selbst, wie im Prototyp.
+        .contentMarginsDisabled()
+    }
+}

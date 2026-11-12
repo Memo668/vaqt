@@ -70,6 +70,8 @@ struct AppContent: View {
     @State private var qada: QadaModel
     @State private var settingsModel: SettingsModel
     @State private var notifications: NotificationModel
+    @State private var widgets: WidgetSync
+    @State private var liveActivities: LiveActivityModel
 
     init(environment: AppEnvironment, settings: SettingsStore, navigation: AppNavigation) {
         self.environment = environment
@@ -83,6 +85,16 @@ struct AppContent: View {
             scheduler: environment.notificationScheduler
         )
         _notifications = State(initialValue: notifications)
+        // Widgets und Live-Aktivität zeigen denselben Ort wie die Zeiten-Seite.
+        _widgets = State(initialValue: WidgetSync(
+            settings: settings, location: location, clock: environment.clock,
+            publisher: environment.widgetPublisher, debug: environment.widgetDebug
+        ))
+        _liveActivities = State(initialValue: LiveActivityModel(
+            settings: settings, location: location, clock: environment.clock,
+            timesSource: environment.timesSource, scheduler: environment.liveActivityScheduler,
+            isPlanning: environment.plansLiveActivities, debugStart: environment.liveActivityDebugStart
+        ))
         let today = TodayModel(
             clock: environment.clock, timesSource: environment.timesSource,
             location: location, connectivity: environment.connectivity,
@@ -131,6 +143,10 @@ struct AppContent: View {
         // Plant die Mitteilungen beim Start, wenn die App nach vorn kommt und nach jeder Änderung.
         .background {
             NotificationPlanning(model: notifications, asksAtLaunch: environment.asksForNotificationsAtLaunch)
+        }
+        // Widgets und Live-Aktivitäten ebenso; dabei enden alte Aktivitäten.
+        .background {
+            OutsideAppPlanning(widgets: widgets, liveActivities: liveActivities, clock: environment.clock)
         }
         .environment(settingsModel)
         .toasts(from: toast)

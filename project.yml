@@ -106,6 +106,8 @@ targets:
         CFBundleLocalizations: [de, tr, en, es]
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
+        # Die App Group, aus der Widgets und Live-Aktivität den Stand der App lesen (DesignSystem: WidgetState).
+        AppGroupIdentifier: $(APP_GROUP_ID)
     entitlements:
       path: Widgets/GebetszeitenWidgets.entitlements
       properties:
@@ -134,6 +136,7 @@ schemes:
         "-debugTab today": false
         "-debugQiblaHeading 137": false
         "-debugNotifications": false
+        "-debugLiveActivity": false
     test:
       config: Debug
       gatherCoverageData: true
