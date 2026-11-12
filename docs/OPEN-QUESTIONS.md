@@ -223,6 +223,10 @@ Mit dem Plan freigegeben sind auch seine Annahmen:
 - **Quellcode und Version:** Für „Quellcode“ gibt es noch keine Adresse (kein Remote); bis dahin ein Platzhalter in `project.yml` wie die Bundle-ID. Die Version kommt aus dem Bundle („0.1.0 (1)“; das Referenzbild zeigt „1.0 (1)“).
 - **App-Zeichen** in Onboarding und Tagline: die Platzhalter-Zeichnung des Prototyps (`appGlyph`), bis Phase 11 das Icon bringt.
 
+## Abnahme von Phase 7 am 12.11.2026
+
+Phase 7 wurde am 12.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-7` stand (Stand `dfcc6f5`). Offen bleiben die Prüfung mit Ton am Gerät (der Simulator hat kein Ausgabegerät) und die Rechte der beiden Aufnahmen von Wikimedia Commons vor dem App Store (oben unter „Vor der Veröffentlichung zu prüfen“). Noch nicht geprüft sind VoiceOver von Hand (bisher nur der Baum der Bedienungshilfen) und die Seiten am echten Gerät.
+
 ## Annahmen in Phase 7
 
 Gemessen ist auf dem iPhone 18 Pro mit iOS 27.2, Zustände wie in `scripts/compare-settings`; `iphone/71` und `72` (gescrollt), die Abläufe und der Baum der Bedienungshilfen mit dem UI-Hilfsprojekt (`s28-settings.txt` bis `s35-appearance-language.txt`).
