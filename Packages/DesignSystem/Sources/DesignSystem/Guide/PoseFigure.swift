@@ -27,6 +27,8 @@ public struct PoseFigure: View {
                 )
         }
         .frame(width: PoseFigureMetrics.figureSize, height: PoseFigureMetrics.figureSize)
+        // Sonst spiegelt SwiftUI die Zeichnung bei der Leserichtung von rechts nach links.
+        .environment(\.layoutDirection, .leftToRight)
         .frame(width: PoseFigureMetrics.tileSize, height: PoseFigureMetrics.tileSize)
         .background(Palette.accentTint, in: .rect(cornerRadius: PoseFigureMetrics.tileRadius, style: .continuous))
         .accessibilityHidden(true)

@@ -20,17 +20,33 @@ public struct CardEyebrow: View {
     }
 
     public var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: CardEyebrowMetrics.gap) {
-            Text(leading)
-            Spacer(minLength: 0)
-            Text(trailing)
-                .tabularDigits(trailingHasTabularDigits)
+        // Passen beide Teile nicht nebeneinander – große Schrift –, steht die Angabe unter dem Stichwort,
+        // statt mitten in einer Uhrzeit umzubrechen.
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: .firstTextBaseline, spacing: CardEyebrowMetrics.gap) {
+                Text(leading)
+                Spacer(minLength: 0)
+                trailingText
+            }
+            VStack(alignment: .leading, spacing: 0) {
+                if !leading.isEmpty {
+                    Text(leading)
+                }
+                trailingText
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .textStyle(.caption1, weight: .semibold, lineHeight: CardEyebrowMetrics.lineHeight)
         .tracking(CardEyebrowMetrics.tracking)
         .textCase(.uppercase)
         .foregroundStyle(Palette.textSecondary)
         .accessibilityElement(children: .combine)
+    }
+
+    private var trailingText: some View {
+        Text(trailing)
+            .tabularDigits(trailingHasTabularDigits)
+            .fixedSize()
     }
 }
 

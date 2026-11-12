@@ -68,9 +68,9 @@ public struct ComponentCatalog: View {
         case .compass:
             capture { CatalogCompass(state: compass) }
         case .guide:
-            capture { CatalogGuide(header: guide) }
+            captureTall { CatalogGuide(header: guide) }
         case .steps:
-            capture { GuideSteps() }
+            captureTall { GuideSteps() }
         case .all:
             everything
         }
@@ -85,6 +85,21 @@ public struct ComponentCatalog: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background(Palette.backgroundGrouped)
             .ignoresSafeArea()
+    }
+
+    /// Wie `capture`, für Bausteine, die höher sind als der Bildschirm: Sie stehen in voller Höhe oben an
+    /// derselben Stelle und laufen unten hinaus, statt ihre Texte zu kürzen.
+    private func captureTall<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        let content = content()
+        return GeometryReader { _ in
+            content
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(width: CatalogMetrics.referenceWidth)
+                .padding(.top, CatalogMetrics.captureTop)
+                .frame(maxWidth: .infinity, alignment: .top)
+        }
+        .background(Palette.backgroundGrouped)
+        .ignoresSafeArea()
     }
 
     private var everything: some View {
