@@ -15,7 +15,7 @@ import PrayerCore
 /// -debugHighLatitude            Berlin, 21. Juni
 /// -debugLocationDenied  -debugOffline
 /// -debugTab today|qibla|guide|verses|qada|settings
-///           method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|adhan
+///           method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|adhan|city
 /// -debugOnboarding 1|2|3        Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
 /// -debugQiblaHeading 137
 /// -debugQiblaAccuracy 40        Genauigkeit des Kompasses in Grad; über 25 erscheint die Kalibrierungskarte
@@ -28,16 +28,19 @@ import PrayerCore
 public struct LaunchOptions: Equatable, Sendable {
 
     /// Ziel von `-debugTab`: ein Tab, eine Seite des Tabs „Gebete“, die Einstellungen oder eine ihrer
-    /// Seiten (die Kennungen aus `PAGES` im Prototyp) oder das Adhan-Sheet über den Einstellungen.
+    /// Seiten (die Kennungen aus `PAGES` im Prototyp), das Adhan-Sheet über den Einstellungen oder das
+    /// Stadt-Sheet über der Zeiten-Seite.
     public enum Page: String, CaseIterable, Sendable {
         case today, qibla, guide, verses, qada, settings
         case method, asr, hl, adjust, perPrayer, reminder, live, sound, appearance, language, privacy
         case adhan
+        /// Das Stadt-Sheet über der Zeiten-Seite (`iphone/85`, `duo/closed-85`, `duo/open-85`).
+        case city
 
-        /// Die Seite der Einstellungen, die offen ist; `nil` für die Tabs und ihre Seiten.
+        /// Die Seite der Einstellungen, die offen ist; `nil` für die Tabs, ihre Seiten und das Stadt-Sheet.
         public var settingsRoute: SettingsRoute? {
             switch self {
-            case .today, .qibla, .guide, .verses, .qada: nil
+            case .today, .qibla, .guide, .verses, .qada, .city: nil
             case .adhan: .settings
             default: SettingsRoute(rawValue: rawValue)
             }

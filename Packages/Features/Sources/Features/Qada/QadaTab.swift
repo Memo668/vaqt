@@ -11,9 +11,9 @@ struct QadaTab: View {
     var body: some View {
         NavigationStack(path: $path) {
             QadaPage(model: model)
+                .readsPageArrangement()
                 .settingsBar(path: $path)
                 .background(Palette.backgroundGrouped)
-                .toolbar(.hidden, for: .navigationBar)
                 .navigationDestination(for: SettingsRoute.self) { route in
                     SettingsDestination(route: route)
                 }
@@ -31,15 +31,12 @@ struct QadaPage: View {
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                QadaOverview(ledger: model.ledger, today: model.today, onAction: model.perform)
-                QadaDetails(ledger: model.ledger, onAction: model.perform)
-            }
-            .padding(.top, PageMetrics.contentTop)
-            .padding(.bottom, PageMetrics.contentBottom)
+        // Innen auf dem iPhone Duo: Zusammenfassung und Plan links, „Nach Gebet“ und der Rechner rechts.
+        PageScroll {
+            QadaOverview(ledger: model.ledger, today: model.today, onAction: model.perform)
+        } second: {
+            QadaDetails(ledger: model.ledger, onAction: model.perform)
         }
-        .background(Palette.backgroundGrouped)
         // Liest den Tag, wenn die App nach vorn kommt, und dann um Mitternacht am Ort.
         .task(id: DayActivity(isActive: scenePhase == .active, timeZone: model.timeZone.identifier)) {
             guard scenePhase == .active else { return }

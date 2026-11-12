@@ -11,6 +11,7 @@ struct OnboardingView: View {
     let model: OnboardingModel
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @AccessibilityFocusState private var primaryFocused: Bool
 
     var body: some View {
@@ -106,9 +107,8 @@ struct OnboardingView: View {
                 plainButton(L10n.ob3Later, action: model.finish)
             }
         }
-        .padding(.top, OnboardingMetrics.actionsTop)
-        .padding(.horizontal, OnboardingMetrics.actionsInsetX)
-        .padding(.bottom, OnboardingMetrics.actionsBottom)
+        // Innen auf dem iPhone Duo schmaler und mittig (`.onb-actions`).
+        .padding(OnboardingMetrics.actionsInsets(regular: horizontalSizeClass == .regular))
     }
 
     /// `.btn.btn-primary`: Kapsel in Akzent, 50 pt hoch, Schrift 17 pt halbfett.

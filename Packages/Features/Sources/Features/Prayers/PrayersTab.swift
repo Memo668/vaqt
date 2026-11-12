@@ -4,8 +4,10 @@ import SwiftUI
 /// Der Tab „Gebete“: die obere Leiste über den drei Seiten Zeiten, Qibla und Anleitung. Die
 /// Einstellungen schieben sich als eigene Seite darüber; dort gibt es die Leiste nicht.
 ///
-/// Die Leiste steht fest (`safeAreaBar`), der Inhalt scrollt unter ihr durch. Zurück aus den
-/// Einstellungen steht wieder die Seite da, die vorher zu sehen war (Design Spec § 1 und § 4).
+/// Die Leiste steht fest (`safeAreaBar`), der Inhalt scrollt unter ihr durch. Stehen die Leisten
+/// senkrecht am Rand (iPhone Duo), legt iOS Einstellungskreis und Chips als Einträge in die senkrechte
+/// Leiste (Design Spec § 8). Zurück aus den Einstellungen steht wieder die Seite da, die vorher zu sehen
+/// war (Design Spec § 1 und § 4).
 ///
 /// Der Ort gilt für alle Seiten des Tabs. Deshalb bestimmt ihn der Tab. Das Stadt-Sheet hängt an der
 /// Wurzel der App (`AppContent`), damit es auch die Einstellungen jedes Tabs und das Onboarding öffnen:
@@ -40,10 +42,14 @@ struct PrayersTab: View {
                     }
                 }
             }
-            .safeAreaBar(edge: .top, spacing: 0) {
-                TopBar(selection: $page) {
-                    path.append(.settings)
-                }
+            // Innen auf dem iPhone Duo stehen die Teile jeder Seite in zwei Spalten am Falz. Gemessen wird
+            // am Pager, dessen Rahmen beim Wischen stillsteht.
+            .readsPageArrangement()
+            // Neben der senkrechten Leiste endet der Pager an ihrem Rand: Die nächste Seite schaut sonst
+            // hinter der Leiste hervor.
+            .clipsPagesAtVerticalBar()
+            .prayersTopBar(selection: $page) {
+                path.append(.settings)
             }
             // Wer die Anleitung verlässt – Chip, Wischen, „Qibla öffnen“ –, hebt die manuelle Wahl auf
             // (`goPane()`). Ein anderer Tab und die Einstellungen lassen sie stehen, wie im Prototyp.
@@ -53,7 +59,6 @@ struct PrayersTab: View {
                 }
             }
             .background(Palette.backgroundGrouped)
-            .toolbar(.hidden, for: .navigationBar)
             // Beim ersten Erscheinen und immer, wenn die App wieder nach vorn kommt.
             .task(id: scenePhase) {
                 if scenePhase == .active {
@@ -63,6 +68,30 @@ struct PrayersTab: View {
             .navigationDestination(for: SettingsRoute.self) { route in
                 SettingsDestination(route: route)
             }
+        }
+    }
+}
+
+extension View {
+
+    /// Stehen die Leisten senkrecht am Rand, schneidet die Ansicht links und rechts an ihrem Rahmen ab –
+    /// oben und unten reicht sie weiter unter die Ränder des Systems, damit der Inhalt dort durchscrollt.
+    /// Auf dem iPhone bleibt sie, wie sie ist.
+    func clipsPagesAtVerticalBar() -> some View {
+        modifier(VerticalBarClip())
+    }
+}
+
+private struct VerticalBarClip: ViewModifier {
+    @Environment(\.verticalBarEdge) private var verticalBarEdge
+
+    func body(content: Content) -> some View {
+        if verticalBarEdge != nil {
+            content.mask {
+                Rectangle().ignoresSafeArea(edges: .vertical)
+            }
+        } else {
+            content
         }
     }
 }

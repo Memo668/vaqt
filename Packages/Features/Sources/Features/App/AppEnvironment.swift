@@ -54,6 +54,8 @@ public struct AppEnvironment: Sendable {
     public var settingsPath: [SettingsRoute]
     /// Ob das Adhan-Sheet beim Start offen ist (`-debugTab adhan`).
     public var opensAdhanSheet: Bool
+    /// Ob das Stadt-Sheet beim Start über der Zeiten-Seite offen ist (`-debugTab city`).
+    public var opensCitySheet: Bool
     /// Ob das Onboarding beim Start übergangen wird (`-debugSkipOnboarding`).
     public var skipsOnboarding: Bool
     /// Schritt, mit dem das Onboarding beim Start erscheint, auch wenn es schon durchlaufen ist
@@ -85,6 +87,7 @@ public struct AppEnvironment: Sendable {
         initialPage: PrayersPage = .today,
         settingsPath: [SettingsRoute] = [],
         opensAdhanSheet: Bool = false,
+        opensCitySheet: Bool = false,
         skipsOnboarding: Bool = false,
         onboardingStep: OnboardingStep? = nil
     ) {
@@ -108,6 +111,7 @@ public struct AppEnvironment: Sendable {
         self.initialPage = initialPage
         self.settingsPath = settingsPath
         self.opensAdhanSheet = opensAdhanSheet
+        self.opensCitySheet = opensCitySheet
         self.skipsOnboarding = skipsOnboarding
         self.onboardingStep = onboardingStep
     }
@@ -233,6 +237,7 @@ extension AppEnvironment {
         initialPage = PrayersPage(options.page)
         settingsPath = options.page?.settingsRoute?.path ?? []
         opensAdhanSheet = options.page == .adhan
+        opensCitySheet = options.page == .city
         skipsOnboarding = options.skipOnboarding && options.onboardingStep == nil
         onboardingStep = options.onboardingStep.flatMap { OnboardingStep(rawValue: $0 - 1) }
         launchOptions = options
@@ -241,8 +246,8 @@ extension AppEnvironment {
 
 extension AppTab {
 
-    /// Der Tab, in dem eine Seite aus `-debugTab` liegt. Zeiten, Qibla, Anleitung, die Einstellungen und
-    /// das Adhan-Sheet gehören zum Tab „Gebete“.
+    /// Der Tab, in dem eine Seite aus `-debugTab` liegt. Zeiten, Qibla, Anleitung, die Einstellungen,
+    /// das Adhan- und das Stadt-Sheet gehören zum Tab „Gebete“.
     init(_ page: LaunchOptions.Page?) {
         switch page {
         case .verses: self = .verses

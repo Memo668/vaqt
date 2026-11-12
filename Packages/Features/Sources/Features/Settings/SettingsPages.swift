@@ -10,6 +10,8 @@ struct SettingsDestination: View {
 
     var body: some View {
         page
+            // Innen auf dem iPhone Duo als mittige 600-pt-Spalte (Design Spec § 8).
+            .centeredColumn()
             .navigationTitle(route.title)
             .navigationBarTitleDisplayMode(route == .settings ? .large : .inline)
     }

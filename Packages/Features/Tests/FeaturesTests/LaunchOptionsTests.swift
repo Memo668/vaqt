@@ -198,6 +198,7 @@ struct LaunchOptionsTests {
         }
         #expect(LaunchOptions.Page.adhan.settingsRoute == .settings)
         #expect(LaunchOptions.Page.verses.settingsRoute == nil)
+        #expect(LaunchOptions.Page.city.settingsRoute == nil)
     }
 
     @Test("ein fehlender Wert am Ende wird gemeldet")

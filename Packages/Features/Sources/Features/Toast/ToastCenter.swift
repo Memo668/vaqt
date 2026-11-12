@@ -49,11 +49,14 @@ public final class ToastCenter {
 }
 
 /// Stellt den Toast der App über den Inhalt: unten mittig, 100 pt über der Unterkante des Bildschirms
-/// und damit 16 pt über der Tableiste.
+/// und damit 16 pt über der Tableiste. Stehen die Leisten senkrecht am Rand (iPhone Duo), gibt es unten
+/// keine Tableiste: Dann steht er 28 pt über der Unterkante, mittig über dem Inhalt
+/// (`.screen[data-dev^="duo"] .toast`).
 struct ToastHost: ViewModifier {
     let center: ToastCenter
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.verticalBarEdge) private var verticalBarEdge
 
     func body(content: Content) -> some View {
         content
@@ -65,10 +68,12 @@ struct ToastHost: ViewModifier {
                             .transition(transition)
                     }
                 }
-                .padding(.bottom, Layout.toastBottom)
-                // Gemessen wird von der Unterkante des Bildschirms, nicht vom sicheren Bereich.
+                .padding(.bottom, verticalBarEdge == nil ? Layout.toastBottom : Layout.toastBottomWithVerticalBar)
+                // Gemessen wird von der Unterkante des Bildschirms, nicht vom sicheren Bereich; links und
+                // rechts bleibt der sichere Bereich, damit der Toast neben einer senkrechten Leiste mittig
+                // über dem Inhalt steht.
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                .ignoresSafeArea()
+                .ignoresSafeArea(edges: .vertical)
                 .allowsHitTesting(false)
                 // `transition: opacity .25s, transform .4s var(--ease-spring)`
                 .animation(.spring(duration: 0.4), value: center.message)

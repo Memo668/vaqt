@@ -12,16 +12,3 @@ struct SettingsBar: View {
         }
     }
 }
-
-extension View {
-
-    /// Legt die Leiste mit dem Einstellungskreis fest über die Seite; der Inhalt scrollt unter ihr durch,
-    /// mit dem Randeffekt des Systems. Der Kreis öffnet die Einstellungen im Stapel des Tabs.
-    func settingsBar(path: Binding<[SettingsRoute]>) -> some View {
-        safeAreaBar(edge: .top, spacing: 0) {
-            SettingsBar {
-                path.wrappedValue.append(.settings)
-            }
-        }
-    }
-}

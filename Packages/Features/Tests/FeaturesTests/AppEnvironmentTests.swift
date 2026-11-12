@@ -35,6 +35,7 @@ struct AppEnvironmentTests {
         #expect(environment.initialPage == .today)
         #expect(environment.settingsPath.isEmpty)
         #expect(!environment.opensAdhanSheet)
+        #expect(!environment.opensCitySheet)
         #expect(!environment.skipsOnboarding)
         #expect(environment.onboardingStep == nil)
         #expect(environment.notificationAuthorizer is SystemNotificationAuthorizer)
@@ -237,6 +238,17 @@ struct AppEnvironmentTests {
         let environment = AppEnvironment(options: LaunchOptions(arguments: ["-debugTab", "adhan"]))
         #expect(environment.settingsPath == [.settings])
         #expect(environment.opensAdhanSheet)
+    }
+
+    @Test("-debugTab city öffnet das Stadt-Sheet über der Zeiten-Seite")
+    func citySheet() {
+        let environment = AppEnvironment(options: LaunchOptions(arguments: ["-debugTab", "city"]))
+        #expect(environment.opensCitySheet)
+        #expect(environment.initialTab == .prayers)
+        #expect(environment.initialPage == .today)
+        #expect(environment.settingsPath.isEmpty)
+        #expect(!environment.opensAdhanSheet)
+        #expect(!AppEnvironment(options: LaunchOptions(arguments: ["-debugTab", "adhan"])).opensCitySheet)
     }
 
     @Test("-debugOnboarding wählt den Schritt und schlägt -debugSkipOnboarding")

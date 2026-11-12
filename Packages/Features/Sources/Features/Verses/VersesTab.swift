@@ -11,9 +11,9 @@ struct VersesTab: View {
     var body: some View {
         NavigationStack(path: $path) {
             VersesPage(model: model)
+                .readsPageArrangement()
                 .settingsBar(path: $path)
                 .background(Palette.backgroundGrouped)
-                .toolbar(.hidden, for: .navigationBar)
                 .navigationDestination(for: SettingsRoute.self) { route in
                     SettingsDestination(route: route)
                 }
@@ -31,19 +31,15 @@ struct VersesPage: View {
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                VersesOverview(day: model.shown, onCopy: model.copyShownVerse)
-                RecentVerses(days: model.recent, selection: model.shownDay) { day in
-                    model.select(day)
-                    position.scrollTo(edge: .top)
-                }
+        // Innen auf dem iPhone Duo: die Karte links, „Letzte Tage“ rechts.
+        PageScroll(position: $position) {
+            VersesOverview(day: model.shown, onCopy: model.copyShownVerse)
+        } second: {
+            RecentVerses(days: model.recent, selection: model.shownDay) { day in
+                model.select(day)
+                position.scrollTo(edge: .top)
             }
-            .padding(.top, PageMetrics.contentTop)
-            .padding(.bottom, PageMetrics.contentBottom)
         }
-        .scrollPosition($position)
-        .background(Palette.backgroundGrouped)
         // Liest den Tag, wenn die App nach vorn kommt, und dann um Mitternacht am Ort.
         .task(id: DayActivity(isActive: scenePhase == .active, timeZone: model.timeZone.identifier)) {
             guard scenePhase == .active else { return }

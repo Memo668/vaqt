@@ -14,52 +14,70 @@ struct TodayPage: View {
     /// „Regel ändern“ im Hinweis zu hohen Breiten.
     let onHighLatitudeRule: () -> Void
 
+    @Environment(\.pageArrangement) private var arrangement
+
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                TodayHeader(model: model)
-
-                if model.showsLocationDeniedBanner {
-                    Banner(L10n.locOffBanner, systemImage: "location.slash", actionTitle: L10n.change) {
-                        model.isCitySheetPresented = true
-                    }
-                    .padding(.top, TodayMetrics.bannerTop)
-                    .padding(.horizontal, Layout.inset)
-                }
-
-                if let timeline = model.timeline {
-                    TodayHero(timeline: timeline, clock: model.clock, showKerahat: model.settings.showKerahat) {
-                        model.refresh()
-                    }
-                    .padding(.top, TodayMetrics.heroTop)
-
-                    rows
-                        .padding(.top, TodayMetrics.rowsTop)
-                        .padding(.horizontal, Layout.inset)
-
-                    if model.isHighLatitude {
-                        NoteCard(
-                            title: L10n.highLatTitle, text: model.highLatitudeNote,
-                            linkTitle: L10n.highLatLink, action: onHighLatitudeRule
-                        )
-                        .padding(.top, TodayMetrics.noteTop)
-                        .padding(.horizontal, Layout.inset)
-                    }
-                } else if model.hasNoTimes {
-                    NoteCard(text: L10n.noTimes)
-                        .padding(.top, TodayMetrics.bannerTop)
-                        .padding(.horizontal, Layout.inset)
-                }
-            }
-            .padding(.top, PageMetrics.contentTop)
-            .padding(.bottom, PageMetrics.contentBottom)
+        PageScroll(centersParts: true, alignment: .center) {
+            overview
+        } second: {
+            details
         }
-        .background(Palette.backgroundGrouped)
         .task {
             await model.observeConnectivity()
         }
         .onChange(of: model.settings.calculation) { model.refresh() }
         .onChange(of: model.settings.showKerahat) { model.refresh() }
+    }
+
+    /// Stadt, Datum, Banner und Bogen – `.col-a` in `homePage()`; innen die linke Spalte.
+    private var overview: some View {
+        VStack(spacing: 0) {
+            TodayHeader(model: model)
+
+            if model.showsLocationDeniedBanner {
+                Banner(L10n.locOffBanner, systemImage: "location.slash", actionTitle: L10n.change) {
+                    model.isCitySheetPresented = true
+                }
+                .padding(.top, TodayMetrics.bannerTop)
+                .padding(.horizontal, Layout.inset)
+            }
+
+            if let timeline = model.timeline {
+                TodayHero(timeline: timeline, clock: model.clock, showKerahat: model.settings.showKerahat) {
+                    model.refresh()
+                }
+                .padding(.top, TodayMetrics.heroTop)
+                // In Spalten bleibt der Abstand unter dem Bogen in der linken Spalte (`.hero`:
+                // `margin-bottom: 8px`); untereinander fällt er mit dem über den Karten zusammen.
+                .padding(.bottom, arrangement.isSplit ? TodayMetrics.heroBottom : 0)
+            } else if model.hasNoTimes {
+                NoteCard(text: L10n.noTimes)
+                    .padding(.top, TodayMetrics.bannerTop)
+                    .padding(.horizontal, Layout.inset)
+            }
+        }
+    }
+
+    /// Die Gebetskarten und der Hinweis zu hohen Breiten – `.col-b` in `homePage()`; innen die rechte
+    /// Spalte.
+    @ViewBuilder
+    private var details: some View {
+        if model.timeline != nil {
+            VStack(spacing: 0) {
+                rows
+                    .padding(.top, arrangement.isSplit ? TodayMetrics.rowsTopInColumns : TodayMetrics.rowsTop)
+                    .padding(.horizontal, Layout.inset)
+
+                if model.isHighLatitude {
+                    NoteCard(
+                        title: L10n.highLatTitle, text: model.highLatitudeNote,
+                        linkTitle: L10n.highLatLink, action: onHighLatitudeRule
+                    )
+                    .padding(.top, TodayMetrics.noteTop)
+                    .padding(.horizontal, Layout.inset)
+                }
+            }
+        }
     }
 
     /// Die sechs Gebetskarten. Die Liste trägt für VoiceOver das Datum, wie `aria-label` im Prototyp.
@@ -104,7 +122,11 @@ enum TodayMetrics {
     /// Bogen (`.hero`: `margin: 10px auto 8px`). Sein unterer Rand fällt mit dem oberen der
     /// Gebetskarten zusammen (`.prayers`: `margin-top: 8px`), es bleiben 8 pt.
     static let heroTop: CGFloat = 10
+    static let heroBottom: CGFloat = 8
     static let rowsTop: CGFloat = 8
+    /// Innen auf dem iPhone Duo stehen die Karten in der rechten Spalte: deren Innenrand oben
+    /// (`.home .col-b`: `padding-top: 6px`) und der Abstand der Karten (`margin-top: 8px`).
+    static let rowsTopInColumns: CGFloat = 6 + 8
     /// Hinweis zu hohen Breiten unter den Karten (`.note`: `margin: 12px … 0`).
     static let noteTop: CGFloat = 12
 }

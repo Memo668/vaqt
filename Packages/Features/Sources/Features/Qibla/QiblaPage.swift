@@ -16,10 +16,17 @@ struct QiblaPage: View {
     let onChooseCity: () -> Void
 
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.pageArrangement) private var arrangement
     @ScaledMetric(relativeTo: .body) private var typeScale: CGFloat = 1
 
     var body: some View {
-        ScrollView {
+        let inColumns = arrangement.isColumns
+        // Untereinander mit dem Seitenrand (`.qibla`: `padding: 0 var(--inset)`); in Spalten ohne
+        // (`padding: 0`), die rechte Spalte hält dann 28 pt.
+        let inset = inColumns ? 0 : Layout.inset
+        // Innen auf dem iPhone Duo: Titel, Kurs, Kompass und Status links, Richtung, Entfernung und die
+        // Kalibrierungskarte rechts, beide senkrecht mittig (`.qibla .cols`).
+        PageScroll(centersParts: true, alignment: .center, secondPadding: QiblaMetrics.infoColumnPadding) {
             VStack(spacing: 0) {
                 Text(model.title)
                     .textStyle(.subheadline, lineHeight: QiblaMetrics.titleLineHeight)
@@ -36,11 +43,15 @@ struct QiblaPage: View {
                 }
 
                 Compass(heading: model.dialHeading, bearing: model.bearing, isAligned: model.isAligned)
-                    .padding(.top, QiblaMetrics.compassTop)
-                    .padding(.bottom, QiblaMetrics.compassBottom)
+                    .padding(.top, inColumns ? QiblaMetrics.compassTopInColumns : QiblaMetrics.compassTop)
+                    .padding(.bottom, inColumns ? QiblaMetrics.compassBottomInColumns : QiblaMetrics.compassBottom)
 
                 status
-
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, inset)
+        } second: {
+            VStack(spacing: 0) {
                 info
                     .padding(.top, QiblaMetrics.infoTop)
                     .padding(.bottom, QiblaMetrics.infoBottom)
@@ -50,11 +61,8 @@ struct QiblaPage: View {
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding(.horizontal, Layout.inset)
-            .padding(.top, PageMetrics.contentTop)
-            .padding(.bottom, PageMetrics.contentBottom)
+            .padding(.horizontal, inset)
         }
-        .background(Palette.backgroundGrouped)
         // Solange die Seite zu sehen ist; verschwindet sie – andere Seite, anderer Tab, Einstellungen,
         // App im Hintergrund –, hört der Kompass auf.
         .task(id: isSelected && scenePhase == .active) {
@@ -168,9 +176,13 @@ enum QiblaMetrics {
     static let degreesMaxScale: CGFloat = 1.2
     static let degreesTracking: CGFloat = -1
 
-    /// Kompass (`.compass`: `margin: 40px 0 20px`).
+    /// Kompass (`.compass`: `margin: 40px 0 20px`); innen auf dem iPhone Duo `margin: 20px 0 16px`.
     static let compassTop: CGFloat = 40
     static let compassBottom: CGFloat = 20
+    static let compassTopInColumns: CGFloat = 20
+    static let compassBottomInColumns: CGFloat = 16
+    /// Innenrand der rechten Spalte innen auf dem iPhone Duo (`.qibla .col-b`: `padding: 0 28px`).
+    static let infoColumnPadding: CGFloat = 28
 
     /// Statuszeile (`.q-status`: `gap: 6px; min-height: 26px; font: 600 …/1.3`).
     static let statusGap: CGFloat = 6

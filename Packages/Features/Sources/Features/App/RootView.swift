@@ -25,6 +25,7 @@ public struct RootView: View {
         _navigation = State(initialValue: AppNavigation(
             tab: environment.initialTab, prayersPage: environment.initialPage,
             settingsPath: environment.settingsPath, isAdhanSheetPresented: environment.opensAdhanSheet,
+            opensCitySheetOnAppear: environment.opensCitySheet,
             onboardingStep: environment.onboardingStep ?? (showsOnboarding ? .welcome : nil)
         ))
     }
@@ -48,6 +49,8 @@ public struct RootView: View {
         L10n.chosenLanguage = settings.language
         return AppContent(environment: environment, settings: settings, navigation: navigation)
             .id(settings.language)
+            // Wo die senkrechte Leiste steht (iPhone Duo), für die obere Leiste und die Abstände der Seiten.
+            .readsVerticalBarEdge()
             .environment(\.locale, L10n.locale)
             .preferredColorScheme(settings.appearance.colorScheme)
     }
@@ -72,6 +75,8 @@ struct AppContent: View {
     @State private var notifications: NotificationModel
     @State private var widgets: WidgetSync
     @State private var liveActivities: LiveActivityModel
+    /// Innen auf dem iPhone Duo (regular) erscheinen die Sheets als mittige Karte.
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     init(environment: AppEnvironment, settings: SettingsStore, navigation: AppNavigation) {
         self.environment = environment
@@ -128,6 +133,7 @@ struct AppContent: View {
             } else {
                 tabs
                     .transition(.opacity)
+                    .onAppear(perform: openCitySheetIfRequested)
             }
         }
         .animation(.easeInOut(duration: 0.35), value: navigation.onboardingStep == nil)
@@ -135,10 +141,12 @@ struct AppContent: View {
         // Onboarding.
         .sheet(isPresented: $today.isCitySheetPresented) {
             CitySheet(today: today, search: today.citySearch)
+                .centeredSheetCard(isRegular: horizontalSizeClass == .regular)
         }
         // „Adhan anhören“ in den Einstellungen; Schließen hält die Wiedergabe an.
         .sheet(isPresented: $navigation.isAdhanSheetPresented, onDismiss: adhan.stop) {
             AdhanSheet(model: adhan)
+                .centeredSheetCard(isRegular: horizontalSizeClass == .regular)
         }
         // Plant die Mitteilungen beim Start, wenn die App nach vorn kommt und nach jeder Änderung.
         .background {
@@ -152,6 +160,13 @@ struct AppContent: View {
         .toasts(from: toast)
         .environment(\.appClock, environment.clock)
         .environment(\.locationSource, environment.locationSource)
+    }
+
+    /// `-debugTab city`: das Stadt-Sheet über der Zeiten-Seite, einmal beim ersten Erscheinen der Tabs.
+    private func openCitySheetIfRequested() {
+        guard navigation.opensCitySheetOnAppear else { return }
+        navigation.opensCitySheetOnAppear = false
+        today.isCitySheetPresented = true
     }
 
     private var tabs: some View {

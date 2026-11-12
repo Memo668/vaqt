@@ -16,17 +16,22 @@ final class AppNavigation {
     var qadaPath: [SettingsRoute] = []
     /// Das Adhan-Sheet (`openSheet('adhan')`), erreichbar über „Adhan anhören“.
     var isAdhanSheetPresented: Bool
+    /// Ob sich das Stadt-Sheet beim ersten Erscheinen der Tabs öffnet (`-debugTab city`). Gilt einmal: Baut
+    /// sich der Inhalt in einer neuen Sprache neu auf, bleibt es zu.
+    var opensCitySheetOnAppear: Bool
     /// Der Schritt des Onboardings (`S.obStep`); `nil`, wenn die App zu sehen ist (`S.onboarded`).
     var onboardingStep: OnboardingStep?
 
     init(
         tab: AppTab = .prayers, prayersPage: PrayersPage = .today, settingsPath: [SettingsRoute] = [],
-        isAdhanSheetPresented: Bool = false, onboardingStep: OnboardingStep? = nil
+        isAdhanSheetPresented: Bool = false, opensCitySheetOnAppear: Bool = false,
+        onboardingStep: OnboardingStep? = nil
     ) {
         self.tab = tab
         self.prayersPage = prayersPage
         prayersPath = settingsPath
         self.isAdhanSheetPresented = isAdhanSheetPresented
+        self.opensCitySheetOnAppear = opensCitySheetOnAppear
         self.onboardingStep = onboardingStep
     }
 

@@ -16,18 +16,15 @@ struct GuidePage: View {
     @AccessibilityFocusState private var focusedPrayer: Prayer?
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                GuideOverview(
-                    header: model.header, focus: $focusedPrayer,
-                    onSelect: { model.choose($0) }, onReturn: returnToCurrentPrayer, onOpenQibla: onOpenQibla
-                )
-                GuideSteps()
-            }
-            .padding(.top, PageMetrics.contentTop)
-            .padding(.bottom, PageMetrics.contentBottom)
+        // Innen auf dem iPhone Duo: Auswahl, Kopfkarte und „Vorher“ links, „Ablauf“ rechts.
+        PageScroll {
+            GuideOverview(
+                header: model.header, focus: $focusedPrayer,
+                onSelect: { model.choose($0) }, onReturn: returnToCurrentPrayer, onOpenQibla: onOpenQibla
+            )
+        } second: {
+            GuideSteps()
         }
-        .background(Palette.backgroundGrouped)
         // Gleicht ab, solange die App vorn ist – auch wenn gerade eine andere Seite des Tabs zu sehen ist,
         // damit beim Wischen schon das richtige Gebet dasteht. Wacht nur bei einem neuen Ereignis auf.
         .task(id: Activity(isActive: scenePhase == .active, timeline: model.timeline)) {
