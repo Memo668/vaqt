@@ -45,7 +45,9 @@ public struct AdhanPlayerCard: View {
                 .frame(height: AdhanPlayerMetrics.waveHeight)
                 .padding(.top, AdhanPlayerMetrics.waveTop)
                 .padding(.bottom, AdhanPlayerMetrics.waveBottom)
-            Slider(value: Binding(get: { position }, set: onSeek), in: 0...max(duration, 0.1))
+            // Die Closure entsteht hier im Hauptakteur und ruft `onSeek` dort auf. `set: onSeek` direkt
+            // übergeben hieße, eine nicht-`Sendable`-Funktion als `@Sendable` weiterzureichen.
+            Slider(value: Binding(get: { position }, set: { onSeek($0) }), in: 0...max(duration, 0.1))
                 .tint(Palette.accent)
                 .frame(height: AdhanPlayerMetrics.scrubberHeight)
                 .accessibilityLabel(L10n.progress)
