@@ -148,6 +148,10 @@ struct LaunchOptionsTests {
         ["-debugQiblaHeading", "süd"],
         ["-debugQiblaAccuracy", "schlecht"],
         ["-debugQiblaAccuracy", "inf"],
+        ["-debugTab", "hohe"],
+        ["-debugOnboarding", "0"],
+        ["-debugOnboarding", "4"],
+        ["-debugOnboarding", "zwei"],
     ])
     func invalidValue(arguments: [String]) {
         let options = LaunchOptions(arguments: arguments)
@@ -157,6 +161,34 @@ struct LaunchOptionsTests {
         #expect(options.problems.count == 1)
         #expect(options.problems.first?.contains(arguments[0]) == true)
         #expect(options.problems.first?.contains(arguments[1]) == true)
+    }
+
+    @Test("-debugOnboarding nimmt die Schritte 1 bis 3", arguments: [1, 2, 3])
+    func onboardingStep(step: Int) {
+        let options = LaunchOptions(arguments: ["-debugOnboarding", String(step)])
+        #expect(options.onboardingStep == step)
+        #expect(options.problems.isEmpty)
+    }
+
+    @Test("-debugOnboarding zusammen mit -debugSkipOnboarding wird gemeldet")
+    func onboardingAndSkip() {
+        let options = LaunchOptions(arguments: ["-debugSkipOnboarding", "-debugOnboarding", "2"])
+        #expect(options.onboardingStep == 2)
+        #expect(options.problems.count == 1)
+    }
+
+    @Test("die Seiten der Einstellungen sind die Kennungen aus PAGES")
+    func settingsPages() {
+        let pages = LaunchOptions.Page.allCases.compactMap { page in page.settingsRoute.map { (page, $0) } }
+        #expect(pages.map(\.0.rawValue) == [
+            "settings", "method", "asr", "hl", "adjust", "perPrayer", "reminder", "live", "sound", "appearance",
+            "language", "privacy", "adhan",
+        ])
+        for (page, route) in pages where page != .adhan {
+            #expect(route.rawValue == page.rawValue)
+        }
+        #expect(LaunchOptions.Page.adhan.settingsRoute == .settings)
+        #expect(LaunchOptions.Page.verses.settingsRoute == nil)
     }
 
     @Test("ein fehlender Wert am Ende wird gemeldet")

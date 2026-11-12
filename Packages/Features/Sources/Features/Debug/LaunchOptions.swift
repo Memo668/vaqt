@@ -15,20 +15,36 @@ import PrayerCore
 /// -debugHighLatitude            Berlin, 21. Juni
 /// -debugLocationDenied  -debugOffline
 /// -debugTab today|qibla|guide|verses|qada|settings
+///           method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|adhan
+/// -debugOnboarding 1|2|3        Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
 /// -debugQiblaHeading 137
 /// -debugQiblaAccuracy 40        Genauigkeit des Kompasses in Grad; über 25 erscheint die Kalibrierungskarte
-/// -debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|all   Katalog der Bausteine statt der App, für den Abgleich
+/// -debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|all   Katalog der Bausteine statt der App, für den Abgleich
 /// ```
 ///
 /// Es gibt diesen Typ nur in DEBUG-Builds. Alles, was nicht mit `-debug` beginnt, wird übergangen.
 public struct LaunchOptions: Equatable, Sendable {
 
-    /// Ziel von `-debugTab`.
+    /// Ziel von `-debugTab`: ein Tab, eine Seite des Tabs „Gebete“, die Einstellungen oder eine ihrer
+    /// Seiten (die Kennungen aus `PAGES` im Prototyp) oder das Adhan-Sheet über den Einstellungen.
     public enum Page: String, CaseIterable, Sendable {
         case today, qibla, guide, verses, qada, settings
+        case method, asr, hl, adjust, perPrayer, reminder, live, sound, appearance, language, privacy
+        case adhan
+
+        /// Die Seite der Einstellungen, die offen ist; `nil` für die Tabs und ihre Seiten.
+        public var settingsRoute: SettingsRoute? {
+            switch self {
+            case .today, .qibla, .guide, .verses, .qada: nil
+            case .adhan: .settings
+            default: SettingsRoute(rawValue: rawValue)
+            }
+        }
     }
 
     public var skipOnboarding = false
+    /// Schritt des Onboardings, mit dem die App startet (`-debugOnboarding`), 1 bis 3.
+    public var onboardingStep: Int?
     public var fixtureTimes = false
     public var date: CalendarDay?
     public var time: ClockTime?
@@ -77,6 +93,10 @@ public struct LaunchOptions: Equatable, Sendable {
             case "-debugTab":
                 let pages = Page.allCases.map(\.rawValue).joined(separator: ", ")
                 page = value(of: argument, from: &rest, expected: "eine der Seiten \(pages)") { Page(rawValue: $0) }
+            case "-debugOnboarding":
+                onboardingStep = value(of: argument, from: &rest, expected: "ein Schritt von 1 bis 3") {
+                    Int($0).flatMap { (1...3).contains($0) ? $0 : nil }
+                }
             case "-debugQiblaHeading":
                 qiblaHeading = value(of: argument, from: &rest, expected: "ein Kurs von 0 bis unter 360 Grad") {
                     Double($0).flatMap { (0..<360).contains($0) ? $0 : nil }
@@ -99,6 +119,9 @@ public struct LaunchOptions: Equatable, Sendable {
         }
         if qiblaAccuracy != nil, effectiveQiblaHeading == nil {
             problems.append("-debugQiblaAccuracy wirkt nur mit festem Kurs: zusammen mit -debugQiblaHeading oder -debugFixtureTimes.")
+        }
+        if onboardingStep != nil, skipOnboarding {
+            problems.append("-debugOnboarding zeigt das Onboarding; -debugSkipOnboarding wird übergangen.")
         }
     }
 

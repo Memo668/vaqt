@@ -5,8 +5,8 @@ import SwiftUI
 /// Einstellungen schieben sich als eigene Seite darüber.
 struct VersesTab: View {
     let model: VersesModel
-
-    @State private var path: [SettingsRoute] = []
+    /// Der Stapel der Einstellungen dieses Tabs (`AppNavigation.versesPath`).
+    @Binding var path: [SettingsRoute]
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -15,7 +15,7 @@ struct VersesTab: View {
                 .background(Palette.backgroundGrouped)
                 .toolbar(.hidden, for: .navigationBar)
                 .navigationDestination(for: SettingsRoute.self) { route in
-                    SettingsPlaceholder(route: route)
+                    SettingsDestination(route: route)
                 }
         }
     }

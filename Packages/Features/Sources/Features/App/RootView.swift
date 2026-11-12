@@ -2,23 +2,67 @@ import DesignSystem
 import PrayerCore
 import SwiftUI
 
-/// Wurzel der App: die System-`TabView` mit den drei Tabs Gebete, Verse und Nachholen, darüber der
-/// Toast.
+/// Wurzel der App: Einstellungen, Sprache, Erscheinungsbild und wo man in der App steht. Darunter liegt
+/// der Inhalt (`AppContent`).
+///
+/// Wählt man unter Einstellungen › Sprache eine andere Sprache, baut sich der Inhalt mit den neuen Texten
+/// neu auf. Die Einstellungen und der Stand der Navigation liegen hier und bleiben dabei erhalten.
 public struct RootView: View {
     private let environment: AppEnvironment
 
-    @State private var selection: AppTab
     @State private var settings: SettingsStore
+    @State private var navigation: AppNavigation
+
+    public init(environment: AppEnvironment) {
+        self.environment = environment
+        let settings = SettingsStore(storage: environment.settings)
+        // Die gespeicherte Sprache gilt, bevor der erste Text gelesen wird.
+        L10n.chosenLanguage = settings.language
+        _settings = State(initialValue: settings)
+        _navigation = State(initialValue: AppNavigation(
+            tab: environment.initialTab, prayersPage: environment.initialPage,
+            settingsPath: environment.settingsPath, isAdhanSheetPresented: environment.opensAdhanSheet
+        ))
+    }
+
+    public var body: some View {
+        #if DEBUG
+        if let section = environment.launchOptions.catalog {
+            // `-debugCatalog`: der Katalog der Bausteine statt der App, für den Abgleich mit den Referenzbildern.
+            CatalogRoot(section: section, environment: environment)
+        } else {
+            content
+        }
+        #else
+        content
+        #endif
+    }
+
+    private var content: some View {
+        AppContent(environment: environment, settings: settings, navigation: navigation)
+            .id(settings.language)
+            .environment(\.locale, L10n.locale)
+            .preferredColorScheme(settings.appearance.colorScheme)
+    }
+}
+
+/// Der Inhalt der App: die System-`TabView` mit den drei Tabs Gebete, Verse und Nachholen, darüber das
+/// Stadt-Sheet und der Toast. Hier entstehen die Modelle der Seiten – in der Sprache, die gerade gilt.
+struct AppContent: View {
+    let environment: AppEnvironment
+    @Bindable var navigation: AppNavigation
+
     @State private var toast: ToastCenter
     @State private var today: TodayModel
     @State private var qibla: QiblaModel
     @State private var guide: GuideModel
     @State private var verses: VersesModel
     @State private var qada: QadaModel
+    @State private var settingsModel: SettingsModel
 
-    public init(environment: AppEnvironment) {
+    init(environment: AppEnvironment, settings: SettingsStore, navigation: AppNavigation) {
         self.environment = environment
-        let settings = SettingsStore(storage: environment.settings)
+        self.navigation = navigation
         let toast = ToastCenter()
         // Zeiten- und Qibla-Seite zeigen denselben Ort.
         let location = PlaceModel(settings: settings, locationSource: environment.locationSource)
@@ -27,8 +71,6 @@ public struct RootView: View {
             location: location, connectivity: environment.connectivity,
             citySearch: environment.citySearch, toast: toast
         )
-        _selection = State(initialValue: environment.initialTab)
-        _settings = State(initialValue: settings)
         _toast = State(initialValue: toast)
         _today = State(initialValue: today)
         _qibla = State(initialValue: QiblaModel(location: location, headingSource: environment.headingSource))
@@ -39,41 +81,57 @@ public struct RootView: View {
         _qada = State(initialValue: QadaModel(
             storage: environment.qadaStorage, clock: environment.clock, location: location, toast: toast
         ))
+        _settingsModel = State(initialValue: SettingsModel(
+            settings: settings, today: today, navigation: navigation,
+            timesSource: environment.timesSource, notificationAuthorizer: environment.notificationAuthorizer,
+            sourceCodeURL: AppInfo.sourceCodeURL, version: AppInfo.version
+        ))
     }
 
-    public var body: some View {
-        #if DEBUG
-        if let section = environment.launchOptions.catalog {
-            // `-debugCatalog`: der Katalog der Bausteine statt der App, für den Abgleich mit den Referenzbildern.
-            CatalogRoot(section: section, environment: environment)
-        } else {
-            tabs
-        }
-        #else
-        tabs
-        #endif
-    }
-
-    private var tabs: some View {
-        TabView(selection: $selection) {
+    var body: some View {
+        @Bindable var today = today
+        TabView(selection: $navigation.tab) {
             ForEach(AppTab.allCases, id: \.self) { tab in
                 Tab(tab.title, systemImage: tab.systemImage, value: tab) {
                     switch tab {
                     case .prayers:
                         PrayersTab(
-                            today: today, qibla: qibla, guide: guide, initialPage: environment.initialPage,
-                            opensSettings: environment.opensSettings
+                            today: today, qibla: qibla, guide: guide,
+                            page: $navigation.prayersPage, path: $navigation.prayersPath
                         )
                     case .verses:
-                        VersesTab(model: verses)
+                        VersesTab(model: verses, path: $navigation.versesPath)
                     case .qada:
-                        QadaTab(model: qada)
+                        QadaTab(model: qada, path: $navigation.qadaPath)
                     }
                 }
             }
         }
+        // Das Stadt-Sheet öffnen die Zeiten-Seite, die Qibla-Seite und die Einstellungen jedes Tabs.
+        .sheet(isPresented: $today.isCitySheetPresented) {
+            CitySheet(today: today, search: today.citySearch)
+        }
+        .environment(settingsModel)
         .toasts(from: toast)
         .environment(\.appClock, environment.clock)
         .environment(\.locationSource, environment.locationSource)
+    }
+}
+
+/// Angaben aus der Info.plist der App.
+enum AppInfo {
+
+    /// „0.1.0 (1)“ – Version und Build (`CFBundleShortVersionString`, `CFBundleVersion`).
+    static var version: String {
+        let info = Bundle.main.infoDictionary ?? [:]
+        let short = info["CFBundleShortVersionString"] as? String ?? "–"
+        let build = info["CFBundleVersion"] as? String ?? "–"
+        return "\(short) (\(build))"
+    }
+
+    /// Adresse des Quellcodes (`SourceCodeURL`, gefüllt aus `SOURCE_CODE_URL` in project.yml).
+    static var sourceCodeURL: URL? {
+        (Bundle.main.object(forInfoDictionaryKey: "SourceCodeURL") as? String)
+            .flatMap { $0.isEmpty ? nil : URL(string: $0) }
     }
 }

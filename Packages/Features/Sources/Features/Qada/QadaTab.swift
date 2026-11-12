@@ -5,8 +5,8 @@ import SwiftUI
 /// Einstellungen schieben sich als eigene Seite darüber.
 struct QadaTab: View {
     let model: QadaModel
-
-    @State private var path: [SettingsRoute] = []
+    /// Der Stapel der Einstellungen dieses Tabs (`AppNavigation.qadaPath`).
+    @Binding var path: [SettingsRoute]
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -15,7 +15,7 @@ struct QadaTab: View {
                 .background(Palette.backgroundGrouped)
                 .toolbar(.hidden, for: .navigationBar)
                 .navigationDestination(for: SettingsRoute.self) { route in
-                    SettingsPlaceholder(route: route)
+                    SettingsDestination(route: route)
                 }
         }
     }

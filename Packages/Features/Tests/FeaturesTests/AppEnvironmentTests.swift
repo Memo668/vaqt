@@ -33,7 +33,11 @@ struct AppEnvironmentTests {
         #expect(environment.clock is SystemClock)
         #expect(environment.initialTab == .prayers)
         #expect(environment.initialPage == .today)
-        #expect(!environment.opensSettings)
+        #expect(environment.settingsPath.isEmpty)
+        #expect(!environment.opensAdhanSheet)
+        #expect(!environment.skipsOnboarding)
+        #expect(environment.onboardingStep == nil)
+        #expect(environment.notificationAuthorizer is SystemNotificationAuthorizer)
         // Echte Rechnung, das Netz des Geräts, Einstellungen in den UserDefaults. Die App Group steht in
         // der Info.plist der App; im Test gibt es die nicht, dann gelten die Standard-Defaults.
         #expect(environment.timesSource is AdhanTimesSource)
@@ -207,10 +211,52 @@ struct AppEnvironmentTests {
         #expect(environment("qibla").initialPage == .qibla)
         #expect(environment("guide").initialPage == .guide)
         #expect(environment("today").initialPage == .today)
-        #expect(!environment("qibla").opensSettings)
-        #expect(environment("settings").opensSettings)
+        #expect(environment("qibla").settingsPath.isEmpty)
+        #expect(environment("settings").settingsPath == [.settings])
         #expect(environment("settings").initialPage == .today)
         #expect(environment("settings").initialTab == .prayers)
+    }
+
+    @Test("-debugTab mit einer Seite der Einstellungen öffnet sie über den Einstellungen im Tab „Gebete“", arguments: [
+        ("method", SettingsRoute.method), ("asr", .asr), ("hl", .highLatitude), ("adjust", .adjustments),
+        ("perPrayer", .perPrayer), ("reminder", .reminder), ("live", .liveActivity), ("sound", .sound),
+        ("appearance", .appearance), ("language", .language), ("privacy", .privacy),
+    ])
+    func settingsPage(argument: String, route: SettingsRoute) {
+        let environment = AppEnvironment(options: LaunchOptions(arguments: ["-debugTab", argument]))
+        #expect(environment.settingsPath == [.settings, route])
+        #expect(environment.initialTab == .prayers)
+        #expect(environment.initialPage == .today)
+        #expect(!environment.opensAdhanSheet)
+    }
+
+    @Test("-debugTab adhan öffnet das Adhan-Sheet über den Einstellungen")
+    func adhanSheet() {
+        let environment = AppEnvironment(options: LaunchOptions(arguments: ["-debugTab", "adhan"]))
+        #expect(environment.settingsPath == [.settings])
+        #expect(environment.opensAdhanSheet)
+    }
+
+    @Test("-debugOnboarding wählt den Schritt und schlägt -debugSkipOnboarding")
+    func onboarding() {
+        func environment(_ arguments: String...) -> AppEnvironment {
+            AppEnvironment(options: LaunchOptions(arguments: arguments))
+        }
+        #expect(environment("-debugOnboarding", "1").onboardingStep == .welcome)
+        #expect(environment("-debugOnboarding", "3").onboardingStep == .notifications)
+        #expect(!environment("-debugOnboarding", "2").skipsOnboarding)
+        #expect(environment("-debugSkipOnboarding").skipsOnboarding)
+        #expect(environment("-debugSkipOnboarding").onboardingStep == nil)
+        let both = environment("-debugSkipOnboarding", "-debugOnboarding", "2")
+        #expect(both.onboardingStep == .location)
+        #expect(!both.skipsOnboarding)
+    }
+
+    @Test("mit -debugFixtureTimes ist die Erlaubnis für Mitteilungen noch nicht erfragt")
+    func fixtureNotifications() async {
+        let environment = AppEnvironment(options: LaunchOptions(arguments: ["-debugFixtureTimes"]))
+        #expect(await environment.notificationAuthorizer.authorization() == .notDetermined)
+        #expect(await environment.notificationAuthorizer.requestAuthorization() == .authorized)
     }
 
     @Test("die Uhr folgt den Argumenten")

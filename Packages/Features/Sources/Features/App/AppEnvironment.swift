@@ -27,11 +27,21 @@ public struct AppEnvironment: Sendable {
     /// Wo der Stand des Nachholens liegt: in den UserDefaults der App, mit `-debugFixtureTimes` nur im
     /// Speicher und mit den Zahlen des Prototyps.
     public var qadaStorage: QadaModel.Storage
+    /// Erlaubnis für Mitteilungen: die des Systems, mit `-debugFixtureTimes` fest „noch nicht gefragt“.
+    public var notificationAuthorizer: any NotificationAuthorizing
     public var initialTab: AppTab
     /// Die Seite des Gebete-Tabs beim Start.
     public var initialPage: PrayersPage
-    /// Ob die Einstellungen beim Start schon offen sind (`-debugTab settings`).
-    public var opensSettings: Bool
+    /// Die Seiten der Einstellungen, die beim Start im Tab „Gebete“ offen sind (`-debugTab settings`,
+    /// `-debugTab method` …).
+    public var settingsPath: [SettingsRoute]
+    /// Ob das Adhan-Sheet beim Start offen ist (`-debugTab adhan`).
+    public var opensAdhanSheet: Bool
+    /// Ob das Onboarding beim Start übergangen wird (`-debugSkipOnboarding`).
+    public var skipsOnboarding: Bool
+    /// Schritt, mit dem das Onboarding beim Start erscheint, auch wenn es schon durchlaufen ist
+    /// (`-debugOnboarding`).
+    public var onboardingStep: OnboardingStep?
     #if DEBUG
     /// Die ausgewerteten Debug-Startargumente; der Katalog liest hier seinen Zustand.
     public var launchOptions = LaunchOptions()
@@ -46,9 +56,13 @@ public struct AppEnvironment: Sendable {
         citySearch: any CitySearching = NoCitySearch(),
         settings: SettingsStore.Storage = .userDefaults(suiteName: nil),
         qadaStorage: QadaModel.Storage = .userDefaults(suiteName: nil),
+        notificationAuthorizer: any NotificationAuthorizing = FixedNotificationAuthorizer(),
         initialTab: AppTab = .prayers,
         initialPage: PrayersPage = .today,
-        opensSettings: Bool = false
+        settingsPath: [SettingsRoute] = [],
+        opensAdhanSheet: Bool = false,
+        skipsOnboarding: Bool = false,
+        onboardingStep: OnboardingStep? = nil
     ) {
         self.clock = clock
         self.locationSource = locationSource
@@ -58,21 +72,26 @@ public struct AppEnvironment: Sendable {
         self.citySearch = citySearch
         self.settings = settings
         self.qadaStorage = qadaStorage
+        self.notificationAuthorizer = notificationAuthorizer
         self.initialTab = initialTab
         self.initialPage = initialPage
-        self.opensSettings = opensSettings
+        self.settingsPath = settingsPath
+        self.opensAdhanSheet = opensAdhanSheet
+        self.skipsOnboarding = skipsOnboarding
+        self.onboardingStep = onboardingStep
     }
 
     /// Die Umgebung der ausgelieferten App: Gerätezeit, Standort und Kurs über Core Location, echte
     /// Rechnung, Ortssuche über MapKit, Einstellungen in der App Group, das Nachholen in den
-    /// UserDefaults der App.
+    /// UserDefaults der App, die Erlaubnis für Mitteilungen über das System.
     public static var live: AppEnvironment {
         AppEnvironment(
             clock: SystemClock(), locationSource: CoreLocationSource(),
             headingSource: CoreLocationHeadingSource(),
             citySearch: MapKitCitySearch(),
             settings: .userDefaults(suiteName: appGroupIdentifier),
-            qadaStorage: .userDefaults(suiteName: nil)
+            qadaStorage: .userDefaults(suiteName: nil),
+            notificationAuthorizer: SystemNotificationAuthorizer()
         )
     }
 
@@ -143,29 +162,35 @@ extension AppEnvironment {
             citySearch = NoCitySearch()
             settings = .ephemeral(.prototype(city: options.effectiveCity))
             qadaStorage = .ephemeral(.prototypeSample)
+            // `S.notifAllowed: null` – noch nicht gefragt; „Mitteilungen erlauben“ wird erlaubt.
+            notificationAuthorizer = FixedNotificationAuthorizer()
         } else {
             timesSource = AdhanTimesSource()
             connectivity = options.offline ? FixedConnectivity(isOnline: false) : NetworkConnectivity()
             citySearch = MapKitCitySearch()
             settings = .userDefaults(suiteName: Self.appGroupIdentifier)
             qadaStorage = .userDefaults(suiteName: nil)
+            notificationAuthorizer = SystemNotificationAuthorizer()
         }
         initialTab = AppTab(options.page)
         initialPage = PrayersPage(options.page)
-        opensSettings = options.page == .settings
+        settingsPath = options.page?.settingsRoute?.path ?? []
+        opensAdhanSheet = options.page == .adhan
+        skipsOnboarding = options.skipOnboarding && options.onboardingStep == nil
+        onboardingStep = options.onboardingStep.flatMap { OnboardingStep(rawValue: $0 - 1) }
         launchOptions = options
     }
 }
 
 extension AppTab {
 
-    /// Der Tab, in dem eine Seite aus `-debugTab` liegt. Zeiten, Qibla, Anleitung und die
-    /// Einstellungen gehören zum Tab „Gebete“.
+    /// Der Tab, in dem eine Seite aus `-debugTab` liegt. Zeiten, Qibla, Anleitung, die Einstellungen und
+    /// das Adhan-Sheet gehören zum Tab „Gebete“.
     init(_ page: LaunchOptions.Page?) {
         switch page {
         case .verses: self = .verses
         case .qada: self = .qada
-        case .today, .qibla, .guide, .settings, nil: self = .prayers
+        default: self = .prayers
         }
     }
 }
@@ -177,7 +202,7 @@ extension PrayersPage {
         switch page {
         case .qibla: self = .qibla
         case .guide: self = .guide
-        case .today, .verses, .qada, .settings, nil: self = .today
+        default: self = .today
         }
     }
 }
