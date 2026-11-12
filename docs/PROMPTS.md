@@ -62,6 +62,10 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 
 | Screenshot | Argumente |
 |---|---|
+| `iphone/01` | `-debugFixtureTimes -debugDate 2026-11-10 -debugTime 09:10 -debugOnboarding 1` (Statusleiste `make statusbar TIME=09:10`) |
+| `iphone/02` | wie `01` mit `-debugOnboarding 2` |
+| `iphone/03` | wie `01` mit `-debugOnboarding 3` |
+| `iphone/04` | wie `02`, dann „Standort erlauben“ – ohne `-debugFixtureTimes` und mit noch nicht beantworteter Standortabfrage; der Dialog ist der des Systems |
 | `iphone/10` | `-debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25` |
 | `iphone/12` | … `-debugTime 05:14` |
 | `iphone/13` | … `-debugTime 08:04` |
@@ -82,5 +86,18 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 | `iphone/51` | wie `50` (Dark Mode) |
 | `iphone/60` | … `-debugTime 14:25 -debugTab qada` – mit `-debugFixtureTimes` die Zahlen des Prototyps |
 | `iphone/61` | wie `60`, dann ganz nach unten scrollen (UI-Hilfsprojekt, `s24-qada-scrolled.txt`) |
+| `iphone/70` | … `-debugTime 14:25 -debugTab settings` |
+| `iphone/71` | wie `70`, dann scrollen, bis „Pro Gebet“ oben unter der Leiste steht (UI-Hilfsprojekt, `s29-settings-scrolled.txt`) |
+| `iphone/72` | wie `70`, dann ganz nach unten scrollen (UI-Hilfsprojekt, `s29-settings-scrolled.txt`) |
+| `iphone/73` | … `-debugTime 14:25 -debugTab method` |
+| `iphone/74` | … `-debugTab asr` |
+| `iphone/75` | … `-debugTab hl` |
+| `iphone/76` | … `-debugTab adjust` |
+| `iphone/77` | … `-debugTab perPrayer` |
+| `iphone/78` | … `-debugTab reminder` |
+| `iphone/79` | … `-debugTab live` |
+| `iphone/80` | … `-debugTab sound` |
+| `iphone/81` | … `-debugTab privacy` |
+| `iphone/86` | … `-debugTime 14:25 -debugTab adhan` |
 
 Sprache im Simulator: Scheme › Run › Options › App Language, oder `-AppleLanguages "(tr)"`.

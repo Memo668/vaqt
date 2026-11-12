@@ -48,9 +48,11 @@ Nur in DEBUG: Startargumente, mit denen sich jeder Referenz-Screenshot nachstell
 -debugHighLatitude            # Berlin, 21. Juni
 -debugLocationDenied  -debugOffline
 -debugTab today|qibla|guide|verses|qada|settings
+          method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|adhan   # Seiten der Einstellungen (PAGES), adhan = Adhan-Sheet
+-debugOnboarding 1|2|3        # Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
 -debugQiblaHeading 137
 -debugQiblaAccuracy 40        # Genauigkeit des Kompasses; über 25° erscheint die Kalibrierungskarte (iphone/30–32)
--debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|all   # Katalog der Bausteine statt der App, für den Abgleich (make compare)
+-debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|all   # Katalog der Bausteine statt der App, für den Abgleich (make compare)
 ```
 
 Uhrzeit, Datum und Ort laufen über eine injizierbare `Clock`/`LocationSource`, nie direkt über `Date()` oder `CLLocationManager` in den Views.

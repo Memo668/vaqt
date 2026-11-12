@@ -29,7 +29,7 @@ Die Ortssuche fragt bei Apple nach Städten und Verwaltungsgebieten. Mit „nur 
 
 ### 5. Antippen beim Abgleich
 
-`xcrun simctl` kann starten und aufnehmen, aber nicht tippen. Zustände, die einen Tipp brauchen – `iphone/85` (Stadt-Sheet), später Qibla, Anleitung, Nachholen und die Einstellungen –, lassen sich damit nicht automatisch nachstellen. In Phase 3 hat ein kleines Hilfsprojekt außerhalb des Repos getippt: ein UI-Test, der die installierte App startet, antippt, wischt, tippt und aufnimmt (`/Volumes/Extern/Builds/NamazVakti/ui-harness`). In Phase 5 hat es `iphone/41` (gescrollt) und `42` (Maghrib angetippt) nachgestellt; dazu kam der Befehl `scroll`: ziehen ohne Schwung. Jede Geste verliert dabei 10 pt Anlauf, die das Skript dazurechnet. In Phase 6 hat es `iphone/61` (ganz nach unten gescrollt) nachgestellt und die Aktionen von Verse und Nachholen durchgespielt.
+`xcrun simctl` kann starten und aufnehmen, aber nicht tippen. Zustände, die einen Tipp brauchen – `iphone/85` (Stadt-Sheet), später Qibla, Anleitung, Nachholen und die Einstellungen –, lassen sich damit nicht automatisch nachstellen. In Phase 3 hat ein kleines Hilfsprojekt außerhalb des Repos getippt: ein UI-Test, der die installierte App startet, antippt, wischt, tippt und aufnimmt (`/Volumes/Extern/Builds/NamazVakti/ui-harness`). In Phase 5 hat es `iphone/41` (gescrollt) und `42` (Maghrib angetippt) nachgestellt; dazu kam der Befehl `scroll`: ziehen ohne Schwung. Jede Geste verliert dabei 10 pt Anlauf, die das Skript dazurechnet. In Phase 6 hat es `iphone/61` (ganz nach unten gescrollt) nachgestellt und die Aktionen von Verse und Nachholen durchgespielt. In Phase 7 hat es `iphone/71` und `72` (gescrollt) nachgestellt, das Onboarding durchlaufen, den Player abgespielt und die Sprachwahl geprüft; die übrigen Zustände der Phase erreichen die Debug-Argumente ohne Tippen.
 
 - **Standard:** Das Hilfsprojekt bleibt außerhalb des Repos. Vorschlag: als `scripts/ui-harness` ins Repo übernehmen, damit `make` auch Zustände mit Tipp nachstellen kann.
 
@@ -37,6 +37,8 @@ Die Ortssuche fragt bei Apple nach Städten und Verwaltungsgebieten. Mit „nur 
 
 - **Kompass am echten Gerät** (Phase 4): Der Simulator hat keinen Kompass; geprüft ist dort alles nur mit festem Kurs. Am Gerät zu prüfen: dass die Skala ruhig und in die richtige Richtung dreht, dass mit Standortfreigabe geografisch Nord gilt und ohne sie magnetisch Nord, ab welcher Abweichung die Karte „Kompass kalibrieren“ erscheint (angenommen sind 25°), die Haptik beim Ausrichten und der Verbrauch, solange die Seite offen ist.
 - **Texte der Anleitung** (Phase 5, Spec § 6.14): Niemand hat sie bisher fachlich geprüft (Imam oder Gelehrter je Sprache); sie stehen unverändert wie im Prototyp. Ebenso offen: eine neutrale Fassung oder Varianten je Rechtsschule und für Frauen, echte Illustrationen statt der Strichfiguren, Audio für die Formeln.
+- **Adhan-Aufnahmen** (Phase 7, Spec § 6.5): Stimme 1 und 2 sind freie Aufnahmen von Wikimedia Commons, die Lizenzangaben (CC0 1.0, gemeinfrei) stammen von den Hochladenden. Vor dem App Store: Herkunft und Rechte prüfen oder durch die endgültigen Aufnahmen ersetzen; Stimme 3 und die Fadschr-Variante fehlen. Abspielen mit Ton ist nur am Gerät zu prüfen (der Simulator hat hier kein Ausgabegerät).
+- **Quellcode und Version** (Phase 7): Die Adresse hinter „Quellcode“ ist ein Platzhalter (`SOURCE_CODE_URL` in `project.yml`); die Version steht auf 0.1.0.
 - **JAKIM und Kemenag** rechnen mit reinen Winkeln 20°/18°, ohne Sicherheitsminuten (entschieden am 10.11.2026, siehe unten). Beide sind gegen offizielle Tabellen zu prüfen, bevor die App erscheint. Bisher gibt es nur den Vergleich mit dem Mock für Jakarta: Kemenag liegt bis zu 3 Minuten daneben (Dhuhr 11:36 statt 11:39). Die Voreinstellung `singapore` von Adhan Swift – dieselben Winkel, Dhuhr +1, aufgerundet – läge näher (11:38).
 
 ## Entschieden am 10.11.2026
@@ -220,6 +222,53 @@ Mit dem Plan freigegeben sind auch seine Annahmen:
 - **Methode in den Bildern:** Mit `-debugFixtureTimes` gilt die Automatik der Fixture-Stadt (Berlin → MWL); echt rechnet die App in Deutschland mit Diyanet.
 - **Quellcode und Version:** Für „Quellcode“ gibt es noch keine Adresse (kein Remote); bis dahin ein Platzhalter in `project.yml` wie die Bundle-ID. Die Version kommt aus dem Bundle („0.1.0 (1)“; das Referenzbild zeigt „1.0 (1)“).
 - **App-Zeichen** in Onboarding und Tagline: die Platzhalter-Zeichnung des Prototyps (`appGlyph`), bis Phase 11 das Icon bringt.
+
+## Annahmen in Phase 7
+
+Gemessen ist auf dem iPhone 18 Pro mit iOS 27.2, Zustände wie in `scripts/compare-settings`; `iphone/71` und `72` (gescrollt), die Abläufe und der Baum der Bedienungshilfen mit dem UI-Hilfsprojekt (`s28-settings.txt` bis `s35-appearance-language.txt`).
+
+### Was mit den Referenzbildern übereinstimmt
+
+- **Zustände:** `70` bis `72` alle Gruppen mit ihren Werten („Automatisch für Deutschland“ · MWL, „5 von 6“, „10 Min. vorher“, „30 Min. vorher“, „Kurzer Adhan“, „System“, „Deutsch“), Kopf- und Fußtexte, Tagline; `73` „Automatisch · MWL“ mit Häkchen und die elf Methoden mit ihren Winkeln („Fadschr 19,5° · Ischa 17,5°“, „… 90 Min. nach Maghrib“); `74` bis `80` die Wahl mit Häkchen und die Fußtexte; `76` die sechs Zeiten von heute (05:16 bis 18:17) mit „0 Min.“; `77` die Glocken des Prototyps (Sonnenaufgang aus, Ischa lautlos); `81` Schild, Überschrift, zwei Absätze; `86` „Stimme 1 · Makkah“, 0:00 und −0:27, die drei Stimmen, Fadschr-Variante aus; `01` bis `03` die drei Schritte mit Punkten und Knöpfen.
+- **Abstände der Listen:** Zeilen 44,3 pt, mit Zusatz 63,3 pt, „Pro Gebet“ 56 pt, Kopf 7 pt über der Gruppe, Fuß 7 pt darunter, 32 pt bis zur nächsten Gruppe. Von Gruppe zu Gruppe mit Fußtext 82,7 pt (Referenz 82,5), ohne Fußtext 57,4 pt (57,5). Trennlinie bei „Pro Gebet“ ab dem Namen (52 pt).
+- **Onboarding:** Knöpfe 50 pt hoch, der untere 46 pt über dem unteren Rand wie im CSS, 4 pt zwischen ihnen, Punkte 14 pt über dem ersten Knopf; Zeichen der App deckungsgleich mit der Referenz, Standort-Pfeil 32,6 statt 32 pt breit.
+- **Farben:** Akzent, Tönung der Kreise, Sekundärschrift, Kartenflächen aus den Tokens wie in den Phasen davor.
+
+| Baustein | Referenz (y in pt) | App (y in pt) |
+|---|---|---|
+| `70` Kopf „Standort“, erste Gruppe | 153, 178 bis 274,5 | 174,3, 199,7 bis 294 |
+| `70` zweite Gruppe | 357 | 376,7 |
+| `73` Suchfeld (38 bzw. 44 pt), „Empfohlen“, erste Gruppe | 109, 165, 190 | 116, 178, 203,3 |
+| `74` bis `80` erste Gruppe | 109 | 126 |
+| `86` Titel (Mitte), Play-Knopf (Mitte), Kopf „Stimme“ | 166, 390,8, 487,5 | 178,7, 404,7, 501,7 |
+| `01` Zeichen, Titel; Knopf „Weiter“ | 255, 396,5; 749 bis 798,5 | 273,1, 415,1; 778 bis 828 |
+
+Alles liegt tiefer als im Referenzbild, weil die Leisten des Systems anders sitzen: Der große Titel der Startseite steht 21,7 pt tiefer (sicherer Bereich 62 statt 58 pt, die Leiste mit großem Titel ist höher als im Prototyp), auf den Unterseiten ist die Leiste 54 statt 44 pt hoch (17 pt), das Sheet beginnt tiefer (12 bis 14 pt). Im Onboarding steht die Seite mittig im 30 pt höheren Bildschirm (18 bis 19 pt tiefer), die Knöpfe stehen am unteren Rand (29 pt tiefer).
+
+### Was abweicht und bleibt
+
+- **Leisten und Bedienelemente des Systems:** großer Titel, Zurück-Knopf (Glass-Kreis bei 16 | 62 pt), Suchfeld (44-pt-Kapsel), Schalter (63 × 28 statt 51 × 31 pt – die Zeile mit Schalter ist 50 statt 53,5 pt hoch, darunter liegt alles 3,5 pt höher), Schieberegler des Players (Glass-Griff statt 14-pt-Punkt), Schließen-Knopf des Sheets (Glass-Kreis), Chevron hinter `NavigationLink`, Tableiste. Wie in den Phasen davor bleiben sie, wie das System sie zeichnet.
+- **Schrift und Breite:** Wie in den Phasen 2 bis 6 bricht Text anders um, weil die App 12 pt breiter ist und SF Pro schmaler setzt: `75` „Nachtanteil nach Dämmerungswinkel – empfohlen“ und „… nie über die Nachtmitte hinaus“ in einer statt zwei Zeilen, `81` die Überschrift in einer statt zwei Zeilen, `72` der Hinweis zur Berechnung in zwei statt drei Zeilen, `01` „Gebetszeiten. Ruhig und / genau.“ statt „Ruhig / und genau.“, `02` der Text in anderer Teilung. Silbentrennung (`hyphens: auto`, „Son-nenauf“) macht SwiftUI nicht.
+- **Höhe der Zeilen mit Zusatz:** 63,3 statt 61,5 bis 62,5 pt, weil jeder Text seine Höhe auf Gerätepixel rundet; die Karte des Players ist 2 pt höher (318,5 statt 316,5 pt).
+- **Symbole:** SF Symbols statt der Zeichnungen: Häkchen wie im Stadt-Sheet, ↗ hinter „Quellcode“, `waveform`, `location.fill`, `checkmark.shield` (19 pt breit wie die Zeichnung), `play.fill`/`pause.fill`. Die Glocke im dritten Schritt (`bell.and.waves.left.and.right`) hat je zwei Wellen statt einer und ist 52 statt 41 pt breit, gleich hoch.
+- **Version:** „0.1.0 (1)“ aus dem Bundle statt „1.0 (1)“ im Referenzbild.
+- **Audio im Simulator:** Der Simulator hat auf diesem Mac kein Ausgabegerät („Could not find default device“). Die Aufnahmen lassen sich dort nicht abspielen; der Player bleibt dann stehen. Geprüft ist das Abspielen mit Stimme 3 und der Fadschr-Variante (stumm): Zeit, Scrubber, gespielte Balken in Akzent, Schwingen, Pause, Ende. Mit Ton ist es am Gerät zu prüfen.
+
+### Annahmen in der Umsetzung
+
+- **Stapel:** Die Einstellungen schieben sich in jedem Tab auf dessen Stapel; wo man steht – Tab, Seite, Stapel je Tab, offenes Adhan-Sheet –, liegt außerhalb der Seiten (`AppNavigation`). Die Stadt- und Adhan-Sheets hängen an der Wurzel und öffnen sich aus jedem Tab und aus dem Onboarding.
+- **Sprache:** Ohne eigene Wahl gilt die Sprache, die iOS für die App wählt; Häkchen und Wert zeigen sie. Eine Wahl wirkt sofort: Die Seiten bauen sich neu auf, man bleibt auf der Seite „Sprache“. Datum, Zahlen und Ländernamen folgen ihr. Die Wahl liegt in der App Group, damit Widgets und Live-Aktivität sie in Phase 9 lesen können.
+- **Erscheinungsbild:** gilt sofort für die ganze App samt Sheets (`preferredColorScheme`).
+- **Standort-Schalter:** an → aktueller Standort, fragt beim ersten Mal; aus → die Stadt des Standorts bleibt als gewählte, ohne bekannte Stadt öffnet sich das Stadt-Sheet; verweigert → gesperrt, „iOS-Einstellungen öffnen“ öffnet die Seite der App in den iOS-Einstellungen. „Stadt“ öffnet das Stadt-Sheet.
+- **Methode:** Die Suche filtert Name und Kurzname ohne Rücksicht auf Groß- und Kleinschreibung und Akzente („türk“ findet Diyanet); „Empfohlen“ verschwindet beim Suchen. Eine Wahl bleibt auf der Seite (wie im Prototyp); der Suchtext ist beim nächsten Öffnen leer. Mit `-debugFixtureTimes` gilt die Automatik der Fixture-Stadt.
+- **Wirkung:** Methode, Asr, Regel und Minutenkorrektur rechnen den Zeitstrahl sofort neu – Bogen, Karten, Anleitung, Minutenkorrektur (die Zeiten unter den Namen sind die von heute mit Korrektur). Der Kerahat-Schalter wirkt sofort auf Bogen und Karten. „Pro Gebet“ ist dieselbe Wahl wie die Glocke der Gebetskarte.
+- **Mitteilungen:** Erinnerung, Live-Aktivität, Klang und Stimme werden nur gespeichert (Phase 8 und 9). Der Fußtext „Mitteilungen sind … deaktiviert“ erscheint, wenn iOS sie nicht erlaubt; gelesen wird beim Öffnen der Einstellungen und wenn die App nach vorn kommt.
+- **Onboarding:** nur beim ersten Start, durchlaufen oder übersprungen steht in der App Group (`settings.onboarded`). Die Seiten wechseln nur über die Knöpfe; die neue schiebt sich herein, bei „Bewegung reduzieren“ blendet sie über; der Fokus von VoiceOver springt auf den ersten Knopf. „Standort erlauben“, wenn schon geantwortet ist: erlaubt → Schritt 3, verweigert → Stadt-Sheet. „Abbrechen“ im Stadt-Sheet bleibt bei Schritt 2. Mitteilungen werden mit Hinweis und Ton erfragt, ohne Kennzeichen am App-Symbol.
+- **Adhan:** Die gewählte Stimme ist gespeichert (für Phase 8), die Fadschr-Variante nur eine Vorschau. Wechsel von Stimme oder Variante und das Schließen halten an und springen an den Anfang; am Ende springt der Player auf 0:00. Ton auch bei stummgeschaltetem iPhone (`.playback`), andere Wiedergaben halten an; die Audio-Sitzung wird außerhalb des Haupt-Threads umgeschaltet. Die Balken schwingen nur beim Abspielen und nicht bei „Bewegung reduzieren“; rechts nach links wächst der gespielte Teil von rechts wie der Schieberegler.
+- **Aufnahmen:** `App/Sounds/adhan-voice1.caf` (27,0 s) und `adhan-voice2.caf` (29,5 s), IMA4 in CAF, mono, 22,05 kHz – ein Format, das iOS auch für Mitteilungstöne annimmt (unter 30 s). Geschnitten mit `scripts/adhan-clip.swift`; dort stehen Quellen und Schnitte.
+- **VoiceOver:** Zeilen mit Wert sind ein Element („Methode, Automatisch für Deutschland, MWL“), Zeilen mit Häkchen tragen „ausgewählt“, Schalter heißen wie ihre Zeile, die Glocken-Segmente „Ton“, „Lautlos“, „Aus“, die Stepper der Minutenkorrektur „Fadschr eine Minute früher“, der Schieberegler „Wiedergabeposition, 0:12 / 0:27“, die Punkte des Onboardings „1 / 3“. Geprüft ist nur der Baum der Bedienungshilfen.
+- **Quellcode:** Platzhalter `https://example.com/gebetszeiten` in `project.yml` (`SOURCE_CODE_URL`), vor dem ersten Archiv einzutragen.
+- **Katalog:** `-debugCatalog settings`, `onboarding` und `adhan` zeigen die Bausteine in Referenzbreite; die Zeilen dort in `InsetGroup`, weil es ohne Liste keine Liste des Systems gibt.
 
 ## Annahmen in Phase 6
 

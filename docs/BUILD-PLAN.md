@@ -157,6 +157,8 @@ Gebaut am 12.11.2026. Abgleich mit `make compare-verses` und `make compare-qada`
 
 **Referenzen:** `iphone/01`–`04`, `70`–`81`, `86`.
 
+Gebaut am 12.11.2026 in drei Teilschritten: Einstellungen (Liste des Systems, eigene Sprachwahl, Hinweis bei Moonsighting), Onboarding, Adhan-Sheet mit zwei freien Aufnahmen von Wikimedia Commons als Platzhalter (Stimme 3 und Fadschr-Variante stumm). Abgleich mit `make compare-settings` über die Debug-Argumente `-debugTab settings|method|…|adhan` und `-debugOnboarding 1|2|3`, `iphone/71` und `72` mit dem UI-Hilfsprojekt; was übereinstimmt, was abweicht und was angenommen ist, steht in `docs/OPEN-QUESTIONS.md` („Entschieden mit dem Plan für Phase 7“, „Annahmen in Phase 7“).
+
 ## Phase 8 – Mitteilungen
 
 - `UNUserNotificationCenter`, rollierendes Fenster wegen des Limits von 64 ausstehenden Mitteilungen.
