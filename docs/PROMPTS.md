@@ -99,5 +99,6 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 | `iphone/80` | … `-debugTab sound` |
 | `iphone/81` | … `-debugTab privacy` |
 | `iphone/86` | … `-debugTime 14:25 -debugTab adhan` |
+| `system/92` | `-debugSkipOnboarding -debugFixtureTimes -debugNotifications -debugDate 2026-11-10 -debugTime 11:41`, Systemsprache des Simulators Deutsch, `make statusbar TIME=11:52`; Gerät sperren, gut elf Minuten warten, den Stapel aufklappen, aufnehmen (UI-Hilfsprojekt, `s37-notifications-92.txt`). Die Erinnerung kommt nach einer Minute, Dhuhr nach elf |
 
 Sprache im Simulator: Scheme › Run › Options › App Language, oder `-AppleLanguages "(tr)"`.

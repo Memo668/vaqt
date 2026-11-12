@@ -133,6 +133,7 @@ schemes:
         "-debugOffline": false
         "-debugTab today": false
         "-debugQiblaHeading 137": false
+        "-debugNotifications": false
     test:
       config: Debug
       gatherCoverageData: true

@@ -4,7 +4,7 @@ Gemeinnützige Gebetszeiten-App für iOS: werbefrei, ohne Tracking, ohne Konto. 
 
 Die Regeln für die Arbeit stehen in `CLAUDE.md`, der Bauplan in `docs/BUILD-PLAN.md`, offene Punkte in `docs/OPEN-QUESTIONS.md`.
 
-**Stand:** Phase 0 (Projektgerüst), Phase 1 (`PrayerCore`, die Logik ohne UI), Phase 2 (`DesignSystem`: Tokens und Bausteine), Phase 3 (Gebete-Tab: Zeiten), Phase 4 (Qibla), Phase 5 (Anleitung), Phase 6 (Verse und Nachholen) und Phase 7 (Einstellungen, Onboarding, Adhan) sind fertig. Der Tab „Gebete“ zeigt die obere Leiste mit den Chips Zeiten, Qibla und Anleitung, die Zeiten-Seite – Stadt, Datum, Bogen mit laufendem Countdown, sechs Gebetskarten mit Glocke, Stadt-Sheet –, die Qibla-Seite mit Kompass, Statuszeile, Richtung und Entfernung zur Kaaba und die Anleitung mit der Auswahl der fünf Gebete, der Kopfkarte (Status, Zeitfenster, Fakten, Rakʿa-Folge), „Vorher“ und „Ablauf“ mit Haltungsfiguren und arabischen Formeln. Der Tab „Verse“ zeigt den Vers des Tages auf Arabisch mit Übersetzung (Platzhalter) und Quelle, Teilen und Kopieren und die letzten Tage; der Tab „Nachholen“ den Anteil nachgeholt, je Gebet einen Stepper, den Plan pro Tag mit voraussichtlichem Ende und den Rechner für einen verpassten Zeitraum. Der Einstellungskreis jedes Tabs öffnet die Einstellungen mit allen Unterseiten – Standort, Berechnung, Mitteilungen, Darstellung samt Sprache, Über –; Änderungen wirken sofort in der ganzen App. Beim ersten Start führt das Onboarding in drei Schritten zu Standort und Mitteilungen. „Adhan anhören“ öffnet den Player mit Wellenform und drei Stimmen (Platzhalter). Mitteilungen planen kommt in Phase 8, Widgets und Live-Aktivität in Phase 9. Die Bausteine lassen sich als Previews in Xcode ansehen und in der App mit `-debugCatalog`.
+**Stand:** Phase 0 (Projektgerüst), Phase 1 (`PrayerCore`, die Logik ohne UI), Phase 2 (`DesignSystem`: Tokens und Bausteine), Phase 3 (Gebete-Tab: Zeiten), Phase 4 (Qibla), Phase 5 (Anleitung), Phase 6 (Verse und Nachholen), Phase 7 (Einstellungen, Onboarding, Adhan) und Phase 8 (Mitteilungen) sind fertig. Der Tab „Gebete“ zeigt die obere Leiste mit den Chips Zeiten, Qibla und Anleitung, die Zeiten-Seite – Stadt, Datum, Bogen mit laufendem Countdown, sechs Gebetskarten mit Glocke, Stadt-Sheet –, die Qibla-Seite mit Kompass, Statuszeile, Richtung und Entfernung zur Kaaba und die Anleitung mit der Auswahl der fünf Gebete, der Kopfkarte (Status, Zeitfenster, Fakten, Rakʿa-Folge), „Vorher“ und „Ablauf“ mit Haltungsfiguren und arabischen Formeln. Der Tab „Verse“ zeigt den Vers des Tages auf Arabisch mit Übersetzung (Platzhalter) und Quelle, Teilen und Kopieren und die letzten Tage; der Tab „Nachholen“ den Anteil nachgeholt, je Gebet einen Stepper, den Plan pro Tag mit voraussichtlichem Ende und den Rechner für einen verpassten Zeitraum. Der Einstellungskreis jedes Tabs öffnet die Einstellungen mit allen Unterseiten – Standort, Berechnung, Mitteilungen, Darstellung samt Sprache, Über –; Änderungen wirken sofort in der ganzen App. Beim ersten Start führt das Onboarding in drei Schritten zu Standort und Mitteilungen. „Adhan anhören“ öffnet den Player mit Wellenform und drei Stimmen (Platzhalter). Die App plant lokale Mitteilungen zu jedem Gebet nach seiner Glocke, dazu die Vorab-Erinnerung, im rollierenden Fenster der nächsten 64 und neu nach jeder Änderung. Widgets und Live-Aktivität kommen in Phase 9. Die Bausteine lassen sich als Previews in Xcode ansehen und in der App mit `-debugCatalog`.
 
 ## Voraussetzungen
 
@@ -89,6 +89,7 @@ Nur in DEBUG-Builds. Damit lässt sich jeder Referenz-Screenshot nachstellen:
 -debugOnboarding 1|2|3        Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
 -debugQiblaHeading 137
 -debugQiblaAccuracy 40        Genauigkeit des Kompasses in Grad; über 25 erscheint die Kalibrierungskarte
+-debugNotifications           echte Mitteilungen auch mit Mock-Zeiten; fragt beim Start nach der Erlaubnis
 -debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|all   Katalog der Bausteine statt der App, für den Abgleich
 ```
 
@@ -99,7 +100,8 @@ Versteht die App ein Debug-Argument nicht, schreibt sie das beim Start in die Ko
 | Argument | Wirkung |
 |---|---|
 | `-debugDate`, `-debugTime` | Die Uhr der App beginnt dort und läuft weiter. |
-| `-debugFixtureTimes` | Mock-Zeiten statt echter Rechnung. Dazu: festes Netz, keine Ortssuche und flüchtige Einstellungen mit den Startwerten von `S` im Prototyp (Glocken, die fünf Städte, Erinnerung, Klang, Sprache wie das Gerät) – so sieht jede Aufnahme gleich aus, egal was vorher angetippt wurde. Das Nachholen zeigt die Zahlen des Prototyps (`iphone/60`), ebenfalls nur im Speicher. Die Methode „Automatisch“ ist die der Fixture-Stadt (Berlin → MWL). Mitteilungen gelten als noch nicht erfragt. |
+| `-debugFixtureTimes` | Mock-Zeiten statt echter Rechnung. Dazu: festes Netz, keine Ortssuche und flüchtige Einstellungen mit den Startwerten von `S` im Prototyp (Glocken, die fünf Städte, Erinnerung, Klang, Sprache wie das Gerät) – so sieht jede Aufnahme gleich aus, egal was vorher angetippt wurde. Das Nachholen zeigt die Zahlen des Prototyps (`iphone/60`), ebenfalls nur im Speicher. Die Methode „Automatisch“ ist die der Fixture-Stadt (Berlin → MWL). Mitteilungen gelten als noch nicht erfragt, und vorgemerkt wird keine. |
+| `-debugNotifications` | Erlaubnis und Mitteilungen über das System, auch mit `-debugFixtureTimes`: Die App merkt die Mitteilungen zu den Mock-Zeiten bei iOS vor, gemessen an der Debug-Uhr. Beim Start räumt sie zugestellte Mitteilungen ab und fragt nach der Erlaubnis, falls iOS noch nie gefragt hat. Damit lässt sich `system/92` nachstellen. |
 | `-debugCity`, `-debugHighLatitude` | feste Standortquelle mit dieser Stadt, Standort erlaubt |
 | `-debugLocationDenied` | Standort verweigert: Banner auf der Zeiten-Seite, „Aktueller Standort“ im Stadt-Sheet gesperrt |
 | `-debugOffline` | fest „kein Netz“: Hinweis unter dem Datum, im Stadt-Sheet nur gespeicherte Städte |
@@ -140,7 +142,8 @@ docs/                   Bauplan, Prompts, offene Fragen
 |---|---|
 | `CalculationMethod`, `CalculationSettings` | die elf Methoden aus `METHODS`, automatische Methode je Land, Asr, hohe Breiten, Minutenkorrekturen ±30 |
 | `PrayerTimesSource` | Zeiten eines Tages: `AdhanTimesSource` rechnet echt, `FixtureTimesSource` liefert die Mock-Zeiten des Prototyps (nur DEBUG); dazu die Methode „Automatisch“ für einen Ort (`automaticMethod(for:)`) |
-| `NotificationPreferences`, `NotificationSound`, `AdhanVoice` | Vorab-Erinnerung (`REMINDERS`), Vorlauf der Live-Aktivität (`LIVE_OPTS`), Klang, Stimme des Adhan (`VOICES`, Platzhalter) – für die Einstellungen und für Phase 8 und 9 |
+| `NotificationPreferences`, `NotificationSound`, `AdhanVoice` | Vorab-Erinnerung (`REMINDERS`), Vorlauf der Live-Aktivität (`LIVE_OPTS`), Klang, Stimme des Adhan (`VOICES`, Platzhalter) und der Name ihrer Aufnahme |
+| `NotificationPlanner`, `PrayerNotification`, `NotificationTone`, `NotificationWording` | welche Mitteilungen die App vormerkt: die nächsten 64 ab jetzt, je Ereignis nach seiner Glocke zur Gebetszeit und als Vorab-Erinnerung, mit Texten und Ton (Adhan der Stimme, Systemton oder keiner) |
 | `PrayerTimeline`, `DayPhase` | Zeitstrahl über drei Tage; laufendes und nächstes Ereignis, Restzeit, Tagesfortschritt, Schlüssel für den Neuaufbau |
 | `Kerahat` | die drei Kerahat-Fenster eines Tages |
 | `BellState` | Stand der Mitteilung je Ereignis: Ton, Lautlos, Aus |
@@ -220,6 +223,9 @@ DayArc(phase: phase, showKerahat: settings.showKerahat) {
 | `OnboardingModel`, `OnboardingView`, `OnboardingStep` | Onboarding beim ersten Start: Willkommen, Standort und Mitteilungen erst nach dem jeweiligen Vorab-Bildschirm, „Überspringen“ auf Schritt 1 und 2 |
 | `AdhanPlayerModel`, `AdhanSheet`, `AdhanClips`, `AdhanPlayback` | Adhan-Sheet: Stimme (gespeichert), Fadschr-Variante als Vorschau, Abspielen über `AVAudioPlayer` oder stumm, wo es keine Aufnahme gibt |
 | `NotificationAuthorizing` | Erlaubnis für Mitteilungen lesen und erfragen (`UNUserNotificationCenter`; fest in Tests und mit `-debugFixtureTimes`) |
+| `NotificationModel`, `NotificationPlanning` | plant die Mitteilungen für den Ort, der gilt – nur mit Erlaubnis; neu beim Start, wenn die App nach vorn kommt, und nach jeder Änderung an Ort, Rechnung, Glocken, Erinnerung, Klang, Stimme und Sprache. Nach „Später“ im Onboarding fragt die erste Änderung an Glocke oder Mitteilungen |
+| `NotificationScheduling`, `SystemNotificationScheduler` | merkt die Mitteilungen bei iOS vor: ersetzt alle ausstehenden, Auslöser nach Zeitabstand von der App-Uhr, Ton nach Glocke und Klang; mit `-debugFixtureTimes` merkt `NoNotificationScheduler` nichts vor |
+| `BackgroundRefresh`, `NotificationPresenter` | Hintergrundaktualisierung (`BGAppRefreshTask`, etwa einmal am Tag) plant neu; bei offener App erscheint eine Mitteilung als Banner mit Ton |
 | `VersesModel`, `VersesTab`, `VersesPage` | Seite „Verse“: Vers des Tages (wechselt um Mitternacht am Ort), Antippen eines Eintrags zeigt ihn oben und springt nach oben, Teilen über `ShareLink`, Kopieren mit Toast |
 | `QadaModel`, `QadaTab`, `QadaPage` | Seite „Nachholen“: Stand des Nachholens, jede Änderung sofort als JSON in den UserDefaults der App (nicht in der App Group), Toast nach „Als offen übernehmen“; ohne Einträge ohne Zusammenfassung und Plan |
 | `CoreLocationSource`, `MapKitPlaceResolver` | aktueller Ort über Core Location („Beim Verwenden der App“), Stadtname über `MKReverseGeocodingRequest` |
@@ -228,7 +234,7 @@ DayArc(phase: phase, showKerahat: settings.showKerahat) {
 | `NetworkConnectivity` | ob das Gerät ein Netz hat (`NWPathMonitor`) |
 | `ToastCenter` | zeigt den Toast über der Tableiste, 1,7 Sekunden |
 
-Alles, was nach außen geht, hängt in `AppEnvironment`: Uhr, Standortquelle, Kursquelle, Zeitenquelle, Netz-Zustand, Ortssuche, Erlaubnis für Mitteilungen, der Ort der Einstellungen und der des Nachholens. Views sprechen nie selbst mit `Date()`, `CLLocationManager`, MapKit oder `UNUserNotificationCenter`.
+Alles, was nach außen geht, hängt in `AppEnvironment`: Uhr, Standortquelle, Kursquelle, Zeitenquelle, Netz-Zustand, Ortssuche, Erlaubnis für Mitteilungen und wo sie vorgemerkt werden, der Ort der Einstellungen und der des Nachholens. Views sprechen nie selbst mit `Date()`, `CLLocationManager`, MapKit oder `UNUserNotificationCenter`.
 
 Die Zahlen des Nachholens bleiben auf dem Gerät: ein JSON-Eintrag (`qada.ledger`) in den UserDefaults der App, nicht in der App Group, weil Widgets sie nicht brauchen. Die App startet leer; mit `-debugFixtureTimes` zeigt sie die Zahlen des Prototyps und speichert nichts.
 
@@ -308,7 +314,44 @@ make compare-settings
 make compare-settings STATES='70 86'
 ```
 
-Einzelne Ausschnitte vergleicht `scripts/compare-shot`; die Optionen stehen im Kopf von `scripts/compare-shot.swift`. Was vom Referenzbild abweicht und warum, steht in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 2“ bis „Annahmen in Phase 7“.
+Einzelne Ausschnitte vergleicht `scripts/compare-shot`; die Optionen stehen im Kopf von `scripts/compare-shot.swift`. Was vom Referenzbild abweicht und warum, steht in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 2“ bis „Annahmen in Phase 8“.
+
+## Mitteilungen
+
+Die App merkt lokale Mitteilungen bei iOS vor, ohne Server. Je Ereignis gibt es eine zu seiner Zeit, wenn seine Glocke nicht auf „Aus“ steht: „Dhuhr · 11:52“ – „Zeit für Dhuhr in Berlin.“. Ist eine Vorab-Erinnerung gewählt, kommt dazu eine früher: „Dhuhr in 10 Minuten“ – „Dhuhr beginnt um 11:52 Uhr.“. Die Texte stehen in der Sprache der App, auch bei der eigenen Wahl; Uhrzeit und Tag gelten am Ort, Minutenkorrekturen eingerechnet. Kerahat hat keine Mitteilung.
+
+| Glocke | Mitteilung zur Gebetszeit | Erinnerung |
+|---|---|---|
+| Ton | Klang „Kurzer Adhan“: die Aufnahme der gewählten Stimme (`App/Sounds`), zu Fadschr die Fadschr-Variante, sobald es sie gibt; Stimme 3 ohne Aufnahme: Systemton. Klang „Systemton“: Systemton. Klang „Lautlos“: ohne Ton | Systemton, beim Klang „Lautlos“ ohne Ton |
+| Lautlos | ohne Ton | ohne Ton |
+| Aus | keine | keine |
+
+iOS hält je App höchstens 64 ausstehende Mitteilungen. Die App plant deshalb ein rollierendes Fenster: die nächsten 64 in zeitlicher Folge, eine Erinnerung nur mit ihrer Mitteilung. Mit den Startwerten – fünf Glocken an, Erinnerung 10 Minuten vorher – sind das zehn am Tag, gut sechs Tage; alle sechs mit Erinnerung gut fünf Tage, ohne Erinnerung 10 bis 13 Tage. Neu geplant wird beim Start, wenn die App nach vorn kommt, nach jeder Änderung an Ort, Methode, Asr, Regel für hohe Breiten, Minutenkorrektur, Glocken, Erinnerung, Klang, Stimme und Sprache, nach der Antwort im Onboarding und bei der Hintergrundaktualisierung: Etwa einmal am Tag weckt iOS die App kurz (`BGAppRefreshTask`, Kennung `<Bundle-ID>.refresh` in der Info.plist). Den Zeitpunkt bestimmt iOS; im Simulator gibt es sie nicht.
+
+Ohne Erlaubnis plant die App nichts; die Glocken bleiben einstellbar, unter Einstellungen › Mitteilungen steht der Hinweis. Gefragt wird im Onboarding; wer dort „Später“ wählt, wird bei der ersten Änderung an einer Glocke oder unter Einstellungen › Mitteilungen gefragt. Mitteilungen sind nicht zeitkritisch. Bei offener App erscheinen sie als Banner mit Ton.
+
+### Abgleich von `system/92`
+
+`system/92` zeigt den Sperrbildschirm mit der Mitteilung zu Dhuhr und der Erinnerung zehn Minuten davor. Nachgestellt wird er mit dem UI-Hilfsprojekt (`s37-notifications-92.txt`, siehe `docs/OPEN-QUESTIONS.md`, „Antippen beim Abgleich“):
+
+1. Systemsprache des Simulators auf Deutsch, damit iOS „jetzt“ und „vor 10 Min.“ schreibt; die Uhr auf dem Sperrbildschirm folgt der Statusleiste.
+2. Die App mit `-debugFixtureTimes -debugNotifications -debugTime 11:41` starten.
+3. Das Gerät sperren und gut elf Minuten warten.
+4. Den Stapel der beiden Mitteilungen aufklappen und aufnehmen.
+
+Die Argumente stehen in `docs/PROMPTS.md`, was abweicht in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 8“).
+
+```bash
+make statusbar TIME=11:52
+```
+
+Das Protokoll der App nennt in DEBUG jedes Mal, was iOS vormerkt:
+
+```bash
+xcrun simctl spawn booted log show --last 15m --predicate 'subsystem == "com.example.gebetszeiten" AND category == "notifications"'
+```
+
+Töne sind im Simulator auf diesem Mac nicht zu hören (kein Ausgabegerät); sie bleiben am Gerät zu prüfen.
 
 ## Texte
 

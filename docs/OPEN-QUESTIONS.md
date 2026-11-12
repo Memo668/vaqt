@@ -29,9 +29,16 @@ Die Ortssuche fragt bei Apple nach Städten und Verwaltungsgebieten. Mit „nur 
 
 ### 5. Antippen beim Abgleich
 
-`xcrun simctl` kann starten und aufnehmen, aber nicht tippen. Zustände, die einen Tipp brauchen – `iphone/85` (Stadt-Sheet), später Qibla, Anleitung, Nachholen und die Einstellungen –, lassen sich damit nicht automatisch nachstellen. In Phase 3 hat ein kleines Hilfsprojekt außerhalb des Repos getippt: ein UI-Test, der die installierte App startet, antippt, wischt, tippt und aufnimmt (`/Volumes/Extern/Builds/NamazVakti/ui-harness`). In Phase 5 hat es `iphone/41` (gescrollt) und `42` (Maghrib angetippt) nachgestellt; dazu kam der Befehl `scroll`: ziehen ohne Schwung. Jede Geste verliert dabei 10 pt Anlauf, die das Skript dazurechnet. In Phase 6 hat es `iphone/61` (ganz nach unten gescrollt) nachgestellt und die Aktionen von Verse und Nachholen durchgespielt. In Phase 7 hat es `iphone/71` und `72` (gescrollt) nachgestellt, das Onboarding durchlaufen, den Player abgespielt und die Sprachwahl geprüft; die übrigen Zustände der Phase erreichen die Debug-Argumente ohne Tippen.
+`xcrun simctl` kann starten und aufnehmen, aber nicht tippen. Zustände, die einen Tipp brauchen – `iphone/85` (Stadt-Sheet), später Qibla, Anleitung, Nachholen und die Einstellungen –, lassen sich damit nicht automatisch nachstellen. In Phase 3 hat ein kleines Hilfsprojekt außerhalb des Repos getippt: ein UI-Test, der die installierte App startet, antippt, wischt, tippt und aufnimmt (`/Volumes/Extern/Builds/NamazVakti/ui-harness`). In Phase 5 hat es `iphone/41` (gescrollt) und `42` (Maghrib angetippt) nachgestellt; dazu kam der Befehl `scroll`: ziehen ohne Schwung. Jede Geste verliert dabei 10 pt Anlauf, die das Skript dazurechnet. In Phase 6 hat es `iphone/61` (ganz nach unten gescrollt) nachgestellt und die Aktionen von Verse und Nachholen durchgespielt. In Phase 7 hat es `iphone/71` und `72` (gescrollt) nachgestellt, das Onboarding durchlaufen, den Player abgespielt und die Sprachwahl geprüft; die übrigen Zustände der Phase erreichen die Debug-Argumente ohne Tippen. In Phase 8 hat es den Dialog der Erlaubnis beantwortet, das Gerät gesperrt und den Sperrbildschirm mit den Mitteilungen aufgenommen und ausgelesen (`system/92`, `s37-notifications-92.txt`). Dazu kamen die Befehle `lock`, `home`, `sbtapif`, `sbtree`, `sbdrag` sowie `open`, `opentap`, `openswitch` und `opendump` für die iOS-Einstellungen.
 
 - **Standard:** Das Hilfsprojekt bleibt außerhalb des Repos. Vorschlag: als `scripts/ui-harness` ins Repo übernehmen, damit `make` auch Zustände mit Tipp nachstellen kann.
+
+### 6. Ton zum Sonnenaufgang
+
+Der Sonnenaufgang hat eine Glocke wie die Gebete (Startwert „Aus“). Steht sie auf „Ton“ und der Klang auf „Kurzer Adhan“, spielt die Mitteilung zum Sonnenaufgang den Adhan – so sagt es der Prototyp („„Ton“ spielt den gewählten Klang“). Einen Adhan zum Sonnenaufgang gibt es aber nicht: Er beendet die Zeit von Fadschr.
+
+- **Standard:** wie im Prototyp, der Adhan der gewählten Stimme.
+- **Vorschlag:** zum Sonnenaufgang immer der Systemton, wenn die Glocke auf „Ton“ steht.
 
 ## Vor der Veröffentlichung zu prüfen
 
@@ -39,6 +46,12 @@ Die Ortssuche fragt bei Apple nach Städten und Verwaltungsgebieten. Mit „nur 
 - **Texte der Anleitung** (Phase 5, Spec § 6.14): Niemand hat sie bisher fachlich geprüft (Imam oder Gelehrter je Sprache); sie stehen unverändert wie im Prototyp. Ebenso offen: eine neutrale Fassung oder Varianten je Rechtsschule und für Frauen, echte Illustrationen statt der Strichfiguren, Audio für die Formeln.
 - **Adhan-Aufnahmen** (Phase 7, Spec § 6.5): Stimme 1 und 2 sind freie Aufnahmen von Wikimedia Commons, die Lizenzangaben (CC0 1.0, gemeinfrei) stammen von den Hochladenden. Vor dem App Store: Herkunft und Rechte prüfen oder durch die endgültigen Aufnahmen ersetzen; Stimme 3 und die Fadschr-Variante fehlen. Abspielen mit Ton ist nur am Gerät zu prüfen (der Simulator hat hier kein Ausgabegerät).
 - **Quellcode und Version** (Phase 7): Die Adresse hinter „Quellcode“ ist ein Platzhalter (`SOURCE_CODE_URL` in `project.yml`); die Version steht auf 0.1.0.
+- **Mitteilungen am Gerät** (Phase 8): Im Simulator geprüft sind Texte, Zeitpunkte, Reihenfolge und ob eine Mitteilung einen Ton hat. Am Gerät zu prüfen:
+  - die Aufnahmen als Mitteilungston (der Simulator hat hier kein Ausgabegerät);
+  - die Hintergrundaktualisierung – im Simulator gibt es sie nicht –, also ob das Fenster weiterrollt, wenn man die App tagelang nicht öffnet;
+  - das Verhalten im Fokus und in der geplanten Übersicht;
+  - die Gruppierung auf dem Sperrbildschirm über mehrere Tage.
+- **Türkische Endung in `notifReminderBody`** (Phase 8): „{p} vakti {time}’de başlıyor.“ passt nur zu manchen Uhrzeiten. Richtig wäre etwa „15:36’da“ oder „12:53’te“. Der Text steht so in `T`; Phase 11 prüft die Sprachen.
 - **JAKIM und Kemenag** rechnen mit reinen Winkeln 20°/18°, ohne Sicherheitsminuten (entschieden am 10.11.2026, siehe unten). Beide sind gegen offizielle Tabellen zu prüfen, bevor die App erscheint. Bisher gibt es nur den Vergleich mit dem Mock für Jakarta: Kemenag liegt bis zu 3 Minuten daneben (Dhuhr 11:36 statt 11:39). Die Voreinstellung `singapore` von Adhan Swift – dieselben Winkel, Dhuhr +1, aufgerundet – läge näher (11:38).
 
 ## Entschieden am 10.11.2026
@@ -240,6 +253,64 @@ Für den ersten Upload fehlt noch:
 - **App Store Connect:** Eintrag der App, dann Archiv und Upload.
 
 Die Platzhalter – Übersetzungen der Verse, Adhan-Aufnahmen, Texte der Anleitung – dürfen in der Beta bleiben; vor dem App Store gilt „Vor der Veröffentlichung zu prüfen“ oben.
+
+## Entschieden mit dem Plan für Phase 8 am 12.11.2026
+
+Der Plan für Phase 8 wurde am 12.11.2026 freigegeben („Freigeben, -debugNotifications“), zu jeder Frage mit der Empfehlung.
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Ton ohne Aufnahme | „Systemton; Fadschr mit Stimme“ | Stimme 3 hat keine Aufnahme; eine Mitteilung mit „Ton“ spielt dann den Systemton. Fadschr spielt die Aufnahme der gewählten Stimme und nimmt die Fadschr-Variante, sobald es für sie eine gibt (`AdhanVoice.clipResource(fajrVariant:)`). |
+| Zeitkritische Mitteilungen (Spec § 6.6) | „Nein, wie Prototyp“ | normale Mitteilungen (`interruptionLevel = .active`), kein Entitlement und keine Begründung für die App-Prüfung. Im Fokus kommen sie nur, wenn man die App dort erlaubt. |
+| Hintergrundaktualisierung | „BGAppRefreshTask“ | Etwa einmal am Tag weckt iOS die App kurz, und sie plant neu (`BackgroundRefresh`). In der Info.plist stehen „Background fetch“ (`UIBackgroundModes`) und die Kennung `<Bundle-ID>.refresh` (`BGTaskSchedulerPermittedIdentifiers`), beides in `project.yml`. |
+| Nach „Später“ im Onboarding | „Bei erster Änderung“ | Hat iOS noch nie gefragt, erscheint der Dialog des Systems einmal, sobald man eine Glocke antippt oder unter Einstellungen › Mitteilungen etwas ändert (Pro Gebet, Erinnerung, Live-Aktivität, Klang; nicht die Stimme im Adhan-Sheet). Damit ändert sich die Annahme aus Phase 7, dass nur das Onboarding fragt. |
+| Abgleich von `system/92` | „Freigeben, -debugNotifications“ | Neues Debug-Argument: Mit Mock-Zeiten merkt die App echte Mitteilungen bei iOS vor, gemessen an der Debug-Uhr. Beim Start fragt sie nach der Erlaubnis und räumt zugestellte Mitteilungen ab. |
+
+Mit dem Plan freigegeben sind auch seine Annahmen:
+
+- **Fenster:** die nächsten 64 Mitteilungen in zeitlicher Folge (Spec § 6.4); eine Erinnerung nur zusammen mit ihrer Mitteilung. Mit den Startwerten zehn am Tag, gut sechs Tage; alle sechs mit Erinnerung gut fünf, ohne Erinnerung 10 bis 13 Tage.
+- **Erinnerung:** spielt nie den Adhan. Bei der Glocke „Ton“ kommt sie mit dem Systemton, beim Klang „Lautlos“ und bei der Glocke „Lautlos“ ohne Ton, bei „Aus“ gar nicht.
+- **Offene App:** Die Mitteilung erscheint als Banner mit Ton. Antippen öffnet die App dort, wo sie war.
+- **Ort ohne Namen** (ohne Netz bestimmt): Im Text steht „Aktueller Standort“, wie auf der Zeiten-Seite.
+- **Zeitangaben:** „jetzt“ und „vor 10 Min.“ zeichnet iOS selbst, in der Sprache des Geräts. `notifNow` und `notifAgo` aus `T` bleiben ungenutzt.
+
+## Annahmen in Phase 8
+
+Geprüft ist auf dem iPhone 18 Pro mit iOS 27.2. Für `system/92` wurden die Systemsprache des Simulators auf Deutsch und die Statusleiste auf 11:52 gestellt, danach wieder zurück. Die Abläufe liefen mit dem UI-Hilfsprojekt (`s36`–`s40`). Was iOS vormerkt, steht im Protokoll der App.
+
+### Was mit dem Referenzbild übereinstimmt
+
+- **Inhalt:** oben „Dhuhr · 11:52“ – „Zeit für Dhuhr in Berlin.“ – „jetzt“, darunter „Dhuhr in 10 Minuten“ – „Dhuhr beginnt um 11:52 Uhr.“. Die Erinnerung kam zehn Minuten vor der Mitteilung. Die neuere steht oben, wie im Referenzbild. Die große Uhr zeigt 11:52.
+- **Maße:** Jede Karte ist 66 pt hoch, zwischen ihnen liegen 8 pt – wie `.notif` und `.n-stack` im Prototyp.
+- **Fälle:**
+  - Ischa („Lautlos“) kommt ohne Ton, der Sonnenaufgang („Aus“) gar nicht. Maghrib auf „Lautlos“ getippt: neu geplant, ohne Ton. Auf „Aus“: Maghrib fehlt.
+  - Stadt Istanbul: neu geplant mit „Zeit für Ischa in Istanbul.“ um 19:23.
+  - Asr „Hanafi“: Asr um 14:36. Methode Diyanet: neu geplant; mit Mock-Zeiten bleiben die Uhrzeiten gleich.
+  - Mitteilungen in den iOS-Einstellungen aus: „0 geplant, 0 ausstehend“, unter „Mitteilungen“ steht „Mitteilungen sind in den iOS-Einstellungen deaktiviert.“, die Glocken bleiben einstellbar.
+  - Vor der Erlaubnis plant die App nichts, danach 64.
+
+### Was abweicht und bleibt
+
+Das alles zeichnet iOS selbst; verglichen werden Titel, Text, App-Name und Zeitangabe, nicht die Form.
+
+- **Stapel:** iOS stapelt die beiden Mitteilungen der App, oben die neuere, mit der Zahl 2 am Symbol. Aufgeklappt steht darüber „Gebetszeiten“ mit „Weniger“ und ✕. Das Referenzbild zeigt zwei einzelne Karten ohne Kopf.
+- **Zeitangabe:** „Vor 10 Min.“ mit großem V; das Referenzbild schreibt „vor 10 Min.“ (`notifAgo`).
+- **Symbol:** das leere Platzhalter-Symbol von iOS statt des Halbmonds auf Grün – die App hat noch kein Icon (Phase 11).
+- **Karten:** dunkles Glas über dem Hintergrund des Simulators mit weißer Schrift statt der hellen Karte (`rgba(250,250,250,.74)`) mit schwarzer Schrift.
+- **Datum und Statusleiste:** Das Datum bleibt „Sa. 1. Jan.“ statt „Dienstag, 10. November“, weil die Überschreibung der Statusleiste nur die Uhrzeit setzt. Oben links steht der Name des Netzes („Carrier“) statt der Uhrzeit, wie auf jedem Sperrbildschirm.
+- **Ton:** Ob eine Mitteilung einen Ton hat, ist geprüft. Zu hören ist im Simulator auf diesem Mac nichts (kein Ausgabegerät); das bleibt am Gerät zu prüfen.
+
+### Annahmen in der Umsetzung
+
+- **Auslöser:** Jede Mitteilung bekommt einen Auslöser nach Zeitabstand (`UNTimeIntervalNotificationTrigger`), gerechnet von der Uhr der App. Sie kommt zum Zeitpunkt am Ort, auch wenn das Gerät in einer anderen Zeitzone steht oder reist; mit `-debugTime` läuft sie mit der Debug-Uhr. Was weniger als eine Sekunde entfernt liegt, geht nicht mehr an iOS.
+- **Ersetzen:** Jedes Planen löscht alle ausstehenden Mitteilungen der App und merkt die neuen vor. Schon zugestellte bleiben stehen. Die Kennung bleibt für dieselbe Mitteilung gleich (`prayer.2026-11-10.dhuhr`, `reminder.2026-11-10.dhuhr`).
+- **Wann neu geplant wird:** Der unsichtbare Begleiter `NotificationPlanning` an der Wurzel plant, wenn die App nach vorn kommt, und nach jeder Änderung an dem, was eingeht. Änderungen innerhalb von 0,3 s fasst er zusammen, etwa am Stepper. Die Live-Aktivität zählt mit, weil sie unter Mitteilungen steht; der Kerahat-Schalter nicht.
+- **Tage und Grenzen:** Der Plan beginnt beim Vortag, weil ein Ischa nach Mitternacht noch bevorstehen kann (Regel „Nachtmitte“). Tage ohne Zeiten fallen aus, etwa in der Polarnacht. Gesucht wird höchstens 64 Tage voraus. Fallen zwei Mitteilungen auf denselben Zeitpunkt, gilt die Tagesfolge, die Erinnerung zuerst.
+- **Texte:** Uhrzeit wie auf der Gebetskarte (24 Stunden, mit Minutenkorrektur), Stadt wie auf der Zeiten-Seite, Minuten der Erinnerung als Zahl. Die Sprache ist die der App, auch bei der eigenen Wahl. Ändert sich die Sprache des Geräts, gilt sie mit dem nächsten Planen.
+- **Gruppierung:** Die Mitteilungen tragen keine eigene Gruppe (`threadIdentifier`). iOS fasst sie wie bei jeder App zusammen.
+- **Ohne Erlaubnis:** Bei „Nicht erlauben“ und solange iOS noch nicht gefragt hat, merkt die App nichts vor und löscht, was aussteht. Die Glocken bleiben einstellbar (Spec § 5). Kommt die Erlaubnis in den iOS-Einstellungen zurück, plant die App, sobald sie nach vorn kommt.
+- **Hintergrund:** Die Hintergrundaktualisierung liest Einstellungen und Sprache aus der App Group. Sie nimmt den Ort, der gilt: den zuletzt bestimmten Standort oder die gewählte Stadt. Sie fragt nicht nach dem Standort und bestimmt ihn nicht neu. Danach bittet sie um den nächsten Lauf, frühestens in zwölf Stunden; auch beim Wechsel in den Hintergrund bittet die App darum.
+- **Protokoll:** In DEBUG schreibt die App nach jedem Planen ins Protokoll des Systems, was iOS vormerkt: Kennung, Zeitpunkt, Titel, Text und ob mit Ton (`category == "notifications"`).
 
 ## Annahmen in Phase 7
 

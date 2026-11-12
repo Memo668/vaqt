@@ -167,6 +167,13 @@ Gebaut am 12.11.2026 in drei Teilschritten: Einstellungen (Liste des Systems, ei
 
 **Referenz:** `system/92`.
 
+Gebaut am 12.11.2026 in drei Schritten.
+- **PrayerCore:** `NotificationPlanner` plant die nächsten 64 Mitteilungen samt Erinnerungen, mit Texten und Tönen; dazu Tests mit Mock-Zeiten, Zeitzonen, Sommerzeit, hohen Breiten und Mitternacht.
+- **Features und App:** Die App merkt die Mitteilungen über `UNUserNotificationCenter` vor. Neu geplant wird beim Start, wenn die App nach vorn kommt, nach jeder Änderung und bei der Hintergrundaktualisierung (`BGAppRefreshTask`).
+- **Abgleich:** `system/92` mit dem neuen Debug-Argument `-debugNotifications` und dem UI-Hilfsprojekt.
+
+Entscheidungen, Annahmen und was abweicht stehen in `docs/OPEN-QUESTIONS.md` („Entschieden mit dem Plan für Phase 8“, „Annahmen in Phase 8“).
+
 ## Phase 9 – Widgets und Live-Aktivität
 
 - **Widgets:** systemSmall, systemMedium, accessoryCircular, accessoryRectangular, accessoryInline; Zeitleiste aus `PrayerCore` über die App Group.
