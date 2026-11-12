@@ -2,12 +2,16 @@
 /// wie es zur Uhrzeit steht.
 public struct GuideState: Hashable, Sendable {
 
-    /// Das Gebet, das die Anleitung zeigt (`p`): die manuelle Wahl, sonst `automatic`.
+    /// Das Gebet, das die Anleitung zeigt (`p`): die manuelle Wahl, sonst `automatic`. Ohne Zeiten und
+    /// ohne Wahl Fadschr, das erste der fünf.
     public let prayer: Prayer
 
     /// Das Gebet, dem die Anleitung von selbst folgt (`auto`): das laufende; vor Fadschr noch Ischa;
     /// zwischen Sonnenaufgang und Dhuhr das nächste, also Dhuhr. Es trägt den Punkt in der Auswahl.
-    public let automatic: Prayer
+    ///
+    /// `nil`, solange es für den Ort keine Zeiten gibt – ohne Ort oder wo die Sonne nicht auf- oder
+    /// untergeht. Dann gibt es weder Punkt noch Status noch Zeitfenster.
+    public let automatic: Prayer?
 
     /// Das gezeigte Gebet läuft gerade – Status „Jetzt“ (`isCur`).
     public let isCurrent: Bool
@@ -15,26 +19,26 @@ public struct GuideState: Hashable, Sendable {
     /// Das gezeigte Gebet ist das nächste – Status „Als Nächstes“ (`isNext`).
     public let isNext: Bool
 
-    /// Ob der Knopf „Zurück zum aktuellen Gebet“ erscheint: nach einer manuellen Wahl, die vom
-    /// automatischen Gebet abweicht.
+    /// Ob der Knopf „Zum aktuellen Gebet“ erscheint: nach einer manuellen Wahl, die vom automatischen
+    /// Gebet abweicht. Ohne Zeiten gibt es kein aktuelles Gebet und damit keinen Knopf.
     public let showsReturnButton: Bool
 
     /// - Parameters:
-    ///   - phase: die Tagesphase.
+    ///   - phase: die Tagesphase; `nil`, wenn es für den Ort keine Zeiten gibt.
     ///   - pick: die manuelle Wahl (`S.guidePick`); `nil` heißt, die Anleitung folgt der Zeit. Der
     ///     Sonnenaufgang ist kein Gebet und zählt wie keine Wahl.
-    public init(phase: DayPhase, pick: Prayer? = nil) {
+    public init(phase: DayPhase?, pick: Prayer? = nil) {
         // Läuft kein Gebet, liegt „jetzt“ zwischen Sonnenaufgang und Dhuhr; das nächste Gebet ist dann Dhuhr.
-        let automatic = phase.current?.prayer ?? .dhuhr
+        let automatic = phase.map { $0.current?.prayer ?? .dhuhr }
         let pick = pick == .sunrise ? nil : pick
-        let prayer = pick ?? automatic
-        let isCurrent = phase.current?.prayer == prayer
+        let prayer = pick ?? automatic ?? .fajr
+        let isCurrent = phase?.current?.prayer == prayer
 
         self.prayer = prayer
         self.automatic = automatic
         self.isCurrent = isCurrent
         self.isNext = !isCurrent && prayer == automatic
-        self.showsReturnButton = pick != nil && pick != automatic
+        self.showsReturnButton = automatic != nil && pick != nil && pick != automatic
     }
 }
 
@@ -52,18 +56,21 @@ public struct GuideSelection: Hashable, Sendable {
 
     public init() {}
 
-    /// Der Stand der Anleitung zur Phase, mit der aktuellen Wahl.
-    public func state(for phase: DayPhase) -> GuideState {
+    /// Der Stand der Anleitung zur Phase, mit der aktuellen Wahl. Ohne Phase gibt es für den Ort keine
+    /// Zeiten.
+    public func state(for phase: DayPhase?) -> GuideState {
         GuideState(phase: phase, pick: pick)
     }
 
     /// Wählt ein Gebet von Hand – Aktion `guide-pick`. Wer das automatische Gebet antippt, hebt die
-    /// manuelle Wahl auf.
-    public mutating func choose(_ prayer: Prayer, in phase: DayPhase) {
+    /// manuelle Wahl auf. Ohne Zeiten gibt es kein automatisches Gebet; die Wahl gilt dann einfach.
+    public mutating func choose(_ prayer: Prayer, in phase: DayPhase?) {
         let automatic = GuideState(phase: phase).automatic
         pick = prayer == automatic || prayer == .sunrise ? nil : prayer
         // Die Wahl merkt sich, bei welchem Gebet sie getroffen wurde – auch ohne vorherigen Abgleich.
-        lastAutomatic = automatic
+        if let automatic {
+            lastAutomatic = automatic
+        }
     }
 
     /// Zurück zum aktuellen Gebet – Aktion `guide-now`. Gilt auch, wenn man die Seite verlässt.

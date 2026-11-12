@@ -46,6 +46,30 @@ struct GuideDataTests {
         #expect(empty.count == 0)
         #expect(empty.recitation == .aloud)
         #expect(!empty.hasMoreThanTwo)
+        #expect(empty.sequence == [.finalSitting])
+    }
+
+    @Test("Rakʿa-Folge: Sitzen nach der 2. nur bei mehr als zwei Rakʿas, am Ende Sitzen · Salām", arguments: [
+        (Prayer.fajr, [Rakahs.Item.rakah(number: 1, aloud: true), .rakah(number: 2, aloud: true), .finalSitting]),
+        (.dhuhr, [
+            .rakah(number: 1, aloud: false), .rakah(number: 2, aloud: false), .sitting,
+            .rakah(number: 3, aloud: false), .rakah(number: 4, aloud: false), .finalSitting,
+        ]),
+        (.asr, [
+            .rakah(number: 1, aloud: false), .rakah(number: 2, aloud: false), .sitting,
+            .rakah(number: 3, aloud: false), .rakah(number: 4, aloud: false), .finalSitting,
+        ]),
+        (.maghrib, [
+            .rakah(number: 1, aloud: true), .rakah(number: 2, aloud: true), .sitting,
+            .rakah(number: 3, aloud: false), .finalSitting,
+        ]),
+        (.isha, [
+            .rakah(number: 1, aloud: true), .rakah(number: 2, aloud: true), .sitting,
+            .rakah(number: 3, aloud: false), .rakah(number: 4, aloud: false), .finalSitting,
+        ]),
+    ])
+    func sequence(prayer: Prayer, items: [Rakahs.Item]) throws {
+        #expect(try #require(Guide.rakahs(for: prayer)).sequence == items)
     }
 
     @Test("die Zeit eines Gebets endet mit dem nächsten Ereignis", arguments: [
@@ -421,6 +445,50 @@ struct GuideStateTests {
         var other = GuideSelection()
         try other.update(for: phase("14:25"))
         #expect(selection == other)
+    }
+
+    // MARK: - Ohne Zeiten
+
+    @Test("ohne Zeiten zeigt die Anleitung Fadschr – ohne Punkt, Status und Knopf")
+    func withoutTimes() {
+        let state = GuideState(phase: nil)
+        #expect(state.prayer == .fajr)
+        #expect(state.automatic == nil)
+        #expect(!state.isCurrent)
+        #expect(!state.isNext)
+        #expect(!state.showsReturnButton)
+    }
+
+    @Test("ohne Zeiten gilt die Wahl, aber es gibt keinen Knopf zurück")
+    func pickWithoutTimes() {
+        var selection = GuideSelection()
+        selection.choose(.maghrib, in: nil)
+        #expect(selection.pick == .maghrib)
+        let state = selection.state(for: nil)
+        #expect(state.prayer == .maghrib)
+        #expect(!state.isCurrent)
+        #expect(!state.isNext)
+        #expect(!state.showsReturnButton)
+
+        // Fadschr ist ohne Zeiten kein automatisches Gebet; die Wahl gilt also auch hier.
+        selection.choose(.fajr, in: nil)
+        #expect(selection.pick == .fajr)
+        selection.choose(.sunrise, in: nil)
+        #expect(selection.pick == nil)
+    }
+
+    @Test("kommen die Zeiten, bleibt die Wahl, bis das laufende Gebet wechselt")
+    func timesArriveAfterPick() throws {
+        var selection = GuideSelection()
+        selection.choose(.isha, in: nil)
+
+        // Der erste Abgleich mit Zeiten ist kein Wechsel.
+        try selection.update(for: phase("14:25"))
+        #expect(selection.pick == .isha)
+        #expect(try selection.state(for: phase("14:25")).showsReturnButton)
+
+        try selection.update(for: phase("16:27"))
+        #expect(selection.pick == nil)
     }
 }
 

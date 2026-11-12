@@ -35,4 +35,28 @@ public struct Rakahs: Hashable, Sendable {
     public var hasMoreThanTwo: Bool {
         count > 2
     }
+
+    /// Ein Glied der Rakʿa-Folge in der Kopfkarte der Anleitung (`.rak` in `guidePage()`).
+    public enum Item: Hashable, Sendable {
+        /// Eine Rakʿa: ihre Nummer ab 1 und ob sie laut rezitiert wird (`.rak-unit`).
+        case rakah(number: Int, aloud: Bool)
+        /// Sitzen nach der zweiten Rakʿa, wenn das Gebet mehr als zwei hat (`tashSit`).
+        case sitting
+        /// Sitzen und Friedensgruß am Ende (`tashEnd`).
+        case finalSitting
+    }
+
+    /// Die Rakʿas in ihrer Folge: nach der zweiten das Sitzen, sofern noch eine folgt, und am Ende das
+    /// Sitzen mit dem Friedensgruß.
+    public var sequence: [Item] {
+        var items: [Item] = []
+        for (index, isAloud) in aloud.enumerated() {
+            items.append(.rakah(number: index + 1, aloud: isAloud))
+            if index == 1, hasMoreThanTwo {
+                items.append(.sitting)
+            }
+        }
+        items.append(.finalSitting)
+        return items
+    }
 }
