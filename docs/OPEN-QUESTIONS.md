@@ -35,10 +35,7 @@ Die Ortssuche fragt bei Apple nach Städten und Verwaltungsgebieten. Mit „nur 
 
 ### 6. Ton zum Sonnenaufgang
 
-Der Sonnenaufgang hat eine Glocke wie die Gebete (Startwert „Aus“). Steht sie auf „Ton“ und der Klang auf „Kurzer Adhan“, spielt die Mitteilung zum Sonnenaufgang den Adhan – so sagt es der Prototyp („„Ton“ spielt den gewählten Klang“). Einen Adhan zum Sonnenaufgang gibt es aber nicht: Er beendet die Zeit von Fadschr.
-
-- **Standard:** wie im Prototyp, der Adhan der gewählten Stimme.
-- **Vorschlag:** zum Sonnenaufgang immer der Systemton, wenn die Glocke auf „Ton“ steht.
+Entschieden am 12.11.2026 mit der Abnahme von Phase 8 („Systemton“), siehe unten.
 
 ## Vor der Veröffentlichung zu prüfen
 
@@ -273,6 +270,16 @@ Mit dem Plan freigegeben sind auch seine Annahmen:
 - **Offene App:** Die Mitteilung erscheint als Banner mit Ton. Antippen öffnet die App dort, wo sie war.
 - **Ort ohne Namen** (ohne Netz bestimmt): Im Text steht „Aktueller Standort“, wie auf der Zeiten-Seite.
 - **Zeitangaben:** „jetzt“ und „vor 10 Min.“ zeichnet iOS selbst, in der Sprache des Geräts. `notifNow` und `notifAgo` aus `T` bleiben ungenutzt.
+
+## Abnahme von Phase 8 am 12.11.2026
+
+Phase 8 wurde am 12.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-8` stand (Stand `2a48ba8`). Dazu kam eine Entscheidung:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Ton zum Sonnenaufgang | „Systemton“ | Der Sonnenaufgang ist kein Gebet und hat keinen Adhan. Steht seine Glocke auf „Ton“, spielt die Mitteilung den Systemton, auch beim Klang „Kurzer Adhan“; beim Klang „Lautlos“ keinen. Der Prototyp sagt nur „„Ton“ spielt den gewählten Klang“ und hätte den Adhan gespielt. |
+
+Offen bleiben die Prüfung am Gerät (Ton, Hintergrundaktualisierung, Fokus) und die türkische Endung in `notifReminderBody`, beide oben unter „Vor der Veröffentlichung zu prüfen“.
 
 ## Annahmen in Phase 8
 
