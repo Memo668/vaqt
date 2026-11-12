@@ -167,9 +167,16 @@ final class RecordingNotificationScheduler: NotificationScheduling {
     private(set) var calls: [[PrayerNotification]] = []
     private(set) var nows: [Date] = []
 
+    /// Wie oft Zugestelltes abgeräumt wurde.
+    private(set) var removals = 0
+
     func replacePending(with notifications: [PrayerNotification], now: Date) {
         calls.append(notifications)
         nows.append(now)
+    }
+
+    func removeDelivered() {
+        removals += 1
     }
 }
 

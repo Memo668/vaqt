@@ -102,6 +102,15 @@ struct NotificationModelTests {
         #expect(fixture.scheduler.calls.count == requests)
     }
 
+    @Test("-debugNotifications beim Start: Zugestelltes abräumen, dann fragen und planen")
+    func debugRun() async {
+        let fixture = fixture(authorization: .notDetermined)
+        await fixture.model.prepareDebugRun()
+        #expect(fixture.scheduler.removals == 1)
+        #expect(await fixture.authorizer.requests == 1)
+        #expect(fixture.scheduler.calls.last?.count == 64)
+    }
+
     @Test("abgelehnt beim Fragen: nichts geplant")
     func requestDenied() async {
         let fixture = fixture(authorization: .notDetermined, answer: .denied)

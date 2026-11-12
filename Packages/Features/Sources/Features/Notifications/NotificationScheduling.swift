@@ -11,6 +11,10 @@ public protocol NotificationScheduling: Sendable {
     /// - Parameter now: jetzt, auf der Uhr der App. Von hier zählt der Abstand bis zu jeder Mitteilung –
     ///   so läuft auch die Debug-Uhr mit (`-debugTime`).
     @MainActor func replacePending(with notifications: [PrayerNotification], now: Date)
+
+    /// Räumt die schon zugestellten Mitteilungen der App ab – nur für `-debugNotifications`, damit eine
+    /// Aufnahme des Sperrbildschirms nur die Mitteilungen dieses Laufs zeigt.
+    @MainActor func removeDelivered()
 }
 
 /// Mitteilungen über `UNUserNotificationCenter`.
@@ -43,6 +47,11 @@ public struct SystemNotificationScheduler: NotificationScheduling {
         #endif
     }
 
+    @MainActor
+    public func removeDelivered() {
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+    }
+
     /// Die Anfrage an iOS für eine Mitteilung; `nil`, wenn sie nicht mehr in der Zukunft liegt.
     static func request(for notification: PrayerNotification, now: Date) -> UNNotificationRequest? {
         let lead = notification.date.timeIntervalSince(now)
@@ -70,7 +79,8 @@ public struct SystemNotificationScheduler: NotificationScheduling {
     static let log = Logger(subsystem: "com.example.gebetszeiten", category: "notifications")
 
     #if DEBUG
-    /// Schreibt ins Protokoll, was iOS jetzt vormerkt – für den Abgleich im Simulator:
+    /// Schreibt ins Protokoll, was iOS jetzt vormerkt – die ersten sechs und die letzten zwei, damit der
+    /// Eintrag nicht gekürzt wird. Für den Abgleich im Simulator:
     /// `xcrun simctl spawn booted log show --last 5m --predicate 'category == "notifications"'`.
     private static func logPending(center: UNUserNotificationCenter, planned: Int) {
         center.getPendingNotificationRequests { requests in
@@ -80,7 +90,8 @@ public struct SystemNotificationScheduler: NotificationScheduling {
                     let sound = request.content.sound == nil ? "ohne Ton" : "Ton"
                     return "\(request.identifier) \(nextDate(request).formatted(.iso8601)) „\(request.content.title)“ – „\(request.content.body)“ (\(sound))"
                 }
-            log.notice("Mitteilungen: \(planned) geplant, \(requests.count) ausstehend\n\(lines.joined(separator: "\n"), privacy: .public)")
+            let shown = lines.count > 8 ? lines.prefix(6) + ["…"] + lines.suffix(2) : lines[...]
+            log.notice("Mitteilungen: \(planned) geplant, \(requests.count) ausstehend\n\(shown.joined(separator: "\n"), privacy: .public)")
         }
     }
 
@@ -96,4 +107,7 @@ public struct NoNotificationScheduler: NotificationScheduling {
 
     @MainActor
     public func replacePending(with notifications: [PrayerNotification], now: Date) {}
+
+    @MainActor
+    public func removeDelivered() {}
 }

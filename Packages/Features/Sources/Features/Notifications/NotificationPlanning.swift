@@ -11,7 +11,8 @@ import SwiftUI
 /// - Geht die App in den Hintergrund, bittet er iOS um die nächste Hintergrundaktualisierung.
 struct NotificationPlanning: View {
     let model: NotificationModel
-    /// `-debugNotifications`: beim Start nach der Erlaubnis fragen, falls iOS noch nie gefragt hat.
+    /// `-debugNotifications`: beim Start Zugestelltes abräumen und nach der Erlaubnis fragen, falls iOS noch
+    /// nie gefragt hat.
     var asksAtLaunch = false
 
     @Environment(\.scenePhase) private var scenePhase
@@ -38,7 +39,7 @@ struct NotificationPlanning: View {
             }
             .task {
                 if asksAtLaunch {
-                    await model.requestIfNeverAsked()
+                    await model.prepareDebugRun()
                 }
             }
     }

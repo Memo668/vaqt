@@ -126,6 +126,13 @@ public final class NotificationModel {
         guard await authorizer.authorization() == .notDetermined else { return }
         await requestAuthorization()
     }
+
+    /// `-debugNotifications` beim Start: Zugestelltes abräumen, dann nach der Erlaubnis fragen, falls iOS
+    /// noch nie gefragt hat. So zeigt die Aufnahme von `system/92` nur die Mitteilungen dieses Laufs.
+    public func prepareDebugRun() async {
+        scheduler.removeDelivered()
+        await requestIfNeverAsked()
+    }
 }
 
 /// Die Texte der Mitteilungen aus dem String Catalog, in der Sprache der App (`L10n`) – auch bei der
