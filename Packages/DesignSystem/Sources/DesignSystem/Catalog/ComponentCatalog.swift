@@ -39,6 +39,11 @@ public struct ComponentCatalog: View {
         case onboarding
         /// Die Karte des Adhan-Players: still wie `iphone/86` und beim Abspielen.
         case adhan
+        /// Die fünf Widgets: mittleres und kleines wie `system/91`, die drei des Sperrbildschirms wie
+        /// `system/90`.
+        case widgets
+        /// Die Live-Aktivität: Insel kompakt und erweitert (`system/94`, `95`), Sperrbildschirm (`93`, `96`).
+        case live
         /// Alles untereinander, zum Durchblättern.
         case all
     }
@@ -50,6 +55,7 @@ public struct ComponentCatalog: View {
     private let guide: GuideHeader
     private let today: CalendarDay
     private let qada: QadaLedger
+    private let outside: CatalogOutsideState
 
     /// - Parameters:
     ///   - phase: der Zustand für Bogen und Gebetskarten; ohne Angabe Berlin um 14:25 wie `iphone/10`.
@@ -58,10 +64,11 @@ public struct ComponentCatalog: View {
     ///   - guide: Auswahl und Kopfkarte der Anleitung; ohne Angabe Berlin um 14:25 wie `iphone/40`.
     ///   - today: der Tag für Verse und Plan; ohne Angabe der 10.11.2026 wie `iphone/50` und `60`.
     ///   - qada: der Stand des Nachholens; ohne Angabe die Zahlen des Prototyps wie `iphone/60`.
+    ///   - outside: Widgets und Live-Aktivität; ohne Angabe Berlin um 14:25 wie `system/90`, `91`, `93`.
     public init(
         section: Section = .all, phase: DayPhase? = nil, isHighLatitude: Bool = false,
         compass: CatalogFixtures.CompassState? = nil, guide: GuideHeader? = nil,
-        today: CalendarDay? = nil, qada: QadaLedger? = nil
+        today: CalendarDay? = nil, qada: QadaLedger? = nil, outside: CatalogOutsideState? = nil
     ) {
         self.section = section
         self.phase = phase ?? CatalogFixtures.phase(time: "14:25:01")
@@ -70,6 +77,7 @@ public struct ComponentCatalog: View {
         self.guide = guide ?? CatalogFixtures.guideHeader()
         self.today = today ?? FixtureTimes.referenceDay
         self.qada = qada ?? .prototypeSample
+        self.outside = outside ?? .fixture()
     }
 
     public var body: some View {
@@ -98,6 +106,10 @@ public struct ComponentCatalog: View {
             captureTall { CatalogOnboarding() }
         case .adhan:
             captureTall { CatalogAdhan() }
+        case .widgets:
+            captureScreen { CatalogWidgets(state: outside) }
+        case .live:
+            captureScreen { CatalogLiveActivity(state: outside) }
         case .all:
             everything
         }
@@ -127,6 +139,16 @@ public struct ComponentCatalog: View {
         }
         .background(Palette.backgroundGrouped)
         .ignoresSafeArea()
+    }
+
+    /// Für Bausteine, die wie auf dem Sperr- oder Home-Bildschirm an fester Stelle vom oberen Rand stehen:
+    /// in der Breite der Referenzbilder, über den ganzen Bildschirm.
+    private func captureScreen<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        content()
+            .frame(width: CatalogMetrics.referenceWidth)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(.black)
+            .ignoresSafeArea()
     }
 
     private var everything: some View {
@@ -197,6 +219,18 @@ public struct ComponentCatalog: View {
                 CatalogGroup("Adhan – still, beim Abspielen") {
                     CatalogAdhan()
                         .padding(.horizontal, -Layout.inset)
+                }
+                CatalogGroup("Widgets – Home-Bildschirm und Sperrbildschirm") {
+                    CatalogWidgets(state: outside)
+                        .frame(height: CatalogOutsideMetrics.accessoryTop + WidgetMetrics.circularSize.height + 20)
+                        .padding(.horizontal, -Layout.inset)
+                }
+                CatalogGroup("Live-Aktivität – vor und ab Gebetsbeginn") {
+                    ForEach([false, true], id: \.self) { isStale in
+                        CatalogLiveActivity(state: outside, isStale: isStale)
+                            .frame(height: CatalogOutsideMetrics.lockScreenTop + LiveActivityMetrics.lockScreenHeight + 20)
+                            .padding(.horizontal, -Layout.inset)
+                    }
                 }
                 CatalogGroup("Tokens") {
                     CatalogTokens()
