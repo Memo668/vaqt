@@ -25,14 +25,10 @@ protocol AdhanPlayback: AnyObject {
 /// Prototyp, 27 bzw. 30 Sekunden (`adhanDur()`). Spec § 6.5 ist offen.
 enum AdhanClips {
 
-    /// Name der Datei im Bundle der App, ohne Endung; `nil`, wenn es keine Aufnahme gibt.
+    /// Name der Datei im Bundle der App, ohne Endung; `nil`, wenn es keine Aufnahme gibt. Dieselben
+    /// Aufnahmen spielen die Mitteilungen (`AdhanVoice.clipResource(fajrVariant:)` in PrayerCore).
     static func resource(for voice: AdhanVoice, fajrVariant: Bool) -> String? {
-        guard !fajrVariant else { return nil }
-        switch voice {
-        case .one: return "adhan-voice1"
-        case .two: return "adhan-voice2"
-        case .three: return nil
-        }
+        voice.clipResource(fajrVariant: fajrVariant)
     }
 
     /// Länge des stummen Ablaufs ohne Aufnahme (`adhanDur()`): 27 Sekunden, die Fadschr-Variante 30.

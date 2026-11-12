@@ -18,6 +18,7 @@ struct OnboardingModelTests {
         let model: OnboardingModel
         let location: ScriptedLocationSource
         let notifications: CountingNotificationAuthorizer
+        let scheduler: RecordingNotificationScheduler
     }
 
     private func fixture(
@@ -33,10 +34,15 @@ struct OnboardingModelTests {
         )
         let navigation = AppNavigation(onboardingStep: step)
         let notifications = CountingNotificationAuthorizer()
-        let model = OnboardingModel(navigation: navigation, today: today, notificationAuthorizer: notifications)
+        let scheduler = RecordingNotificationScheduler()
+        let notificationModel = NotificationModel(
+            settings: settings, location: today.location, clock: today.clock, timesSource: FixtureTimesSource(),
+            authorizer: notifications, scheduler: scheduler
+        )
+        let model = OnboardingModel(navigation: navigation, today: today, notifications: notificationModel)
         return Fixture(
             settings: settings, today: today, navigation: navigation, model: model, location: location,
-            notifications: notifications
+            notifications: notifications, scheduler: scheduler
         )
     }
 
@@ -121,22 +127,28 @@ struct OnboardingModelTests {
         #expect(fixture.model.step == .location)
     }
 
-    @Test("„Mitteilungen erlauben“ fragt erst jetzt und führt in die App")
-    func allowNotifications() async {
-        let fixture = fixture(step: .notifications)
+    @Test("„Mitteilungen erlauben“ fragt erst jetzt, plant gleich und führt in die App")
+    func allowNotifications() async throws {
+        let fixture = fixture(step: .location)
+        await fixture.model.allowLocation()
         await fixture.model.allowNotifications()
         #expect(await fixture.notifications.requests == 1)
         #expect(fixture.navigation.onboardingStep == nil)
         #expect(fixture.settings.onboardingCompleted)
+        // Erlaubt: Die Mitteilungen für Berlin sind schon vorgemerkt, die erste ist die Erinnerung an Maghrib.
+        let planned = try #require(fixture.scheduler.calls.last)
+        #expect(planned.count == NotificationPlanner.pendingLimit)
+        #expect(planned.first?.id == "reminder.2026-11-10.maghrib")
     }
 
-    @Test("„Später“ führt in die App, ohne zu fragen")
+    @Test("„Später“ führt in die App, ohne zu fragen und ohne zu planen")
     func later() async {
         let fixture = fixture(step: .notifications)
         fixture.model.finish()
         #expect(await fixture.notifications.requests == 0)
         #expect(fixture.navigation.onboardingStep == nil)
         #expect(fixture.settings.onboardingCompleted)
+        #expect(fixture.scheduler.calls.isEmpty)
     }
 
     @Test("„Überspringen“ auf Schritt 1 und 2 führt in die App, ohne nach etwas zu fragen", arguments: [

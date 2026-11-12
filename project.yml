@@ -75,6 +75,10 @@ targets:
         AppGroupIdentifier: $(APP_GROUP_ID)
         # Adresse hinter Einstellungen › Quellcode (Features: AppInfo.sourceCodeURL).
         SourceCodeURL: $(SOURCE_CODE_URL)
+        # Hintergrundaktualisierung (Phase 8): iOS weckt die App etwa einmal am Tag kurz, und sie plant
+        # die Mitteilungen neu (Features: BackgroundRefresh). Die Kennung ist die Bundle-ID mit „.refresh“.
+        UIBackgroundModes: [fetch]
+        BGTaskSchedulerPermittedIdentifiers: [$(APP_BUNDLE_ID).refresh]
     entitlements:
       path: App/Gebetszeiten.entitlements
       properties:

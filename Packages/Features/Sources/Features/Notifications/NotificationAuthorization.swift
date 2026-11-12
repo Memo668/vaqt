@@ -13,8 +13,10 @@ public enum NotificationAuthorization: Sendable, Equatable {
 
 /// Liest und erfragt die Erlaubnis für Mitteilungen.
 ///
-/// Gefragt wird nur im dritten Schritt des Onboardings, nach „Mitteilungen erlauben“ (Spec § 1). Die
-/// Einstellungen lesen den Stand für ihren Fußtext. Mitteilungen planen kommt in Phase 8.
+/// Gefragt wird im dritten Schritt des Onboardings nach „Mitteilungen erlauben“ (Spec § 1) und – wer dort
+/// „Später“ gewählt hat – bei der ersten Änderung an einer Glocke oder unter Einstellungen › Mitteilungen
+/// (entschieden mit dem Plan für Phase 8). Die Einstellungen lesen den Stand für ihren Fußtext,
+/// `NotificationModel` vor jedem Planen.
 public protocol NotificationAuthorizing: Sendable {
     /// Der Stand, ohne zu fragen.
     func authorization() async -> NotificationAuthorization

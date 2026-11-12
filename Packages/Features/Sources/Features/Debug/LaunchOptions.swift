@@ -19,6 +19,7 @@ import PrayerCore
 /// -debugOnboarding 1|2|3        Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
 /// -debugQiblaHeading 137
 /// -debugQiblaAccuracy 40        Genauigkeit des Kompasses in Grad; über 25 erscheint die Kalibrierungskarte
+/// -debugNotifications           echte Mitteilungen auch mit Mock-Zeiten; fragt beim Start nach der Erlaubnis
 /// -debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|all   Katalog der Bausteine statt der App, für den Abgleich
 /// ```
 ///
@@ -59,6 +60,9 @@ public struct LaunchOptions: Equatable, Sendable {
     /// Abweichung, negativ für einen ungültigen Kurs. Die Referenzbilder zeigen die Karte „Kompass
     /// kalibrieren“ immer, die App nur bei schlechter Genauigkeit – damit lässt sie sich nachstellen.
     public var qiblaAccuracy: Double?
+    /// `-debugNotifications`: Mitteilungen über das System auch mit Mock-Zeiten, und beim Start nach der
+    /// Erlaubnis fragen, falls iOS noch nie gefragt hat – zum Nachstellen von `system/92`.
+    public var notifications = false
     /// Abschnitt des Katalogs, den die App statt der Tabs zeigt (`-debugCatalog`). Bogen und
     /// Gebetskarten stehen dort im Zustand der übrigen Argumente.
     public var catalog: ComponentCatalog.Section?
@@ -83,6 +87,8 @@ public struct LaunchOptions: Equatable, Sendable {
                 locationDenied = true
             case "-debugOffline":
                 offline = true
+            case "-debugNotifications":
+                notifications = true
             case "-debugDate":
                 date = value(of: argument, from: &rest, expected: "ein Datum wie 2026-11-10") { CalendarDay($0) }
             case "-debugTime":

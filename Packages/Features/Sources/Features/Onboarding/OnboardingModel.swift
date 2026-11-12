@@ -18,16 +18,17 @@ final class OnboardingModel {
 
     let navigation: AppNavigation
     let today: TodayModel
+    /// Erlaubnis und Planen der Mitteilungen; nach der Antwort plant es gleich.
+    let notifications: NotificationModel
 
-    @ObservationIgnored private let notificationAuthorizer: any NotificationAuthorizing
     /// Stand von `today.cityChoices`, als das Stadt-Sheet aus dem Onboarding aufging; `nil`, solange es
     /// nicht offen ist.
     @ObservationIgnored private var cityChoicesWhenOpened: Int?
 
-    init(navigation: AppNavigation, today: TodayModel, notificationAuthorizer: any NotificationAuthorizing) {
+    init(navigation: AppNavigation, today: TodayModel, notifications: NotificationModel) {
         self.navigation = navigation
         self.today = today
-        self.notificationAuthorizer = notificationAuthorizer
+        self.notifications = notifications
     }
 
     /// Der Schritt, der zu sehen ist.
@@ -88,9 +89,9 @@ final class OnboardingModel {
     }
 
     /// „Mitteilungen erlauben“ (`ob-notif`): fragt mit dem Dialog des Systems, dann in die App – wie die
-    /// Antwort auch ausfällt.
+    /// Antwort auch ausfällt. Erlaubt, sind die Mitteilungen schon geplant.
     func allowNotifications() async {
-        _ = await notificationAuthorizer.requestAuthorization()
+        await notifications.requestAuthorization()
         finish()
     }
 

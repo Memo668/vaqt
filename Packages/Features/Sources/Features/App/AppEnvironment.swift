@@ -29,6 +29,11 @@ public struct AppEnvironment: Sendable {
     public var qadaStorage: QadaModel.Storage
     /// Erlaubnis für Mitteilungen: die des Systems, mit `-debugFixtureTimes` fest „noch nicht gefragt“.
     public var notificationAuthorizer: any NotificationAuthorizing
+    /// Wo die Mitteilungen vorgemerkt werden: bei iOS, mit `-debugFixtureTimes` nirgends.
+    public var notificationScheduler: any NotificationScheduling
+    /// Ob die App beim Start nach der Erlaubnis für Mitteilungen fragt, falls iOS noch nie gefragt hat
+    /// (`-debugNotifications`). Sonst fragt nur das Onboarding und eine spätere Änderung an den Glocken.
+    public var asksForNotificationsAtLaunch: Bool
     public var initialTab: AppTab
     /// Die Seite des Gebete-Tabs beim Start.
     public var initialPage: PrayersPage
@@ -57,6 +62,8 @@ public struct AppEnvironment: Sendable {
         settings: SettingsStore.Storage = .userDefaults(suiteName: nil),
         qadaStorage: QadaModel.Storage = .userDefaults(suiteName: nil),
         notificationAuthorizer: any NotificationAuthorizing = FixedNotificationAuthorizer(),
+        notificationScheduler: any NotificationScheduling = NoNotificationScheduler(),
+        asksForNotificationsAtLaunch: Bool = false,
         initialTab: AppTab = .prayers,
         initialPage: PrayersPage = .today,
         settingsPath: [SettingsRoute] = [],
@@ -73,6 +80,8 @@ public struct AppEnvironment: Sendable {
         self.settings = settings
         self.qadaStorage = qadaStorage
         self.notificationAuthorizer = notificationAuthorizer
+        self.notificationScheduler = notificationScheduler
+        self.asksForNotificationsAtLaunch = asksForNotificationsAtLaunch
         self.initialTab = initialTab
         self.initialPage = initialPage
         self.settingsPath = settingsPath
@@ -83,7 +92,7 @@ public struct AppEnvironment: Sendable {
 
     /// Die Umgebung der ausgelieferten App: Gerätezeit, Standort und Kurs über Core Location, echte
     /// Rechnung, Ortssuche über MapKit, Einstellungen in der App Group, das Nachholen in den
-    /// UserDefaults der App, die Erlaubnis für Mitteilungen über das System.
+    /// UserDefaults der App, Erlaubnis und Mitteilungen über das System.
     public static var live: AppEnvironment {
         AppEnvironment(
             clock: SystemClock(), locationSource: CoreLocationSource(),
@@ -91,7 +100,8 @@ public struct AppEnvironment: Sendable {
             citySearch: MapKitCitySearch(),
             settings: .userDefaults(suiteName: appGroupIdentifier),
             qadaStorage: .userDefaults(suiteName: nil),
-            notificationAuthorizer: SystemNotificationAuthorizer()
+            notificationAuthorizer: SystemNotificationAuthorizer(),
+            notificationScheduler: SystemNotificationScheduler()
         )
     }
 
@@ -141,6 +151,9 @@ extension AppEnvironment {
     /// - `-debugQiblaHeading`, `-debugQiblaAccuracy`: fester Kompasskurs; mit `-debugFixtureTimes` auch
     ///   ohne Angabe der Startwert des Prototyps. Sonst der Kompass des Geräts.
     /// - `-debugOffline`: fest „kein Netz“.
+    /// - `-debugNotifications`: Erlaubnis und Mitteilungen über das System, auch mit `-debugFixtureTimes`;
+    ///   beim Start fragt die App nach der Erlaubnis, falls iOS noch nie gefragt hat. So lässt sich
+    ///   `system/92` mit den Mock-Zeiten nachstellen.
     public init(options: LaunchOptions, system: any AppClock = SystemClock(), deviceTimeZone: TimeZone = .current) {
         clock = options.makeClock(system: system, deviceTimeZone: deviceTimeZone)
         if options.effectiveCity != nil || options.locationDenied {
@@ -162,16 +175,23 @@ extension AppEnvironment {
             citySearch = NoCitySearch()
             settings = .ephemeral(.prototype(city: options.effectiveCity))
             qadaStorage = .ephemeral(.prototypeSample)
-            // `S.notifAllowed: null` – noch nicht gefragt; „Mitteilungen erlauben“ wird erlaubt.
-            notificationAuthorizer = FixedNotificationAuthorizer()
         } else {
             timesSource = AdhanTimesSource()
             connectivity = options.offline ? FixedConnectivity(isOnline: false) : NetworkConnectivity()
             citySearch = MapKitCitySearch()
             settings = .userDefaults(suiteName: Self.appGroupIdentifier)
             qadaStorage = .userDefaults(suiteName: nil)
-            notificationAuthorizer = SystemNotificationAuthorizer()
         }
+        if options.fixtureTimes, !options.notifications {
+            // `S.notifAllowed: null` – noch nicht gefragt; „Mitteilungen erlauben“ wird erlaubt. Vorgemerkt
+            // wird nichts, damit Aufnahmen keine Mitteilungen auslösen.
+            notificationAuthorizer = FixedNotificationAuthorizer()
+            notificationScheduler = NoNotificationScheduler()
+        } else {
+            notificationAuthorizer = SystemNotificationAuthorizer()
+            notificationScheduler = SystemNotificationScheduler()
+        }
+        asksForNotificationsAtLaunch = options.notifications
         initialTab = AppTab(options.page)
         initialPage = PrayersPage(options.page)
         settingsPath = options.page?.settingsRoute?.path ?? []

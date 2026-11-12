@@ -159,3 +159,38 @@ extension Place {
         )
     }
 }
+
+/// Merkt sich, was vorgemerkt werden sollte, statt es iOS zu geben.
+@MainActor
+final class RecordingNotificationScheduler: NotificationScheduling {
+    /// Je Aufruf die Mitteilungen und das „jetzt“ der App-Uhr.
+    private(set) var calls: [[PrayerNotification]] = []
+    private(set) var nows: [Date] = []
+
+    func replacePending(with notifications: [PrayerNotification], now: Date) {
+        calls.append(notifications)
+        nows.append(now)
+    }
+}
+
+/// Eine Erlaubnis für Mitteilungen, deren Antworten der Test vorgibt: Stand vor und nach dem Fragen.
+actor ScriptedNotificationAuthorizer: NotificationAuthorizing {
+    private var status: NotificationAuthorization
+    private let answer: NotificationAuthorization
+    private(set) var requests = 0
+
+    init(status: NotificationAuthorization, answer: NotificationAuthorization = .authorized) {
+        self.status = status
+        self.answer = answer
+    }
+
+    func authorization() async -> NotificationAuthorization { status }
+
+    func requestAuthorization() async -> NotificationAuthorization {
+        requests += 1
+        if status == .notDetermined {
+            status = answer
+        }
+        return status
+    }
+}

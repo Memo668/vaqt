@@ -54,6 +54,15 @@ struct LaunchOptionsTests {
         #expect(options.highLatitude)
         #expect(!options.skipOnboarding)
         #expect(!options.fixtureTimes)
+        #expect(!options.notifications)
+        #expect(options.problems.isEmpty)
+    }
+
+    @Test("-debugNotifications schaltet echte Mitteilungen ein (system/92)")
+    func notifications() {
+        let options = LaunchOptions(arguments: ["-debugFixtureTimes", "-debugNotifications", "-debugTime", "11:41"])
+        #expect(options.notifications)
+        #expect(options.fixtureTimes)
         #expect(options.problems.isEmpty)
     }
 

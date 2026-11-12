@@ -90,6 +90,12 @@ public final class PlaceModel {
         return true
     }
 
+    /// Liest nur die Freigabe – ohne zu fragen und ohne neuen Standort. Für die Hintergrundaktualisierung:
+    /// Dort gilt der zuletzt bestimmte Standort oder die gewählte Stadt.
+    public func readAuthorization() async {
+        authorization = await locationSource.authorization()
+    }
+
     /// Fragt nach dem Standort, falls noch nicht gefragt wurde – „Standort erlauben“ im Onboarding
     /// (`ob-loc`). Ist er schon erlaubt oder verweigert, kommt kein Dialog (iOS fragt nur einmal).
     ///

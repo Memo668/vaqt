@@ -4,6 +4,10 @@
 <dict>
 	<key>AppGroupIdentifier</key>
 	<string>$(APP_GROUP_ID)</string>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>$(APP_BUNDLE_ID).refresh</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -35,6 +39,10 @@
 	<true/>
 	<key>SourceCodeURL</key>
 	<string>$(SOURCE_CODE_URL)</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>

@@ -69,13 +69,20 @@ struct AppContent: View {
     @State private var verses: VersesModel
     @State private var qada: QadaModel
     @State private var settingsModel: SettingsModel
+    @State private var notifications: NotificationModel
 
     init(environment: AppEnvironment, settings: SettingsStore, navigation: AppNavigation) {
         self.environment = environment
         self.navigation = navigation
         let toast = ToastCenter()
-        // Zeiten- und Qibla-Seite zeigen denselben Ort.
+        // Zeiten- und Qibla-Seite zeigen denselben Ort; die Mitteilungen gelten für ihn.
         let location = PlaceModel(settings: settings, locationSource: environment.locationSource)
+        let notifications = NotificationModel(
+            settings: settings, location: location, clock: environment.clock,
+            timesSource: environment.timesSource, authorizer: environment.notificationAuthorizer,
+            scheduler: environment.notificationScheduler
+        )
+        _notifications = State(initialValue: notifications)
         let today = TodayModel(
             clock: environment.clock, timesSource: environment.timesSource,
             location: location, connectivity: environment.connectivity,
@@ -96,9 +103,7 @@ struct AppContent: View {
             timesSource: environment.timesSource, notificationAuthorizer: environment.notificationAuthorizer,
             sourceCodeURL: AppInfo.sourceCodeURL, version: AppInfo.version
         ))
-        _onboarding = State(initialValue: OnboardingModel(
-            navigation: navigation, today: today, notificationAuthorizer: environment.notificationAuthorizer
-        ))
+        _onboarding = State(initialValue: OnboardingModel(navigation: navigation, today: today, notifications: notifications))
         _adhan = State(initialValue: AdhanPlayerModel(settings: settings))
     }
 
@@ -122,6 +127,10 @@ struct AppContent: View {
         // „Adhan anhören“ in den Einstellungen; Schließen hält die Wiedergabe an.
         .sheet(isPresented: $navigation.isAdhanSheetPresented, onDismiss: adhan.stop) {
             AdhanSheet(model: adhan)
+        }
+        // Plant die Mitteilungen beim Start, wenn die App nach vorn kommt und nach jeder Änderung.
+        .background {
+            NotificationPlanning(model: notifications, asksAtLaunch: environment.asksForNotificationsAtLaunch)
         }
         .environment(settingsModel)
         .toasts(from: toast)

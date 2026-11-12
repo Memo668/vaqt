@@ -38,6 +38,8 @@ struct AppEnvironmentTests {
         #expect(!environment.skipsOnboarding)
         #expect(environment.onboardingStep == nil)
         #expect(environment.notificationAuthorizer is SystemNotificationAuthorizer)
+        #expect(environment.notificationScheduler is SystemNotificationScheduler)
+        #expect(!environment.asksForNotificationsAtLaunch)
         // Echte Rechnung, das Netz des Geräts, Einstellungen in den UserDefaults. Die App Group steht in
         // der Info.plist der App; im Test gibt es die nicht, dann gelten die Standard-Defaults.
         #expect(environment.timesSource is AdhanTimesSource)
@@ -252,11 +254,35 @@ struct AppEnvironmentTests {
         #expect(!both.skipsOnboarding)
     }
 
-    @Test("mit -debugFixtureTimes ist die Erlaubnis für Mitteilungen noch nicht erfragt")
+    @Test("mit -debugFixtureTimes ist die Erlaubnis für Mitteilungen noch nicht erfragt, vorgemerkt wird nichts")
     func fixtureNotifications() async {
         let environment = AppEnvironment(options: LaunchOptions(arguments: ["-debugFixtureTimes"]))
         #expect(await environment.notificationAuthorizer.authorization() == .notDetermined)
         #expect(await environment.notificationAuthorizer.requestAuthorization() == .authorized)
+        #expect(environment.notificationScheduler is NoNotificationScheduler)
+        #expect(!environment.asksForNotificationsAtLaunch)
+    }
+
+    @Test("-debugNotifications: Erlaubnis und Mitteilungen über das System, auch mit Mock-Zeiten; fragt beim Start")
+    func debugNotifications() {
+        for arguments in [["-debugFixtureTimes", "-debugNotifications"], ["-debugNotifications"]] {
+            let environment = AppEnvironment(options: LaunchOptions(arguments: arguments))
+            #expect(environment.notificationAuthorizer is SystemNotificationAuthorizer)
+            #expect(environment.notificationScheduler is SystemNotificationScheduler)
+            #expect(environment.asksForNotificationsAtLaunch)
+        }
+        // Die übrigen Mock-Zustände bleiben: Zeiten und Einstellungen des Prototyps.
+        let fixture = AppEnvironment(options: LaunchOptions(arguments: ["-debugFixtureTimes", "-debugNotifications"]))
+        #expect(fixture.timesSource is FixtureTimesSource)
+        #expect(fixture.settings == .ephemeral(.prototype(city: FixtureTimes.city("berlin"))))
+    }
+
+    @Test("ohne -debugFixtureTimes plant die App echt, fragt aber nur im Onboarding")
+    func realNotifications() {
+        let environment = AppEnvironment(options: LaunchOptions(arguments: ["-debugCity", "berlin"]))
+        #expect(environment.notificationAuthorizer is SystemNotificationAuthorizer)
+        #expect(environment.notificationScheduler is SystemNotificationScheduler)
+        #expect(!environment.asksForNotificationsAtLaunch)
     }
 
     @Test("die Uhr folgt den Argumenten")
