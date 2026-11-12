@@ -227,6 +227,20 @@ Mit dem Plan freigegeben sind auch seine Annahmen:
 
 Phase 7 wurde am 12.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-7` stand (Stand `dfcc6f5`). Offen bleiben die Prüfung mit Ton am Gerät (der Simulator hat kein Ausgabegerät) und die Rechte der beiden Aufnahmen von Wikimedia Commons vor dem App Store (oben unter „Vor der Veröffentlichung zu prüfen“). Noch nicht geprüft sind VoiceOver von Hand (bisher nur der Baum der Bedienungshilfen) und die Seiten am echten Gerät.
 
+## Erste Beta, entschieden am 12.11.2026
+
+Auf die Frage, wann die erste Beta über TestFlight kommen soll, fiel die Wahl auf „Erst nach Phase 11“: Die erste Beta enthält alles, auch Mitteilungen, Widgets, Live-Aktivität und Duo – nicht schon den Stand nach Phase 8. Zum Apple-Entwicklerkonto hieß es: „Ich kläre das noch.“ Ein Konto als Organisation braucht eine D-U-N-S-Nummer und kann Tage bis Wochen dauern.
+
+Für den ersten Upload fehlt noch:
+
+- **Konto und Team:** `DEVELOPMENT_TEAM` in `project.yml` ist leer.
+- **Kennungen:** echte Bundle-ID und App Group statt `com.example.gebetszeiten` und `group.com.example.gebetszeiten`.
+- **App-Icon:** gibt es noch nicht; für die Beta reicht der Platzhalter aus Phase 11.
+- **Datenschutz-Manifest:** `PrivacyInfo.xcprivacy` mit dem Grund für UserDefaults; Apple verlangt es beim Hochladen.
+- **App Store Connect:** Eintrag der App, dann Archiv und Upload.
+
+Die Platzhalter – Übersetzungen der Verse, Adhan-Aufnahmen, Texte der Anleitung – dürfen in der Beta bleiben; vor dem App Store gilt „Vor der Veröffentlichung zu prüfen“ oben.
+
 ## Annahmen in Phase 7
 
 Gemessen ist auf dem iPhone 18 Pro mit iOS 27.2, Zustände wie in `scripts/compare-settings`; `iphone/71` und `72` (gescrollt), die Abläufe und der Baum der Bedienungshilfen mit dem UI-Hilfsprojekt (`s28-settings.txt` bis `s35-appearance-language.txt`).

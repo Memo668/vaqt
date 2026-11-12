@@ -199,3 +199,5 @@ Gebaut am 12.11.2026 in drei Teilschritten: Einstellungen (Liste des Systems, ei
 - `docs/OPEN-QUESTIONS.md` aufräumen.
 
 **Abnahme:** Alle Screenshots aus `design/screenshots/` lassen sich nachstellen und stimmen überein.
+
+**Danach:** erste Beta über TestFlight (entschieden am 12.11.2026). Was dafür noch fehlt – Konto, Kennungen, Datenschutz-Manifest, App Store Connect –, steht in `docs/OPEN-QUESTIONS.md` unter „Erste Beta“.
