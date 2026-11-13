@@ -113,6 +113,9 @@ public struct GlassChip: View {
             .padding(.leading, GlassMetrics.chipLeading)
             .padding(.trailing, GlassMetrics.chipTrailing)
             .frame(minHeight: height)
+                    // Ab AX1 reicht die Breite für „Anleitung“ nicht ganz: etwas kleiner statt „Anleit…“
+                    // (Phase 11). Den vollen Titel zeigt der Large Content Viewer.
+                    .minimumScaleFactor(GlassMetrics.chipTitleMinimumScale)
         } else {
             symbol
                 .frame(width: height, height: height)

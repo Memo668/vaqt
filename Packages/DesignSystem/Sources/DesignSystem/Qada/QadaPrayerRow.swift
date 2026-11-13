@@ -14,6 +14,8 @@ public struct QadaPrayerRow: View {
     private let onMadeUp: () -> Void
     private let onMissed: () -> Void
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     /// - Parameters:
     ///   - count: die offenen Gebete, fertig geschrieben, z. B. „501“.
     ///   - onMadeUp: „−“ – ein Gebet nachgeholt.
@@ -31,35 +33,79 @@ public struct QadaPrayerRow: View {
     }
 
     public var body: some View {
-        let name = prayer.localizedName
-        HStack(spacing: QadaRowMetrics.gap) {
-            HStack(spacing: QadaRowMetrics.gap) {
-                Image(systemName: prayer.symbolName)
-                    .font(.system(size: QadaRowMetrics.symbolSize, weight: QadaRowMetrics.symbolWeight))
-                    .foregroundStyle(Palette.textSecondary)
-                    .frame(width: QadaRowMetrics.symbolBox)
-                    .accessibilityHidden(true)
-                Text(name)
-                    .textStyle(.body, lineHeight: QadaRowMetrics.nameLineHeight)
-                    .foregroundStyle(Palette.label)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Text(count)
-                    .monospacedDigit()
-                    .textStyle(.headline, lineHeight: QadaRowMetrics.countLineHeight)
-                    .foregroundStyle(Palette.label)
-                    .frame(minWidth: QadaRowMetrics.countMinWidth, alignment: .trailing)
+        Group {
+            if dynamicTypeSize.isAccessibilitySize {
+                stacked
+            } else {
+                HStack(spacing: QadaRowMetrics.gap) {
+                    HStack(spacing: QadaRowMetrics.gap) {
+                        symbol
+                        nameText
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        countText
+                            .frame(minWidth: QadaRowMetrics.countMinWidth, alignment: .trailing)
+                    }
+                    // Name und Zahl sind für VoiceOver eine Angabe: „Fadschr, 501“.
+                    .accessibilityElement(children: .combine)
+                    stepper
+                }
             }
-            // Name und Zahl sind für VoiceOver eine Angabe: „Fadschr, 501“.
-            .accessibilityElement(children: .combine)
-            StepperPill(
-                name, canDecrement: canMarkMadeUp, canIncrement: canAddMissed,
-                decrementLabel: L10n.qadaMinus(p: name), incrementLabel: L10n.qadaPlus(p: name),
-                onDecrement: onMadeUp, onIncrement: onMissed
-            )
         }
         .padding(QadaRowMetrics.insets)
         .frame(maxWidth: .infinity, minHeight: Layout.prayerRowHeight)
         .background(Palette.backgroundCell, in: .rect(cornerRadius: Radius.row, style: .continuous))
+    }
+}
+
+extension QadaPrayerRow {
+
+    /// Ab den AX-Größen untereinander: Symbol und Name, darunter die Zahl, darunter der Stepper – nebeneinander
+    /// zerfielen Name und Zahl („Dhuh-r“, „50-1“; Phase 11).
+    private var stacked: some View {
+        VStack(alignment: .leading, spacing: QadaRowMetrics.gap) {
+            HStack(alignment: .top, spacing: QadaRowMetrics.gap) {
+                symbol
+                VStack(alignment: .leading, spacing: QadaRowMetrics.stackedGap) {
+                    nameText
+                        .fixedSize(horizontal: false, vertical: true)
+                    countText
+                        .fixedSize()
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .accessibilityElement(children: .combine)
+            stepper
+        }
+    }
+
+    private var symbol: some View {
+        Image(systemName: prayer.symbolName)
+            .font(.system(size: QadaRowMetrics.symbolSize, weight: QadaRowMetrics.symbolWeight))
+            .foregroundStyle(Palette.textSecondary)
+            .frame(width: QadaRowMetrics.symbolBox)
+            .accessibilityHidden(true)
+    }
+
+    private var nameText: some View {
+        Text(hyphenating: prayer.localizedName)
+            .textStyle(.body, lineHeight: QadaRowMetrics.nameLineHeight)
+            .foregroundStyle(Palette.label)
+    }
+
+    private var countText: some View {
+        Text(count)
+            .monospacedDigit()
+            .textStyle(.headline, lineHeight: QadaRowMetrics.countLineHeight)
+            .foregroundStyle(Palette.label)
+    }
+
+    private var stepper: some View {
+        let name = prayer.localizedName
+        return StepperPill(
+            name, canDecrement: canMarkMadeUp, canIncrement: canAddMissed,
+            decrementLabel: L10n.qadaMinus(p: name), incrementLabel: L10n.qadaPlus(p: name),
+            onDecrement: onMadeUp, onIncrement: onMissed
+        )
     }
 }
 
@@ -77,4 +123,6 @@ enum QadaRowMetrics {
     static let countMinWidth: CGFloat = 52
     /// Abstand zwischen den Zeilen (`.qrows`: `gap: 8px`).
     static let rowGap: CGFloat = 8
+    /// Ab den AX-Größen: Abstand zwischen Name und Zahl.
+    static let stackedGap: CGFloat = 2
 }

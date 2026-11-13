@@ -71,6 +71,13 @@ public struct ArcCountdown: View {
                     lineHeight: Typography.countdownLabelLineHeight
                 )
                 .foregroundStyle(Palette.textSecondary)
+                // Die Zeile steht im Bogen zwischen den Markern: Sie wächst höchstens bis „xxxLarge“ – die
+                // größte Stufe des Prototyps (`iphone/19`) – und wird schmaler, wo sie sonst die Marker
+                // berührte (Phase 11). VoiceOver liest sie mit dem Countdown in voller Länge.
+                .lineLimit(1)
+                .minimumScaleFactor(ArcCountdownMetrics.labelMinimumScale)
+                .frame(maxWidth: ArcCountdownMetrics.labelMaxWidth)
+                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             Text(CountdownFormat.digital(remaining))
                 .font(Typography.countdown(inArc: true, isWide: isWide, typeScale: typeScale))
                 .tracking(Typography.countdownTracking)
@@ -82,4 +89,13 @@ public struct ArcCountdown: View {
         .accessibilityLabel(label + " " + CountdownFormat.spoken(remaining))
         .accessibilityAddTraits(.updatesFrequently)
     }
+}
+
+/// Maße der Zeile über dem Countdown im Bogen (Phase 11).
+enum ArcCountdownMetrics {
+    /// So breit darf die Zeile werden: der Platz zwischen den Markern an den Enden des Bogens (Innenkanten
+    /// bei 48 und 310 pt), mit etwas Luft.
+    static let labelMaxWidth: CGFloat = 240
+    /// So weit darf sie schrumpfen, bevor sie gekürzt wird.
+    static let labelMinimumScale: CGFloat = 0.7
 }

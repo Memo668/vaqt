@@ -22,11 +22,11 @@ public struct RowTitle: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: ListRowMetrics.detailGap) {
-            Text(title)
+            Text(hyphenating: title)
                 .textStyle(.body, lineHeight: ListRowMetrics.lineHeight)
                 .foregroundStyle(isDisabled ? Palette.labelTertiary : Palette.label)
             if let detail {
-                Text(detail)
+                Text(hyphenating: detail)
                     .textStyle(.footnote, lineHeight: ListRowMetrics.lineHeight)
                     .foregroundStyle(Palette.textSecondary)
             }
@@ -169,7 +169,7 @@ public struct ListLinkRow: View {
     public var body: some View {
         Button(action: action) {
             HStack(spacing: ListRowMetrics.gap) {
-                Text(title)
+                Text(hyphenating: title)
                     .textStyle(.body, lineHeight: ListRowMetrics.lineHeight)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 if let systemImage {

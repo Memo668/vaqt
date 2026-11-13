@@ -57,6 +57,8 @@ enum GlassMetrics {
     static let chipLeading: CGFloat = 14
     /// Innenabstand hinter dem Titel.
     static let chipTrailing: CGFloat = 18
+    /// So weit darf der Titel des gewählten Chips schrumpfen, wenn er bei großer Schrift nicht passt.
+    static let chipTitleMinimumScale: CGFloat = 0.8
     /// Tönung des ausgewählten Chips: Akzent mit 17 % Deckkraft.
     static let selectedTintOpacity = 0.17
 

@@ -106,6 +106,29 @@ struct WidgetComponentTests {
         #expect(abs(points.end.y - 1.3234) < 0.001)
     }
 
+    // MARK: - Dynamic Type (Phase 11: „Begrenzt mitwachsen“)
+
+    @Test("die Texte wachsen wie Fließtext, höchstens auf das 1,2-Fache, nie kleiner als im Prototyp", arguments: [
+        (DynamicTypeSize.xSmall, 1.0), (.medium, 1.0), (.large, 1.0), (.xLarge, 19.0 / 17), (.xxLarge, 1.2),
+        (.xxxLarge, 1.2), (.accessibility1, 1.2), (.accessibility5, 1.2),
+    ])
+    func textScale(size: DynamicTypeSize, expected: Double) {
+        #expect(abs(WidgetMetrics.textScale(for: size) - expected) < 0.001)
+    }
+
+    @Test("passt der Inhalt nicht, versucht das Widget die halbe Zugabe, dann die Größe des Prototyps")
+    func textScaleSteps() {
+        #expect(WidgetMetrics.textScaleSteps(for: .large) == [1])
+        #expect(WidgetMetrics.textScaleSteps(for: .accessibility3) == [1.2, 1.1, 1])
+    }
+
+    @Test("die Schriften folgen dem Faktor; ohne Faktor die Größen des Prototyps")
+    func scaledFonts() {
+        #expect(WidgetMetrics.timeFont() == Font.system(size: 34, weight: .semibold, design: .rounded).monospacedDigit())
+        #expect(WidgetMetrics.nameFont(1.2) == Font.system(size: 17 * 1.2, weight: .semibold))
+        #expect(WidgetMetrics.listFont(1, isNext: true) == Font.system(size: 13, weight: .bold).monospacedDigit())
+    }
+
     // MARK: - Hilfen
 
     /// Die Aktivität für Maghrib, angemeldet um 14:25 mit den Mock-Zeiten für Berlin.

@@ -193,15 +193,16 @@ final class HarnessTests: XCTestCase {
         XCUIApplication(bundleIdentifier: "com.apple.springboard")
     }
 
-    /// Phase 11: die ganze Seite in Bildschirmen. Nach jeder Aufnahme zieht die Geste den Inhalt um gut die
-    /// Hälfte der Bildschirmhöhe nach oben, ohne Schwung; die Aufnahmen überlappen sich. Die Seite steht am
-    /// Ende, wenn die Texte nach der Geste dort liegen, wo sie vorher lagen – höchstens 15 Aufnahmen.
+    /// Phase 11: die ganze Seite in Bildschirmen. Nach jeder Aufnahme zieht die Geste den Inhalt um 40 % der
+    /// Bildschirmhöhe nach oben, ohne Schwung; die Aufnahmen überlappen sich. Sie beginnt in der Mitte, nicht
+    /// unten, wo im Onboarding die Knöpfe stehen. Die Seite steht am Ende, wenn die Texte nach der Geste dort
+    /// liegen, wo sie vorher lagen – höchstens 15 Aufnahmen.
     @MainActor
     private func capturePages(of app: XCUIApplication, to prefix: String) throws {
         let frame = app.frame
         let origin = app.coordinate(withNormalizedOffset: .zero)
-        let start = origin.withOffset(CGVector(dx: frame.midX, dy: frame.minY + frame.height * 0.78))
-        let end = origin.withOffset(CGVector(dx: frame.midX, dy: frame.minY + frame.height * 0.22))
+        let start = origin.withOffset(CGVector(dx: frame.midX, dy: frame.minY + frame.height * 0.55))
+        let end = origin.withOffset(CGVector(dx: frame.midX, dy: frame.minY + frame.height * 0.15))
         var previous = textPositions(in: app)
         for page in 1...15 {
             try XCUIScreen.main.screenshot().pngRepresentation.write(to: URL(fileURLWithPath: "\(prefix)-\(page).png"))

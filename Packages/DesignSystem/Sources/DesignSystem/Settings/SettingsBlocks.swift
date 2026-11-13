@@ -24,7 +24,7 @@ public struct PrayerNotificationRow: View {
                 .foregroundStyle(Palette.textSecondary)
                 .frame(width: SettingsBlockMetrics.symbolBox)
                 .accessibilityHidden(true)
-            Text(prayer.localizedName)
+            Text(hyphenating: prayer.localizedName)
                 .textStyle(.body, lineHeight: ListRowMetrics.lineHeight)
                 .foregroundStyle(Palette.label)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -51,6 +51,8 @@ public struct AdjustmentRow: View {
     private let value: String
     private let stepper: StepperPill
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     /// - Parameters:
     ///   - time: die Uhrzeit von heute mit der Korrektur, z. B. „05:16“.
     ///   - value: die Korrektur, z. B. „+2 Min.“.
@@ -73,28 +75,58 @@ public struct AdjustmentRow: View {
     }
 
     public var body: some View {
-        HStack(spacing: ListRowMetrics.gap) {
-            HStack(spacing: ListRowMetrics.gap) {
+        if dynamicTypeSize.isAccessibilitySize {
+            // Ab den AX-Größen untereinander: Name, Uhrzeit, Korrektur, Stepper – nebeneinander brachen
+            // Uhrzeit und Korrektur mitten in der Zahl um (Phase 11).
+            VStack(alignment: .leading, spacing: ListRowMetrics.gap) {
                 VStack(alignment: .leading, spacing: ListRowMetrics.detailGap) {
-                    Text(title)
-                        .textStyle(.body, lineHeight: ListRowMetrics.lineHeight)
-                        .foregroundStyle(Palette.label)
-                    Text(time)
-                        .monospacedDigit()
-                        .textStyle(.footnote, lineHeight: ListRowMetrics.lineHeight)
-                        .foregroundStyle(Palette.textSecondary)
+                    titleText
+                        .fixedSize(horizontal: false, vertical: true)
+                    timeText
+                        .fixedSize()
+                    valueText
+                        .fixedSize()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                Text(value)
-                    .monospacedDigit()
-                    .textStyle(.body, lineHeight: ListRowMetrics.lineHeight)
-                    .foregroundStyle(Palette.textSecondary)
-                    .multilineTextAlignment(.trailing)
+                .accessibilityElement(children: .combine)
+                stepper
             }
-            // Für VoiceOver eine Angabe: „Fadschr, 05:16, 0 Min.“
-            .accessibilityElement(children: .combine)
-            stepper
+        } else {
+            HStack(spacing: ListRowMetrics.gap) {
+                HStack(spacing: ListRowMetrics.gap) {
+                    VStack(alignment: .leading, spacing: ListRowMetrics.detailGap) {
+                        titleText
+                        timeText
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    valueText
+                        .multilineTextAlignment(.trailing)
+                }
+                // Für VoiceOver eine Angabe: „Fadschr, 05:16, 0 Min.“
+                .accessibilityElement(children: .combine)
+                stepper
+            }
         }
+    }
+
+    private var titleText: some View {
+        Text(hyphenating: title)
+            .textStyle(.body, lineHeight: ListRowMetrics.lineHeight)
+            .foregroundStyle(Palette.label)
+    }
+
+    private var timeText: some View {
+        Text(time)
+            .monospacedDigit()
+            .textStyle(.footnote, lineHeight: ListRowMetrics.lineHeight)
+            .foregroundStyle(Palette.textSecondary)
+    }
+
+    private var valueText: some View {
+        Text(value)
+            .monospacedDigit()
+            .textStyle(.body, lineHeight: ListRowMetrics.lineHeight)
+            .foregroundStyle(Palette.textSecondary)
     }
 }
 

@@ -8,6 +8,8 @@ public struct GuideHeaderCard: View {
     private let header: GuideHeader
     private let onReturn: () -> Void
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     /// - Parameter onReturn: „Zum aktuellen Gebet“ (`guide-now`).
     public init(_ header: GuideHeader, onReturn: @escaping () -> Void) {
         self.header = header
@@ -56,9 +58,14 @@ public struct GuideHeaderCard: View {
         }
     }
 
-    /// Drei gleich breite, gleich hohe Kacheln (`.facts`: `grid-template-columns: repeat(3,1fr)`).
+    /// Drei gleich breite, gleich hohe Kacheln (`.facts`: `grid-template-columns: repeat(3,1fr)`). Ab den
+    /// AX-Größen stehen sie untereinander, jede über die ganze Breite: Nebeneinander blieben für einen Wert
+    /// wie „4 vorher (freiwillig)“ keine 80 pt, und die Wörter zerfielen (Phase 11).
     private var facts: some View {
-        HStack(alignment: .top, spacing: FactTile.spacing) {
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: FactTile.spacing))
+            : AnyLayout(HStackLayout(alignment: .top, spacing: FactTile.spacing))
+        return layout {
             FactTile(value: String(header.rakahs.count), caption: L10n.rakFard, isProminent: true)
             FactTile(value: header.rakahs.recitation.localizedName, caption: L10n.recite)
             FactTile(value: header.prayer.localizedSunna, caption: L10n.sunna)

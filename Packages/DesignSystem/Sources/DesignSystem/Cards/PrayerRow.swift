@@ -16,6 +16,7 @@ public struct PrayerRow: View {
 
     @ScaledMetric(relativeTo: .caption2) private var chipLineHeight = TypeScale.caption2.pointSize
     @ScaledMetric(relativeTo: .caption) private var captionSize = TypeScale.caption1.pointSize
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     /// - Parameters:
     ///   - bell: Stand der Mitteilung für dieses Ereignis.
@@ -36,17 +37,18 @@ public struct PrayerRow: View {
 
             VStack(alignment: .leading, spacing: RowMetrics.captionGap) {
                 nameLine
+                if stacksTime {
+                    time
+                }
                 if let kerahat = model.kerahat {
                     caption(kerahat)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            Text(model.time.description)
-                .font(TypeScale.body.font(weight: isCurrent ? .semibold : nil))
-                .monospacedDigit()
-                .tracking(Typography.prayerTimeTracking)
-                .foregroundStyle(textColor)
+            if !stacksTime {
+                time
+            }
 
             BellButton(state: bell, prayerName: model.prayer.localizedName, isCurrent: isCurrent, action: onBell)
         }
@@ -65,25 +67,51 @@ public struct PrayerRow: View {
         model.status == .current
     }
 
+    /// Ab den AX-Größen steht die Uhrzeit unter dem Namen: So haben Name, Uhrzeit und Kerahat-Zeile die
+    /// Breite der Karte, und keine Uhrzeit bricht mitten in der Zahl um (Spec § 4: „rows wrap“; Phase 11).
+    private var stacksTime: Bool {
+        dynamicTypeSize.isAccessibilitySize
+    }
+
+    private var time: some View {
+        Text(model.time.description)
+            .font(TypeScale.body.font(weight: isCurrent ? .semibold : nil))
+            .monospacedDigit()
+            .tracking(Typography.prayerTimeTracking)
+            .foregroundStyle(textColor)
+            .fixedSize()
+    }
+
     // MARK: - Name, Marken, Kerahat-Zeile
 
     /// Name, Info-Marke und Chip stehen nebeneinander; passt das nicht, rutscht der Chip in die nächste
-    /// Zeile (`flex-wrap`).
+    /// Zeile (`flex-wrap`). Ab den AX-Größen stehen sie immer untereinander, und der Name bricht um.
+    @ViewBuilder
     private var nameLine: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(spacing: RowMetrics.nameGap) {
-                name
-                marks
-            }
+        if stacksTime {
             VStack(alignment: .leading, spacing: RowMetrics.nameGap) {
                 name
-                HStack(spacing: RowMetrics.nameGap) { marks }
+                    .fixedSize(horizontal: false, vertical: true)
+                if model.showsHighLatitudeMark || isCurrent {
+                    HStack(spacing: RowMetrics.nameGap) { marks }
+                }
+            }
+        } else {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: RowMetrics.nameGap) {
+                    name
+                    marks
+                }
+                VStack(alignment: .leading, spacing: RowMetrics.nameGap) {
+                    name
+                    HStack(spacing: RowMetrics.nameGap) { marks }
+                }
             }
         }
     }
 
     private var name: some View {
-        Text(model.prayer.localizedName)
+        Text(hyphenating: model.prayer.localizedName)
             .textStyle(.body, weight: isCurrent ? .semibold : nil, lineHeight: RowMetrics.nameLineHeight)
             .foregroundStyle(textColor)
     }
@@ -123,6 +151,11 @@ public struct PrayerRow: View {
                 .textStyle(.caption1, lineHeight: RowMetrics.captionLineHeight)
                 .monospacedDigit()
                 .foregroundStyle(kerahat.isActive ? Palette.kerahatText : Palette.textSecondary)
+                // Die Zeitspanne bricht nie um (Spec § 3). Ab den AX-Größen ist sie breiter als die Karte:
+                // Dann steht sie in der zweiten Zeile und wird etwas kleiner, statt in der Zahl umzubrechen.
+                .lineLimit(stacksTime ? RowMetrics.stackedCaptionLines : nil)
+                .minimumScaleFactor(stacksTime ? RowMetrics.stackedCaptionMinimumScale : 1)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
@@ -179,4 +212,8 @@ enum RowMetrics {
     static let dotSize: CGFloat = 5
     static let dotGap: CGFloat = 5
     static let dotOpacity = 0.75
+    /// Ab den AX-Größen: die Kerahat-Zeile in höchstens zwei Zeilen – „Kerahat“ und die Spanne –, die
+    /// Spanne bis auf 70 % kleiner, wenn sie sonst nicht in eine Zeile passt (Phase 11).
+    static let stackedCaptionLines = 2
+    static let stackedCaptionMinimumScale: CGFloat = 0.7
 }

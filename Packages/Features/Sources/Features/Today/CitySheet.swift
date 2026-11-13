@@ -140,11 +140,11 @@ struct CitySheet: View {
     /// Titel mit Zusatz darunter (`.row-label` und `.row-sub`), über die Breite der Zeile.
     private func label(_ title: String, detail: String?, isDisabled: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: CitySheetMetrics.detailGap) {
-            Text(title)
+            Text(hyphenating: title)
                 .textStyle(.body, lineHeight: CitySheetMetrics.lineHeight)
                 .foregroundStyle(isDisabled ? Palette.labelTertiary : Palette.label)
             if let detail {
-                Text(detail)
+                Text(hyphenating: detail)
                     .textStyle(.footnote, lineHeight: CitySheetMetrics.lineHeight)
                     .foregroundStyle(Palette.textSecondary)
             }

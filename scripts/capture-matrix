@@ -12,7 +12,8 @@
 # Sprachen: de, tr, en, es (Region wie `LOC` im Prototyp). Größen wie `simctl ui content_size`: xs, s, m, l
 # (Standard), xl, xxl, xxxl, ax1 … ax5. Die Bildschirme stehen unten in SCREEN_LIST.
 #
-# Ausgabe in screenshots-out/phase-11/matrix/<variante>/ (OUT=… änderbar): <bildschirm>-<n>.png,
+# Ausgabe in screenshots-out/phase-11/matrix/<variante>/, mit angesteckter externer Platte dort unter
+# Builds/NamazVakti/screenshots-out (OUT=… änderbar): <bildschirm>-<n>.png,
 # <bildschirm>-audit.txt, <bildschirm>-tree.txt und ../<variante>.png (Kontaktbogen). Danach stehen
 # Erscheinungsbild und Schriftgröße des Simulators wieder auf hell und Standard.
 #
@@ -21,7 +22,12 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SIM="${SIM:-iPhone 18 Pro}"
 TARGET="${SIM_ID:-$SIM}"
-OUT="${OUT:-$ROOT/screenshots-out/phase-11/matrix}"
+# Viele Aufnahmen: Ist die externe Platte angesteckt, liegen sie dort (wie die Build-Daten im Makefile).
+if [ -d /Volumes/Extern ]; then
+  OUT="${OUT:-/Volumes/Extern/Builds/NamazVakti/screenshots-out/phase-11/matrix}"
+else
+  OUT="${OUT:-$ROOT/screenshots-out/phase-11/matrix}"
+fi
 
 # Name | Debug-Argumente
 SCREEN_LIST='

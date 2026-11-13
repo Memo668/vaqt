@@ -94,6 +94,8 @@ struct WidgetCity: View {
     let name: String
     var showsArrow = false
 
+    @Environment(\.widgetTextScale) private var scale
+
     var body: some View {
         HStack(spacing: WidgetMetrics.cityGap) {
             if showsArrow {
@@ -103,11 +105,12 @@ struct WidgetCity: View {
                     .accessibilityHidden(true)
             }
             Text(name)
-                .font(WidgetMetrics.cityFont)
+                .font(WidgetMetrics.cityFont(scale))
                 .tracking(WidgetMetrics.tracking)
-                .lineHeight(WidgetMetrics.cityLineHeight, fontSize: 13)
+                .lineHeight(WidgetMetrics.cityLineHeight, fontSize: 13 * scale)
                 .foregroundStyle(Palette.textSecondary)
                 .lineLimit(1)
+                .minimumScaleFactor(0.8)
         }
     }
 }
@@ -117,28 +120,33 @@ struct WidgetNextBlock: View {
     let snapshot: WidgetSnapshot
     let content: PrayerWidgetContent
 
+    @Environment(\.widgetTextScale) private var scale
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(snapshot.next.prayer.localizedName)
-                .font(WidgetMetrics.nameFont)
+                .font(WidgetMetrics.nameFont(scale))
                 .tracking(WidgetMetrics.tracking)
-                .lineHeight(WidgetMetrics.nameLineHeight, fontSize: 17)
+                .lineHeight(WidgetMetrics.nameLineHeight, fontSize: 17 * scale)
                 .foregroundStyle(Palette.accent)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
             Text(WidgetTexts.time(of: snapshot.next, in: snapshot))
-                .font(WidgetMetrics.timeFont)
+                .font(WidgetMetrics.timeFont(scale))
                 .tracking(WidgetMetrics.timeTracking)
-                .lineHeight(WidgetMetrics.timeLineHeight, fontSize: WidgetMetrics.timeSize)
+                .lineHeight(WidgetMetrics.timeLineHeight, fontSize: WidgetMetrics.timeSize * scale)
                 .foregroundStyle(Palette.label)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
             TimerText.text(
                 L10n.wIn(t:), until: content.deviceDate(snapshot.next.date), from: content.deviceDate(snapshot.now)
             )
-            .font(WidgetMetrics.countFont)
+            .font(WidgetMetrics.countFont(scale))
             .tracking(WidgetMetrics.tracking)
-            .lineHeight(WidgetMetrics.countLineHeight, fontSize: 13)
+            .lineHeight(WidgetMetrics.countLineHeight, fontSize: 13 * scale)
             .foregroundStyle(Palette.textSecondary)
             .lineLimit(1)
+            .minimumScaleFactor(0.8)
         }
     }
 }
@@ -155,6 +163,15 @@ public struct SmallPrayerWidget: View {
     }
 
     public var body: some View {
+        WidgetTextScaling {
+            smallContent
+        }
+        .padding(WidgetMetrics.smallPadding)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var smallContent: some View {
         VStack(alignment: .leading, spacing: 0) {
             switch content.state {
             case .times(let snapshot):
@@ -176,9 +193,7 @@ public struct SmallPrayerWidget: View {
                 WidgetChooseCity()
             }
         }
-        .padding(WidgetMetrics.smallPadding)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .accessibilityElement(children: .combine)
     }
 }
 
@@ -195,18 +210,22 @@ public struct MediumPrayerWidget: View {
     }
 
     public var body: some View {
+        WidgetTextScaling {
+            mediumContent
+        }
+        .padding(WidgetMetrics.mediumPadding)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var mediumContent: some View {
         HStack(alignment: .top, spacing: WidgetMetrics.mediumGap) {
             VStack(alignment: .leading, spacing: 0) {
                 switch content.state {
                 case .times(let snapshot):
                     WidgetCity(name: content.cityName, showsArrow: content.isCurrentLocation)
                     Spacer(minLength: 0)
-                    Text(L10n.wNext.uppercased(with: L10n.locale))
-                        .font(WidgetMetrics.captionFont)
-                        .tracking(WidgetMetrics.captionTracking)
-                        .lineHeight(WidgetMetrics.captionLineHeight, fontSize: 11)
-                        .foregroundStyle(Palette.textSecondary)
-                        .lineLimit(1)
+                    WidgetCaption(text: L10n.wNext.uppercased(with: L10n.locale))
                     WidgetNextBlock(snapshot: snapshot, content: content)
                 case .noTimes:
                     WidgetCity(name: content.cityName, showsArrow: content.isCurrentLocation)
@@ -230,15 +249,32 @@ public struct MediumPrayerWidget: View {
                 Spacer(minLength: 0)
             }
         }
-        .padding(WidgetMetrics.mediumPadding)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .accessibilityElement(children: .combine)
+    }
+}
+
+/// „NÄCHSTES“ über dem nächsten Gebet im mittleren Widget (`.w-cap`).
+struct WidgetCaption: View {
+    let text: String
+
+    @Environment(\.widgetTextScale) private var scale
+
+    var body: some View {
+        Text(text)
+            .font(WidgetMetrics.captionFont(scale))
+            .tracking(WidgetMetrics.captionTracking)
+            .lineHeight(WidgetMetrics.captionLineHeight, fontSize: 11 * scale)
+            .foregroundStyle(Palette.textSecondary)
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
     }
 }
 
 /// Die sechs Zeiten des Tages im mittleren Widget (`.wm-list`).
 struct WidgetPrayerList: View {
     let snapshot: WidgetSnapshot
+
+    @Environment(\.widgetTextScale) private var scale
 
     var body: some View {
         VStack(spacing: 0) {
@@ -262,9 +298,9 @@ struct WidgetPrayerList: View {
             Spacer(minLength: 0)
             Text(snapshot.list.clockTime(of: prayer).description)
         }
-        .font(isNext ? WidgetMetrics.listNextFont : WidgetMetrics.listFont)
+        .font(WidgetMetrics.listFont(scale, isNext: isNext))
         .tracking(WidgetMetrics.tracking)
-        .lineHeight(WidgetMetrics.listLineHeight, fontSize: 13)
+        .lineHeight(WidgetMetrics.listLineHeight, fontSize: 13 * scale)
         .foregroundStyle(isNext ? Palette.accent : isPassed ? Palette.labelTertiary : Palette.label)
         .padding(WidgetMetrics.listRowPadding)
         .background {
@@ -278,11 +314,13 @@ struct WidgetPrayerList: View {
 
 /// „Stadt wählen“ in der Schrift des Gebetsnamens – das Widget, solange die App keinen Ort kennt.
 struct WidgetChooseCity: View {
+    @Environment(\.widgetTextScale) private var scale
+
     var body: some View {
         Text(L10n.citySheetTitle)
-            .font(WidgetMetrics.nameFont)
+            .font(WidgetMetrics.nameFont(scale))
             .tracking(WidgetMetrics.tracking)
-            .lineHeight(WidgetMetrics.nameLineHeight, fontSize: 17)
+            .lineHeight(WidgetMetrics.nameLineHeight, fontSize: 17 * scale)
             .foregroundStyle(Palette.accent)
             .lineLimit(2)
     }
@@ -292,9 +330,11 @@ struct WidgetChooseCity: View {
 struct WidgetMessage: View {
     let text: String
 
+    @Environment(\.widgetTextScale) private var scale
+
     var body: some View {
         Text(text)
-            .font(WidgetMetrics.countFont)
+            .font(WidgetMetrics.countFont(scale))
             .tracking(WidgetMetrics.tracking)
             .foregroundStyle(Palette.textSecondary)
             .minimumScaleFactor(0.8)
@@ -319,6 +359,8 @@ public struct CircularPrayerWidget: View {
         self.content = content
         self.drawsRing = drawsRing
     }
+
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     public var body: some View {
         switch content.state {
@@ -351,8 +393,11 @@ public struct CircularPrayerWidget: View {
     private func label(_ snapshot: WidgetSnapshot) -> some View {
         VStack(spacing: WidgetMetrics.circularGap) {
             WidgetSymbol(name: snapshot.next.prayer.symbolName, box: WidgetMetrics.circularSymbolBox)
+            // Im Ring ist Platz für das 1,2-Fache; die Höhe des Widgets begrenzt hier nichts.
             Text(WidgetTexts.time(of: snapshot.next, in: snapshot))
-                .font(WidgetMetrics.circularTimeFont)
+                .font(WidgetMetrics.circularTimeFont(WidgetMetrics.textScale(for: dynamicTypeSize)))
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
         }
     }
 
@@ -404,39 +449,56 @@ public struct RectangularPrayerWidget: View {
     }
 
     public var body: some View {
+        WidgetTextScaling {
+            RectangularPrayerWidgetLines(content: content)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
+    }
+}
+
+/// Die drei Zeilen des Rechtecks, in der Schrift, die `WidgetTextScaling` vorgibt.
+struct RectangularPrayerWidgetLines: View {
+    let content: PrayerWidgetContent
+
+    @Environment(\.widgetTextScale) private var scale
+
+    var body: some View {
         VStack(alignment: .leading, spacing: WidgetMetrics.rectangularGap) {
             switch content.state {
             case .times(let snapshot):
                 HStack(spacing: WidgetMetrics.rectangularTitleGap) {
                     WidgetSymbol(name: snapshot.next.prayer.symbolName, box: WidgetMetrics.rectangularSymbolBox, weight: .bold)
                     Text(snapshot.next.prayer.localizedName)
-                        .font(WidgetMetrics.rectangularTitleFont)
+                        .font(WidgetMetrics.rectangularTitleFont(scale))
                         .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 }
                 Text("\(Text(verbatim: WidgetTexts.time(of: snapshot.next, in: snapshot) + " · "))\(TimerText.text(L10n.wIn(t:), until: content.deviceDate(snapshot.next.date), from: content.deviceDate(snapshot.now)))")
-                    .font(WidgetMetrics.rectangularFont)
+                    .font(WidgetMetrics.rectangularFont(scale))
                     .lineLimit(1)
+                    .minimumScaleFactor(0.8)
                 Text(WidgetTexts.nameAndTime(of: snapshot.following, in: snapshot))
-                    .font(WidgetMetrics.rectangularFont)
+                    .font(WidgetMetrics.rectangularFont(scale))
                     .opacity(WidgetMetrics.followingOpacity)
                     .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             case .noTimes:
                 Text(L10n.appName)
-                    .font(WidgetMetrics.rectangularTitleFont)
+                    .font(WidgetMetrics.rectangularTitleFont(scale))
                 Text(L10n.noTimes)
-                    .font(WidgetMetrics.rectangularFont)
+                    .font(WidgetMetrics.rectangularFont(scale))
                     .lineLimit(2)
                     .minimumScaleFactor(0.8)
             case .noPlace:
                 Text(L10n.appName)
-                    .font(WidgetMetrics.rectangularTitleFont)
+                    .font(WidgetMetrics.rectangularTitleFont(scale))
                 Text(L10n.citySheetTitle)
-                    .font(WidgetMetrics.rectangularFont)
+                    .font(WidgetMetrics.rectangularFont(scale))
             }
         }
-        .lineHeight(WidgetMetrics.rectangularLineHeight, fontSize: 13)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-        .accessibilityElement(children: .combine)
+        .lineHeight(WidgetMetrics.rectangularLineHeight, fontSize: 13 * scale)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
