@@ -41,7 +41,7 @@ public struct GlassCircleButton: View {
 }
 
 /// Maße der Glass-Bausteine der oberen Leiste (`.gear-btn`, `.chip`).
-public enum GlassMetrics {
+enum GlassMetrics {
     /// Symbol im Einstellungskreis – `ic('gear', 24)`. Als Schriftgröße eines SF Symbols so gewählt,
     /// dass es so breit erscheint wie die Zeichnung des Prototyps (knapp 21 pt).
     static let circleSymbolSize: CGFloat = 20
@@ -59,9 +59,8 @@ public enum GlassMetrics {
     static let chipTrailing: CGFloat = 18
     /// So weit darf der Titel des gewählten Chips schrumpfen, wenn er bei großer Schrift nicht passt.
     static let chipTitleMinimumScale: CGFloat = 0.8
-    /// Tönung des ausgewählten Chips: Akzent mit 17 % Deckkraft – auch der gewählten Seite in der senkrechten
-    /// Leiste auf dem iPhone Duo (Phase 11).
-    public static let selectedTintOpacity = 0.17
+    /// Tönung des ausgewählten Chips: Akzent mit 17 % Deckkraft.
+    static let selectedTintOpacity = 0.17
 
     /// Höhe der Leiste bei der aktuellen Schriftgröße: 52 pt, höchstens das 1,15-Fache.
     static func barHeight(typeScale: CGFloat) -> CGFloat {
