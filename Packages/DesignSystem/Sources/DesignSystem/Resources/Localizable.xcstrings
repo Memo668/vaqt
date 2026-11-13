@@ -3729,7 +3729,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ vakti %2$@’de başlıyor."
+            "value" : "%1$@ vakti %2$@ başlıyor."
           }
         }
       }

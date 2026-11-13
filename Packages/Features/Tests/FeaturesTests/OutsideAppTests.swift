@@ -63,7 +63,7 @@ struct OutsideAppTests {
         await fixture.model.reschedule()
         let alert = try #require(fixture.scheduler.alerts.first)
         #expect(alert.title == L10n.notifReminderTitle(p: L10n.p_maghrib, n: "30"))
-        #expect(alert.body == L10n.notifReminderBody(p: L10n.p_maghrib, time: "16:27"))
+        #expect(alert.body == L10n.notifReminderBody(p: L10n.p_maghrib, at: try #require(ClockTime("16:27"))))
     }
 
     @Test("ein zweites Planen ohne Änderung meldet nichts neu an")

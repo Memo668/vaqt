@@ -153,6 +153,6 @@ public struct L10nNotificationWording: NotificationWording {
     }
 
     public func reminderBody(_ prayer: Prayer, time: ClockTime) -> String {
-        L10n.notifReminderBody(p: prayer.localizedName, time: time.description)
+        L10n.notifReminderBody(p: prayer.localizedName, at: time)
     }
 }

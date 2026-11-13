@@ -60,7 +60,7 @@ struct NotificationModelTests {
         let reminder = planned[0]
         let prayer = planned[1]
         #expect(reminder.title == L10n.notifReminderTitle(p: L10n.p_maghrib, n: "10"))
-        #expect(reminder.body == L10n.notifReminderBody(p: L10n.p_maghrib, time: "16:27"))
+        #expect(reminder.body == L10n.notifReminderBody(p: L10n.p_maghrib, at: try #require(ClockTime("16:27"))))
         #expect(prayer.title == L10n.notifPrayerTitle(p: L10n.p_maghrib, time: "16:27"))
         #expect(prayer.body == L10n.notifPrayerBody(p: L10n.p_maghrib, city: "Berlin"))
         #expect(prayer.date == instant("2026-11-10", "16:27"))

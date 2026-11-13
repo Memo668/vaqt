@@ -1,4 +1,5 @@
 import Foundation
+import PrayerCore
 import Testing
 @testable import DesignSystem
 
@@ -26,7 +27,24 @@ struct NotificationTextTests {
         #expect(text("notifPrayerTitle", .tr, "Öğle", "12:53") == "Öğle · 12:53")
         #expect(text("notifPrayerBody", .tr, "Öğle", "İstanbul") == "İstanbul için Öğle vakti girdi.")
         #expect(text("notifReminderTitle", .tr, "Öğle", "10") == "Öğle vaktine 10 dakika")
-        #expect(text("notifReminderBody", .tr, "Öğle", "11:52") == "Öğle vakti 11:52’de başlıyor.")
+        #expect(text("notifReminderBody", .tr, "Öğle", "11:52’de") == "Öğle vakti 11:52’de başlıyor.")
+    }
+
+    /// Phase 11, „Endung berechnen“: Die Uhrzeit trägt im Türkischen die Endung, die zu ihr passt; die
+    /// übrigen Sprachen bekommen sie ohne.
+    @Test("Uhrzeit der Vorab-Erinnerung: im Türkischen mit Endung", arguments: [
+        ("12:53", AppLanguage.tr, "12:53’te"), ("15:36", .tr, "15:36’da"), ("14:00", .tr, "14:00’te"),
+        ("11:52", .tr, "11:52’de"), ("11:52", .de, "11:52"), ("11:52", .en, "11:52"), ("13:00", .es, "13:00"),
+    ])
+    func reminderTime(time: String, language: AppLanguage, expected: String) throws {
+        let clock = try #require(ClockTime(time))
+        #expect(L10n.reminderTime(clock, in: language) == expected)
+    }
+
+    @Test("Türkisch: der ganze Satz mit berechneter Endung")
+    func turkishSentence() throws {
+        let clock = try #require(ClockTime("12:53"))
+        #expect(text("notifReminderBody", .tr, "Öğle", L10n.reminderTime(clock, in: .tr)) == "Öğle vakti 12:53’te başlıyor.")
     }
 
     @Test("Englisch und Spanisch")

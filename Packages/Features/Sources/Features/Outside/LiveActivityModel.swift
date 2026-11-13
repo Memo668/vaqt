@@ -31,7 +31,7 @@ public struct L10nLiveActivityWording: LiveActivityWording {
     }
 
     public func alertBody(_ prayer: Prayer, time: ClockTime) -> String {
-        L10n.notifReminderBody(p: prayer.localizedName, time: time.description)
+        L10n.notifReminderBody(p: prayer.localizedName, at: time)
     }
 }
 
