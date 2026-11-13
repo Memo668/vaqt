@@ -330,6 +330,10 @@ Der Plan für Phase 10 wurde am 12.11.2026 freigegeben („Freigeben, bauen (Emp
 | Stadt-Sheet für `duo/*-85` | „-debugTab city (Empfohlen)“ | Neues Debug-Argument: Das Stadt-Sheet öffnet sich beim Start über der Zeiten-Seite, einmal; so lassen sich auch `iphone/85` ohne Tipp nachstellen. Steht in `CLAUDE.md`, README und PROMPTS. |
 | Auf- und Zuklappen | „Ich klappe selbst (Empfohlen)“ | Das Scharnier stellt nur der Schieberegler in Device Hub (`simctl` und XCUITest können es nicht). Die Freigabe der Bildschirmsteuerung für Device Hub kam zweimal als abgelehnt zurück; der Nutzer hat deshalb gedreht, halb geöffnet, Split View eingerichtet und zugeklappt. |
 
+## Abnahme von Phase 10 am 13.11.2026
+
+Phase 10 wurde am 13.11.2026 abgenommen („Abnehmen, zusammenführen (Empfohlen)“), so wie sie auf dem Zweig `phase-10` stand (Stand `4f39a9a`). Offen bleibt, was nur ein echtes Gerät zeigt: Auf- und Zuklappen und der Wechsel in die Tischhaltung bei laufender App, der echte Winkel der Tischhaltung, der Kompass sowie Widgets und Live-Aktivität auf dem Duo (oben unter „Vor der Veröffentlichung zu prüfen“). Die Breiten des Onboardings innen sind nur gerechnet und getestet, im Simulator nicht angesehen.
+
 ## Annahmen in Phase 10
 
 Geprüft ist auf dem Simulator „iPhone Duo“ (iOS 27.2, Build 24B91016s) mit `make compare-duo` und Aufnahmen über `simctl`; auf dem iPhone 18 Pro sind alle Aufnahmen von 17 Zuständen pixelgleich mit `main` – bis auf die laufenden Sekunden des Countdowns und den Home-Indikator, den iOS in den Aufnahmen mal zeichnet und mal nicht.
