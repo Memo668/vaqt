@@ -12,8 +12,8 @@
 #
 # iphone/71 und 72 sind die Einstellungen in der Mitte und ganz unten; das kann simctl nicht scrollen.
 # Liegen die Aufnahmen schon in screenshots-out/phase-7/ – settings-71.png und settings-72.png,
-# aufgenommen mit dem UI-Hilfsprojekt (Skript s29-settings-scrolled.txt, docs/OPEN-QUESTIONS.md,
-# „Antippen beim Abgleich“) –, vergleicht das Skript sie mit.
+# aufgenommen mit dem UI-Hilfsprojekt (Skript scripts/ui-harness/scripts/iphone-71-72-settings.txt,
+# OUT gleich) –, vergleicht das Skript sie mit.
 #
 # Ergebnis in screenshots-out/phase-7/: <zustand>.png (Aufnahmen) und compare-<Ausschnitt>.png (oben
 # Referenz, Mitte Aufnahme, unten Unterschied).

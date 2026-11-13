@@ -1,0 +1,138 @@
+#!/bin/bash
+# Phase 11: nimmt jeden Bildschirm der App in einer Variante auf – Sprache, Schriftgröße, hell oder dunkel,
+# Leserichtung – und zwar die ganze Seite, Bildschirm für Bildschirm gescrollt. Dazu je Bildschirm die Prüfung
+# der Bedienungshilfen von Xcode (performAccessibilityAudit) und der Baum der Bedienungshilfen; am Ende ein
+# Kontaktbogen mit der ersten Aufnahme jedes Bildschirms. Getippt und gescrollt wird mit dem UI-Hilfsprojekt.
+#
+#   scripts/capture-matrix de tr en es                  Varianten: <sprache>[-<größe>][-dark][-rtl]
+#   scripts/capture-matrix de-ax5 de-dark de-rtl
+#   SCREENS='today guide' scripts/capture-matrix de     nur diese Bildschirme
+#   SIM_ID=<Kennung> scripts/capture-matrix de          auf einem Simulator über seine Kennung (Duo)
+#
+# Sprachen: de, tr, en, es (Region wie `LOC` im Prototyp). Größen wie `simctl ui content_size`: xs, s, m, l
+# (Standard), xl, xxl, xxxl, ax1 … ax5. Die Bildschirme stehen unten in SCREEN_LIST.
+#
+# Ausgabe in screenshots-out/phase-11/matrix/<variante>/ (OUT=… änderbar): <bildschirm>-<n>.png,
+# <bildschirm>-audit.txt, <bildschirm>-tree.txt und ../<variante>.png (Kontaktbogen). Danach stehen
+# Erscheinungsbild und Schriftgröße des Simulators wieder auf hell und Standard.
+#
+# Die App muss gebaut und installiert sein (make capture).
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SIM="${SIM:-iPhone 18 Pro}"
+TARGET="${SIM_ID:-$SIM}"
+OUT="${OUT:-$ROOT/screenshots-out/phase-11/matrix}"
+
+# Name | Debug-Argumente
+SCREEN_LIST='
+today|
+today-denied|-debugLocationDenied -debugOffline
+today-highlat|-debugHighLatitude -debugTime 23:47
+city|-debugTab city
+qibla|-debugTab qibla -debugQiblaHeading 137 -debugQiblaAccuracy 40
+guide|-debugTab guide
+verses|-debugTab verses
+qada|-debugTab qada
+settings|-debugTab settings
+method|-debugTab method
+asr|-debugTab asr
+hl|-debugTab hl
+adjust|-debugTab adjust
+perPrayer|-debugTab perPrayer
+reminder|-debugTab reminder
+live|-debugTab live
+sound|-debugTab sound
+appearance|-debugTab appearance
+language|-debugTab language
+privacy|-debugTab privacy
+adhan|-debugTab adhan
+onboarding-1|-debugOnboarding 1
+onboarding-2|-debugOnboarding 2
+onboarding-3|-debugOnboarding 3
+catalog-widgets|-debugCatalog widgets
+catalog-live|-debugCatalog live
+'
+
+size_name() {
+  case "$1" in
+    xs) echo extra-small ;; s) echo small ;; m) echo medium ;; l) echo large ;;
+    xl) echo extra-large ;; xxl) echo extra-extra-large ;; xxxl) echo extra-extra-extra-large ;;
+    ax1) echo accessibility-medium ;; ax2) echo accessibility-large ;; ax3) echo accessibility-extra-large ;;
+    ax4) echo accessibility-extra-extra-large ;; ax5) echo accessibility-extra-extra-extra-large ;;
+    *) return 1 ;;
+  esac
+}
+
+[ $# -gt 0 ] || { echo "Aufruf: scripts/capture-matrix <variante> … (z. B. de tr-ax5 de-dark de-rtl)" >&2; exit 2; }
+
+mkdir -p "$OUT"
+OUT="$(cd "$OUT" && pwd)"
+
+restore() {
+  xcrun simctl ui "$TARGET" appearance light
+  xcrun simctl ui "$TARGET" content_size large
+}
+trap restore EXIT
+
+for variant in "$@"; do
+  language="${variant%%-*}"
+  size=l appearance=light rtl=()
+  IFS='-' read -r -a options <<< "${variant#"$language"}"
+  for option in ${options[@]+"${options[@]}"}; do
+    case "$option" in
+      '') ;;
+      dark) appearance=dark ;;
+      rtl) rtl=(-AppleTextDirection YES -NSForceRightToLeftWritingDirection YES) ;;
+      *) size_name "$option" >/dev/null || { echo "unbekannte Angabe „$option“ in $variant" >&2; exit 2; }; size="$option" ;;
+    esac
+  done
+  case "$language" in
+    de) locale=de_DE city=berlin ;;
+    tr) locale=tr_TR city=istanbul ;;
+    en) locale=en_GB city=berlin ;;
+    es) locale=es_ES city=madrid ;;
+    *) echo "unbekannte Sprache „$language“" >&2; exit 2 ;;
+  esac
+
+  dir="$OUT/$variant"
+  mkdir -p "$dir"
+  rm -f "$dir"/*.png "$dir"/*.txt
+  script="$dir/capture.txt"
+  echo "# $variant – erzeugt von scripts/capture-matrix" > "$script"
+  echo "$SCREEN_LIST" | while IFS='|' read -r name arguments; do
+    [ -n "$name" ] || continue
+    if [ -n "${SCREENS:-}" ] && ! printf '%s\n' $SCREENS | grep -qx "$name"; then continue; fi
+    # -debugHighLatitude bestimmt Stadt und Datum selbst.
+    place="-debugCity $city -debugDate 2026-11-10"
+    case "$arguments" in *-debugHighLatitude*) place="" ;; esac
+    time="-debugTime 14:25"
+    case "$arguments" in *-debugTime*) time="" ;; esac
+    {
+      echo "launch -AppleLanguages ($language) -AppleLocale $locale ${rtl[*]+${rtl[*]}} -debugSkipOnboarding -debugFixtureTimes $place $time $arguments"
+      echo "wait 3"
+      echo "audit $dir/$name-audit.txt"
+      echo "dump $dir/$name-tree.txt"
+      echo "pages $dir/$name"
+    } >> "$script"
+  done
+
+  xcrun simctl ui "$TARGET" appearance "$appearance"
+  xcrun simctl ui "$TARGET" content_size "$(size_name "$size")"
+  echo "== $variant ($(size_name "$size"), $appearance${rtl[*]+, rtl})"
+  OUT="$dir" "$ROOT/scripts/ui-harness/run" "$script"
+
+  # Kontaktbogen: die erste Aufnahme jedes Bildschirms, darunter Name und Zahl der Aufnahmen.
+  cells=()
+  for name in $(echo "$SCREEN_LIST" | cut -d'|' -f1); do
+    first="$dir/$name-1.png"
+    [ -e "$first" ] || continue
+    count=$(find "$dir" -maxdepth 1 -name "$name-[0-9]*.png" | wc -l | tr -d ' ')
+    cells+=("$name ($count)=$first")
+  done
+  [ ${#cells[@]} -eq 0 ] || swift "$ROOT/scripts/contact-sheet.swift" "$OUT/$variant.png" 7 "$variant" "${cells[@]}"
+
+  # Befunde der Prüfung je Art.
+  echo "Prüfung der Bedienungshilfen ($variant):"
+  cat "$dir"/*-audit.txt | grep -v '^keine Befunde' | cut -d'|' -f1 | sort | uniq -c | sed 's/^/  /' || true
+done
+echo "Ergebnis in $OUT"

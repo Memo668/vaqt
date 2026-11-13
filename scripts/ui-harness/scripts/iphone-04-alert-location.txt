@@ -1,0 +1,10 @@
+# iphone/04: der Dialog des Systems zur Standortabfrage über Schritt 2 des Onboardings (nur zum Ablauf).
+# Vorher: Standort noch nie gefragt – xcrun simctl privacy 'iPhone 18 Pro' reset location <Bundle-ID>.
+# Ohne -debugFixtureTimes, damit die App Core Location fragt. Der Dialog erscheint in der Sprache des Simulators.
+# Danach die Freigabe wieder zurücksetzen (gleicher Befehl).
+launch -AppleLanguages (de) -AppleLocale de_DE -debugDate 2026-11-10 -debugTime 14:25 -debugOnboarding 2
+wait 3
+taplabel Standort erlauben
+wait 2
+shot {OUT}/onboarding-04.png
+sbdump {OUT}/onboarding-04-alert.txt

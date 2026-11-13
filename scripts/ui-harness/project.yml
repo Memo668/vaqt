@@ -1,0 +1,36 @@
+# UI-Hilfsprojekt für den Abgleich: ein UI-Test ohne Ziel-App, der die installierte App über ihre Bundle-ID
+# startet, antippt, wischt, aufnimmt und den Baum der Bedienungshilfen schreibt. Kein Teil der App.
+#
+#   scripts/ui-harness/run <skript.txt> …
+#
+# Das Projekt erzeugt `run` mit XcodeGen; es liegt nicht in Git. Seit Phase 3 außerhalb des Repos, seit
+# Phase 11 hier (docs/OPEN-QUESTIONS.md, Punkt 5).
+name: UIHarness
+options:
+  bundleIdPrefix: com.example.gebetszeiten
+  deploymentTarget:
+    iOS: "26.0"
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: ""
+    GENERATE_INFOPLIST_FILE: YES
+targets:
+  UIHarness:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: Harness
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.gebetszeiten.uiharness
+schemes:
+  UIHarness:
+    build:
+      targets:
+        UIHarness: [test]
+    test:
+      config: Debug
+      targets:
+        - UIHarness

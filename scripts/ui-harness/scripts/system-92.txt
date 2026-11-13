@@ -1,0 +1,18 @@
+# system/92: Mitteilung zu Dhuhr (11:52) und Erinnerung (10 Min. vorher) auf dem Sperrbildschirm.
+# Vorher: Systemsprache des Simulators Deutsch (defaults write -g AppleLanguages -array de-DE en-US,
+# AppleLocale de_DE, Neustart des Simulators), make statusbar TIME=11:52. Danach zurück (en-US de-US, en_US).
+# Die App beginnt um 11:41 App-Zeit: Erinnerung nach 1 Min., Dhuhr nach 11 Min. iOS stapelt beide; der Tipp
+# auf den Stapel klappt ihn auf, solange Dhuhr noch „jetzt“ ist.
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugNotifications -debugTime 11:41
+wait 2
+sbtapif 1
+wait 3
+lock
+wait 680
+home
+wait 1
+shot {OUT}/system-92-stack.png
+sbpoint 201 709
+wait 1.5
+shot {OUT}/system-92.png
+sbtree {OUT}/system-92-tree.txt

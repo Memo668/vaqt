@@ -1,0 +1,15 @@
+# system/91 (Home-Bildschirm) und system/90 (Sperrbildschirm), ohne Live-Aktivität. Mit Mock-Zeiten ohne
+# -debugLiveActivity endet die Aktivität eines früheren Laufs; die Widgets bekommen Mock-Zeiten und Debug-Uhr
+# über die App Group. Vorher: Widgets eingerichtet (system-setup-*), make statusbar.
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25
+wait 5
+home
+wait 3
+shot {OUT}/system-91.png
+sbtree {OUT}/system-91-tree.txt
+lock
+wait 2
+home
+wait 3
+shot {OUT}/system-90.png
+sbtree {OUT}/system-90-tree.txt

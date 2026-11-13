@@ -11,7 +11,7 @@
 #
 # iphone/61 ist die Seite, ganz nach unten gescrollt; das kann simctl nicht. Liegt die Aufnahme schon in
 # screenshots-out/phase-6/ – qada-61.png, aufgenommen mit dem UI-Hilfsprojekt (Skript
-# s24-qada-scrolled.txt, docs/OPEN-QUESTIONS.md, „Antippen beim Abgleich“) –, vergleicht das Skript sie
+# scripts/ui-harness/scripts/iphone-61-qada.txt, OUT gleich) –, vergleicht das Skript sie
 # mit: Ischa, Rechner, „Als offen übernehmen“ und Fußnote.
 #
 # Ergebnis in screenshots-out/phase-6/: qada-60.png, catalog-qada.png (Aufnahmen) und

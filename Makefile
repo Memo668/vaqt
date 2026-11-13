@@ -17,6 +17,8 @@ DEST := platform=iOS Simulator,name=$(SIM)
 # und quer) oder closed (außen). Auf- und zuklappen geht nur in Device Hub.
 DUO_SIM ?= iPhone Duo
 MODE    ?= open
+# Varianten für `make capture` (scripts/capture-matrix): <sprache>[-<größe>][-dark][-rtl]
+VARIANTS ?= de tr en es
 
 EXTERN     := /Volumes/Extern
 BUILD_ROOT ?= $(if $(wildcard $(EXTERN)),$(EXTERN)/Builds/NamazVakti,$(HOME)/Library/Developer/Xcode/DerivedData/NamazVakti)
@@ -40,7 +42,7 @@ SHOT ?= screenshots-out/screenshot.png
 
 XCODEBUILD := xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' -derivedDataPath '$(DERIVED)'
 
-.PHONY: help project strings check-strings build test test-core coverage boot run statusbar screenshot compare compare-today compare-qibla compare-guide compare-verses compare-qada compare-settings compare-system compare-duo clean
+.PHONY: help project strings check-strings build test test-core coverage boot run statusbar screenshot compare compare-today compare-qibla compare-guide compare-verses compare-qada compare-settings compare-system compare-duo harness capture clean
 
 help: ## Diese Übersicht
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -122,6 +124,14 @@ compare-system: build boot ## Widgets und Live-Aktivität wie in system/90, 91, 
 compare-duo: build ## iPhone Duo wie in duo/* aufnehmen und danebenlegen (MODE=open|closed, STATES='10 85'); auf- und zuklappen in Device Hub
 	xcrun simctl install '$(DUO_SIM)' '$(APP)'
 	SIM='$(DUO_SIM)' scripts/compare-duo $(MODE) $(STATES)
+
+harness: build boot ## Skripte des UI-Hilfsprojekts ausführen (SCRIPTS='scripts/ui-harness/scripts/iphone-61-qada.txt …')
+	xcrun simctl install '$(SIM)' '$(APP)'
+	SIM='$(SIM)' scripts/ui-harness/run $(SCRIPTS)
+
+capture: build boot ## Jeden Bildschirm ganz aufnehmen, mit Prüfung der Bedienungshilfen (VARIANTS='de tr-ax5 de-dark de-rtl')
+	xcrun simctl install '$(SIM)' '$(APP)'
+	SIM='$(SIM)' scripts/capture-matrix $(VARIANTS)
 
 clean: ## Build-Daten dieses Projekts löschen
 	rm -rf '$(DERIVED)' '$(CORE_BUILD)'

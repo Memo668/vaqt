@@ -1,0 +1,11 @@
+# iphone/61: Nachholen ganz nach unten gescrollt (Plan, Rechner, „Als offen übernehmen“, Fußnote) – für
+# scripts/compare-qada (OUT gleich setzen). Der Bildschirm ist 30 pt höher als die Referenz; alles liegt deshalb
+# rund 30 pt tiefer.
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25 -debugTab qada
+wait 3
+scroll 201 700 201 150
+wait 1
+scroll 201 700 201 150
+wait 1.5
+shot {OUT}/qada-61.png
+dump {OUT}/qada-61-tree.txt

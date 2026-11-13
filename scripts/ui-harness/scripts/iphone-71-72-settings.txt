@@ -1,0 +1,14 @@
+# iphone/71 (Einstellungen, Mitte) und iphone/72 (unten) – für scripts/compare-settings (OUT gleich setzen).
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25 -debugTab settings
+wait 3
+scroll 201 700 201 428.65
+scroll 201 700 201 428.65
+wait 1
+shot {OUT}/settings-71.png
+dump {OUT}/settings-71-tree.txt
+drag 201 750 201 150
+drag 201 750 201 150
+drag 201 750 201 150
+wait 2
+shot {OUT}/settings-72.png
+dump {OUT}/settings-72-tree.txt

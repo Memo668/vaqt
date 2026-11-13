@@ -46,6 +46,8 @@ open Gebetszeiten.xcodeproj
 | `make compare-settings` | Einstellungen, Onboarding und Adhan-Sheet in den Zuständen von `iphone/01`–`03`, `70`, `73`–`81` und `86` aufnehmen und neben die Referenz legen, dazu `71` und `72`, wenn aufgenommen |
 | `make compare-system` | Widgets und Live-Aktivität im Katalog in den Zuständen von `system/90`, `91` und `93`–`96` aufnehmen und neben die Referenz legen |
 | `make compare-duo` | auf dem Simulator „iPhone Duo“ die Zustände von `duo/open-*` (`MODE=open`, aufgeklappt und quer) oder `duo/closed-*` (`MODE=closed`) aufnehmen und neben die Referenz legen; auf- und zuklappen in Device Hub |
+| `make harness` | Skripte des UI-Hilfsprojekts ausführen, das antippt, wischt und aufnimmt (`SCRIPTS='scripts/ui-harness/scripts/iphone-61-qada.txt'`) – für Zustände mit Tipp |
+| `make capture` | jeden Bildschirm ganz aufnehmen, in Sprachen, Schriftgrößen, hell und dunkel, RTL, mit der Prüfung der Bedienungshilfen von Xcode und einem Kontaktbogen (`VARIANTS='de tr-ax5 de-dark de-rtl'`) |
 | `make strings` | String Catalog und `L10n.swift` aus dem Prototyp neu erzeugen |
 
 Simulator für Build, Tests und Abgleich ist das iPhone 18 Pro. Ein anderer lässt sich je Aufruf wählen, z. B. `make test SIM='iPhone 17'`.
@@ -136,6 +138,9 @@ scripts/compare-settings nimmt Einstellungen, Onboarding und Adhan-Sheet in den 
 scripts/compare-system  nimmt Widgets und Live-Aktivität im Katalog in den Zuständen der Referenzbilder auf
 scripts/compare-duo     nimmt die Seiten auf dem iPhone Duo (außen oder innen) in den Zuständen der Referenzbilder auf
 scripts/compare-shot    legt einen Ausschnitt einer Aufnahme neben die Referenz
+scripts/ui-harness      UI-Hilfsprojekt: ein UI-Test, der die App antippt, wischt, aufnimmt und prüft; Skripte für die Referenzbilder mit Tipp
+scripts/capture-matrix  nimmt jeden Bildschirm in Varianten auf (Sprache, Schriftgröße, hell/dunkel, RTL), mit Prüfung der Bedienungshilfen
+scripts/contact-sheet.swift legt Aufnahmen als Kontaktbogen in ein Raster
 scripts/adhan-clip.swift schneidet die Adhan-Ausschnitte für Player und Mitteilungen (Quellen im Kopf der Datei)
 project.yml             Beschreibung des Xcode-Projekts für XcodeGen
 design/                 Prototyp, Design Spec, Referenz-Screenshots
@@ -305,7 +310,7 @@ make compare-today STATES='17 22'
 make compare-qibla
 ```
 
-`make compare-guide` stellt `iphone/40` nach (Anleitung, 14:25, Asr läuft) und schreibt die Aufnahme (`guide-40.png`) und Ausschnitte von Leiste, Auswahl, Kopfkarte und „Vorher“ nach `screenshots-out/phase-5/`, dazu die Bausteine aus dem Katalog (`-debugCatalog guide` und `steps`) in der Breite der Referenzbilder. `iphone/41` (gescrollt) und `42` (Maghrib angetippt) brauchen Wischen und Tippen; liegen ihre Aufnahmen `guide-41.png` und `guide-42.png` dort, vergleicht das Skript sie mit. Aufgenommen werden sie mit dem UI-Hilfsprojekt (siehe `docs/OPEN-QUESTIONS.md`, „Antippen beim Abgleich“).
+`make compare-guide` stellt `iphone/40` nach (Anleitung, 14:25, Asr läuft) und schreibt die Aufnahme (`guide-40.png`) und Ausschnitte von Leiste, Auswahl, Kopfkarte und „Vorher“ nach `screenshots-out/phase-5/`, dazu die Bausteine aus dem Katalog (`-debugCatalog guide` und `steps`) in der Breite der Referenzbilder. `iphone/41` (gescrollt) und `42` (Maghrib angetippt) brauchen Wischen und Tippen; liegen ihre Aufnahmen `guide-41.png` und `guide-42.png` dort, vergleicht das Skript sie mit. Aufgenommen werden sie mit dem UI-Hilfsprojekt: `make harness SCRIPTS=scripts/ui-harness/scripts/iphone-41-42-guide.txt` mit `OUT=screenshots-out/phase-5`.
 
 ```bash
 make compare-guide
@@ -351,7 +356,7 @@ Ohne Erlaubnis plant die App nichts; die Glocken bleiben einstellbar, unter Eins
 
 ### Abgleich von `system/92`
 
-`system/92` zeigt den Sperrbildschirm mit der Mitteilung zu Dhuhr und der Erinnerung zehn Minuten davor. Nachgestellt wird er mit dem UI-Hilfsprojekt (`s37-notifications-92.txt`, siehe `docs/OPEN-QUESTIONS.md`, „Antippen beim Abgleich“):
+`system/92` zeigt den Sperrbildschirm mit der Mitteilung zu Dhuhr und der Erinnerung zehn Minuten davor. Nachgestellt wird er mit dem UI-Hilfsprojekt (`scripts/ui-harness/scripts/system-92.txt`):
 
 1. Systemsprache des Simulators auf Deutsch, damit iOS „jetzt“ und „vor 10 Min.“ schreibt; die Uhr auf dem Sperrbildschirm folgt der Statusleiste.
 2. Die App mit `-debugFixtureTimes -debugNotifications -debugTime 11:41` starten.

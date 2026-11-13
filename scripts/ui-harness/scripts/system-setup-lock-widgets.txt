@@ -1,0 +1,23 @@
+# Einrichtung für system/90: Ring und Rechteck unten auf dem Sperrbildschirm (iOS 27), die Zeile über der Uhr.
+# Nur nötig, wenn sie fehlen. Kennungen und Texte wie in einem englischen System.
+lock
+wait 2
+home
+wait 2
+sbpress 201 330 1.8
+wait 2
+sbtaplabel posterboard-customize-button
+wait 6
+sbtaplabel grouped-widgets-reticle-view
+wait 3
+sbtapcell Gebetszeiten
+wait 3
+sbpoint 113 633
+wait 2
+sbpoint 245 633
+wait 2
+sbtaplabel close
+wait 3
+sbtaplabel Calendar, Date, Top Widget
+wait 3
+shot {OUT}/setup-lock-widgets.png

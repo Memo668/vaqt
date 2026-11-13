@@ -11,7 +11,7 @@
 #
 # iphone/41 (nach unten gescrollt) und 42 (Maghrib von Hand gewählt) brauchen Wischen und Tippen; das
 # kann simctl nicht. Liegen ihre Aufnahmen schon in screenshots-out/phase-5/ – guide-41.png und
-# guide-42.png, aufgenommen mit dem UI-Hilfsprojekt (docs/OPEN-QUESTIONS.md, „Antippen beim Abgleich“) –,
+# guide-42.png, aufgenommen mit dem UI-Hilfsprojekt (scripts/ui-harness/scripts/iphone-41-42-guide.txt, OUT gleich) –,
 # vergleicht das Skript sie mit. Für 41 muss die erste Karte des Ablaufs 133 pt unter der Oberkante
 # stehen (Referenz 129 pt).
 #

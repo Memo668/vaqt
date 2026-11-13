@@ -80,15 +80,15 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 | `iphone/31` | … `-debugTime 14:25 -debugTab qibla -debugQiblaHeading 137 -debugQiblaAccuracy 40` |
 | `iphone/32` | … `-debugCity mecca -debugTime 15:42 -debugTab qibla -debugQiblaHeading 138 -debugQiblaAccuracy 40` |
 | `iphone/40` | … `-debugTab guide` |
-| `iphone/41` | wie `40`, dann nach unten scrollen, bis die erste Karte des Ablaufs 133 pt unter der Oberkante steht (UI-Hilfsprojekt, `s21-guide-steps.txt`) |
-| `iphone/42` | wie `40`, dann „Maghrib“ in der Auswahl antippen (UI-Hilfsprojekt, `s20-guide.txt`) |
+| `iphone/41` | wie `40`, dann nach unten scrollen, bis die erste Karte des Ablaufs 133 pt unter der Oberkante steht (UI-Hilfsprojekt, `scripts/ui-harness/scripts/iphone-41-42-guide.txt`) |
+| `iphone/42` | wie `40`, dann „Maghrib“ in der Auswahl antippen (UI-Hilfsprojekt, `scripts/ui-harness/scripts/iphone-41-42-guide.txt`) |
 | `iphone/50` | … `-debugTime 14:25 -debugTab verses` |
 | `iphone/51` | wie `50` (Dark Mode) |
 | `iphone/60` | … `-debugTime 14:25 -debugTab qada` – mit `-debugFixtureTimes` die Zahlen des Prototyps |
-| `iphone/61` | wie `60`, dann ganz nach unten scrollen (UI-Hilfsprojekt, `s24-qada-scrolled.txt`) |
+| `iphone/61` | wie `60`, dann ganz nach unten scrollen (UI-Hilfsprojekt, `scripts/ui-harness/scripts/iphone-61-qada.txt`) |
 | `iphone/70` | … `-debugTime 14:25 -debugTab settings` |
-| `iphone/71` | wie `70`, dann scrollen, bis „Pro Gebet“ oben unter der Leiste steht (UI-Hilfsprojekt, `s29-settings-scrolled.txt`) |
-| `iphone/72` | wie `70`, dann ganz nach unten scrollen (UI-Hilfsprojekt, `s29-settings-scrolled.txt`) |
+| `iphone/71` | wie `70`, dann scrollen, bis „Pro Gebet“ oben unter der Leiste steht (UI-Hilfsprojekt, `scripts/ui-harness/scripts/iphone-71-72-settings.txt`) |
+| `iphone/72` | wie `70`, dann ganz nach unten scrollen (UI-Hilfsprojekt, `scripts/ui-harness/scripts/iphone-71-72-settings.txt`) |
 | `iphone/73` | … `-debugTime 14:25 -debugTab method` |
 | `iphone/74` | … `-debugTab asr` |
 | `iphone/75` | … `-debugTab hl` |
@@ -100,14 +100,16 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 | `iphone/81` | … `-debugTab privacy` |
 | `iphone/85` | … `-debugTime 14:25 -debugTab city` (seit Phase 10; vorher ein Tipp auf die Stadt) |
 | `iphone/86` | … `-debugTime 14:25 -debugTab adhan` |
-| `system/92` | `-debugSkipOnboarding -debugFixtureTimes -debugNotifications -debugDate 2026-11-10 -debugTime 11:41`, Systemsprache des Simulators Deutsch, `make statusbar TIME=11:52`; Gerät sperren, gut elf Minuten warten, den Stapel aufklappen, aufnehmen (UI-Hilfsprojekt, `s37-notifications-92.txt`). Die Erinnerung kommt nach einer Minute, Dhuhr nach elf |
-| `system/90` | `-debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25` – ohne `-debugLiveActivity` endet eine noch laufende Aktivität; Widgets vorher anlegen: Sperrbildschirm anpassen, Rechteck und Ring von „Gebetszeiten“, Zeile über der Uhr (UI-Hilfsprojekt, `s45-lock-widgets.txt`); App starten, sperren, aufnehmen (`s47-system-90-91.txt`). Im Katalog: `make compare-system STATES=90` |
-| `system/91` | wie `90`; Widgets vorher anlegen: erst das kleine, dann das mittlere, dann rutscht das kleine darunter (UI-Hilfsprojekt, `s43-home-widgets.txt`); App starten, Home, aufnehmen (`s47-system-90-91.txt`). Im Katalog: `make compare-system STATES=91` |
-| `system/93` | `-debugSkipOnboarding -debugFixtureTimes -debugLiveActivity -debugDate 2026-11-10 -debugTime 14:25`, Widgets wie `90`; sperren, aufnehmen (UI-Hilfsprojekt, `s48-system-93-95.txt`) |
-| `system/94` | wie `93`, statt sperren Home: die kompakte Insel über den Widgets von `91` (`s48-system-93-95.txt`) |
-| `system/95` | wie `94`, dann lange auf die Insel drücken (`sbpress 201 30 1.2`, `s48-system-93-95.txt`) |
-| `system/96` | `… -debugLiveActivity -debugDate 2026-11-10 -debugTime 16:35`, Simulator dunkel (`xcrun simctl ui 'iPhone 18 Pro' appearance dark`), `make statusbar TIME=16:35`; sperren, aufnehmen (`s49-system-96.txt`), danach hell und `make statusbar` |
+| `system/92` | `-debugSkipOnboarding -debugFixtureTimes -debugNotifications -debugDate 2026-11-10 -debugTime 11:41`, Systemsprache des Simulators Deutsch, `make statusbar TIME=11:52`; Gerät sperren, gut elf Minuten warten, den Stapel aufklappen, aufnehmen (UI-Hilfsprojekt, `scripts/ui-harness/scripts/system-92.txt`). Die Erinnerung kommt nach einer Minute, Dhuhr nach elf |
+| `system/90` | `-debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25` – ohne `-debugLiveActivity` endet eine noch laufende Aktivität; Widgets vorher anlegen: Sperrbildschirm anpassen, Rechteck und Ring von „Gebetszeiten“, Zeile über der Uhr (UI-Hilfsprojekt, `scripts/ui-harness/scripts/system-setup-lock-widgets.txt`); App starten, sperren, aufnehmen (`scripts/ui-harness/scripts/system-90-91.txt`). Im Katalog: `make compare-system STATES=90` |
+| `system/91` | wie `90`; Widgets vorher anlegen: erst das kleine, dann das mittlere, dann rutscht das kleine darunter (UI-Hilfsprojekt, `scripts/ui-harness/scripts/system-setup-home-widgets.txt`); App starten, Home, aufnehmen (`scripts/ui-harness/scripts/system-90-91.txt`). Im Katalog: `make compare-system STATES=91` |
+| `system/93` | `-debugSkipOnboarding -debugFixtureTimes -debugLiveActivity -debugDate 2026-11-10 -debugTime 14:25`, Widgets wie `90`; sperren, aufnehmen (UI-Hilfsprojekt, `scripts/ui-harness/scripts/system-93-95.txt`) |
+| `system/94` | wie `93`, statt sperren Home: die kompakte Insel über den Widgets von `91` (`scripts/ui-harness/scripts/system-93-95.txt`) |
+| `system/95` | wie `94`, dann lange auf die Insel drücken (`sbpress 201 30 1.2`, `scripts/ui-harness/scripts/system-93-95.txt`) |
+| `system/96` | `… -debugLiveActivity -debugDate 2026-11-10 -debugTime 16:35`, Simulator dunkel (`xcrun simctl ui 'iPhone 18 Pro' appearance dark`), `make statusbar TIME=16:35`; sperren, aufnehmen (`scripts/ui-harness/scripts/system-96.txt`), danach hell und `make statusbar` |
 | `duo/closed-*`, `duo/open-*` | Simulator „iPhone Duo“ (Runtime iOS 27.2, Build 24B91016s), in Device Hub zugeklappt bzw. flach aufgeklappt und quer; Argumente wie `iphone/` mit derselben Nummer: `10` (`-debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25`), `11` wie `10` dunkel, `30` … `-debugTab qibla -debugQiblaHeading 136 -debugQiblaAccuracy 40`, `40` … `-debugTab guide`, `50` … `-debugTab verses`, `60` … `-debugTab qada`, `70` … `-debugTab settings`, `85` … `-debugTab city`. Aufnehmen und danebenlegen: `make compare-duo MODE=open` bzw. `MODE=closed`. RTL innen: dazu `-AppleTextDirection YES -NSForceRightToLeftWritingDirection YES` |
 | Duo hochkant, Tischhaltung, Split View | ohne Referenzbild: in Device Hub drehen, das Scharnier halb öffnen bzw. eine zweite App daneben öffnen; Argumente wie `duo/open-*` |
 
 Sprache im Simulator: Scheme › Run › Options › App Language, oder `-AppleLanguages "(tr)"`.
+
+Zustände mit Tipp spielt das UI-Hilfsprojekt im Repo nach (`scripts/ui-harness`, seit Phase 11): `make harness SCRIPTS='scripts/ui-harness/scripts/iphone-61-qada.txt'`. Die Aufnahmen landen in `screenshots-out/ui-harness/` oder unter `OUT=…`.

@@ -1,0 +1,55 @@
+#!/bin/bash
+# Führt Skripte des UI-Hilfsprojekts aus (Befehle im Kopf von Harness/HarnessTests.swift): ein UI-Test startet
+# die installierte App, tippt, wischt, nimmt auf und schreibt den Baum der Bedienungshilfen. So lassen sich
+# Zustände nachstellen, die einen Tipp brauchen – simctl kann starten und aufnehmen, aber nicht tippen.
+#
+#   scripts/ui-harness/run <skript.txt> …        nacheinander
+#   SIM='iPhone 17' scripts/ui-harness/run …     anderer Simulator (Name)
+#   SIM_ID=<Kennung> scripts/ui-harness/run …    Simulator über seine Kennung (das Duo, siehe compare-duo)
+#
+# In den Skripten stehen {ROOT} für das Repo und {OUT} für den Ordner der Ausgaben (Standard
+# screenshots-out/ui-harness, mit OUT=… änderbar). Die App muss gebaut und installiert sein (make harness).
+# Ein Lauf dauert gut eine halbe Minute mehr als sein Skript: Xcode baut und startet den Test.
+#
+# Das Xcode-Projekt entsteht beim ersten Aufruf mit XcodeGen; die Build-Daten liegen wie beim Makefile auf
+# der externen Platte, wenn sie angesteckt ist.
+set -euo pipefail
+HERE="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$HERE/../.." && pwd)"
+SIM="${SIM:-iPhone 18 Pro}"
+OUT="${OUT:-$ROOT/screenshots-out/ui-harness}"
+if [ -d /Volumes/Extern ]; then
+  BUILD_ROOT="${BUILD_ROOT:-/Volumes/Extern/Builds/NamazVakti}"
+else
+  BUILD_ROOT="${BUILD_ROOT:-$HOME/Library/Developer/Xcode/DerivedData/NamazVakti}"
+fi
+DERIVED="$BUILD_ROOT/ui-harness/DerivedData"
+# Die Bundle-ID der App aus project.yml – sie ist bis zur Beta ein Platzhalter.
+BUNDLE_ID="${BUNDLE_ID:-$(sed -nE 's/^ *APP_BUNDLE_ID: *([^ ]+).*/\1/p' "$ROOT/project.yml" | head -1)}"
+if [ -n "${SIM_ID:-}" ]; then
+  DEST="platform=iOS Simulator,id=$SIM_ID"
+else
+  DEST="platform=iOS Simulator,name=$SIM"
+fi
+
+[ $# -gt 0 ] || { echo "Aufruf: scripts/ui-harness/run <skript.txt> …" >&2; exit 2; }
+[ -d "$HERE/UIHarness.xcodeproj" ] || (cd "$HERE" && xcodegen generate --quiet)
+mkdir -p "$OUT/.harness"
+# Der Test läuft im Simulator; er braucht ganze Pfade.
+OUT="$(cd "$OUT" && pwd)"
+
+for script in "$@"; do
+  name="$(basename "$script" .txt)"
+  resolved="$OUT/.harness/$name.txt"
+  log="$OUT/.harness/$name.log"
+  sed -e "s|{ROOT}|$ROOT|g" -e "s|{OUT}|$OUT|g" "$script" > "$resolved"
+  if TEST_RUNNER_HARNESS_SCRIPT="$resolved" TEST_RUNNER_HARNESS_BUNDLE_ID="$BUNDLE_ID" \
+    xcodebuild test -project "$HERE/UIHarness.xcodeproj" -scheme UIHarness \
+      -destination "$DEST" -derivedDataPath "$DERIVED" > "$log" 2>&1; then
+    echo "$name: ok"
+  else
+    echo "$name: FEHLER (Protokoll: $log)"
+    grep -E "error|XCTAssert|failed|Fehler" "$log" | grep -v "^\s*$" | head -20
+    exit 1
+  fi
+done

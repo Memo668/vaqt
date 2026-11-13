@@ -1,0 +1,17 @@
+# iphone/41 (Anleitung gescrollt) und iphone/42 (Maghrib angetippt) – für scripts/compare-guide (OUT gleich setzen).
+# 41: Die erste Karte des Ablaufs soll 133 pt unter der Oberkante stehen (Referenz 129 pt, der sichere Bereich
+# beginnt 4 pt tiefer). Unverschoben liegt sie bei 1033,7 pt; jede Geste verliert rund 10 pt Anlauf.
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25 -debugTab guide
+wait 3
+scroll 201 700 201 239.65
+wait 1
+scroll 201 700 201 239.65
+wait 1.5
+shot {OUT}/guide-41.png
+dump {OUT}/guide-41-tree.txt
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25 -debugTab guide
+wait 3
+taplabel Maghrib
+wait 1.5
+shot {OUT}/guide-42.png
+dump {OUT}/guide-42-tree.txt
