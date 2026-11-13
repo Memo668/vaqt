@@ -22,10 +22,12 @@ struct PrayersPager<Page: View>: View {
         ScrollView(.horizontal) {
             HStack(spacing: 0) {
                 ForEach(PrayersPage.allCases) { item in
-                    page(item)
-                        .containerRelativeFrame(.horizontal)
-                        // Nur die sichtbare Seite ist für VoiceOver da (`aria-hidden` und `inert`).
-                        .accessibilityHidden(item != selection)
+                    PagerPage {
+                        page(item)
+                            .containerRelativeFrame(.horizontal)
+                    }
+                    // Nur die sichtbare Seite ist für VoiceOver da (`aria-hidden` und `inert`).
+                    .accessibilityHidden(item != selection)
                 }
             }
             .scrollTargetLayout()
@@ -57,4 +59,27 @@ struct PrayersPager<Page: View>: View {
             }
         }
     }
+}
+
+/// Eine Seite des Pagers. Sie sagt ihrem Inhalt, ob sie gerade zu sehen ist (`isPagerPageVisible`) – schon
+/// ab dem ersten sichtbaren Streifen beim Wischen. Die Zeiten-Seite hält damit ihren Sekundentakt an,
+/// solange Qibla oder die Anleitung zu sehen sind (Phase 11, Leistung): Die waagerechte `ScrollView` hält
+/// alle drei Seiten am Leben, und SwiftUI hält eine `TimelineView` dort nicht von selbst an.
+private struct PagerPage<Content: View>: View {
+    @ViewBuilder let content: Content
+
+    @State private var isVisible = true
+
+    var body: some View {
+        content
+            .environment(\.isPagerPageVisible, isVisible)
+            .onScrollVisibilityChange(threshold: 0.01) { visible in
+                isVisible = visible
+            }
+    }
+}
+
+extension EnvironmentValues {
+    /// Ob die Seite des Pagers, in der eine Ansicht steht, zu sehen ist; außerhalb des Pagers immer `true`.
+    @Entry var isPagerPageVisible: Bool = true
 }
