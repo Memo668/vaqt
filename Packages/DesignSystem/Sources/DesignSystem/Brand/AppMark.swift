@@ -4,8 +4,8 @@ import SwiftUI
 /// im Prototyp. Es steht groß im ersten Schritt des Onboardings und klein über der Tagline der
 /// Einstellungen.
 ///
-/// TODO(placeholder): Das Zeichen ist der Platzhalter des Prototyps (Spec § 6.9); das App-Symbol kommt
-/// in Phase 11.
+/// TODO(placeholder): Das Zeichen ist der Platzhalter des Prototyps (Spec § 6.9), wie in den Referenzbildern.
+/// Das App-Symbol ist seit Phase 11 ein eigener Platzhalter (Tagesbogen, `scripts/app-icon.swift`).
 public struct AppMark: View {
 
     /// Größe des Zeichens.

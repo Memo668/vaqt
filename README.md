@@ -4,7 +4,7 @@ Gemeinnützige Gebetszeiten-App für iOS: werbefrei, ohne Tracking, ohne Konto. 
 
 Die Regeln für die Arbeit stehen in `CLAUDE.md`, der Bauplan in `docs/BUILD-PLAN.md`, offene Punkte in `docs/OPEN-QUESTIONS.md`.
 
-**Stand:** Phase 0 (Projektgerüst), Phase 1 (`PrayerCore`, die Logik ohne UI), Phase 2 (`DesignSystem`: Tokens und Bausteine), Phase 3 (Gebete-Tab: Zeiten), Phase 4 (Qibla), Phase 5 (Anleitung), Phase 6 (Verse und Nachholen), Phase 7 (Einstellungen, Onboarding, Adhan), Phase 8 (Mitteilungen), Phase 9 (Widgets und Live-Aktivität) und Phase 10 (iPhone Duo) sind fertig. Der Tab „Gebete“ zeigt die obere Leiste mit den Chips Zeiten, Qibla und Anleitung, die Zeiten-Seite – Stadt, Datum, Bogen mit laufendem Countdown, sechs Gebetskarten mit Glocke, Stadt-Sheet –, die Qibla-Seite mit Kompass, Statuszeile, Richtung und Entfernung zur Kaaba und die Anleitung mit der Auswahl der fünf Gebete, der Kopfkarte (Status, Zeitfenster, Fakten, Rakʿa-Folge), „Vorher“ und „Ablauf“ mit Haltungsfiguren und arabischen Formeln. Der Tab „Verse“ zeigt den Vers des Tages auf Arabisch mit Übersetzung (Platzhalter) und Quelle, Teilen und Kopieren und die letzten Tage; der Tab „Nachholen“ den Anteil nachgeholt, je Gebet einen Stepper, den Plan pro Tag mit voraussichtlichem Ende und den Rechner für einen verpassten Zeitraum. Der Einstellungskreis jedes Tabs öffnet die Einstellungen mit allen Unterseiten – Standort, Berechnung, Mitteilungen, Darstellung samt Sprache, Über –; Änderungen wirken sofort in der ganzen App. Beim ersten Start führt das Onboarding in drei Schritten zu Standort und Mitteilungen. „Adhan anhören“ öffnet den Player mit Wellenform und drei Stimmen (Platzhalter). Die App plant lokale Mitteilungen zu jedem Gebet nach seiner Glocke, dazu die Vorab-Erinnerung, im rollierenden Fenster der nächsten 64 und neu nach jeder Änderung. Das Widget gibt es in fünf Größen – klein und mittel auf dem Home-Bildschirm, rund, als Rechteck und als Zeile auf dem Sperrbildschirm –, dazu die Live-Aktivität zu jedem Gebet auf dem Sperrbildschirm und in der Dynamic Island. Auf dem iPhone Duo zeigt die App außen die iPhone-Seiten neben der senkrechten Leiste des Systems und innen quer zwei Spalten, die sich am Falz treffen; Einstellungen stehen innen als mittige Spalte, Sheets als mittige Karte, hochkant und in der Tischhaltung passen sich die Seiten an. Die Bausteine lassen sich als Previews in Xcode ansehen und in der App mit `-debugCatalog`.
+**Stand:** Phase 0 (Projektgerüst), Phase 1 (`PrayerCore`, die Logik ohne UI), Phase 2 (`DesignSystem`: Tokens und Bausteine), Phase 3 (Gebete-Tab: Zeiten), Phase 4 (Qibla), Phase 5 (Anleitung), Phase 6 (Verse und Nachholen), Phase 7 (Einstellungen, Onboarding, Adhan), Phase 8 (Mitteilungen), Phase 9 (Widgets und Live-Aktivität), Phase 10 (iPhone Duo) und Phase 11 (Feinschliff: Sprachen, große Schrift, Barrierefreiheit, Leistung, App Store) sind fertig. Der Tab „Gebete“ zeigt die obere Leiste mit den Chips Zeiten, Qibla und Anleitung, die Zeiten-Seite – Stadt, Datum, Bogen mit laufendem Countdown, sechs Gebetskarten mit Glocke, Stadt-Sheet –, die Qibla-Seite mit Kompass, Statuszeile, Richtung und Entfernung zur Kaaba und die Anleitung mit der Auswahl der fünf Gebete, der Kopfkarte (Status, Zeitfenster, Fakten, Rakʿa-Folge), „Vorher“ und „Ablauf“ mit Haltungsfiguren und arabischen Formeln. Der Tab „Verse“ zeigt den Vers des Tages auf Arabisch mit Übersetzung (Platzhalter) und Quelle, Teilen und Kopieren und die letzten Tage; der Tab „Nachholen“ den Anteil nachgeholt, je Gebet einen Stepper, den Plan pro Tag mit voraussichtlichem Ende und den Rechner für einen verpassten Zeitraum. Der Einstellungskreis jedes Tabs öffnet die Einstellungen mit allen Unterseiten – Standort, Berechnung, Mitteilungen, Darstellung samt Sprache, Über –; Änderungen wirken sofort in der ganzen App. Beim ersten Start führt das Onboarding in drei Schritten zu Standort und Mitteilungen. „Adhan anhören“ öffnet den Player mit Wellenform und drei Stimmen (Platzhalter). Die App plant lokale Mitteilungen zu jedem Gebet nach seiner Glocke, dazu die Vorab-Erinnerung, im rollierenden Fenster der nächsten 64 und neu nach jeder Änderung. Das Widget gibt es in fünf Größen – klein und mittel auf dem Home-Bildschirm, rund, als Rechteck und als Zeile auf dem Sperrbildschirm –, dazu die Live-Aktivität zu jedem Gebet auf dem Sperrbildschirm und in der Dynamic Island. Auf dem iPhone Duo zeigt die App außen die iPhone-Seiten neben der senkrechten Leiste des Systems und innen quer zwei Spalten, die sich am Falz treffen; Einstellungen stehen innen als mittige Spalte, Sheets als mittige Karte, hochkant und in der Tischhaltung passen sich die Seiten an. Die Bausteine lassen sich als Previews in Xcode ansehen und in der App mit `-debugCatalog`.
 
 ## Voraussetzungen
 
@@ -141,6 +141,7 @@ scripts/compare-shot    legt einen Ausschnitt einer Aufnahme neben die Referenz
 scripts/ui-harness      UI-Hilfsprojekt: ein UI-Test, der die App antippt, wischt, aufnimmt und prüft; Skripte für die Referenzbilder mit Tipp
 scripts/capture-matrix  nimmt jeden Bildschirm in Varianten auf (Sprache, Schriftgröße, hell/dunkel, RTL), mit Prüfung der Bedienungshilfen
 scripts/contact-sheet.swift legt Aufnahmen als Kontaktbogen in ein Raster
+scripts/app-icon.swift  zeichnet das Platzhalter-Icon (hell, dunkel, getönt) nach App/Assets.xcassets/AppIcon.appiconset
 scripts/adhan-clip.swift schneidet die Adhan-Ausschnitte für Player und Mitteilungen (Quellen im Kopf der Datei)
 project.yml             Beschreibung des Xcode-Projekts für XcodeGen
 design/                 Prototyp, Design Spec, Referenz-Screenshots
@@ -217,6 +218,9 @@ Die Referenzwerte für die Berechnung liegen unter `Packages/PrayerCore/Tests/Pr
 | `readsVerticalBarEdge()`, `verticalBarEdge` | wo das System die senkrechte Leiste hinlegt (iPhone Duo, `toolbarVerticalEdge`, iOS 27.1); `nil` bei waagerechten Leisten |
 | `centeredColumn()`, `centeredSheetCard(isRegular:)`, `CenteredColumn` | innen die Einstellungen als mittige 600-pt-Spalte, Sheets als mittige Karte, 600 pt breit |
 | `GlassSymbol.barImage` | Symbol eines Chips als Bild für die Leisten des Systems, auch der Gebetsteppich |
+| `Hyphenation`, `Text(hyphenating:)` | Silbentrennung mit dem Trennwörterbuch des Systems: weiche Trennstriche in den Zeilen der Listen und, bei großer Schrift, in Gebetskarte und Stepper-Zeilen (Phase 11); VoiceOver liest ohne sie |
+| `WidgetTextScaling`, `WidgetMetrics.textScale` | Schrift der Widgets bei Dynamic Type: wächst wie Fließtext, höchstens auf das 1,2-Fache und nur so weit, wie der Inhalt passt (Phase 11) |
+| `Palette.currentRowAccent`, `currentRowTextSecondary`, `currentRowKerahatText` | Schrift auf der Karte des laufenden Gebets, hell 8 % dunkler – Kontrast 4,5 : 1 (Phase 11) |
 | `ComponentCatalog` (nur DEBUG) | alle Bausteine zum Ansehen: Previews hell und dunkel, in der App über `-debugCatalog`; Widgets und Live-Aktivität über `CatalogOutsideState` |
 
 So kommt der Bogen auf eine Seite:
@@ -235,7 +239,7 @@ DayArc(phase: phase, showKerahat: settings.showKerahat) {
 | `PrayersTab`, `TopBar`, `PrayersPager`, `PrayersPage` | obere Leiste (Einstellungskreis und drei Chips, `ViewThatFits`) über drei Seiten, die sich wischen lassen; die Einstellungen schieben sich darüber. Der Tab bestimmt den Ort |
 | `PlaceModel` | welcher Ort gilt – aktueller Standort oder gewählte Stadt, Freigabe, Stadtname; Zeiten- und Qibla-Seite teilen es sich |
 | `TodayModel` | Zustand der Zeiten-Seite: Zeitstrahl, die sechs Karten, Banner und Hinweise, Glocke, Stadtwahl |
-| `TodayPage`, `TodayHeader`, `TodayHero` | die Seite; `TodayHero` holt die Tagesphase im Sekundentakt der App-Uhr, die Karten bauen sich nur beim Phasenwechsel neu auf |
+| `TodayPage`, `TodayHeader`, `TodayHero`, `CountdownSchedule` | die Seite; `TodayHero` holt die Tagesphase im Sekundentakt der App-Uhr, die Karten bauen sich nur beim Phasenwechsel neu auf. Der Takt ruht, solange die Seite nicht zu sehen (`isPagerPageVisible`) oder die App nicht aktiv ist |
 | `CitySheet`, `CitySheetModel` | Stadt-Sheet: aktueller Standort, gespeicherte Städte, Ortssuche |
 | `QiblaModel`, `QiblaPage` | Qibla-Seite: Kursanzeige, Kompass, Statuszeile („Nach rechts drehen 39°“, ausgerichtet mit Haptik), Richtung und Entfernung, in Mekka die Meldung, ohne Ort „Stadt wählen“, ohne Kompass „Kein Kompass verfügbar“, Kalibrierungskarte nur bei ungenauem Kompass |
 | `GuideModel`, `GuidePage` | Anleitung: öffnet beim aktuellen Gebet, manuelle Wahl bis zum nächsten Gebetswechsel oder bis man die Seite verlässt, „Qibla öffnen“ wechselt zur Qibla-Seite; gleicht sich nur beim nächsten Ereignis ab, nicht im Sekundentakt |
@@ -441,11 +445,23 @@ Die Verse kommen aus `VERSES` und `SURAH` im Prototyp: Übersetzungen und Namen 
 
 `App/InfoPlist.xcstrings` enthält die Begründung der Standortabfrage im System-Dialog (`NSLocationWhenInUseUsageDescription`) – der Text `alLocBody` aus `T`. Die Info.plist braucht ihn zusätzlich als Grundwert; der steht in `project.yml`, und `make check-strings` prüft, dass er dem deutschen Text entspricht.
 
+Die Vorab-Erinnerung braucht im Türkischen eine Endung, die von der Uhrzeit abhängt: „Öğle vakti 12:53’te başlıyor.“, aber „15:36’da“. `TurkishClockSuffix` (PrayerCore) bestimmt sie nach dem letzten gesprochenen Zahlwort, `L10n.notifReminderBody(p:at:)` hängt sie an (Phase 11); im türkischen Text von `T` steht deshalb keine feste Endung.
+
 `L10n.locale` nennt die Sprache, in der die Texte gerade erscheinen; mit ihr schreibt die App Datum und Ländernamen. `L10n.chosenLanguage` ist die in der App gewählte Sprache (`nil`: wie das Gerät).
 
 Neben `noTimes` (Phase 3) und `noCompass` (Phase 4) hat der Prototyp in Phase 7 den Text `hlMoonsighting` bekommen: der Hinweis unter „Hohe Breitengrade“, dass die Regel bei Moonsighting nicht wirkt. Der Katalog hat damit 273 Einträge.
 
 Die Adresse hinter „Quellcode“ steht als Platzhalter in `project.yml` (`SOURCE_CODE_URL`) und kommt über die Info.plist (`SourceCodeURL`) in die App.
+
+## Große Schrift und Barrierefreiheit
+
+Die App folgt Dynamic Type bis AX5 (Phase 11). Ab den AX-Größen stellen sich enge Zeilen um, statt mitten im Wort oder in der Zahl umzubrechen: Die Gebetskarte setzt die Uhrzeit unter den Namen, die Fakten-Kacheln der Anleitung stehen untereinander, die Zeilen mit Stepper (Nachholen, Minutenkorrektur) werden zweizeilig. Countdown (×1,05), Zeiten am Bogen (×1,2), die Zeile über dem Countdown (bis „xxxLarge“), die Chips (bis AX1, dann Large Content Viewer) und die Widgets (×1,2) wachsen begrenzt. Lange Wörter trennt das System; die weichen Trennstriche von `Hyphenation` sichern das für iOS 26 ab.
+
+`make capture` nimmt jeden Bildschirm in Varianten auf und schreibt dazu die Prüfung der Bedienungshilfen von Xcode (`performAccessibilityAudit`) und den Baum der Bedienungshilfen; die Aufnahmen liegen auf der externen Platte, wenn sie angesteckt ist (`screenshots-out/phase-11/matrix` zeigt dorthin). Was die Prüfung meldet und was davon bleibt, steht in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 11“).
+
+## App Store
+
+Datenschutz-Manifeste: `App/PrivacyInfo.xcprivacy` und `Widgets/PrivacyInfo.xcprivacy` (kein Tracking, keine erfassten Daten, UserDefaults mit Grund). Die Angaben für App Store Connect – „Keine Daten erfasst“ mit Begründung je Datenart – stehen in `docs/APP-STORE.md`. Das App-Symbol ist ein Platzhalter: der Tagesbogen mit den fünf Gebeten, hell, dunkel und getönt, erzeugt von `swift scripts/app-icon.swift` (TODO(placeholder), Spec § 6.9).
 
 ## Bundle-ID und App Group
 

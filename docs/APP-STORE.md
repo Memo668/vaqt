@@ -1,6 +1,6 @@
 # App Store – Datenschutz und Angaben zum Upload
 
-Vorbereitet in Phase 11. Eintragen lässt sich das erst in App Store Connect, wenn es das Entwicklerkonto gibt (Schritt „Erste Beta“ in `docs/OPEN-QUESTIONS.md`).
+Vorbereitet in Phase 11. Eintragen lässt sich das erst in App Store Connect, wenn es das Entwicklerkonto gibt („Für die erste Beta“ in `docs/OPEN-QUESTIONS.md`).
 
 ## App-Datenschutz: „Keine Daten erfasst“
 

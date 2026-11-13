@@ -12,7 +12,8 @@ wait 680
 home
 wait 1
 shot {OUT}/system-92-stack.png
-sbpoint 201 709
+# Der Stapel steht seit Phase 9 über den Widgets unten auf dem Sperrbildschirm (587–661 pt).
+sbpoint 201 620
 wait 1.5
 shot {OUT}/system-92.png
 sbtree {OUT}/system-92-tree.txt

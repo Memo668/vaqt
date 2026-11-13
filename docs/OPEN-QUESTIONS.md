@@ -1,74 +1,248 @@
 # Offene Fragen
 
-Hier steht alles, was Spec, Screenshots und Prototyp nicht eindeutig beantworten. Was noch offen ist, nennt den Standardwert, mit dem bis zu einer Entscheidung gebaut wird. Was entschieden ist, steht weiter unten mit seiner Folge. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
+Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
+
+Stand: 13.11.2026, nach Phase 11.
+
+## Für die erste Beta
+
+Die erste Beta über TestFlight kommt nach Phase 11 und enthält alles, auch Mitteilungen, Widgets, Live-Aktivität und Duo (entschieden am 12.11.2026). Es fehlt:
+
+- **Konto und Team:** das Apple-Entwicklerkonto; `DEVELOPMENT_TEAM` in `project.yml` ist leer. Ein Konto als Organisation braucht eine D-U-N-S-Nummer und kann Tage bis Wochen dauern.
+- **Kennungen:** echte Bundle-ID und App Group statt `com.example.gebetszeiten` und `group.com.example.gebetszeiten` (`APP_BUNDLE_ID`, `APP_GROUP_ID` in `project.yml`; die Kennung der Hintergrundaktualisierung und das UI-Hilfsprojekt lesen sie von dort, das `Makefile` hat sie noch einmal als `BUNDLE_ID`).
+- **App Store Connect:** Eintrag der App, die Datenschutzangabe „Keine Daten erfasst“ (vorbereitet in `docs/APP-STORE.md`), für externe Tester eine Datenschutzerklärung (URL) und die Beschreibung der Beta.
+- **Info.plist:** `ITSAppUsesNonExemptEncryption = NO` für die Exportkontrolle (`docs/APP-STORE.md`).
+- **Archiv und Upload.**
+
+Erledigt mit Phase 11: das Platzhalter-Icon (`AppIcon`, Tagesbogen mit den fünf Gebeten) und die Datenschutz-Manifeste (`PrivacyInfo.xcprivacy` in App und Widgets). Die Platzhalter – Übersetzungen der Verse, Adhan-Aufnahmen, Texte der Anleitung, Icon – dürfen in der Beta bleiben.
+
+## Vor dem App Store
+
+**Inhalte und Rechte**
+
+- **Übersetzungen der Verse** (Phase 6, Spec § 6.12): Platzhalter mit `TODO(placeholder)` im String Catalog. Offen sind Übersetzungen mit Lizenz, die Quelle des arabischen Textes und die Auswahl der Verse.
+- **Adhan-Aufnahmen** (Phase 7, Spec § 6.5): Stimme 1 und 2 sind freie Aufnahmen von Wikimedia Commons; die Lizenzangaben (CC0 1.0, gemeinfrei) stammen von den Hochladenden. Herkunft und Rechte prüfen oder durch die endgültigen Aufnahmen ersetzen; Stimme 3 und die Fadschr-Variante fehlen.
+- **Texte der Anleitung** (Phase 5, Spec § 6.14): Niemand hat sie fachlich geprüft (Imam oder Gelehrter je Sprache). Offen sind auch eine neutrale Fassung oder Varianten je Rechtsschule und für Frauen, echte Illustrationen und Audio für die Formeln.
+- **Icon und Name** (Spec § 6.9): Das Icon ist ein Platzhalter (Phase 11). Das Zeichen in Onboarding und Tagline ist weiter die Mondsichel des Prototyps (`iphone/01`, `72`); mit dem endgültigen Icon gleich mit festlegen.
+- **Datenschutzerklärung** als Adresse für App Store Connect; der Text der Seite „Datenschutz“ kann die Grundlage sein.
+- **Quellcode und Version** (Phase 7): Die Adresse hinter „Quellcode“ ist ein Platzhalter (`SOURCE_CODE_URL`), die Version steht auf 0.1.0.
+- **Türkische Texte:** Die Endung der Vorab-Erinnerung rechnet die App seit Phase 11 („12:53’te“). Jemand mit Türkisch als Muttersprache sollte die Texte einmal lesen.
+
+**Rechnung**
+
+- **JAKIM und Kemenag** rechnen mit reinen Winkeln 20°/18°, ohne Sicherheitsminuten (entschieden am 10.11.2026). Beide sind gegen offizielle Tabellen zu prüfen. Bisher gibt es nur den Vergleich mit dem Mock für Jakarta: Kemenag liegt bis zu 3 Minuten daneben (Dhuhr 11:36 statt 11:39). Die Voreinstellung `singapore` von Adhan Swift – dieselben Winkel, Dhuhr +1, aufgerundet – läge näher (11:38).
+
+**Am Gerät prüfen** – der Simulator kann es nicht:
+
+- **Kompass** (Phase 4): dass die Skala ruhig und in die richtige Richtung dreht, geografisch Nord mit und magnetisch Nord ohne Standortfreigabe, ab welcher Abweichung die Karte „Kompass kalibrieren“ erscheint (angenommen 25°), die Haptik beim Ausrichten, der Verbrauch bei offener Seite.
+- **Mitteilungen** (Phase 8): die Aufnahmen als Mitteilungston, die Hintergrundaktualisierung über Tage (rollt das Fenster weiter?), Fokus und geplante Übersicht, die Gruppierung über mehrere Tage.
+- **Widgets und Live-Aktivität** (Phase 9): der geplante Start über Stunden und Tage mit gesperrtem Gerät und beendeter App; wie schnell iOS ab Gebetsbeginn „Jetzt“ zeichnet (im Simulator bis zu zwei Minuten „0:00“); das Ende 15 Minuten nach Beginn ohne laufende App; der stille Hinweis, Apple Watch und StandBy; die Grenze von fünf Aktivitäten; getönte und klare Widgets; große Schrift (Phase 11: Die Texte wachsen bis zum 1,2-Fachen).
+- **iPhone Duo** (Phase 10): Auf- und Zuklappen bei laufender App, auch beim Scrollen und mit offenem Sheet; der Wechsel in die Tischhaltung und ihr echter Winkel, die Haltung wie ein Buch; der Kompass außen und innen; Widgets und Live-Aktivität. Dazu der Abgleich innen (`duo/open-*`) mit dem Stand von Phase 11 und große Schrift innen – im Simulator braucht beides jemanden, der in Device Hub aufklappt.
+- **Leistung und Akku** (Phase 11): Verbrauch am Gerät mit Instruments (Energy Log) – auf der Zeiten-Seite, mit offenem Kompass, mit laufender Live-Aktivität und über einen Tag mit Hintergrundaktualisierung. Im Simulator gemessen ist nur die CPU-Zeit („Annahmen in Phase 11“).
+- **VoiceOver von Hand** (Phase 11): Geprüft sind der Baum der Bedienungshilfen und die Prüfung von Xcode, nicht VoiceOver selbst; einmal mit VoiceOver durch alle Seiten, Widgets und die Live-Aktivität gehen.
+- **iOS 26:** Getestet ist mit iOS 27.2. Auf iOS 26, der Mindestversion, Leisten, Liquid Glass und die Silbentrennung ansehen.
 
 ## Braucht eine Entscheidung
 
-### 1. Umm al-Qura im Ramadan
+Zurzeit nichts. Die Punkte 1 bis 6, die bis Phase 10 offen waren, sind entschieden (unten unter „Offene Punkte 1 bis 6“).
 
-Die Methode legt Ischa 90 Minuten nach Maghrib (`iMin:90`). In Saudi-Arabien gilt im Ramadan ein Abstand von 120 Minuten; Adhan Swift empfiehlt dafür eine eigene Korrektur von +30 Minuten.
+## Entschieden
 
-- **Stand:** Die Antwort vom 10.11.2026 – „So wie es in Europa normal gehandhabt wird“ – ist noch nicht eindeutig und wird geklärt.
-- **Standard bis dahin:** immer 90 Minuten, wie im Prototyp, auch im Ramadan.
+Die Entscheidungen stehen in der Reihenfolge, in der sie fielen, die neuesten zuerst; die Antwort des Nutzers steht jeweils wörtlich in Anführungszeichen.
 
-### 2. Moonsighting und die Regel für hohe Breiten
+### Entschieden mit dem Plan für Phase 11 am 13.11.2026
 
-Entschieden am 12.11.2026 mit dem Plan für Phase 7 („Hinweis zeigen“), siehe unten.
+Der Plan für Phase 11 wurde am 13.11.2026 freigegeben („Freigeben, bauen (Empfohlen)“), über die Auswahl-Fragen:
 
-### 3. Banner „Standortzugriff aus – Stadt manuell gewählt“, solange noch keine Stadt gewählt ist
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Punkte 1, 3, 4 und 5 unten | „Ja, Hilfsprojekt ins Repo (Empfohlen)“ | Die Standards von 1, 3 und 4 gelten weiter; das UI-Hilfsprojekt liegt jetzt in `scripts/ui-harness` (`make harness`, `make capture`). |
+| Türkische Endung in `notifReminderBody` | „Endung berechnen (Empfohlen)“ | `TurkishClockSuffix` hängt ’da, ’de, ’ta oder ’te nach dem letzten gesprochenen Zahlwort der Uhrzeit an: „12:53’te“, „15:36’da“, „14:00’te“. In `T` fiel dafür nur das feste „’de“ weg. Gilt auch für den Hinweis der Live-Aktivität. |
+| Silbentrennung | „Wörterbuch von iOS (Empfohlen)“ | weiche Trennstriche aus dem Trennwörterbuch des Systems (`Hyphenation`) in den Zeilen der Listen und, bei großer Schrift, in Gebetskarte und Stepper-Zeilen; der String Catalog bleibt unverändert. Für Türkisch hat iOS kein Trennwörterbuch. |
+| Platzhalter-Icon | eigene Antwort „Ich will als Entwurf die 5 Gebetszeiten im Prinzip das Symbol von den 5 Gebetszeiten möchte ich als Icon haben.“, nach drei Entwürfen „A Tagesbogen (Empfohlen)“ | der Bogen der Zeiten-Seite mit den fünf Markern und ihren Symbolen auf dem Verlauf des App-Zeichens; hell, dunkel und getönt (`scripts/app-icon.swift`). |
+| Getönte Fläche in der senkrechten Leiste (Duo) | „Getönte Fläche (Empfohlen)“ – mit der Absprache „Lässt die Leiste des Systems es nicht zu, bleibt es beim Symbol“ | Versucht mit dem hervorgehobenen Glass-Stil und Akzent 17 %. Die Leiste des Systems zeichnet das Symbol darauf immer weiß – auf 17 % Akzent kaum lesbar, auf vollem Akzent im Dunkeln nur etwa 2 : 1; eine Farbe am Symbol übernimmt sie nicht. Deshalb bleibt es wie in Phase 10 beim Symbol in Akzent ohne Fläche. |
+| Laufweite −0,41 px | „Laufweite des Systems (Empfohlen)“ | bleibt wie in den Phasen 2 bis 10: die Laufweite des Systems je Größe; kleine Texte sind etwas breiter als im Referenzbild. |
+| Widgets bei großer Schrift | „Begrenzt mitwachsen“ (die Empfehlung war „Fest wie Prototyp“) | Die Texte der Widgets wachsen mit der Schriftgröße wie Fließtext, höchstens auf das 1,2-Fache, und nur so weit, wie der Inhalt passt (`WidgetTextScaling`). Die Live-Aktivität bleibt fest. |
+| Kontrast auf der Karte des laufenden Gebets | „Schrift dort dunkler (Empfohlen)“ | Hell lag die Schrift dort unter 4,5 : 1 (Akzent 4,2, Kerahat-Text 4,15, Sekundärschrift 4,3). Jetzt ist sie 8 % dunkler (#1D7064, #8E5A11, #636367 – 4,8, 4,7, 4,9 : 1); die Zeiten am Bogen der Live-Aktivität sind voll weiß (5,2 statt 3,9 : 1). |
+| Duo aufgeklappt für den Schlussabgleich | „Ohne innen abschließen“ | Die acht Bilder `duo/open-*` sind in Phase 11 nicht abgeglichen; innen lief der Abgleich zuletzt mit Phase 10. Außen (`duo/closed-*`) ist abgeglichen, auch bei AX5. |
 
-Verweigert jemand den Standort, bevor eine Stadt gewählt ist, steht das Banner schon da – sein Text sagt aber „Stadt manuell gewählt“. Der Prototyp kennt den Zustand nicht: Dort ist immer eine Stadt gewählt. `T` hat keinen anderen Text.
+Mit dem Plan freigegeben sind auch seine Annahmen; sie stehen unten unter „Annahmen in Phase 11“. Während der Phase lief die interne Platte voll (Auslagerung des Arbeitsspeichers und ein vorbereitetes macOS-Update); auf Wunsch des Nutzers („Duo herunterfahren (Empfohlen)“) wurde der Simulator „iPhone Duo“ heruntergefahren, gelöscht wurde nichts.
 
-- **Standard:** Das Banner bleibt, wie es ist. Die Stadtzeile zeigt „Stadt wählen“, und das Stadt-Sheet öffnet sich von selbst. Sobald eine Stadt gewählt ist, stimmt der Text.
+### Offene Punkte 1 bis 6
 
-### 4. Bundesländer in der Ortssuche
+Diese Punkte standen bis Phase 10 unter „Braucht eine Entscheidung“.
 
-Die Ortssuche fragt bei Apple nach Städten und Verwaltungsgebieten. Mit „nur Städte“ fehlen Stadtstaaten: Für „Berl“, „Hambu“ und „Wien“ liefert der Dienst dann weder Berlin noch Hamburg noch Wien, weil er sie als Verwaltungsgebiet führt. Mit den Verwaltungsgebieten stehen sie an erster Stelle – es erscheinen aber auch Flächenländer wie „Bayern“ als Vorschlag. Wer eines wählt, bekommt die Zeiten für dessen Mitte.
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| 1. Umm al-Qura im Ramadan | Standard bestätigt am 13.11.2026 (Plan für Phase 11) | Ischa immer 90 Minuten nach Maghrib (`iMin:90`), wie im Prototyp, auch im Ramadan. In Saudi-Arabien gilt im Ramadan ein Abstand von 120 Minuten; Adhan Swift empfiehlt dafür eine eigene Korrektur von +30 Minuten. Die Antwort vom 10.11.2026 – „So wie es in Europa normal gehandhabt wird“ – ließ das offen. |
+| 2. Moonsighting und die Regel für hohe Breiten | „Hinweis zeigen“ am 12.11.2026 (Plan für Phase 7) | Text `hlMoonsighting` unter „Hohe Breitengrade“. |
+| 3. Banner „Standortzugriff aus – Stadt manuell gewählt“, solange noch keine Stadt gewählt ist | Standard bestätigt am 13.11.2026 | Das Banner bleibt; die Stadtzeile zeigt „Stadt wählen“, das Stadt-Sheet öffnet sich von selbst. Sobald eine Stadt gewählt ist, stimmt der Text. Der Prototyp kennt den Zustand nicht, `T` hat keinen anderen Text. |
+| 4. Bundesländer in der Ortssuche | Standard bestätigt am 13.11.2026 | Städte und Verwaltungsgebiete: Mit „nur Städte“ fehlten Berlin, Hamburg und Wien, die der Dienst als Verwaltungsgebiet führt; dafür erscheinen auch Flächenländer wie „Bayern“, mit den Zeiten für ihre Mitte. |
+| 5. Antippen beim Abgleich | „Ja, Hilfsprojekt ins Repo“ am 13.11.2026 | Das UI-Hilfsprojekt (ein UI-Test, der die installierte App startet, antippt, wischt, aufnimmt und den Baum der Bedienungshilfen schreibt) lag seit Phase 3 außerhalb des Repos; seit Phase 11 liegt es in `scripts/ui-harness`, mit Skripten für die Referenzbilder mit Tipp und den Befehlen `pages` und `audit`. |
+| 6. Ton zum Sonnenaufgang | „Systemton“ am 12.11.2026 (Abnahme von Phase 8) | Steht die Glocke des Sonnenaufgangs auf „Ton“, spielt die Mitteilung den Systemton, auch beim Klang „Kurzer Adhan“; der Sonnenaufgang ist kein Gebet. |
 
-- **Standard:** Städte und Verwaltungsgebiete, weil fehlende Großstädte schwerer wiegen als ein Bundesland in der Liste.
+### Abnahmen
 
-### 5. Antippen beim Abgleich
+| Phase | Abgenommen | Stand | Was dazukam oder offen blieb |
+|---|---|---|---|
+| 2 | 11.11.2026 | – | `-debugCatalog` steht auf Wunsch („ja“) auch in `CLAUDE.md` |
+| 3 | 11.11.2026, „Abnehmen“ | `87bbb08` | – |
+| 4 | 12.11.2026, „Abnehmen“ | `56f6bb2` | Kompass am Gerät |
+| 5 | 12.11.2026, „Abnehmen, zusammenführen“ | `8d1726a` | fachliche Prüfung der Anleitung |
+| 6 | 12.11.2026, „Abnehmen“ | `b432fc7` | Spec § 6.12 und § 6.13 wie im Prototyp |
+| 7 | 12.11.2026, „Abnehmen“ | `dfcc6f5` | Ton am Gerät, Rechte der Aufnahmen |
+| 8 | 12.11.2026, „Abnehmen“ | `2a48ba8` | Ton zum Sonnenaufgang: „Systemton“ |
+| 9 | 12.11.2026, „Abnehmen“ | `402627e` | was nur ein Gerät zeigt (oben unter „Am Gerät prüfen“) |
+| 10 | 13.11.2026, „Abnehmen, zusammenführen (Empfohlen)“ | `4f39a9a` | was nur ein Gerät zeigt; die Breiten des Onboardings innen sind nur gerechnet |
 
-`xcrun simctl` kann starten und aufnehmen, aber nicht tippen. Zustände, die einen Tipp brauchen – `iphone/85` (Stadt-Sheet), später Qibla, Anleitung, Nachholen und die Einstellungen –, lassen sich damit nicht automatisch nachstellen. In Phase 3 hat ein kleines Hilfsprojekt außerhalb des Repos getippt: ein UI-Test, der die installierte App startet, antippt, wischt, tippt und aufnimmt (`/Volumes/Extern/Builds/NamazVakti/ui-harness`). In Phase 5 hat es `iphone/41` (gescrollt) und `42` (Maghrib angetippt) nachgestellt; dazu kam der Befehl `scroll`: ziehen ohne Schwung. Jede Geste verliert dabei 10 pt Anlauf, die das Skript dazurechnet. In Phase 6 hat es `iphone/61` (ganz nach unten gescrollt) nachgestellt und die Aktionen von Verse und Nachholen durchgespielt. In Phase 7 hat es `iphone/71` und `72` (gescrollt) nachgestellt, das Onboarding durchlaufen, den Player abgespielt und die Sprachwahl geprüft; die übrigen Zustände der Phase erreichen die Debug-Argumente ohne Tippen. In Phase 8 hat es den Dialog der Erlaubnis beantwortet, das Gerät gesperrt und den Sperrbildschirm mit den Mitteilungen aufgenommen und ausgelesen (`system/92`, `s37-notifications-92.txt`). Dazu kamen die Befehle `lock`, `home`, `sbtapif`, `sbtree`, `sbdrag` sowie `open`, `opentap`, `openswitch` und `opendump` für die iOS-Einstellungen. In Phase 9 hat es die Widgets auf Home- und Sperrbildschirm gelegt, die Live-Aktivität auf dem Sperrbildschirm und in der Dynamic Island aufgenommen und die Insel lang gedrückt (`system/90`, `91`, `93`–`96`); dazu kamen `sbpress`, `sbtaplabel`, `sbtaplabelif`, `sbtapcell`, `sbtype`, `sbmove` und `sbdeletewidget`, das nur Widgets von „Gebetszeiten“ entfernt. In Phase 10 lief es auf dem Simulator „iPhone Duo“ (Ziel mit dessen Kennung statt Name) und hat außen den Toast ausgelöst (`s57-duo-toast.txt`); das Scharnier kann es nicht stellen.
+### Erste Beta, entschieden am 12.11.2026
 
-- **Standard:** Das Hilfsprojekt bleibt außerhalb des Repos. Vorschlag: als `scripts/ui-harness` ins Repo übernehmen, damit `make` auch Zustände mit Tipp nachstellen kann.
+Auf die Frage, wann die erste Beta über TestFlight kommen soll: „Erst nach Phase 11“ – die erste Beta enthält alles, nicht schon den Stand nach Phase 8. Zum Apple-Entwicklerkonto hieß es: „Ich kläre das noch.“ Was für den Upload fehlt, steht oben unter „Für die erste Beta“.
 
-### 6. Ton zum Sonnenaufgang
+### Entschieden mit dem Plan für Phase 10 am 12.11.2026
 
-Entschieden am 12.11.2026 mit der Abnahme von Phase 8 („Systemton“), siehe unten.
+Der Plan für Phase 10 wurde am 12.11.2026 freigegeben („Freigeben, bauen (Empfohlen)“), über die Auswahl-Fragen:
 
-## Vor der Veröffentlichung zu prüfen
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Duo-Simulator | „Ja, intern (Empfohlen)“, auf Rückfrage zum Runtime „Laden, alten behalten (Empfohlen)“ | Der installierte Runtime iOS 27.2 (Build 24B8117) schließt das Duo aus. Geladen ist zusätzlich iOS 27.2 Build 24B91016s (8,3 GB, eigene Kennung `…iOS-27-2-iPhone19-4`); iPhone 18 Pro und iPhone 17 laufen weiter mit 24B8117. Den Simulator „iPhone Duo“ hat CoreSimulator beim Installieren selbst angelegt. |
+| Spec-Frage 17: Hochformat innen, Tischhaltung, Split View | „Alle drei“ | Alle drei laufen; wie sie aussehen, steht unten unter „Annahmen in Phase 10“ – ohne Entwurf und Referenzbild. |
+| Stadt-Sheet für `duo/*-85` | „-debugTab city (Empfohlen)“ | Neues Debug-Argument: Das Stadt-Sheet öffnet sich beim Start über der Zeiten-Seite, einmal; so lassen sich auch `iphone/85` ohne Tipp nachstellen. Steht in `CLAUDE.md`, README und PROMPTS. |
+| Auf- und Zuklappen | „Ich klappe selbst (Empfohlen)“ | Das Scharnier stellt nur der Schieberegler in Device Hub (`simctl` und XCUITest können es nicht). Die Freigabe der Bildschirmsteuerung für Device Hub kam zweimal als abgelehnt zurück; der Nutzer hat deshalb gedreht, halb geöffnet, Split View eingerichtet und zugeklappt. |
 
-- **Kompass am echten Gerät** (Phase 4): Der Simulator hat keinen Kompass; geprüft ist dort alles nur mit festem Kurs. Am Gerät zu prüfen: dass die Skala ruhig und in die richtige Richtung dreht, dass mit Standortfreigabe geografisch Nord gilt und ohne sie magnetisch Nord, ab welcher Abweichung die Karte „Kompass kalibrieren“ erscheint (angenommen sind 25°), die Haptik beim Ausrichten und der Verbrauch, solange die Seite offen ist.
-- **Texte der Anleitung** (Phase 5, Spec § 6.14): Niemand hat sie bisher fachlich geprüft (Imam oder Gelehrter je Sprache); sie stehen unverändert wie im Prototyp. Ebenso offen: eine neutrale Fassung oder Varianten je Rechtsschule und für Frauen, echte Illustrationen statt der Strichfiguren, Audio für die Formeln.
-- **Adhan-Aufnahmen** (Phase 7, Spec § 6.5): Stimme 1 und 2 sind freie Aufnahmen von Wikimedia Commons, die Lizenzangaben (CC0 1.0, gemeinfrei) stammen von den Hochladenden. Vor dem App Store: Herkunft und Rechte prüfen oder durch die endgültigen Aufnahmen ersetzen; Stimme 3 und die Fadschr-Variante fehlen. Abspielen mit Ton ist nur am Gerät zu prüfen (der Simulator hat hier kein Ausgabegerät).
-- **Quellcode und Version** (Phase 7): Die Adresse hinter „Quellcode“ ist ein Platzhalter (`SOURCE_CODE_URL` in `project.yml`); die Version steht auf 0.1.0.
-- **Mitteilungen am Gerät** (Phase 8): Im Simulator geprüft sind Texte, Zeitpunkte, Reihenfolge und ob eine Mitteilung einen Ton hat. Am Gerät zu prüfen:
-  - die Aufnahmen als Mitteilungston (der Simulator hat hier kein Ausgabegerät);
-  - die Hintergrundaktualisierung – im Simulator gibt es sie nicht –, also ob das Fenster weiterrollt, wenn man die App tagelang nicht öffnet;
-  - das Verhalten im Fokus und in der geplanten Übersicht;
-  - die Gruppierung auf dem Sperrbildschirm über mehrere Tage.
-- **Widgets und Live-Aktivität am Gerät** (Phase 9): Im Simulator geprüft sind Inhalt, Schrift, Farben, die Zeitleiste über die Gebetszeiten hinweg und die Abläufe der Live-Aktivität. Am Gerät zu prüfen:
-  - der geplante Start (`Activity.request(…, start:)`) über Stunden und Tage, mit gesperrtem Gerät und beendeter App;
-  - wie schnell iOS ab Gebetsbeginn „Jetzt“ zeichnet – im Simulator vergingen bis zu zwei Minuten, bis dahin stand „0:00“;
-  - das Ende 15 Minuten nach Beginn, wenn die App nicht läuft (dann beendet erst die Hintergrundaktualisierung oder der nächste Start die Aktivität, spätestens iOS nach 8 Stunden);
-  - der Hinweis beim Start ohne Ton (`AlertConfiguration` mit stiller Tondatei), auf der Apple Watch und im StandBy;
-  - die Grenze von fünf Aktivitäten je App, die im Simulator galt;
-  - Widgets im getönten und klaren Erscheinungsbild des Home-Bildschirms (iOS 26) und mit großer Schrift.
-- **iPhone Duo am Gerät** (Phase 10): Im Simulator geprüft sind außen, innen quer und hoch, die Tischhaltung, Split View, RTL und dunkel – das Scharnier nur über den Schieberegler von Device Hub. Am Gerät zu prüfen:
-  - Auf- und Zuklappen mit laufender App, auch mitten im Scrollen und mit offenem Sheet;
-  - der Wechsel in die Tischhaltung und zurück bei laufender App – im Simulator ist jede Haltung mit neu gestarteter App aufgenommen; die App liest den Falz, wenn sich der Platz der Seite ändert;
-  - die Tischhaltung mit echtem Winkel (ab wann iOS den Falz als aktiv meldet) und die Haltung wie ein Buch;
-  - der Kompass außen und innen;
-  - Widgets und Live-Aktivität (nur für das iPhone gezeichnet, Spec § 6.17).
-- **Türkische Endung in `notifReminderBody`** (Phase 8): „{p} vakti {time}’de başlıyor.“ passt nur zu manchen Uhrzeiten. Richtig wäre etwa „15:36’da“ oder „12:53’te“. Der Text steht so in `T`; Phase 11 prüft die Sprachen.
-- **JAKIM und Kemenag** rechnen mit reinen Winkeln 20°/18°, ohne Sicherheitsminuten (entschieden am 10.11.2026, siehe unten). Beide sind gegen offizielle Tabellen zu prüfen, bevor die App erscheint. Bisher gibt es nur den Vergleich mit dem Mock für Jakarta: Kemenag liegt bis zu 3 Minuten daneben (Dhuhr 11:36 statt 11:39). Die Voreinstellung `singapore` von Adhan Swift – dieselben Winkel, Dhuhr +1, aufgerundet – läge näher (11:38).
+### Entschieden mit dem Plan für Phase 9 am 12.11.2026
 
-## Entschieden am 10.11.2026
+Der Plan für Phase 9 wurde am 12.11.2026 freigegeben („Freigeben, -debugLiveActivity“). Zu Spec-Frage 16 und zum Vorlauf hat der Nutzer eigene Antworten gegeben und auf Rückfrage präzisiert.
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Spec-Frage 16: je Gebet oder je Tagesphase, auch Sonnenaufgang? | „30 min vor jedem Gebet und 10 min danach“, auf Rückfrage zum Fußtext „Doch 15 Minuten“ | Je Pflichtgebet eine Live-Aktivität, ohne Sonnenaufgang. Sie beginnt standardmäßig 30 Minuten vorher, zeigt ab Beginn „Jetzt“ und endet 15 Minuten nach Beginn – so wie Spec § 4 und der Fußtext `liveActFooter`. Der Teil zu Systemen vor iOS 26 entfällt: Die App braucht iOS 26. |
+| Vorlauf | „30min standart nutzer kann aber auch beliebig einstellen“, dann „Längere Liste“ | Unter Einstellungen › Live-Aktivität stehen Aus, 10, 15, 20, 30, 45, 60, 90 und 120 Minuten vorher, Standard 30 (`NotificationPreferences.liveActivityChoices`). Der Prototyp und `iphone/79` zeigen nur Aus, 30 und 60 (`LIVE_OPTS`); die Texte sind dieselben (`off`, `minBefore`). |
+| Ohne Ort oder ohne Zeiten | „Vorhandene Hinweise“ | Ohne Ort zeigen die Widgets „Stadt wählen“ (`citySheetTitle`), ohne Zeiten – etwa in der Polarnacht – den Hinweis der Zeiten-Seite (`noTimes`). Ring und Zeile zeigen dann nur Zeichen bzw. Namen der App. Keine Live-Aktivität. Kein neuer Text. |
+| Ab Gebetsbeginn | „„Jetzt“ statt Countdown“ | Auf dem Sperrbildschirm steht „Maghrib · 16:27“ über „Jetzt“, in der Insel „Jetzt“ statt der Zeit, erweitert „Maghrib“ über „Jetzt“; der Bogen zeigt Maghrib als laufend. Es bleibt beim vorhandenen Text `now`. |
+| Abgleich von `system/93`–`96` | „Freigeben, -debugLiveActivity“ | Neues Debug-Argument: genau eine Live-Aktivität, die zum nächsten Gebet, ab dem Start der App – auch außerhalb des Vorlaufs und mit Mock-Zeiten. Mit `-debugFixtureTimes` ohne dieses Argument plant die App keine (und beendet, was läuft), damit Aufnahmen keine auslösen. Die Widgets bekommen Mock-Zeiten und Debug-Uhr über die App Group. Neue Abschnitte im Katalog: `-debugCatalog widgets`, `live`. |
+
+Mit dem Plan freigegeben sind auch seine Annahmen:
+
+- **Nächstes Ereignis:** Die Widgets nennen dasselbe wie die Zeiten-Seite, also auch den Sonnenaufgang (`ph.next` im Prototyp). Das mittlere Widget listet die Zeiten des Tages, zu dem das nächste Ereignis gehört: nach Ischa die von morgen, nichts abgeblendet.
+- **Ortspfeil** im mittleren Widget und in der Insel nur beim aktuellen Standort, wie auf der Zeiten-Seite.
+- **Was von selbst läuft:** Countdown (`Text(timerInterval:)`), Ring, Balken und Minimal-Ring (`ProgressView(timerInterval:)`). Der Bogen der Live-Aktivität steht still, weil iOS Live-Aktivitäten nicht von selbst neu zeichnet: Er zeigt den Stand beim Start der Aktivität, ab Beginn den zum Gebetsbeginn; läuft die App, frischt sie ihn auf.
+- **Hinweis beim Start:** iOS verlangt ihn für den geplanten Start. Er hat die Texte der Vorab-Erinnerung („Maghrib in 30 Minuten“ – „Maghrib beginnt um 16:27 Uhr.“) und keinen eigenen Ton.
+- **Ende:** ActivityKit kennt kein geplantes Ende. Die App beendet eine Aktivität, sobald sie nach Gebetsbeginn läuft, und lässt sie bis 15 Minuten danach auf dem Sperrbildschirm stehen.
+- **Name in der Widget-Galerie:** `appName`, ohne Beschreibung.
+
+### Entschieden mit dem Plan für Phase 8 am 12.11.2026
+
+Der Plan für Phase 8 wurde am 12.11.2026 freigegeben („Freigeben, -debugNotifications“), zu jeder Frage mit der Empfehlung.
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Ton ohne Aufnahme | „Systemton; Fadschr mit Stimme“ | Stimme 3 hat keine Aufnahme; eine Mitteilung mit „Ton“ spielt dann den Systemton. Fadschr spielt die Aufnahme der gewählten Stimme und nimmt die Fadschr-Variante, sobald es für sie eine gibt (`AdhanVoice.clipResource(fajrVariant:)`). |
+| Zeitkritische Mitteilungen (Spec § 6.6) | „Nein, wie Prototyp“ | normale Mitteilungen (`interruptionLevel = .active`), kein Entitlement und keine Begründung für die App-Prüfung. Im Fokus kommen sie nur, wenn man die App dort erlaubt. |
+| Hintergrundaktualisierung | „BGAppRefreshTask“ | Etwa einmal am Tag weckt iOS die App kurz, und sie plant neu (`BackgroundRefresh`). In der Info.plist stehen „Background fetch“ (`UIBackgroundModes`) und die Kennung `<Bundle-ID>.refresh` (`BGTaskSchedulerPermittedIdentifiers`), beides in `project.yml`. |
+| Nach „Später“ im Onboarding | „Bei erster Änderung“ | Hat iOS noch nie gefragt, erscheint der Dialog des Systems einmal, sobald man eine Glocke antippt oder unter Einstellungen › Mitteilungen etwas ändert (Pro Gebet, Erinnerung, Live-Aktivität, Klang; nicht die Stimme im Adhan-Sheet). Damit ändert sich die Annahme aus Phase 7, dass nur das Onboarding fragt. |
+| Abgleich von `system/92` | „Freigeben, -debugNotifications“ | Neues Debug-Argument: Mit Mock-Zeiten merkt die App echte Mitteilungen bei iOS vor, gemessen an der Debug-Uhr. Beim Start fragt sie nach der Erlaubnis und räumt zugestellte Mitteilungen ab. |
+
+Mit dem Plan freigegeben sind auch seine Annahmen:
+
+- **Fenster:** die nächsten 64 Mitteilungen in zeitlicher Folge (Spec § 6.4); eine Erinnerung nur zusammen mit ihrer Mitteilung. Mit den Startwerten zehn am Tag, gut sechs Tage; alle sechs mit Erinnerung gut fünf, ohne Erinnerung 10 bis 13 Tage.
+- **Erinnerung:** spielt nie den Adhan. Bei der Glocke „Ton“ kommt sie mit dem Systemton, beim Klang „Lautlos“ und bei der Glocke „Lautlos“ ohne Ton, bei „Aus“ gar nicht.
+- **Offene App:** Die Mitteilung erscheint als Banner mit Ton. Antippen öffnet die App dort, wo sie war.
+- **Ort ohne Namen** (ohne Netz bestimmt): Im Text steht „Aktueller Standort“, wie auf der Zeiten-Seite.
+- **Zeitangaben:** „jetzt“ und „vor 10 Min.“ zeichnet iOS selbst, in der Sprache des Geräts. `notifNow` und `notifAgo` aus `T` bleiben ungenutzt.
+
+### Entschieden mit dem Plan für Phase 7 am 12.11.2026
+
+Der Plan für Phase 7 wurde am 12.11.2026 freigegeben („Freigeben, Debug-Argumente“). Zum Adhan fragte der Nutzer zurück: „Gibt es nicht lizenzfreien Adhan, den du dir aus dem Internet beziehen kannst?“ – und wählte dann unter den gefundenen Aufnahmen „Beide laden“.
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Adhan-Aufnahmen | „Beide laden“ | Zwei freie Aufnahmen von Wikimedia Commons sind Platzhalter: Stimme 1 · Makkah spielt die ersten 27 s von „Beautiful adhan.ogg“ (CC0 1.0, hochgeladen 2022 von Adam-synagda, Herkunft unbekannt), Stimme 2 · Madinah „Oración Al-Azzan.ogg“ (gemeinfrei, hochgeladen von B9, aufgenommen 2005 in Medina, 30 s). Stimme 3 und die Fadschr-Variante laufen stumm wie im Prototyp; eine freie Fadschr-Aufnahme gibt es nicht. Die Lizenzangaben stammen von den Hochladenden und sind vor dem App Store zu prüfen (Spec § 6.5 bleibt offen). |
+| Sprachwahl | „Eigene Wahl in der App“ | Seite „Sprache“ mit Deutsch, Türkçe, English und Español wie im Prototyp; die Wahl wirkt sofort. Texte des Systems – die Dialoge für Standort und Mitteilungen, das Teilen-Menü, „Abbrechen“ im Suchfeld – bleiben in der Sprache des Geräts. Die Sprachwahl in den iOS-Einstellungen bietet iOS nur an, wenn auf dem Gerät mehr als eine Sprache eingerichtet ist. |
+| Moonsighting und hohe Breiten | „Hinweis zeigen“ | Ist Moonsighting gewählt, steht unter der Seite „Hohe Breitengrade“ zusätzlich: „Bei Moonsighting gilt diese Regel nicht – die Methode legt Fadschr und Ischa je nach Jahreszeit selbst fest.“ Neuer Text `hlMoonsighting` in `T` (DE, TR, EN, ES). |
+| Aufruf für den Abgleich | „Debug-Argumente“ | `-debugTab` kennt zusätzlich die Seiten der Einstellungen (`method`, `asr`, `hl`, `adjust`, `perPrayer`, `reminder`, `live`, `sound`, `appearance`, `language`, `privacy`) und das Adhan-Sheet (`adhan`); neu ist `-debugOnboarding 1|2|3`. |
+
+Mit dem Plan freigegeben sind auch seine Annahmen:
+
+- **Liste:** Die Einstellungen sind die `List` des Systems, eingestellt wie das Stadt-Sheet (Zeilen 44 pt, 32 pt zwischen den Gruppen), mit `Toggle`, großem Titel und Zurück-Knopf des Systems.
+- **„Pro Gebet“:** der eigene Segment-Baustein aus Phase 5 mit den drei Glocken, wie im Referenzbild und in der Anleitung.
+- **Standort-Schalter:** an → aktueller Standort (fragt, falls noch nie gefragt); aus → die aktuelle Stadt bleibt als gewählte (`S.city = S.deviceCity`); verweigert → gesperrt, dazu „iOS-Einstellungen öffnen“.
+- **Nach „Überspringen“:** Die Zeiten-Seite fragt beim ersten Erscheinen selbst nach dem Standort, weil sie ohne Ort nichts zeigen kann.
+- **Mitteilungen:** Die Erlaubnis wird nur im Onboarding erfragt; verweigert, steht der Fußtext unter „Mitteilungen“. Erinnerung, Live-Aktivität und Klang werden nur gespeichert (Phase 8 und 9).
+- **Stimme:** Die gewählte Stimme wird gespeichert; die Fadschr-Variante ist nur eine Vorschau im Player.
+- **Methode in den Bildern:** Mit `-debugFixtureTimes` gilt die Automatik der Fixture-Stadt (Berlin → MWL); echt rechnet die App in Deutschland mit Diyanet.
+- **Quellcode und Version:** Für „Quellcode“ gibt es noch keine Adresse (kein Remote); bis dahin ein Platzhalter in `project.yml` wie die Bundle-ID. Die Version kommt aus dem Bundle („0.1.0 (1)“; das Referenzbild zeigt „1.0 (1)“).
+- **App-Zeichen** in Onboarding und Tagline: die Platzhalter-Zeichnung des Prototyps (`appGlyph`), bis Phase 11 das Icon bringt. Seit Phase 11 hat die App ein eigenes Platzhalter-Icon (Tagesbogen); das Zeichen in Onboarding und Tagline bleibt die Mondsichel der Referenzbilder.
+
+### Entschieden mit dem Plan für Phase 6 am 12.11.2026
+
+Der Plan für Phase 6 wurde am 12.11.2026 freigegeben („Freigeben, bauen“), mit den drei empfohlenen Antworten:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Speicher des Nachholens | „UserDefaults“ | Der Stand (`QadaLedger`) liegt als ein JSON-Eintrag in den UserDefaults der App, nicht in SwiftData – es ist ein einziger kleiner Datensatz. `CLAUDE.md` ist angepasst. |
+| Nachholen ohne Einträge | „Ohne Zusammenfassung“ | Solange nichts eingetragen ist, fehlen Prozentkarte und Plan; Einleitung, „Nach Gebet“ und der Rechner stehen da. Ein neuer Text ist nicht nötig. Der Prototyp zeigte in diesem Fall „0 %“ und „Alles nachgeholt.“ |
+| Texte der Verse | „String Catalog“ | `scripts/import-strings` liest neben `T` auch `VERSES` und `SURAH`. Übersetzungen und Surennamen stehen als Platzhalter im Katalog, jeder Eintrag mit dem Kommentar `TODO(placeholder)`. Der arabische Text und die Stellen (Sure, Vers) stehen in `PrayerCore`, weil sie in allen Sprachen gleich sind. |
+
+Mit dem Plan freigegeben sind auch seine Annahmen. Die offenen Fragen der Spec § 6.12 und § 6.13 bleiben wie im Prototyp: sechs Platzhalter-Verse, ein Jahr zählt 365 Tage, Witr ist aus, keine Erinnerung, der Bereich lässt sich nicht ausblenden.
+
+### Entschieden mit dem Plan für Phase 5 am 12.11.2026
+
+Der Plan für Phase 5 wurde am 12.11.2026 freigegeben („Freigeben, bauen“), mit den drei empfohlenen Antworten:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Auswahl der Gebete | „Eigener Baustein“ | `SegmentedControl` sieht aus wie im Referenzbild: graue Spur, weißer Daumen, Punkt unter dem aktuellen Gebet. Der Segment-Picker des Systems kann den Punkt nicht zeigen, den die Spec verlangt (§ 3, „Prayer guide“). |
+| VoiceOver beim Punkt | „Ja, ansagen“ | Das Segment des aktuellen Gebets sagt zusätzlich „Jetzt“, zwischen Sonnenaufgang und Dhuhr „Als Nächstes“ (die vorhandenen Texte `now` und `guideNext`). Im Prototyp ist der Punkt für Screenreader ausgeblendet. |
+| Symbole unter „Vorher“ | „SF Symbols“ | `drop`, `sparkles`, `safari` (wie der Chip Qibla), `heart`; die gestrichelte Karte trägt `clock.arrow.circlepath` (wie der Tab Nachholen). Der Prototyp zeichnet eigene Linien. |
+
+Mit dem Plan freigegeben sind auch: die Haltungsfiguren als SwiftUI-Shapes mit der Geometrie von `POSE` (Spec § 6.14 bleibt offen); ohne Zeiten zeigt die Anleitung Fadschr ohne Punkt, Status und Zeitfenster; der Daumen der Auswahl blendet in 0,2 s über, statt zu gleiten; die Katalog-Abschnitte `guide` und `steps`. Neue Texte brauchte die Phase nicht.
+
+### Entschieden mit dem Plan für Phase 4 am 11.11.2026
+
+Der Plan für Phase 4 wurde am 11.11.2026 freigegeben („Freigeben“). Damit gelten die drei empfohlenen Antworten und die Annahmen des Plans:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Standort verweigert und keine Stadt gewählt | Skala ohne Nadel, an der Stelle der Info-Zeile ein Textknopf „Stadt wählen“ | Der Knopf öffnet das Stadt-Sheet. Der Text ist `citySheetTitle`; ein neuer Text war nicht nötig. Die Titelzeile heißt dann nur „Qibla“. |
+| Gerät ohne Kompass (Simulator, iPhone-App auf dem Mac) | Skala fest mit Norden oben, die Nadel zeigt die Richtung auf der Skala; Kursanzeige und Peilmarke entfallen, die Info-Zeile bleibt | Neuer Text `noCompass` in `T`, in der Statuszeile: „Kein Kompass verfügbar“ · „Pusula kullanılamıyor“ · „No compass available“ · „Brújula no disponible“. Das Aussehen des Prototyps ist unverändert. Der String Catalog hat damit 262 Einträge. |
+| Standort verweigert, Stadt gewählt | magnetisch Nord | iOS liefert geografisch Nord nur zusammen mit dem Standort des Geräts. Ohne Freigabe weicht der Kurs um die örtliche Missweisung ab – in Mitteleuropa wenige Grad, anderswo mehr. |
+| Ort | eigenes Modell `PlaceModel` statt `TodayModel` durchzureichen | Zeiten- und Qibla-Seite teilen sich das Modell. `TodayModel` behält seine Schnittstelle. |
+| Kalibrierungskarte | bei ungültigem Kurs oder mehr als 25° Abweichung (`Heading.poorAccuracy`) | Apple nennt keine Schwelle; der Wert ist eine Annahme und am Gerät zu prüfen (siehe oben). |
+| Debug-Argument `-debugQiblaAccuracy` | neu | Die Referenzbilder zeigen die Karte immer, die App nur bei ungenauem Kompass. Mit `-debugQiblaAccuracy 40` lässt sie sich nachstellen. |
+| `-debugFixtureTimes` ohne `-debugQiblaHeading` | Kurs 99°, der Startwert von `S.qibla.heading` | wie die übrigen Startwerte von `S`. Für den Abgleich gelten die Werte der Bilder: 98° (`iphone/30`), 137° (`31`), 138° (`32`). |
+| Entfernung unter 10 km | auf ganze Kilometer | Mit der Rundung auf 10 km stünde 1 bis 5 km vor der Kaaba „0 km“. Ab 10 km gilt die entschiedene Rundung auf 10 km. |
+| Standort noch nicht bestimmt | „Qibla · Aktueller Standort“, Skala ohne Nadel | bis der Ort da ist |
+
+### Entschieden mit dem Plan für Phase 3 am 11.11.2026
+
+Der Plan für Phase 3 wurde am 11.11.2026 mit vier Vorschlägen freigegeben („Freigeben“). Damit gilt:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Symbol für den Chip „Anleitung“ | die Zeichnung des Prototyps: ein Gebetsteppich mit Mihrab-Bogen (`pray`) | Die Design Spec nennt für diesen Chip kein SF Symbol, und in den SF Symbols gibt es keines für Gebet oder Moschee; es gilt deshalb das Referenzbild. `GlassSymbol.prayerRug` zeichnet die Linien des Prototyps in einem Feld von 22 pt. „Zeiten“ zeigt `clock`, „Qibla“ `safari`. |
+| Orte ohne Sonnenauf- oder -untergang | neuer Text `noTimes` in `T` (DE, TR, EN, ES), gezeigt an der Stelle von Bogen und Karten | „Für diesen Ort lassen sich heute keine Gebetszeiten berechnen, weil die Sonne nicht auf- oder untergeht.“ Der Prototyp hat dafür einen neuen Schlüssel bekommen, sein Aussehen ist unverändert. Der String Catalog hat damit 261 Einträge. |
+| Gespeicherte Städte | Die Liste startet leer. Jede über die Suche gewählte Stadt wird gemerkt und ist dann auch ohne Netz wählbar. Löschen mit der Wischgeste der Liste. | Die fünf Städte aus `iphone/85` stehen nur mit `-debugFixtureTimes` da. Das Löschen geht über die Spec hinaus. Die Stadt, die gerade gilt, lässt sich nicht löschen. |
+| Teilung der Phase | zwei Abschnitte in einem Durchgang | 3a: Leiste, Pager, Zeiten-Seite, Glocke, Toast, Abgleich `iphone/10` bis `22`. 3b: Stadt-Sheet, Standort, Ortssuche, `iphone/85`. |
+
+Mit dem Plan freigegeben sind auch seine Annahmen; sie stehen unten unter „Annahmen in Phase 3“.
+
+### Entschieden mit dem Plan für Phase 2 am 10.11.2026
+
+Der Plan für Phase 2 wurde am 10.11.2026 mit vier Vorschlägen freigegeben („Freigeben“). Damit gilt:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Aufnahmeweg für den Abgleich | neues Debug-Argument `-debugCatalog arc\|rows\|glass\|cards\|all`, nur in DEBUG | Die App zeigt den Katalog der Bausteine statt der Tabs. Bogen und Gebetskarten stehen im Zustand der übrigen Debug-Argumente. Dunkel und RTL kommen ohne eigenes Argument aus (`xcrun simctl ui … appearance dark`, `-AppleTextDirection YES -NSForceRightToLeftWritingDirection YES`). |
+| Ring bei eng liegenden Markern | 1,5 pt sichtbar, wie im Referenzbild `iphone/22` | Die Spec nennt 3 pt. Der Prototyp zeichnet eine 3 pt breite Kontur, deren innere Hälfte unter der Füllung liegt (`paint-order: stroke`). |
+| Stepper | eigener Baustein `StepperPill` wie in `iphone/60` | 94 × 32 pt, Radius 8, zwei Tasten mit eigenen VoiceOver-Texten (`qadaMinus`, `qadaPlus`, `stepLess`, `stepMore`). Der `Stepper` des Systems sieht in iOS 26 anders aus und kennt nur einen gemeinsamen Text. |
+| `BellState` | liegt in `PrayerCore` | Ton, Lautlos, Aus mit der Reihenfolge der Glocke und der Voreinstellung des Prototyps. Phase 8 braucht den Stand ohne UI. |
+
+### Entschieden am 10.11.2026
 
 Die Entscheidung steht jeweils wörtlich in Anführungszeichen.
 
-### Automatische Methode je Land
+#### Automatische Methode je Land
 
 - **Deutschland:** „Diyanet“ – statt MWL wie im Prototyp und im Vorschlag der Spec (§ 5, § 6.1).
 - **Österreich:** „Ja, auch Österreich“ – ebenfalls Diyanet. Begründung: Die Zeiten von Diyanet sind in Deutschland und Österreich sehr verbreitet (DITIB).
@@ -93,25 +267,25 @@ Moonsighting gilt in keinem Land von selbst; die Methode lässt sich nur wählen
 - **Folge für die Referenzbilder:** `iphone/70` und `iphone/73` zeigen für Berlin „Automatisch · MWL“ (im Prototyp `CITIES.berlin.auto`). Die Fixture-Daten bleiben wie der Prototyp. Annahme für Phase 7: Mit `-debugFixtureTimes` gilt die Automatik der Fixture-Stadt (`FixtureTimes.City.automaticMethodID`), damit sich die Bilder nachstellen lassen; ohne das Argument gilt Diyanet.
 - **Folge für die Zeiten:** Ohne eigene Wahl rechnet die App in Deutschland und Österreich mit Diyanet – siehe „Mock-Zeiten für Berlin“.
 
-### „In Mekka“
+#### „In Mekka“
 
 „Unter 1 km“ – statt der vorgeschlagenen 5 km (`Qibla.meccaRadiusKm`). Näher an der Kaaba zeigt die Qibla-Seite die Meldung statt der Nadel.
 
 - **Folge für die Referenzbilder:** keine. Die Fixture-Stadt Mekka liegt an der Kaaba; `iphone/32` lässt sich weiter nachstellen.
 
-### Anleitung: Ende des Zeitfensters von Ischa
+#### Anleitung: Ende des Zeitfensters von Ischa
 
 „Fadschr von morgen“ – statt Fadschr von heute wie im Prototyp (`ph.t[NEXT_OF[p]]`). Das Fenster liefert `Guide.window(of:in:at:)`.
 
 - **Folge für die Referenzbilder:** keine. Mit den Mock-Zeiten bleibt es bei „18:17–05:16“, weil dort jeder Tag dieselben Uhrzeiten hat.
 
-### Simulator für Tests und Abgleich
+#### Simulator für Tests und Abgleich
 
 „Iphone 18 pro“ – der Simulator „iPhone 18 Pro“ (iOS 27.2). `make` nimmt ihn als Standard; ein anderer lässt sich mit `SIM='…'` wählen.
 
 - **Folge für die Referenzbilder:** Das iPhone 18 Pro hat wie das iPhone 17 402 × 874 pt (1206 × 2622 px bei 3x). Die Referenzbilder sind 390 × 844 pt groß – der Bildschirm ist 12 pt breiter und 30 pt höher. Ein Vergleich Pixel auf Pixel geht damit weiterhin nicht: Verglichen werden Abstände, Größen, Farben und Texte der Bausteine, nicht die Lage im ganzen Bild.
 
-### Mock-Zeiten für Berlin
+#### Mock-Zeiten für Berlin
 
 „Ja, so lassen“ – die Mock-Zeiten bleiben unverändert. Sie sind die Zahlen der Referenz-Screenshots.
 
@@ -126,7 +300,7 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 
 - **Folge für die Referenzbilder:** Ohne `-debugFixtureTimes` zeigt die App für Berlin am 10.11.2026 andere Zahlen als die Screenshots, z. B. Sonnenaufgang 07:12 statt 07:14 und Maghrib 16:28 statt 16:27.
 
-### Bestätigt, wie es war
+#### Bestätigt, wie es war
 
 | Punkt | Entscheidung | Was das heißt |
 |---|---|---|
@@ -139,200 +313,63 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 | Nachholen | „Ja, so lassen“ | Die App startet leer: kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr. `iphone/60` und `61` zeigen die Beispielzahlen des Prototyps; die gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Annahme für Phase 6: Mit `-debugFixtureTimes` zeigt die Seite sie. |
 | JAKIM und Kemenag | „Ja, so lassen“ | reine Winkel 20°/18°. Vor der Veröffentlichung gegen offizielle Tabellen zu prüfen, siehe oben. |
 
-## Entschieden mit dem Plan für Phase 2 am 10.11.2026
+## Annahmen in Phase 11
 
-Der Plan für Phase 2 wurde am 10.11.2026 mit vier Vorschlägen freigegeben („Freigeben“). Damit gilt:
+Geprüft ist auf dem iPhone 18 Pro mit iOS 27.2, mit `make capture`: jeder der 26 Bildschirme ganz durchgescrollt, in Deutsch, Türkisch, Englisch und Spanisch, bei AX5, dunkel und in RTL, dazu je Bildschirm die Prüfung der Bedienungshilfen von Xcode (`performAccessibilityAudit`) und der Baum der Bedienungshilfen. Auf dem iPhone Duo zugeklappt: `duo/closed-*` und AX5; aufgeklappt nicht (siehe „Entschieden mit dem Plan für Phase 11“). Die Übersicht aller Referenzbilder steht in `docs/REFERENCE-CHECK.md`.
 
-| Punkt | Entscheidung | Was das heißt |
+### Sprachen
+
+- **Textlängen:** Bei Standardgröße wird in keiner Sprache etwas abgeschnitten; gesucht mit Texterkennung nach „…“ in allen Aufnahmen. Die einzigen Auslassungspunkte stehen in der Formel selbst („At-taḥiyyātu li-llāh …“, wie in `FORMULA`). Widgets und Live-Aktivität passen auch auf Türkisch („1:10:48 sonra“, „İkindi vaktine kalan“).
+- **Türkische Endung:** berechnet (oben unter „Entschieden mit dem Plan für Phase 11“).
+- **Name in der Widget-Galerie:** bleibt `appName` in der Sprache des Geräts (Phase 9).
+
+### Große Schrift
+
+- **Ab den AX-Größen** (`dynamicTypeSize.isAccessibilitySize`) stellen sich enge Zeilen um. Bei AX5 brachen sonst Uhrzeiten und Zahlen mitten in der Zahl um („05:1 / 6“, „50 / 1“) und Namen mitten im Wort („Dhuh / r“):
+  - Gebetskarte: Die Uhrzeit steht unter dem Namen, die Kerahat-Zeile darunter, alle über die Breite der Karte; Symbol und Glocke bleiben.
+  - Fakten-Kacheln der Anleitung: untereinander, jede über die ganze Breite.
+  - Zeilen mit Stepper (Nachholen, Rechner, Minutenkorrektur): Name, darunter Zahl, darunter der Stepper.
+- **Begrenzt:** Die Zeile über dem Countdown im Bogen wächst höchstens bis „xxxLarge“, die größte Stufe des Prototyps (`iphone/19`), und wird schmaler, wo sie die Marker berührte; der Countdown selbst wie bisher höchstens ×1,05. Der Titel des gewählten Chips darf ab AX1 auf 80 % schrumpfen, statt mit „…“ zu enden („Anleitung“).
+- **Silbentrennung:** iOS 27.2 trennt in SwiftUI selbst (bei AX5 gesehen: „Stand-ortzu-griff“, Fußzeilen der Listen). Die weichen Trennstriche von `Hyphenation` stehen dort, wo der Prototyp trennt, und sichern das für iOS 26 ab. Bei Standardgröße ändern sie nichts.
+- **Seiten scrollen:** Qibla, Onboarding, Einstellungen und die Seiten der Tabs scrollen bei AX5, wie in den Phasen 4 und 7 angenommen; abgeschnitten wird nichts.
+- **Widgets:** wachsen begrenzt mit (oben). Die Live-Aktivität bleibt bei den Größen des Prototyps: Ihre Höhe auf dem Sperrbildschirm ist begrenzt, die Insel hat feste Maße.
+
+### Barrierefreiheit
+
+- **VoiceOver** (Baum der Bedienungshilfen): Alle Symbolknöpfe haben einen Text – Einstellungskreis, Chips, Glocke („Mitteilung für Fadschr: Ton. Tippen zum Ändern.“, Spec Z. 94), Stepper („Fadschr eine Minute früher“, „Ein Asr nachgeholt“), Teilen, Kopieren, „Abspielen“, Segmente mit „ausgewählt“. Der gewählte Chip ist jetzt ein Element („Zeiten, ausgewählt“); vorher zeigte der Baum Symbol und Titel als eigene Teile. In der Dynamic Island nennen kompakt links und die Minimal-Ansicht den Namen des Gebets, damit der Countdown nicht ohne Bezug vorgelesen wird. Auf dem Duo heißen die Einträge der senkrechten Leiste wie die Seiten, die gewählte mit „ausgewählt“.
+- **Tippziele:** mindestens 44 pt. Kleiner sind nur Bedienelemente des Systems in den Sheets (Schließen-Kreis 36 pt, „Abbrechen“ 36 pt hoch, der Griff).
+- **Bewegung reduzieren:** im Code durchgesehen – Pager, Chips, Onboarding, Toast, Glocke, Balken beim Nachholen, Puls des Kompasses, Wellenform und Druck auf Play folgen der Einstellung; übrig bleiben Überblendungen.
+- **Farbe nie allein:** laufendes Gebet mit Chip „Jetzt“, Kerahat mit Text „Kerahat bis …“, Qibla ausgerichtet mit Haken und Text, gewählte Einträge mit „ausgewählt“. Vergangene Gebete sind nur abgeblendet (Spec-Frage 8, offen in der Spec); ihre Uhrzeit sagt, dass sie vorbei sind.
+- **Kontrast** (`ContrastTests`, nach WCAG 2): Die Werte der Spec stimmen (Akzent auf Weiß 5,2 : 1, dunkler Akzent auf #1C1C1E 7,8 : 1, Sekundärschrift 4,7 und 5,2 : 1, Schrift auf Akzent ≥ 5 : 1). Die Karte des laufenden Gebets und die Zeiten der Live-Aktivität sind angepasst (oben). Unter 4,5 : 1 bleiben: der Titel des gewählten Chips (Akzent auf getöntem Glas, etwa 3,9 : 1 – das Glas des Systems ist durchscheinend und ändert sich mit dem Inhalt darunter), Symbole vergangener Gebete und die ausgeschaltete Glocke in `label-3` des Systems (1,7 : 1, die Uhrzeit bzw. der Text für VoiceOver tragen die Angabe) und der Kerahat-Punkt (Zierde). Die Prüfung von Xcode meldet daneben Texte unter der schwebenden Tableiste, Texte mit dem Kerahat-Punkt im Rahmen und bewusst abgeblendete vergangene Zeilen der Widgets – das sind keine Befunde an den Farben.
+- **Rechts nach links** (Pseudosprache „Right-to-Left“, alle 26 Bildschirme, Widgets und Live-Aktivität im Katalog): gespiegelte Anordnung; der Bogen läuft von rechts, Fadschr steht rechts; Ziffern, Kompass, Symbole am Bogen und das Arabische werden nicht gespiegelt (Spec Z. 145). Chevrons, Stepper, Segmente, Fakten-Kacheln und Rakʿa-Folge folgen der Leserichtung. Neu ist nichts aufgefallen.
+
+### Darstellung
+
+- **Dunkel** (alle 26 Bildschirme, Widgets und Live-Aktivität im Katalog): Farben aus den dunklen Tokens, Karten, Listen und Sheets des Systems; nichts mit heller Fläche oder fehlendem Kontrast. Die Live-Aktivität bleibt auch dunkel auf dem hellen Akzent (Phase 9).
+- **Große Schrift auf dem Duo:** außen (382 pt neben der senkrechten Leiste) bei AX5 geprüft – dieselben Anpassungen greifen, nichts wird abgeschnitten. Innen nicht geprüft, weil das Aufklappen den Nutzer braucht.
+
+### Leistung
+
+Gemessen im Simulator: die CPU-Zeit des App-Prozesses je 60 Sekunden (`ps`), dazu 15 Sekunden Time Profiler (`xctrace`) auf der Zeiten-Seite. Akku, Wärme und Hintergrundläufe gehen nur am Gerät (oben unter „Am Gerät prüfen“).
+
+| Zustand | vorher | nachher |
 |---|---|---|
-| Aufnahmeweg für den Abgleich | neues Debug-Argument `-debugCatalog arc\|rows\|glass\|cards\|all`, nur in DEBUG | Die App zeigt den Katalog der Bausteine statt der Tabs. Bogen und Gebetskarten stehen im Zustand der übrigen Debug-Argumente. Dunkel und RTL kommen ohne eigenes Argument aus (`xcrun simctl ui … appearance dark`, `-AppleTextDirection YES -NSForceRightToLeftWritingDirection YES`). |
-| Ring bei eng liegenden Markern | 1,5 pt sichtbar, wie im Referenzbild `iphone/22` | Die Spec nennt 3 pt. Der Prototyp zeichnet eine 3 pt breite Kontur, deren innere Hälfte unter der Füllung liegt (`paint-order: stroke`). |
-| Stepper | eigener Baustein `StepperPill` wie in `iphone/60` | 94 × 32 pt, Radius 8, zwei Tasten mit eigenen VoiceOver-Texten (`qadaMinus`, `qadaPlus`, `stepLess`, `stepMore`). Der `Stepper` des Systems sieht in iOS 26 anders aus und kennt nur einen gemeinsamen Text. |
-| `BellState` | liegt in `PrayerCore` | Ton, Lautlos, Aus mit der Reihenfolge der Glocke und der Voreinstellung des Prototyps. Phase 8 braucht den Stand ohne UI. |
+| Zeiten (Countdown läuft) | 0,95 % | 0,93 % |
+| Qibla (fester Kurs) | 0,92 % | 0,25 % |
+| Anleitung | 0,90 % | 0,23 % |
+| Verse, Nachholen, Einstellungen | 0,22–0,23 % | 0,22–0,25 % |
+| Hintergrund, nach dem Übergang | – | 0,07–0,09 s je 30 s |
 
-## Entschieden mit der Abnahme von Phase 2 am 11.11.2026
+- **Sekundentakt:** Er lief weiter, solange im Pager Qibla oder die Anleitung zu sehen waren. Die waagerechte `ScrollView` hält alle drei Seiten am Leben, und SwiftUI hält die `TimelineView` dort nicht an, anders als bei einem anderen Tab oder offenen Einstellungen. Jetzt ruht er, solange die Seite nicht zu sehen oder die App nicht aktiv ist (`CountdownSchedule`, `isPagerPageVisible`), und läuft beim ersten sichtbaren Streifen wieder an.
+- **Neuzeichnen:** Auf der Zeiten-Seite kostet ein Takt rund 8 ms. Davon sind 0,6 ms eigener Code (Tagesphase, Bogen, Countdown), der Rest ist das Zeichnen in SwiftUI und Core Animation. Die Karten bauen sich nur beim Wechsel der Phase neu auf (Phase 3).
+- **Hintergrund:** Die Hintergrundaktualisierung rechnet nur und bestimmt keinen Standort; der Standort kommt einmalig mit 3 km Genauigkeit, der Kompass läuft nur bei sichtbarer Qibla-Seite. Den Takt des Players gibt es nur beim Abspielen.
+- **Kalter Start:** nicht gemessen; am Gerät mit Instruments (App Launch) zu prüfen.
 
-- **`-debugCatalog` in `CLAUDE.md`:** „ja“ – Das Argument steht jetzt in der Liste der Debug-Argumente in `CLAUDE.md`, wie schon in `README.md`.
+### Annahmen in der Umsetzung
 
-## Entschieden mit dem Plan für Phase 3 am 11.11.2026
-
-Der Plan für Phase 3 wurde am 11.11.2026 mit vier Vorschlägen freigegeben („Freigeben“). Damit gilt:
-
-| Punkt | Entscheidung | Was das heißt |
-|---|---|---|
-| Symbol für den Chip „Anleitung“ | die Zeichnung des Prototyps: ein Gebetsteppich mit Mihrab-Bogen (`pray`) | Die Design Spec nennt für diesen Chip kein SF Symbol, und in den SF Symbols gibt es keines für Gebet oder Moschee; es gilt deshalb das Referenzbild. `GlassSymbol.prayerRug` zeichnet die Linien des Prototyps in einem Feld von 22 pt. „Zeiten“ zeigt `clock`, „Qibla“ `safari`. |
-| Orte ohne Sonnenauf- oder -untergang | neuer Text `noTimes` in `T` (DE, TR, EN, ES), gezeigt an der Stelle von Bogen und Karten | „Für diesen Ort lassen sich heute keine Gebetszeiten berechnen, weil die Sonne nicht auf- oder untergeht.“ Der Prototyp hat dafür einen neuen Schlüssel bekommen, sein Aussehen ist unverändert. Der String Catalog hat damit 261 Einträge. |
-| Gespeicherte Städte | Die Liste startet leer. Jede über die Suche gewählte Stadt wird gemerkt und ist dann auch ohne Netz wählbar. Löschen mit der Wischgeste der Liste. | Die fünf Städte aus `iphone/85` stehen nur mit `-debugFixtureTimes` da. Das Löschen geht über die Spec hinaus. Die Stadt, die gerade gilt, lässt sich nicht löschen. |
-| Teilung der Phase | zwei Abschnitte in einem Durchgang | 3a: Leiste, Pager, Zeiten-Seite, Glocke, Toast, Abgleich `iphone/10` bis `22`. 3b: Stadt-Sheet, Standort, Ortssuche, `iphone/85`. |
-
-Mit dem Plan freigegeben sind auch seine Annahmen; sie stehen unten unter „Annahmen in Phase 3“.
-
-## Abnahme von Phase 3 am 11.11.2026
-
-Phase 3 wurde am 11.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-3` stand (Stand `87bbb08`). Zu den Punkten 3 bis 5 unter „Braucht eine Entscheidung“ – Banner ohne gewählte Stadt, Bundesländer in der Ortssuche, Antippen beim Abgleich – gab es dabei keine Antwort; dort gilt weiter der jeweilige Standard.
-
-## Entschieden mit dem Plan für Phase 4 am 11.11.2026
-
-Der Plan für Phase 4 wurde am 11.11.2026 freigegeben („Freigeben“). Damit gelten die drei empfohlenen Antworten und die Annahmen des Plans:
-
-| Punkt | Entscheidung | Was das heißt |
-|---|---|---|
-| Standort verweigert und keine Stadt gewählt | Skala ohne Nadel, an der Stelle der Info-Zeile ein Textknopf „Stadt wählen“ | Der Knopf öffnet das Stadt-Sheet. Der Text ist `citySheetTitle`; ein neuer Text war nicht nötig. Die Titelzeile heißt dann nur „Qibla“. |
-| Gerät ohne Kompass (Simulator, iPhone-App auf dem Mac) | Skala fest mit Norden oben, die Nadel zeigt die Richtung auf der Skala; Kursanzeige und Peilmarke entfallen, die Info-Zeile bleibt | Neuer Text `noCompass` in `T`, in der Statuszeile: „Kein Kompass verfügbar“ · „Pusula kullanılamıyor“ · „No compass available“ · „Brújula no disponible“. Das Aussehen des Prototyps ist unverändert. Der String Catalog hat damit 262 Einträge. |
-| Standort verweigert, Stadt gewählt | magnetisch Nord | iOS liefert geografisch Nord nur zusammen mit dem Standort des Geräts. Ohne Freigabe weicht der Kurs um die örtliche Missweisung ab – in Mitteleuropa wenige Grad, anderswo mehr. |
-| Ort | eigenes Modell `PlaceModel` statt `TodayModel` durchzureichen | Zeiten- und Qibla-Seite teilen sich das Modell. `TodayModel` behält seine Schnittstelle. |
-| Kalibrierungskarte | bei ungültigem Kurs oder mehr als 25° Abweichung (`Heading.poorAccuracy`) | Apple nennt keine Schwelle; der Wert ist eine Annahme und am Gerät zu prüfen (siehe oben). |
-| Debug-Argument `-debugQiblaAccuracy` | neu | Die Referenzbilder zeigen die Karte immer, die App nur bei ungenauem Kompass. Mit `-debugQiblaAccuracy 40` lässt sie sich nachstellen. |
-| `-debugFixtureTimes` ohne `-debugQiblaHeading` | Kurs 99°, der Startwert von `S.qibla.heading` | wie die übrigen Startwerte von `S`. Für den Abgleich gelten die Werte der Bilder: 98° (`iphone/30`), 137° (`31`), 138° (`32`). |
-| Entfernung unter 10 km | auf ganze Kilometer | Mit der Rundung auf 10 km stünde 1 bis 5 km vor der Kaaba „0 km“. Ab 10 km gilt die entschiedene Rundung auf 10 km. |
-| Standort noch nicht bestimmt | „Qibla · Aktueller Standort“, Skala ohne Nadel | bis der Ort da ist |
-
-## Abnahme von Phase 4 am 12.11.2026
-
-Phase 4 wurde am 12.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-4` stand (Stand `56f6bb2`). Zu den Punkten 1 bis 5 unter „Braucht eine Entscheidung“ gab es dabei keine Antwort; dort gilt weiter der jeweilige Standard. Offen bleibt die Prüfung des Kompasses am echten Gerät (oben unter „Vor der Veröffentlichung zu prüfen“).
-
-## Entschieden mit dem Plan für Phase 5 am 12.11.2026
-
-Der Plan für Phase 5 wurde am 12.11.2026 freigegeben („Freigeben, bauen“), mit den drei empfohlenen Antworten:
-
-| Punkt | Entscheidung | Was das heißt |
-|---|---|---|
-| Auswahl der Gebete | „Eigener Baustein“ | `SegmentedControl` sieht aus wie im Referenzbild: graue Spur, weißer Daumen, Punkt unter dem aktuellen Gebet. Der Segment-Picker des Systems kann den Punkt nicht zeigen, den die Spec verlangt (§ 3, „Prayer guide“). |
-| VoiceOver beim Punkt | „Ja, ansagen“ | Das Segment des aktuellen Gebets sagt zusätzlich „Jetzt“, zwischen Sonnenaufgang und Dhuhr „Als Nächstes“ (die vorhandenen Texte `now` und `guideNext`). Im Prototyp ist der Punkt für Screenreader ausgeblendet. |
-| Symbole unter „Vorher“ | „SF Symbols“ | `drop`, `sparkles`, `safari` (wie der Chip Qibla), `heart`; die gestrichelte Karte trägt `clock.arrow.circlepath` (wie der Tab Nachholen). Der Prototyp zeichnet eigene Linien. |
-
-Mit dem Plan freigegeben sind auch: die Haltungsfiguren als SwiftUI-Shapes mit der Geometrie von `POSE` (Spec § 6.14 bleibt offen); ohne Zeiten zeigt die Anleitung Fadschr ohne Punkt, Status und Zeitfenster; der Daumen der Auswahl blendet in 0,2 s über, statt zu gleiten; die Katalog-Abschnitte `guide` und `steps`. Neue Texte brauchte die Phase nicht.
-
-## Abnahme von Phase 5 am 12.11.2026
-
-Phase 5 wurde am 12.11.2026 abgenommen („Abnehmen, zusammenführen“), so wie sie auf dem Zweig `phase-5` stand (Stand `8d1726a`). Zu den Punkten 1 bis 5 unter „Braucht eine Entscheidung“ gab es dabei keine Antwort; dort gilt weiter der jeweilige Standard. Offen bleibt die fachliche Prüfung der Texte der Anleitung (oben unter „Vor der Veröffentlichung zu prüfen“). Noch nicht geprüft sind VoiceOver von Hand (bisher nur der Baum der Bedienungshilfen) und die Anleitung am echten Gerät.
-
-## Entschieden mit dem Plan für Phase 6 am 12.11.2026
-
-Der Plan für Phase 6 wurde am 12.11.2026 freigegeben („Freigeben, bauen“), mit den drei empfohlenen Antworten:
-
-| Punkt | Entscheidung | Was das heißt |
-|---|---|---|
-| Speicher des Nachholens | „UserDefaults“ | Der Stand (`QadaLedger`) liegt als ein JSON-Eintrag in den UserDefaults der App, nicht in SwiftData – es ist ein einziger kleiner Datensatz. `CLAUDE.md` ist angepasst. |
-| Nachholen ohne Einträge | „Ohne Zusammenfassung“ | Solange nichts eingetragen ist, fehlen Prozentkarte und Plan; Einleitung, „Nach Gebet“ und der Rechner stehen da. Ein neuer Text ist nicht nötig. Der Prototyp zeigte in diesem Fall „0 %“ und „Alles nachgeholt.“ |
-| Texte der Verse | „String Catalog“ | `scripts/import-strings` liest neben `T` auch `VERSES` und `SURAH`. Übersetzungen und Surennamen stehen als Platzhalter im Katalog, jeder Eintrag mit dem Kommentar `TODO(placeholder)`. Der arabische Text und die Stellen (Sure, Vers) stehen in `PrayerCore`, weil sie in allen Sprachen gleich sind. |
-
-Mit dem Plan freigegeben sind auch seine Annahmen. Die offenen Fragen der Spec § 6.12 und § 6.13 bleiben wie im Prototyp: sechs Platzhalter-Verse, ein Jahr zählt 365 Tage, Witr ist aus, keine Erinnerung, der Bereich lässt sich nicht ausblenden.
-
-## Abnahme von Phase 6 am 12.11.2026
-
-Phase 6 wurde am 12.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-6` stand (Stand `b432fc7`). Zu den Punkten 1 bis 5 unter „Braucht eine Entscheidung“ und zu Spec § 6.12 und § 6.13 gab es dabei keine Antwort; dort gilt weiter der jeweilige Standard bzw. der Prototyp. Noch nicht geprüft sind VoiceOver von Hand (bisher nur der Baum der Bedienungshilfen) und die beiden Tabs am echten Gerät.
-
-## Entschieden mit dem Plan für Phase 7 am 12.11.2026
-
-Der Plan für Phase 7 wurde am 12.11.2026 freigegeben („Freigeben, Debug-Argumente“). Zum Adhan fragte der Nutzer zurück: „Gibt es nicht lizenzfreien Adhan, den du dir aus dem Internet beziehen kannst?“ – und wählte dann unter den gefundenen Aufnahmen „Beide laden“.
-
-| Punkt | Entscheidung | Was das heißt |
-|---|---|---|
-| Adhan-Aufnahmen | „Beide laden“ | Zwei freie Aufnahmen von Wikimedia Commons sind Platzhalter: Stimme 1 · Makkah spielt die ersten 27 s von „Beautiful adhan.ogg“ (CC0 1.0, hochgeladen 2022 von Adam-synagda, Herkunft unbekannt), Stimme 2 · Madinah „Oración Al-Azzan.ogg“ (gemeinfrei, hochgeladen von B9, aufgenommen 2005 in Medina, 30 s). Stimme 3 und die Fadschr-Variante laufen stumm wie im Prototyp; eine freie Fadschr-Aufnahme gibt es nicht. Die Lizenzangaben stammen von den Hochladenden und sind vor dem App Store zu prüfen (Spec § 6.5 bleibt offen). |
-| Sprachwahl | „Eigene Wahl in der App“ | Seite „Sprache“ mit Deutsch, Türkçe, English und Español wie im Prototyp; die Wahl wirkt sofort. Texte des Systems – die Dialoge für Standort und Mitteilungen, das Teilen-Menü, „Abbrechen“ im Suchfeld – bleiben in der Sprache des Geräts. Die Sprachwahl in den iOS-Einstellungen bietet iOS nur an, wenn auf dem Gerät mehr als eine Sprache eingerichtet ist. |
-| Moonsighting und hohe Breiten | „Hinweis zeigen“ | Ist Moonsighting gewählt, steht unter der Seite „Hohe Breitengrade“ zusätzlich: „Bei Moonsighting gilt diese Regel nicht – die Methode legt Fadschr und Ischa je nach Jahreszeit selbst fest.“ Neuer Text `hlMoonsighting` in `T` (DE, TR, EN, ES). |
-| Aufruf für den Abgleich | „Debug-Argumente“ | `-debugTab` kennt zusätzlich die Seiten der Einstellungen (`method`, `asr`, `hl`, `adjust`, `perPrayer`, `reminder`, `live`, `sound`, `appearance`, `language`, `privacy`) und das Adhan-Sheet (`adhan`); neu ist `-debugOnboarding 1|2|3`. |
-
-Mit dem Plan freigegeben sind auch seine Annahmen:
-
-- **Liste:** Die Einstellungen sind die `List` des Systems, eingestellt wie das Stadt-Sheet (Zeilen 44 pt, 32 pt zwischen den Gruppen), mit `Toggle`, großem Titel und Zurück-Knopf des Systems.
-- **„Pro Gebet“:** der eigene Segment-Baustein aus Phase 5 mit den drei Glocken, wie im Referenzbild und in der Anleitung.
-- **Standort-Schalter:** an → aktueller Standort (fragt, falls noch nie gefragt); aus → die aktuelle Stadt bleibt als gewählte (`S.city = S.deviceCity`); verweigert → gesperrt, dazu „iOS-Einstellungen öffnen“.
-- **Nach „Überspringen“:** Die Zeiten-Seite fragt beim ersten Erscheinen selbst nach dem Standort, weil sie ohne Ort nichts zeigen kann.
-- **Mitteilungen:** Die Erlaubnis wird nur im Onboarding erfragt; verweigert, steht der Fußtext unter „Mitteilungen“. Erinnerung, Live-Aktivität und Klang werden nur gespeichert (Phase 8 und 9).
-- **Stimme:** Die gewählte Stimme wird gespeichert; die Fadschr-Variante ist nur eine Vorschau im Player.
-- **Methode in den Bildern:** Mit `-debugFixtureTimes` gilt die Automatik der Fixture-Stadt (Berlin → MWL); echt rechnet die App in Deutschland mit Diyanet.
-- **Quellcode und Version:** Für „Quellcode“ gibt es noch keine Adresse (kein Remote); bis dahin ein Platzhalter in `project.yml` wie die Bundle-ID. Die Version kommt aus dem Bundle („0.1.0 (1)“; das Referenzbild zeigt „1.0 (1)“).
-- **App-Zeichen** in Onboarding und Tagline: die Platzhalter-Zeichnung des Prototyps (`appGlyph`), bis Phase 11 das Icon bringt.
-
-## Abnahme von Phase 7 am 12.11.2026
-
-Phase 7 wurde am 12.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-7` stand (Stand `dfcc6f5`). Offen bleiben die Prüfung mit Ton am Gerät (der Simulator hat kein Ausgabegerät) und die Rechte der beiden Aufnahmen von Wikimedia Commons vor dem App Store (oben unter „Vor der Veröffentlichung zu prüfen“). Noch nicht geprüft sind VoiceOver von Hand (bisher nur der Baum der Bedienungshilfen) und die Seiten am echten Gerät.
-
-## Erste Beta, entschieden am 12.11.2026
-
-Auf die Frage, wann die erste Beta über TestFlight kommen soll, fiel die Wahl auf „Erst nach Phase 11“: Die erste Beta enthält alles, auch Mitteilungen, Widgets, Live-Aktivität und Duo – nicht schon den Stand nach Phase 8. Zum Apple-Entwicklerkonto hieß es: „Ich kläre das noch.“ Ein Konto als Organisation braucht eine D-U-N-S-Nummer und kann Tage bis Wochen dauern.
-
-Für den ersten Upload fehlt noch:
-
-- **Konto und Team:** `DEVELOPMENT_TEAM` in `project.yml` ist leer.
-- **Kennungen:** echte Bundle-ID und App Group statt `com.example.gebetszeiten` und `group.com.example.gebetszeiten`.
-- **App-Icon:** gibt es noch nicht; für die Beta reicht der Platzhalter aus Phase 11.
-- **Datenschutz-Manifest:** `PrivacyInfo.xcprivacy` mit dem Grund für UserDefaults; Apple verlangt es beim Hochladen.
-- **App Store Connect:** Eintrag der App, dann Archiv und Upload.
-
-Die Platzhalter – Übersetzungen der Verse, Adhan-Aufnahmen, Texte der Anleitung – dürfen in der Beta bleiben; vor dem App Store gilt „Vor der Veröffentlichung zu prüfen“ oben.
-
-## Entschieden mit dem Plan für Phase 8 am 12.11.2026
-
-Der Plan für Phase 8 wurde am 12.11.2026 freigegeben („Freigeben, -debugNotifications“), zu jeder Frage mit der Empfehlung.
-
-| Punkt | Entscheidung | Was das heißt |
-|---|---|---|
-| Ton ohne Aufnahme | „Systemton; Fadschr mit Stimme“ | Stimme 3 hat keine Aufnahme; eine Mitteilung mit „Ton“ spielt dann den Systemton. Fadschr spielt die Aufnahme der gewählten Stimme und nimmt die Fadschr-Variante, sobald es für sie eine gibt (`AdhanVoice.clipResource(fajrVariant:)`). |
-| Zeitkritische Mitteilungen (Spec § 6.6) | „Nein, wie Prototyp“ | normale Mitteilungen (`interruptionLevel = .active`), kein Entitlement und keine Begründung für die App-Prüfung. Im Fokus kommen sie nur, wenn man die App dort erlaubt. |
-| Hintergrundaktualisierung | „BGAppRefreshTask“ | Etwa einmal am Tag weckt iOS die App kurz, und sie plant neu (`BackgroundRefresh`). In der Info.plist stehen „Background fetch“ (`UIBackgroundModes`) und die Kennung `<Bundle-ID>.refresh` (`BGTaskSchedulerPermittedIdentifiers`), beides in `project.yml`. |
-| Nach „Später“ im Onboarding | „Bei erster Änderung“ | Hat iOS noch nie gefragt, erscheint der Dialog des Systems einmal, sobald man eine Glocke antippt oder unter Einstellungen › Mitteilungen etwas ändert (Pro Gebet, Erinnerung, Live-Aktivität, Klang; nicht die Stimme im Adhan-Sheet). Damit ändert sich die Annahme aus Phase 7, dass nur das Onboarding fragt. |
-| Abgleich von `system/92` | „Freigeben, -debugNotifications“ | Neues Debug-Argument: Mit Mock-Zeiten merkt die App echte Mitteilungen bei iOS vor, gemessen an der Debug-Uhr. Beim Start fragt sie nach der Erlaubnis und räumt zugestellte Mitteilungen ab. |
-
-Mit dem Plan freigegeben sind auch seine Annahmen:
-
-- **Fenster:** die nächsten 64 Mitteilungen in zeitlicher Folge (Spec § 6.4); eine Erinnerung nur zusammen mit ihrer Mitteilung. Mit den Startwerten zehn am Tag, gut sechs Tage; alle sechs mit Erinnerung gut fünf, ohne Erinnerung 10 bis 13 Tage.
-- **Erinnerung:** spielt nie den Adhan. Bei der Glocke „Ton“ kommt sie mit dem Systemton, beim Klang „Lautlos“ und bei der Glocke „Lautlos“ ohne Ton, bei „Aus“ gar nicht.
-- **Offene App:** Die Mitteilung erscheint als Banner mit Ton. Antippen öffnet die App dort, wo sie war.
-- **Ort ohne Namen** (ohne Netz bestimmt): Im Text steht „Aktueller Standort“, wie auf der Zeiten-Seite.
-- **Zeitangaben:** „jetzt“ und „vor 10 Min.“ zeichnet iOS selbst, in der Sprache des Geräts. `notifNow` und `notifAgo` aus `T` bleiben ungenutzt.
-
-## Abnahme von Phase 8 am 12.11.2026
-
-Phase 8 wurde am 12.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-8` stand (Stand `2a48ba8`). Dazu kam eine Entscheidung:
-
-| Punkt | Entscheidung | Was das heißt |
-|---|---|---|
-| Ton zum Sonnenaufgang | „Systemton“ | Der Sonnenaufgang ist kein Gebet und hat keinen Adhan. Steht seine Glocke auf „Ton“, spielt die Mitteilung den Systemton, auch beim Klang „Kurzer Adhan“; beim Klang „Lautlos“ keinen. Der Prototyp sagt nur „„Ton“ spielt den gewählten Klang“ und hätte den Adhan gespielt. |
-
-Offen bleiben die Prüfung am Gerät (Ton, Hintergrundaktualisierung, Fokus) und die türkische Endung in `notifReminderBody`, beide oben unter „Vor der Veröffentlichung zu prüfen“.
-
-## Entschieden mit dem Plan für Phase 9 am 12.11.2026
-
-Der Plan für Phase 9 wurde am 12.11.2026 freigegeben („Freigeben, -debugLiveActivity“). Zu Spec-Frage 16 und zum Vorlauf hat der Nutzer eigene Antworten gegeben und auf Rückfrage präzisiert.
-
-| Punkt | Entscheidung | Was das heißt |
-|---|---|---|
-| Spec-Frage 16: je Gebet oder je Tagesphase, auch Sonnenaufgang? | „30 min vor jedem Gebet und 10 min danach“, auf Rückfrage zum Fußtext „Doch 15 Minuten“ | Je Pflichtgebet eine Live-Aktivität, ohne Sonnenaufgang. Sie beginnt standardmäßig 30 Minuten vorher, zeigt ab Beginn „Jetzt“ und endet 15 Minuten nach Beginn – so wie Spec § 4 und der Fußtext `liveActFooter`. Der Teil zu Systemen vor iOS 26 entfällt: Die App braucht iOS 26. |
-| Vorlauf | „30min standart nutzer kann aber auch beliebig einstellen“, dann „Längere Liste“ | Unter Einstellungen › Live-Aktivität stehen Aus, 10, 15, 20, 30, 45, 60, 90 und 120 Minuten vorher, Standard 30 (`NotificationPreferences.liveActivityChoices`). Der Prototyp und `iphone/79` zeigen nur Aus, 30 und 60 (`LIVE_OPTS`); die Texte sind dieselben (`off`, `minBefore`). |
-| Ohne Ort oder ohne Zeiten | „Vorhandene Hinweise“ | Ohne Ort zeigen die Widgets „Stadt wählen“ (`citySheetTitle`), ohne Zeiten – etwa in der Polarnacht – den Hinweis der Zeiten-Seite (`noTimes`). Ring und Zeile zeigen dann nur Zeichen bzw. Namen der App. Keine Live-Aktivität. Kein neuer Text. |
-| Ab Gebetsbeginn | „„Jetzt“ statt Countdown“ | Auf dem Sperrbildschirm steht „Maghrib · 16:27“ über „Jetzt“, in der Insel „Jetzt“ statt der Zeit, erweitert „Maghrib“ über „Jetzt“; der Bogen zeigt Maghrib als laufend. Es bleibt beim vorhandenen Text `now`. |
-| Abgleich von `system/93`–`96` | „Freigeben, -debugLiveActivity“ | Neues Debug-Argument: genau eine Live-Aktivität, die zum nächsten Gebet, ab dem Start der App – auch außerhalb des Vorlaufs und mit Mock-Zeiten. Mit `-debugFixtureTimes` ohne dieses Argument plant die App keine (und beendet, was läuft), damit Aufnahmen keine auslösen. Die Widgets bekommen Mock-Zeiten und Debug-Uhr über die App Group. Neue Abschnitte im Katalog: `-debugCatalog widgets`, `live`. |
-
-Mit dem Plan freigegeben sind auch seine Annahmen:
-
-- **Nächstes Ereignis:** Die Widgets nennen dasselbe wie die Zeiten-Seite, also auch den Sonnenaufgang (`ph.next` im Prototyp). Das mittlere Widget listet die Zeiten des Tages, zu dem das nächste Ereignis gehört: nach Ischa die von morgen, nichts abgeblendet.
-- **Ortspfeil** im mittleren Widget und in der Insel nur beim aktuellen Standort, wie auf der Zeiten-Seite.
-- **Was von selbst läuft:** Countdown (`Text(timerInterval:)`), Ring, Balken und Minimal-Ring (`ProgressView(timerInterval:)`). Der Bogen der Live-Aktivität steht still, weil iOS Live-Aktivitäten nicht von selbst neu zeichnet: Er zeigt den Stand beim Start der Aktivität, ab Beginn den zum Gebetsbeginn; läuft die App, frischt sie ihn auf.
-- **Hinweis beim Start:** iOS verlangt ihn für den geplanten Start. Er hat die Texte der Vorab-Erinnerung („Maghrib in 30 Minuten“ – „Maghrib beginnt um 16:27 Uhr.“) und keinen eigenen Ton.
-- **Ende:** ActivityKit kennt kein geplantes Ende. Die App beendet eine Aktivität, sobald sie nach Gebetsbeginn läuft, und lässt sie bis 15 Minuten danach auf dem Sperrbildschirm stehen.
-- **Name in der Widget-Galerie:** `appName`, ohne Beschreibung.
-
-## Abnahme von Phase 9 am 12.11.2026
-
-Phase 9 wurde am 12.11.2026 abgenommen („Abnehmen“), so wie sie auf dem Zweig `phase-9` stand (Stand `402627e`). Offen bleibt, was nur ein echtes Gerät zeigt: der geplante Start über Stunden, das Ende ohne laufende App, wie schnell iOS „Jetzt“ zeichnet, der stille Hinweis, Watch und StandBy (oben unter „Vor der Veröffentlichung zu prüfen“).
-
-## Entschieden mit dem Plan für Phase 10 am 12.11.2026
-
-Der Plan für Phase 10 wurde am 12.11.2026 freigegeben („Freigeben, bauen (Empfohlen)“), über die Auswahl-Fragen:
-
-| Punkt | Entscheidung | Was das heißt |
-|---|---|---|
-| Duo-Simulator | „Ja, intern (Empfohlen)“, auf Rückfrage zum Runtime „Laden, alten behalten (Empfohlen)“ | Der installierte Runtime iOS 27.2 (Build 24B8117) schließt das Duo aus. Geladen ist zusätzlich iOS 27.2 Build 24B91016s (8,3 GB, eigene Kennung `…iOS-27-2-iPhone19-4`); iPhone 18 Pro und iPhone 17 laufen weiter mit 24B8117. Den Simulator „iPhone Duo“ hat CoreSimulator beim Installieren selbst angelegt. |
-| Spec-Frage 17: Hochformat innen, Tischhaltung, Split View | „Alle drei“ | Alle drei laufen; wie sie aussehen, steht unten unter „Annahmen in Phase 10“ – ohne Entwurf und Referenzbild. |
-| Stadt-Sheet für `duo/*-85` | „-debugTab city (Empfohlen)“ | Neues Debug-Argument: Das Stadt-Sheet öffnet sich beim Start über der Zeiten-Seite, einmal; so lassen sich auch `iphone/85` ohne Tipp nachstellen. Steht in `CLAUDE.md`, README und PROMPTS. |
-| Auf- und Zuklappen | „Ich klappe selbst (Empfohlen)“ | Das Scharnier stellt nur der Schieberegler in Device Hub (`simctl` und XCUITest können es nicht). Die Freigabe der Bildschirmsteuerung für Device Hub kam zweimal als abgelehnt zurück; der Nutzer hat deshalb gedreht, halb geöffnet, Split View eingerichtet und zugeklappt. |
-
-## Abnahme von Phase 10 am 13.11.2026
-
-Phase 10 wurde am 13.11.2026 abgenommen („Abnehmen, zusammenführen (Empfohlen)“), so wie sie auf dem Zweig `phase-10` stand (Stand `4f39a9a`). Offen bleibt, was nur ein echtes Gerät zeigt: Auf- und Zuklappen und der Wechsel in die Tischhaltung bei laufender App, der echte Winkel der Tischhaltung, der Kompass sowie Widgets und Live-Aktivität auf dem Duo (oben unter „Vor der Veröffentlichung zu prüfen“). Die Breiten des Onboardings innen sind nur gerechnet und getestet, im Simulator nicht angesehen.
+- **Werkzeug:** `scripts/ui-harness` (UI-Hilfsprojekt), `scripts/capture-matrix` (Varianten, Prüfung, Baum, Kontaktbogen), `scripts/contact-sheet.swift`, `scripts/app-icon.swift`. Große Aufnahmen liegen auf der externen Platte, wenn sie angesteckt ist.
+- **Icon:** Asset-Katalog mit einem Bild von 1024 px je Erscheinungsbild (hell ohne Alphakanal, dunkel und getönt auf durchsichtigem Grund); iOS 26 legt sein Glas selbst darüber. Ein Icon aus Icon Composer (`.icon`) kann das endgültige Icon werden.
+- **Datenschutz-Manifeste:** `App/PrivacyInfo.xcprivacy` (UserDefaults: `CA92.1`, `1C8F.1`), `Widgets/PrivacyInfo.xcprivacy` (`1C8F.1`); die Angaben für App Store Connect in `docs/APP-STORE.md`.
 
 ## Annahmen in Phase 10
 
@@ -403,7 +440,7 @@ Das zeichnet iOS selbst; verglichen werden Inhalt, Schrift und Farben.
 - **Sperrbildschirm:** iOS 27 setzt Ring und Rechteck unten auf den Sperrbildschirm statt unter die Uhr; Uhr, Datum („Thu 12“ im englischen System), „Carrier“ oben links und der Hintergrund des Simulators statt `.wall` kommen vom System.
 - **Größen:** Auf dem iPhone 18 Pro sind die Widgets größer als im Prototyp – klein 164 statt 154 pt, mittel 350 × 164 statt 338 × 154, das Rechteck 162 statt 170 pt breit –, die Live-Aktivität 374 statt 366 pt breit, die erweiterte Insel 374 × 160 statt 372 × 156. Der Inhalt hält die Abstände des Prototyps; was mehr ist, bleibt Rand.
 - **Balken der Insel:** iOS zeichnet die `ProgressView` mit Zeitspanne dünner (etwa 4 pt) und mit eigener Spur statt 6 pt mit Weiß zu 18 %; eine eigene Zeichnung liefe nicht von selbst weiter.
-- **„0:00“ vor „Jetzt“:** Läuft die App zum Gebetsbeginn nicht, setzt iOS die Aktivität auf `stale`, zeichnet sie aber erst etwas später neu; im Simulator stand bis zu gut zwei Minuten „0:00“. Am Gerät zu prüfen (oben unter „Vor der Veröffentlichung zu prüfen“).
+- **„0:00“ vor „Jetzt“:** Läuft die App zum Gebetsbeginn nicht, setzt iOS die Aktivität auf `stale`, zeichnet sie aber erst etwas später neu; im Simulator stand bis zu gut zwei Minuten „0:00“. Am Gerät zu prüfen (oben unter „Vor dem App Store“).
 - **Fadschr-Symbol im Bogen:** das SF Symbol `sun.horizon` wie seit Phase 2, nicht die Zeichnung des Prototyps.
 - **Zeile über der Uhr:** Schrift, Größe und Abstand des Symbols bestimmt iOS; der Katalog ahmt die Zeile nur nach. Im Vergleich weicht beim Zubehör von `90` vor allem der Hintergrund ab (Verlauf statt `.wall`).
 - **Name in der Widget-Galerie:** In einem englischen System heißt das Widget „Prayer Times“ (`appName` in der Sprache des Geräts).
@@ -416,7 +453,7 @@ Das zeichnet iOS selbst; verglichen werden Inhalt, Schrift und Farben.
 - **Live-Aktivität:** Eine Aktivität beginnt frühestens, wenn die des vorigen Gebets endet (bei langem Vorlauf oder Maghrib und Ischa dicht beieinander), außer die beiden Gebete liegen weniger als 15 Minuten auseinander. Höchstens fünf kommende (Grenze von iOS); eine, deren Gebet begonnen hat, zählt nicht mit. Was schon läuft, bleibt bei einer Änderung des Vorlaufs stehen; ersetzt werden die geplanten. Läuft die App, frischt sie den Bogen einer laufenden Aktivität auf.
 - **Ende ohne laufende App:** Die App bittet um die nächste Hintergrundaktualisierung zum Ende der nächsten Aktivität, sonst in zwölf Stunden; wann iOS weckt, entscheidet iOS.
 - **Debug-Uhr:** Inhalte stehen in der Zeit der App, Countdown, Ring und Balken laufen in Gerätezeit (`clockOffset`). Mit Mock-Zeiten bekommen die Widgets Mock-Zeiten und Debug-Uhr über die App Group.
-- **Schrift:** Die Widgets haben feste Schriftgrößen wie im Prototyp; große Schrift prüft Phase 11.
+- **Schrift:** Die Widgets haben die Schriftgrößen des Prototyps; seit Phase 11 wachsen sie bei großer Schrift begrenzt mit (`WidgetTextScaling`).
 - **Stiller Hinweis:** `App/Sounds/live-activity-silence.caf` (0,5 s Stille, IMA4) als Ton des Hinweises beim geplanten Start; ohne eigene Datei spielte iOS seinen Ton.
 - **Fläche auf dem Sperrbildschirm:** Ring und Rechteck tragen `AccessoryWidgetBackground` im Inhalt, das Rechteck mit Radius 18 wie `.acc-rect`; als Hintergrund des Containers ließe iOS 27 sie weg.
 
@@ -483,7 +520,7 @@ Alles liegt tiefer als im Referenzbild, weil die Leisten des Systems anders sitz
 ### Was abweicht und bleibt
 
 - **Leisten und Bedienelemente des Systems:** großer Titel, Zurück-Knopf (Glass-Kreis bei 16 | 62 pt), Suchfeld (44-pt-Kapsel), Schalter (63 × 28 statt 51 × 31 pt – die Zeile mit Schalter ist 50 statt 53,5 pt hoch, darunter liegt alles 3,5 pt höher), Schieberegler des Players (Glass-Griff statt 14-pt-Punkt), Schließen-Knopf des Sheets (Glass-Kreis), Chevron hinter `NavigationLink`, Tableiste. Wie in den Phasen davor bleiben sie, wie das System sie zeichnet.
-- **Schrift und Breite:** Wie in den Phasen 2 bis 6 bricht Text anders um, weil die App 12 pt breiter ist und SF Pro schmaler setzt: `75` „Nachtanteil nach Dämmerungswinkel – empfohlen“ und „… nie über die Nachtmitte hinaus“ in einer statt zwei Zeilen, `81` die Überschrift in einer statt zwei Zeilen, `72` der Hinweis zur Berechnung in zwei statt drei Zeilen, `01` „Gebetszeiten. Ruhig und / genau.“ statt „Ruhig / und genau.“, `02` der Text in anderer Teilung. Silbentrennung (`hyphens: auto`, „Son-nenauf“) macht SwiftUI nicht.
+- **Schrift und Breite:** Wie in den Phasen 2 bis 6 bricht Text anders um, weil die App 12 pt breiter ist und SF Pro schmaler setzt: `75` „Nachtanteil nach Dämmerungswinkel – empfohlen“ und „… nie über die Nachtmitte hinaus“ in einer statt zwei Zeilen, `81` die Überschrift in einer statt zwei Zeilen, `72` der Hinweis zur Berechnung in zwei statt drei Zeilen, `01` „Gebetszeiten. Ruhig und / genau.“ statt „Ruhig / und genau.“, `02` der Text in anderer Teilung. Silbentrennung (`hyphens: auto`, „Son-nenauf“) machte SwiftUI damals nicht; seit Phase 11 setzt die App in diesen Zeilen weiche Trennstriche, und iOS 27.2 trennt selbst (siehe „Annahmen in Phase 11“).
 - **Höhe der Zeilen mit Zusatz:** 63,3 statt 61,5 bis 62,5 pt, weil jeder Text seine Höhe auf Gerätepixel rundet; die Karte des Players ist 2 pt höher (318,5 statt 316,5 pt).
 - **Symbole:** SF Symbols statt der Zeichnungen: Häkchen wie im Stadt-Sheet, ↗ hinter „Quellcode“, `waveform`, `location.fill`, `checkmark.shield` (19 pt breit wie die Zeichnung), `play.fill`/`pause.fill`. Die Glocke im dritten Schritt (`bell.and.waves.left.and.right`) hat je zwei Wellen statt einer und ist 52 statt 41 pt breit, gleich hoch.
 - **Version:** „0.1.0 (1)“ aus dem Bundle statt „1.0 (1)“ im Referenzbild.
@@ -600,7 +637,7 @@ Die Auswahl liegt nur 3 pt tiefer: Das Referenzbild setzt sie 1 pt unter die Ste
 - **Zeitfenster:** Ischa endet mit Fadschr von morgen (entschieden am 10.11.2026), vor Fadschr gilt das Fenster des Ischa von gestern. Uhrzeiten in der Zeitzone des Ortes, Ziffern gleich breit (`.tabnum`).
 - **Ohne Zeiten** (kein Ort, oder die Sonne geht nicht auf oder unter): Fadschr, ohne Punkt, ohne Knopf und ohne die Zeile mit Status und Zeitfenster; wählen geht.
 - **VoiceOver:** Segmente mit „ausgewählt“, beim Punkt „Jetzt“ oder „Als Nächstes“; nach „Zum aktuellen Gebet“ springt der Fokus auf dessen Segment (`focusNext`). Die Rakʿa-Folge ist ein Bild mit dem Text aus `rakSeq`, wie im Prototyp; die Titel der Schritte sind Überschriften („1 Takbīr“). Die Formeln tragen die Sprache „ar“. Geprüft ist nur der Baum der Bedienungshilfen, nicht VoiceOver von Hand.
-- **Große Schrift:** Texte wachsen, die Rakʿa-Folge bricht um. Die Kacheln bleiben drei nebeneinander und trennen Wörter, wie das CSS-Raster; Kreise der Rakʿa-Folge (34 pt), Haltungsfiguren (58 pt) und Symbolkreise bleiben fest. Passen Status und Zeitfenster nicht nebeneinander, steht das Zeitfenster darunter, statt mitten in der Uhrzeit umzubrechen. Bei AX5 sind die Kacheln sehr schmal – ein Fall für Phase 11.
+- **Große Schrift:** Texte wachsen, die Rakʿa-Folge bricht um. Die Kacheln bleiben drei nebeneinander und trennen Wörter, wie das CSS-Raster; Kreise der Rakʿa-Folge (34 pt), Haltungsfiguren (58 pt) und Symbolkreise bleiben fest. Passen Status und Zeitfenster nicht nebeneinander, steht das Zeitfenster darunter, statt mitten in der Uhrzeit umzubrechen. Bei AX5 waren die Kacheln sehr schmal; seit Phase 11 stehen sie ab den AX-Größen untereinander.
 - **Rechts nach links:** gespiegelte Anordnung, auch die Rakʿa-Folge. Haltungsfiguren und das Arabische werden nicht gespiegelt; die Umschrift folgt der Leserichtung.
 - **Gestrichelte Karte:** Strich und Lücke je 4,5 pt, das Dreifache der Linie, wie Browser `dashed` zeichnen. Kein Referenzbild zeigt die Karte; verglichen ist sie mit dem Prototyp im Browser.
 - **Katalog:** `-debugCatalog guide` zeigt Auswahl, Kopfkarte und „Vorher“ im Zustand der Debug-Argumente, `steps` den Ablauf, beide in Referenzbreite und in voller Höhe; was nicht auf den Bildschirm passt, läuft unten hinaus.
@@ -792,4 +829,4 @@ Diese Punkte sind entschieden oder ergeben sich aus den Unterlagen. Sie stehen h
 - **Debug-Uhr:** `-debugDate` und `-debugTime` gelten in der Zeitzone der Stadt, ohne Stadt in der des Geräts. Fehlt das Datum, gilt heute; fehlt die Uhrzeit, gilt die aktuelle.
 - **Sprache der Screenshots:** über die Systemargumente `-AppleLanguages` und `-AppleLocale`, mit den Regionen aus `LOC` im Prototyp (de-DE, tr-TR, en-GB, es-ES).
 - **Texte als `String`:** `L10n` liefert fertige Texte aus dem String Catalog. Mehrere Platzhalter stehen im Katalog als `%1$@`, `%2$@`, weil einzelne Sprachen die Reihenfolge umstellen (z. B. `notifPrayerBody` im Türkischen).
-- **App-Symbol:** noch keines; das Platzhalter-Symbol kommt in Phase 11.
+- **App-Symbol:** noch keines; das Platzhalter-Symbol kam mit Phase 11 (Tagesbogen, `AppIcon`).

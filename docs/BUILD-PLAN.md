@@ -222,4 +222,15 @@ Entscheidungen, Annahmen und was abweicht stehen in `docs/OPEN-QUESTIONS.md` (�
 
 **Abnahme:** Alle Screenshots aus `design/screenshots/` lassen sich nachstellen und stimmen überein.
 
-**Danach:** erste Beta über TestFlight (entschieden am 12.11.2026). Was dafür noch fehlt – Konto, Kennungen, Datenschutz-Manifest, App Store Connect –, steht in `docs/OPEN-QUESTIONS.md` unter „Erste Beta“.
+Gebaut am 13.11.2026 in acht Schritten:
+- **Werkzeug:** Das UI-Hilfsprojekt liegt jetzt im Repo (`scripts/ui-harness`, `make harness`). `make capture` nimmt jeden Bildschirm in Varianten auf – Sprache, Schriftgröße, hell und dunkel, RTL –, mit der Prüfung der Bedienungshilfen von Xcode.
+- **Sprachen:** In TR, EN und ES wird bei Standardgröße nichts abgeschnitten; die türkische Endung der Vorab-Erinnerung rechnet die App (`TurkishClockSuffix`).
+- **Große Schrift und dunkel:** Ab den AX-Größen stellen sich Gebetskarte, Fakten-Kacheln und Stepper-Zeilen um. Die Zeile im Bogen und der gewählte Chip sind begrenzt, die Widgets wachsen bis zum 1,2-Fachen. Silbentrennung mit dem Wörterbuch des Systems.
+- **Barrierefreiheit:** VoiceOver-Texte, Tippziele, Bewegung, Kontrast (`ContrastTests`, dunklere Schrift auf der laufenden Karte), RTL. Eine getönte Fläche in der senkrechten Leiste des Duo lässt das System nicht zu (das Symbol wird darauf weiß); es bleibt beim Symbol in Akzent.
+- **Leistung:** CPU-Zeit je Zustand im Simulator.
+- **App Store:** Datenschutz-Manifeste, Platzhalter-Icon (Tagesbogen), Angaben in `docs/APP-STORE.md`.
+- **Offene Fragen aufgeräumt** und **Schlussabgleich** der Referenzbilder (`docs/REFERENCE-CHECK.md`): 56 von 64 abgeglichen; die acht Bilder des aufgeklappten Duo nicht, weil das Aufklappen den Nutzer braucht („Ohne innen abschließen“).
+
+Entscheidungen, Annahmen und was abweicht stehen in `docs/OPEN-QUESTIONS.md` („Entschieden mit dem Plan für Phase 11“, „Annahmen in Phase 11“).
+
+**Danach:** erste Beta über TestFlight (entschieden am 12.11.2026). Was dafür noch fehlt – Konto, Kennungen, App Store Connect, Archiv und Upload –, steht in `docs/OPEN-QUESTIONS.md` unter „Für die erste Beta“.
