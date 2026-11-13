@@ -86,10 +86,29 @@ struct VerticalTopBar: ToolbarContent {
                     page.symbol.barImage
                 }
             }
-            .tint(page == selection ? Palette.accent : nil)
+            .modifier(SelectedBarItem(isSelected: page == selection))
             .accessibilityAddTraits(page == selection ? .isSelected : [])
         }
         .axisBehavior(.verticalPreferred)
+    }
+}
+
+/// Die gewählte Seite in der senkrechten Leiste: eine getönte Glasfläche mit dem Symbol in Akzent, wie der
+/// gewählte Chip der oberen Leiste (Spec § 8: „selected = tinted“; entschieden mit dem Plan für Phase 11:
+/// „Getönte Fläche“). Die Leiste des Systems tönt einen Eintrag über den hervorgehobenen Glass-Stil.
+@available(iOS 27.1, *)
+private struct SelectedBarItem: ViewModifier {
+    let isSelected: Bool
+
+    func body(content: Content) -> some View {
+        if isSelected {
+            content
+                .buttonStyle(.glassProminent)
+                .tint(Palette.accent.opacity(GlassMetrics.selectedTintOpacity))
+                .foregroundStyle(Palette.accent)
+        } else {
+            content
+        }
     }
 }
 

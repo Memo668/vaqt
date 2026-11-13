@@ -74,7 +74,8 @@ struct TokenTests {
         #expect(hex(Palette.LiveActivity.marker, dark: dark) == "#62A299")
         #expect(hex(Palette.LiveActivity.kerahat, dark: dark) == "#F3C979")
         #expect(abs(RGBA(Palette.LiveActivity.track, dark: dark).alpha - 0.28) < 0.001)
-        #expect(abs(RGBA(Palette.LiveActivity.time, dark: dark).alpha - 0.80) < 0.001)
+        // Phase 11: voll Weiß statt 80 % (Kontrast 5,2 : 1).
+        #expect(RGBA(Palette.LiveActivity.time, dark: dark).alpha == 1)
     }
 
     @Test("Farbwerte lassen sich lesen, mischen und wieder schreiben")

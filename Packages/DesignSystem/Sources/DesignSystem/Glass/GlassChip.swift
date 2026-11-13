@@ -57,6 +57,9 @@ public struct GlassChip: View {
         }
         // Der Text wächst bis AX1; darüber zeigt der Large Content Viewer den Titel.
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        // Ein Element für VoiceOver: „Zeiten, ausgewählt“ – ohne Symbol („Uhr“) und Titel als eigene Teile,
+        // wie sie der Baum der Bedienungshilfen beim gewählten Chip zeigte (Phase 11).
+        .accessibilityElement(children: .combine)
         .accessibilityLabel(title)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityShowsLargeContentViewer {
@@ -101,6 +104,7 @@ public struct GlassChip: View {
         )
         .foregroundStyle(isSelected ? Palette.accent : Palette.textSecondary)
         .frame(width: GlassMetrics.chipSymbolBox)
+        .accessibilityHidden(true)
 
         if showsTitle {
             HStack(spacing: GlassMetrics.chipGap) {
@@ -109,13 +113,13 @@ public struct GlassChip: View {
                     .font(TypeScale.headline.font())
                     .foregroundStyle(isSelected ? Palette.accent : Palette.label)
                     .lineLimit(1)
+                    // Ab AX1 reicht die Breite für „Anleitung“ nicht ganz: etwas kleiner statt „Anleit…“
+                    // (Phase 11). Den vollen Titel zeigt der Large Content Viewer.
+                    .minimumScaleFactor(GlassMetrics.chipTitleMinimumScale)
             }
             .padding(.leading, GlassMetrics.chipLeading)
             .padding(.trailing, GlassMetrics.chipTrailing)
             .frame(minHeight: height)
-                    // Ab AX1 reicht die Breite für „Anleitung“ nicht ganz: etwas kleiner statt „Anleit…“
-                    // (Phase 11). Den vollen Titel zeigt der Large Content Viewer.
-                    .minimumScaleFactor(GlassMetrics.chipTitleMinimumScale)
         } else {
             symbol
                 .frame(width: height, height: height)

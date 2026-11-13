@@ -236,6 +236,9 @@ public struct LiveActivityCompactLeading: View {
     public var body: some View {
         WidgetSymbol(name: content.prayer.prayer.symbolName, box: LiveActivityMetrics.compactSymbolBox)
             .foregroundStyle(LiveActivityMetrics.islandAccent)
+            // VoiceOver: der Name des Gebets vor dem Countdown rechts, statt nur „2:01:29“ (Phase 11).
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(content.prayer.prayer.localizedName)
     }
 }
 
@@ -279,6 +282,9 @@ public struct LiveActivityMinimal: View {
         )
         .progressViewStyle(.circular)
         .tint(LiveActivityMetrics.islandAccent)
+        // VoiceOver: der Name des Gebets statt eines namenlosen Rings (Phase 11).
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(content.prayer.prayer.localizedName)
     }
 }
 

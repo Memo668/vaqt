@@ -150,7 +150,7 @@ public struct PrayerRow: View {
             Text(kerahat.text)
                 .textStyle(.caption1, lineHeight: RowMetrics.captionLineHeight)
                 .monospacedDigit()
-                .foregroundStyle(kerahat.isActive ? Palette.kerahatText : Palette.textSecondary)
+                .foregroundStyle(kerahatColor(isActive: kerahat.isActive))
                 // Die Zeitspanne bricht nie um (Spec § 3). Ab den AX-Größen ist sie breiter als die Karte:
                 // Dann steht sie in der zweiten Zeile und wird etwas kleiner, statt in der Zahl umzubrechen.
                 .lineLimit(stacksTime ? RowMetrics.stackedCaptionLines : nil)
@@ -161,11 +161,22 @@ public struct PrayerRow: View {
 
     // MARK: - Farben
 
+    /// Auf der Karte des laufenden Gebets ist die Schrift hell etwas dunkler (`Palette.currentRowAccent`,
+    /// Phase 11: Kontrast 4,5 : 1).
     private var textColor: Color {
         switch model.status {
-        case .current: Palette.accent
+        case .current: Palette.currentRowAccent
         case .passed: Palette.textSecondary
         case .upcoming: Palette.label
+        }
+    }
+
+    private func kerahatColor(isActive: Bool) -> Color {
+        switch (model.status, isActive) {
+        case (.current, true): Palette.currentRowKerahatText
+        case (.current, false): Palette.currentRowTextSecondary
+        case (_, true): Palette.kerahatText
+        case (_, false): Palette.textSecondary
         }
     }
 

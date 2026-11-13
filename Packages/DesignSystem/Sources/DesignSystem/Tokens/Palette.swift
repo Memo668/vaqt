@@ -86,6 +86,26 @@ public enum Palette {
         dark: Values.accentDark.mixed(Values.currentRowShare, with: Values.backgroundCellDark)
     )
 
+    /// Schrift in Akzent auf der Karte des laufenden Gebets: hell 8 % dunkler als `accent`, damit sie auf der
+    /// getönten Karte 4,5 : 1 erreicht (WCAG AA; 4,8 statt 4,2 : 1) – entschieden mit dem Plan für Phase 11
+    /// („Schrift dort dunkler“). Dunkel gilt der Akzent, er erreicht dort 5,9 : 1.
+    public static let currentRowAccent = Color(
+        light: Values.accentLight.mixed(Values.currentRowTextShare, with: RGBA.black), dark: Values.accentDark
+    )
+
+    /// Sekundärschrift auf der Karte des laufenden Gebets, z. B. die Kerahat-Zeile: hell 8 % dunkler
+    /// (4,9 statt 4,3 : 1), dunkel die Systemfarbe.
+    public static let currentRowTextSecondary = Color(uiColor: UIColor { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor.secondaryLabel.resolvedColor(with: traits)
+            : Values.textSecondaryLight.mixed(Values.currentRowTextShare, with: RGBA.black).uiColor
+    })
+
+    /// Die laufende Kerahat-Zeile auf der Karte des laufenden Gebets: hell 8 % dunkler (4,7 statt 4,2 : 1).
+    public static let currentRowKerahatText = Color(
+        light: Values.kerahatTextLight.mixed(Values.currentRowTextShare, with: RGBA.black), dark: Values.kerahatTextDark
+    )
+
     /// Gewählter Eintrag einer Liste aus Karten, z. B. der Vers, den die Karte oben zeigt: Akzent zu 13 %
     /// auf der Kartenfarbe (`.vitem[aria-pressed="true"]`).
     public static let selectedItem = Color(
@@ -112,8 +132,9 @@ public enum Palette {
         public static let foreground = Color(RGBA.white)
         /// Marker kommender Gebete: Weiß zu 30 % auf dem Akzent.
         public static let marker = Color(RGBA.white.mixed(0.30, with: Values.accentLight))
-        /// Zeiten am Bogen: Weiß mit 80 % Deckkraft.
-        public static let time = Color(RGBA.white.opacity(0.80))
+        /// Zeiten am Bogen: Weiß. Der Prototyp nimmt 80 % Deckkraft (3,9 : 1); voll Weiß erreicht 5,2 : 1
+        /// (WCAG AA, entschieden mit dem Plan für Phase 11: „Schrift dort dunkler“).
+        public static let time = Color(RGBA.white)
         /// Kerahat-Marken in warmem Gelb, `#F3C979`.
         public static let kerahat = Color(Values.liveActivityKerahat)
     }
@@ -141,6 +162,8 @@ public enum Palette {
         public static let arcTrackShareLight = 0.20
         public static let arcTrackShareDark = 0.30
         public static let currentRowShare = 0.15
+        /// Schrift auf der Karte des laufenden Gebets, hell: 92 % der Farbe, 8 % Schwarz (Phase 11).
+        public static let currentRowTextShare = 0.92
         public static let selectedItemShare = 0.13
 
         public static let kerahatLight = RGBA(hex: 0xC7862A)
