@@ -51,8 +51,9 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID)
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
-        # Noch kein App-Icon; das Platzhalter-Icon kommt in Phase 11.
-        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        # TODO(placeholder): Platzhalter-Icon aus Phase 11 (Tagesbogen mit den fünf Gebeten), erzeugt von
+        # scripts/app-icon.swift; das endgültige Icon folgt (Spec § 6.9).
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     info:
       path: App/Info.plist
       properties:
