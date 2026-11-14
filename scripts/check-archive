@@ -1,0 +1,228 @@
+#!/bin/bash
+# Prüft ein Archiv der App vor dem Upload zu TestFlight (Beta-Vorbereitung, 14.11.2026):
+#
+#   - Widget-Extension eingebettet, Symbole (dSYMs) für Absturzberichte dabei
+#   - Datenschutz-Manifeste in App und Extension, gleich den Dateien in App/ und Widgets/
+#   - App-Icon: helles Bild 1024 × 1024 ohne Alphakanal
+#   - Texte in DE, TR, EN und ES, so vollständig wie der String Catalog, dazu die der Info.plist
+#   - nur iPhone, Exportkontrolle, Mindestversion
+#   - Kennungen: Extension und Hintergrundaufgabe passen zur App, App Group und Version überall gleich
+#   - keine Debug-Startargumente und kein Debug-Code in den Binärdateien
+#   - mit Signatur: die App Group in den Entitlements von App und Extension
+#
+#   scripts/check-archive [<Archiv.xcarchive>]     Standard: das Archiv von `make archive`
+#
+# „FEHLER“ heißt: so nicht hochladen (Exit 1). „Hinweis“ steht für Platzhalter, die bis zum
+# Entwicklerkonto bleiben dürfen (docs/OPEN-QUESTIONS.md, „Für die erste Beta“).
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+if [ -d /Volumes/Extern ]; then
+  BUILD_ROOT="${BUILD_ROOT:-/Volumes/Extern/Builds/NamazVakti}"
+else
+  BUILD_ROOT="${BUILD_ROOT:-$HOME/Library/Developer/Xcode/DerivedData/NamazVakti}"
+fi
+ARCHIVE="${1:-$BUILD_ROOT/Archives/Gebetszeiten.xcarchive}"
+APP="$ARCHIVE/Products/Applications/Gebetszeiten.app"
+EXT="$APP/PlugIns/GebetszeitenWidgets.appex"
+INFO="$APP/Info.plist"
+EXT_INFO="$EXT/Info.plist"
+CATALOG="$ROOT/Packages/DesignSystem/Sources/DesignSystem/Resources/Localizable.xcstrings"
+LANGUAGES=(de tr en es)
+
+[ -f "$INFO" ] || { echo "Kein Archiv der App unter $ARCHIVE – erst make archive" >&2; exit 2; }
+
+errors=0
+ok()   { echo "ok       $*"; }
+fail() { echo "FEHLER   $*"; errors=$((errors + 1)); }
+note() { echo "Hinweis  $*"; }
+# Wert aus einer Property-List oder JSON-Datei als Text (Wahrheitswerte als true/false); leer, wenn er fehlt.
+value() { plutil -extract "$2" raw -o - "$1" 2>/dev/null || true; }
+# Wert als JSON, z. B. [1] oder ["de","tr"]; leer, wenn er fehlt.
+json() { plutil -extract "$2" json -o - "$1" 2>/dev/null || true; }
+# Zahl der Einträge einer .strings- oder .stringsdict-Datei; 0, wenn es sie nicht gibt.
+entries() {
+  if [ -f "$1" ]; then plutil -p "$1" | grep -c '^  "' || true; else echo 0; fi
+}
+
+TMP="$(mktemp -d "${TMPDIR:-/tmp}/check-archive.XXXXXX")"
+trap 'rm -rf "$TMP"' EXIT
+
+app_id="$(value "$INFO" CFBundleIdentifier)"
+version="$(value "$INFO" CFBundleShortVersionString)"
+build="$(value "$INFO" CFBundleVersion)"
+group="$(value "$INFO" AppGroupIdentifier)"
+echo "Archiv   $ARCHIVE"
+echo "App      $app_id, Version $version ($build)"
+
+# Extension und Symbole
+if [ -x "$EXT/GebetszeitenWidgets" ]; then
+  ok "Widget-Extension eingebettet (PlugIns/GebetszeitenWidgets.appex)"
+else
+  fail "Widget-Extension fehlt (PlugIns/GebetszeitenWidgets.appex)"
+fi
+for dsym in Gebetszeiten.app.dSYM GebetszeitenWidgets.appex.dSYM; do
+  if [ -d "$ARCHIVE/dSYMs/$dsym" ]; then ok "Symbole für Absturzberichte: dSYMs/$dsym"; else fail "dSYMs/$dsym fehlt"; fi
+done
+
+# Datenschutz-Manifeste
+check_manifest() { # <Bundle> <Datei im Repo>
+  local manifest="$1/PrivacyInfo.xcprivacy" name
+  name="$(basename "$1")"
+  if [ ! -f "$manifest" ]; then
+    fail "$name: PrivacyInfo.xcprivacy fehlt"
+  elif ! plutil -lint -s "$manifest" >/dev/null; then
+    fail "$name: PrivacyInfo.xcprivacy ist keine gültige Property-List"
+  elif ! cmp -s "$manifest" "$2"; then
+    fail "$name: PrivacyInfo.xcprivacy weicht von ${2#"$ROOT/"} ab"
+  else
+    ok "$name: Datenschutz-Manifest wie ${2#"$ROOT/"} (Tracking: $(value "$manifest" NSPrivacyTracking))"
+  fi
+}
+check_manifest "$APP" "$ROOT/App/PrivacyInfo.xcprivacy"
+check_manifest "$EXT" "$ROOT/Widgets/PrivacyInfo.xcprivacy"
+
+# App-Icon: App Store Connect verlangt das helle Bild ohne Alphakanal; dunkel und getönt haben einen.
+icon="$(value "$INFO" CFBundleIcons.CFBundlePrimaryIcon.CFBundleIconName)"
+if [ "$icon" != AppIcon ]; then
+  fail "App-Icon: CFBundleIconName ist „$icon“ statt AppIcon"
+else
+  xcrun --sdk iphoneos assetutil --info "$APP/Assets.car" > "$TMP/assets.json" 2>/dev/null
+  opaque=""
+  i=0
+  while plutil -extract "$i" json -o /dev/null "$TMP/assets.json" 2>/dev/null; do
+    if [ "$(value "$TMP/assets.json" "$i.Name")" = AppIcon ] \
+      && [ "$(value "$TMP/assets.json" "$i.AssetType")" = "Icon Image" ] \
+      && [ "$(value "$TMP/assets.json" "$i.PixelWidth")" = 1024 ] \
+      && [ -z "$(value "$TMP/assets.json" "$i.Appearance")" ]; then
+      opaque="$(value "$TMP/assets.json" "$i.Opaque")"
+      break
+    fi
+    i=$((i + 1))
+  done
+  case "$opaque" in
+    true) ok "App-Icon: helles Bild 1024 × 1024 ohne Alphakanal" ;;
+    false) fail "App-Icon: Das helle Bild hat einen Alphakanal – App Store Connect lehnt es ab" ;;
+    *) fail "App-Icon: kein helles Bild 1024 × 1024 in Assets.car" ;;
+  esac
+fi
+
+# Texte
+localizations="$(json "$INFO" CFBundleLocalizations)"
+if [ "$localizations" = '["de","tr","en","es"]' ]; then
+  ok "Sprachen der App: de, tr, en, es (CFBundleLocalizations)"
+else
+  fail "CFBundleLocalizations ist $localizations statt [\"de\",\"tr\",\"en\",\"es\"]"
+fi
+expected="$(plutil -extract strings raw -o - "$CATALOG" | wc -l | tr -d ' ')"
+for bundle in "$APP" "$EXT"; do
+  missing=""
+  for language in "${LANGUAGES[@]}"; do
+    dir="$bundle/DesignSystem_DesignSystem.bundle/$language.lproj"
+    count=$(($(entries "$dir/Localizable.strings") + $(entries "$dir/Localizable.stringsdict")))
+    [ "$count" -eq "$expected" ] || missing="$missing $language: $count"
+  done
+  if [ -z "$missing" ]; then
+    ok "$(basename "$bundle"): $expected Texte je Sprache wie der String Catalog (${LANGUAGES[*]})"
+  else
+    fail "$(basename "$bundle"): Texte unvollständig, erwartet $expected –$missing"
+  fi
+done
+missing=""
+for language in "${LANGUAGES[@]}"; do
+  [ -n "$(value "$APP/$language.lproj/InfoPlist.strings" NSLocationWhenInUseUsageDescription)" ] || missing="$missing $language"
+done
+if [ -z "$missing" ]; then
+  ok "Begründung der Standortabfrage in allen vier Sprachen (InfoPlist.strings)"
+else
+  fail "Begründung der Standortabfrage fehlt in InfoPlist.strings:$missing"
+fi
+
+# Gerät, Exportkontrolle, Mindestversion
+for plist in "$INFO" "$EXT_INFO"; do
+  name="$(basename "$(dirname "$plist")")"
+  family="$(json "$plist" UIDeviceFamily)"
+  if [ "$family" = "[1]" ]; then
+    ok "$name: nur iPhone (UIDeviceFamily [1])"
+  else
+    fail "$name: UIDeviceFamily $family – nur iPhone ist [1] (TARGETED_DEVICE_FAMILY am Target in project.yml)"
+  fi
+done
+if [ "$(value "$INFO" ITSAppUsesNonExemptEncryption)" = false ]; then
+  ok "Exportkontrolle: ITSAppUsesNonExemptEncryption = NO"
+else
+  fail "Exportkontrolle: ITSAppUsesNonExemptEncryption = NO fehlt in der Info.plist der App (project.yml)"
+fi
+minimum="$(value "$INFO" MinimumOSVersion)"
+if [ -n "$minimum" ] && [ "$minimum" = "$(value "$EXT_INFO" MinimumOSVersion)" ]; then
+  ok "Mindestversion iOS $minimum in App und Extension"
+else
+  fail "Mindestversion: App „$minimum“, Extension „$(value "$EXT_INFO" MinimumOSVersion)“"
+fi
+
+# Kennungen und Versionen
+ext_id="$(value "$EXT_INFO" CFBundleIdentifier)"
+if [ "$ext_id" = "$app_id.widgets" ]; then ok "Extension: $ext_id"; else fail "Extension heißt „$ext_id“ statt $app_id.widgets"; fi
+refresh="$(json "$INFO" BGTaskSchedulerPermittedIdentifiers)"
+if [ "$refresh" = "[\"$app_id.refresh\"]" ]; then
+  ok "Hintergrundaktualisierung: $app_id.refresh"
+else
+  fail "BGTaskSchedulerPermittedIdentifiers ist $refresh statt [\"$app_id.refresh\"]"
+fi
+ext_group="$(value "$EXT_INFO" AppGroupIdentifier)"
+if [ -n "$group" ] && [ "$group" = "$ext_group" ] && [ "${group#group.}" != "$group" ]; then
+  ok "App Group in App und Extension: $group"
+else
+  fail "App Group: App „$group“, Extension „$ext_group“ – beide gleich und mit „group.“ davor"
+fi
+ext_version="$(value "$EXT_INFO" CFBundleShortVersionString) ($(value "$EXT_INFO" CFBundleVersion))"
+if [ "$ext_version" = "$version ($build)" ]; then
+  ok "Version in App und Extension: $version ($build)"
+else
+  fail "Version: App $version ($build), Extension $ext_version"
+fi
+project_id="$("$ROOT/scripts/bundle-id")"
+[ "$app_id" = "$project_id" ] || note "Bundle-ID $app_id weicht von project.yml ab ($project_id)"
+case "$app_id" in
+  com.example.*) note "Bundle-ID und App Group sind noch Platzhalter ($app_id, $group); die echten kommen mit dem Konto (project.yml)" ;;
+esac
+source_url="$(value "$INFO" SourceCodeURL)"
+case "$source_url" in
+  *example.com*) note "Link „Quellcode“ ist noch ein Platzhalter ($source_url; SOURCE_CODE_URL in project.yml)" ;;
+esac
+
+# Debug: Die Startargumente stehen nur in DEBUG-Builds im Code (CLAUDE.md, „Debug-Simulation“).
+for binary in "$APP/Gebetszeiten" "$EXT/GebetszeitenWidgets"; do
+  name="$(basename "$binary")"
+  found="$(strings -a "$binary" \
+    | { grep -E -o -- '-debug[A-Z][A-Za-z]*|LaunchOptions|CatalogRoot|ComponentCatalog|FixtureTimes|DebugClock' || true; } \
+    | sort -u | tr '\n' ' ')"
+  if [ -z "$found" ]; then
+    ok "$name: keine Debug-Startargumente, kein Debug-Code"
+  else
+    fail "$name enthält Debug-Code: ${found}– kein Release-Archiv, oder etwas liegt außerhalb von #if DEBUG"
+  fi
+done
+
+# Signatur und Entitlements
+if codesign -d "$APP" >/dev/null 2>&1; then
+  for bundle in "$APP" "$EXT"; do
+    name="$(basename "$bundle")"
+    codesign -d --entitlements - --xml "$bundle" > "$TMP/entitlements.plist" 2>/dev/null || true
+    # Punkte im Schlüssel maskiert: plutil trennt den Pfad sonst an ihnen auf.
+    groups="$(json "$TMP/entitlements.plist" 'com\.apple\.security\.application-groups')"
+    if [ "$groups" = "[\"$group\"]" ]; then
+      ok "$name: signiert, App Group $group in den Entitlements"
+    else
+      fail "$name: App Group in den Entitlements ist „$groups“ statt [\"$group\"]"
+    fi
+  done
+else
+  note "ohne Signatur (CODE_SIGNING_ALLOWED=NO): die App Group in den Entitlements prüft erst das signierte Archiv"
+fi
+
+if [ "$errors" -eq 0 ]; then
+  echo "Archiv in Ordnung."
+else
+  echo "$errors Fehler – so nicht hochladen."
+  exit 1
+fi

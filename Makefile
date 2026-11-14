@@ -25,6 +25,8 @@ BUILD_ROOT ?= $(if $(wildcard $(EXTERN)),$(EXTERN)/Builds/NamazVakti,$(HOME)/Lib
 DERIVED    := $(BUILD_ROOT)/DerivedData
 CORE_BUILD := $(BUILD_ROOT)/spm-PrayerCore
 APP        := $(DERIVED)/Build/Products/Debug-iphonesimulator/Gebetszeiten.app
+# Release-Archiv für TestFlight (`make archive`), wie die Build-Daten auf der externen Platte.
+ARCHIVE    := $(BUILD_ROOT)/Archives/Gebetszeiten.xcarchive
 
 # Startargumente für `make run`. Standard ist der Haupt-Screenshot iphone/10:
 # Deutsch, Berlin, 10.11.2026, 14:25. Weitere Sätze stehen in docs/PROMPTS.md.
@@ -42,7 +44,7 @@ SHOT ?= screenshots-out/screenshot.png
 
 XCODEBUILD := xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' -derivedDataPath '$(DERIVED)'
 
-.PHONY: help project strings check-strings build test test-core coverage boot run statusbar screenshot compare compare-today compare-qibla compare-guide compare-verses compare-qada compare-settings compare-system compare-duo harness capture clean
+.PHONY: help project strings check-strings build test test-core coverage archive boot run statusbar screenshot compare compare-today compare-qibla compare-guide compare-verses compare-qada compare-settings compare-system compare-duo harness capture clean
 
 help: ## Diese Übersicht
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -71,6 +73,13 @@ coverage: ## Testabdeckung von PrayerCore, Zeile für Zeile je Datei
 	  '$(CORE_BUILD)/debug/PrayerCoreTests.xctest/Contents/MacOS/PrayerCoreTests' \
 	  -instr-profile '$(CORE_BUILD)/debug/codecov/default.profdata' \
 	  '$(CURDIR)/Packages/PrayerCore/Sources/PrayerCore'
+
+archive: project ## Release-Archiv für das iPhone ohne Signatur bauen und prüfen (scripts/check-archive)
+	rm -rf '$(ARCHIVE)'
+	xcodebuild archive -project $(PROJECT) -scheme $(SCHEME) -configuration Release \
+	  -destination 'generic/platform=iOS' -derivedDataPath '$(DERIVED)' -archivePath '$(ARCHIVE)' \
+	  CODE_SIGNING_ALLOWED=NO
+	scripts/check-archive '$(ARCHIVE)'
 
 boot: ## Simulator starten
 	xcrun simctl boot '$(SIM)' 2>/dev/null || true

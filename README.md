@@ -49,6 +49,7 @@ open Gebetszeiten.xcodeproj
 | `make harness` | Skripte des UI-Hilfsprojekts ausführen, das antippt, wischt und aufnimmt (`SCRIPTS='scripts/ui-harness/scripts/iphone-61-qada.txt'`) – für Zustände mit Tipp |
 | `make capture` | jeden Bildschirm ganz aufnehmen, in Sprachen, Schriftgrößen, hell und dunkel, RTL, mit der Prüfung der Bedienungshilfen von Xcode und einem Kontaktbogen (`VARIANTS='de tr-ax5 de-dark de-rtl'`) |
 | `make strings` | String Catalog und `L10n.swift` aus dem Prototyp neu erzeugen |
+| `make archive` | Release-Archiv für das iPhone ohne Signatur bauen und mit `scripts/check-archive` prüfen (Abschnitt „App Store“) |
 
 Simulator für Build, Tests und Abgleich ist das iPhone 18 Pro. Ein anderer lässt sich je Aufruf wählen, z. B. `make test SIM='iPhone 17'`.
 
@@ -460,6 +461,10 @@ Die App folgt Dynamic Type bis AX5 (Phase 11). Ab den AX-Größen stellen sich e
 `make capture` nimmt jeden Bildschirm in Varianten auf und schreibt dazu die Prüfung der Bedienungshilfen von Xcode (`performAccessibilityAudit`) und den Baum der Bedienungshilfen; die Aufnahmen liegen auf der externen Platte, wenn sie angesteckt ist (`screenshots-out/phase-11/matrix` zeigt dorthin). Was die Prüfung meldet und was davon bleibt, steht in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 11“).
 
 ## App Store
+
+`make archive` baut das Release-Archiv für das iPhone (`generic/platform=iOS`) ohne Signatur nach `Archives/Gebetszeiten.xcarchive` neben den Build-Daten, auf der externen Platte, wenn sie angesteckt ist. Danach prüft `scripts/check-archive` es auf das, was der Upload braucht: Widget-Extension und Symbole eingebettet, beide Datenschutz-Manifeste, das helle App-Icon ohne Alphakanal, alle Texte in DE, TR, EN und ES, nur iPhone (`UIDeviceFamily` 1), Exportkontrolle, Kennungen und Versionen von App, Extension und Hintergrundaufgabe, keine Debug-Startargumente in den Binärdateien und, bei einem signierten Archiv, die App Group in den Entitlements. „FEHLER“ heißt: so nicht hochladen; „Hinweis“ nennt die Platzhalter, die bis zum Entwicklerkonto bleiben. Ein anderes Archiv prüft `scripts/check-archive <Pfad.xcarchive>`.
+
+Die Gerätefamilie steht in `project.yml` an beiden Targets, nicht beim Projekt: XcodeGen setzt für iOS-Targets sonst „1,2“, und als iPad-App mit nur Hochformat lehnte Apple den Upload ab. Die Exportkontrolle beantwortet `ITSAppUsesNonExemptEncryption = NO` in der Info.plist: Die App verschlüsselt nicht selbst und geht nur über MapKit ins Netz.
 
 Datenschutz-Manifeste: `App/PrivacyInfo.xcprivacy` und `Widgets/PrivacyInfo.xcprivacy` (kein Tracking, keine erfassten Daten, UserDefaults mit Grund). Die Angaben für App Store Connect – „Keine Daten erfasst“ mit Begründung je Datenart – stehen in `docs/APP-STORE.md`. Das App-Symbol ist ein Platzhalter: der Tagesbogen mit den fünf Gebeten, hell, dunkel und getönt, erzeugt von `swift scripts/app-icon.swift` (TODO(placeholder), Spec § 6.9).
 
