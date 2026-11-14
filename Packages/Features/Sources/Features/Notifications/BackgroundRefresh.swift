@@ -16,7 +16,7 @@ public enum BackgroundRefresh {
 
     /// Kennung der Aufgabe: die Bundle-ID der App mit „.refresh“.
     public static var identifier: String {
-        (Bundle.main.bundleIdentifier ?? "com.example.gebetszeiten") + ".refresh"
+        AppInfo.bundleIdentifier + ".refresh"
     }
 
     /// Frühestens so lange nach der Bitte darf iOS die App wecken.

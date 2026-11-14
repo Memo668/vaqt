@@ -13,7 +13,7 @@ import PrayerCore
 /// das übernimmt die App, sobald sie läuft (`LiveActivityLifecycle`).
 public struct SystemLiveActivityScheduler: LiveActivityScheduling {
 
-    static let log = Logger(subsystem: "com.example.gebetszeiten", category: "liveActivity")
+    static let log = Logger(subsystem: AppInfo.bundleIdentifier, category: "liveActivity")
 
     /// Eine stille Tondatei im Haupt-Bundle (`App/Sounds`): Der Start der Aktivität soll nicht klingen,
     /// Mitteilung und Vorab-Erinnerung klingen schon. Ohne eigene Datei spielte iOS seinen Ton.

@@ -70,7 +70,7 @@ xcodebuild test -project Gebetszeiten.xcodeproj -scheme Gebetszeiten -destinatio
 ```
 
 ```bash
-xcrun simctl launch --terminate-running-process 'iPhone 18 Pro' com.example.gebetszeiten -AppleLanguages '(de)' -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25
+xcrun simctl launch --terminate-running-process 'iPhone 18 Pro' "$(scripts/bundle-id)" -AppleLanguages '(de)' -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25
 ```
 
 ```bash
@@ -377,7 +377,7 @@ make statusbar TIME=11:52
 Das Protokoll der App nennt in DEBUG jedes Mal, was iOS vormerkt:
 
 ```bash
-xcrun simctl spawn booted log show --last 15m --predicate 'subsystem == "com.example.gebetszeiten" AND category == "notifications"'
+xcrun simctl spawn booted log show --last 15m --predicate "subsystem == \"$(scripts/bundle-id)\" AND category == \"notifications\""
 ```
 
 Töne sind im Simulator auf diesem Mac nicht zu hören (kein Ausgabegerät); sie bleiben am Gerät zu prüfen.
@@ -405,7 +405,7 @@ Die Live-Aktivität läuft je Pflichtgebet, ohne Sonnenaufgang, standardmäßig 
 Das Protokoll der App nennt in DEBUG, welche Aktivitäten es gibt und was die App anmeldet, auffrischt und beendet:
 
 ```bash
-xcrun simctl spawn booted log show --last 15m --predicate 'subsystem == "com.example.gebetszeiten" AND (category == "liveActivity" OR category == "widgets")'
+xcrun simctl spawn booted log show --last 15m --predicate "subsystem == \"$(scripts/bundle-id)\" AND (category == \"liveActivity\" OR category == \"widgets\")"
 ```
 
 ## iPhone Duo
@@ -435,7 +435,7 @@ make compare-duo MODE=closed STATES='10 85'
 Aufnahmen und Vergleiche liegen in `screenshots-out/phase-10/`. Startet der Duo nach einem Neustart, ist er zugeklappt. Was abweicht und warum, steht in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 10“). Das Protokoll der App nennt in DEBUG Platz, Falz und Größenklasse:
 
 ```bash
-xcrun simctl spawn 'iPhone Duo' log stream --level debug --predicate 'subsystem == "com.example.gebetszeiten" AND category == "duo"'
+xcrun simctl spawn 'iPhone Duo' log stream --level debug --predicate "subsystem == \"$(scripts/bundle-id)\" AND category == \"duo\""
 ```
 
 ## Texte
@@ -470,4 +470,6 @@ Datenschutz-Manifeste: `App/PrivacyInfo.xcprivacy` und `Widgets/PrivacyInfo.xcpr
 
 ## Bundle-ID und App Group
 
-`com.example.gebetszeiten` und `group.com.example.gebetszeiten` sind Platzhalter. Beide stehen oben in `project.yml` (`APP_BUNDLE_ID`, `APP_GROUP_ID`) und müssen vor dem ersten Archiv ersetzt werden; ein Entwicklerteam ist noch nicht eingetragen.
+`com.example.gebetszeiten` und `group.com.example.gebetszeiten` sind Platzhalter, bis es das Entwicklerkonto gibt (entschieden am 14.11.2026: „Mit dem Konto festlegen“). Beide stehen nur oben in `project.yml` (`APP_BUNDLE_ID`, `APP_GROUP_ID`): Info.plists und Entitlements von App und Extension, die Kennung der Hintergrundaktualisierung (`<Bundle-ID>.refresh`) und das Subsystem des Protokolls nehmen sie von dort; `Makefile`, Abgleich-Skripte, UI-Hilfsprojekt und `scripts/check-archive` lesen die Bundle-ID über `scripts/bundle-id`. Für die echten Kennungen ändern sich damit nur diese zwei Zeilen in `project.yml`, danach `make project`. Das UI-Hilfsprojekt hat für sich selbst eine eigene Kennung (`com.example.gebetszeiten.uiharness`); es läuft nur im Simulator und gehört nicht zur App. Ein Entwicklerteam ist noch nicht eingetragen (`DEVELOPMENT_TEAM`).
+
+Kennungen und Team einer Testinstallation auf einem eigenen iPhone (persönliches Team) gehören nicht ins Repo. Die echte Bundle-ID nicht mit einem persönlichen Team verwenden: Xcode registriert sie sonst dort, und das Konto für die Beta bekommt sie womöglich nicht mehr.

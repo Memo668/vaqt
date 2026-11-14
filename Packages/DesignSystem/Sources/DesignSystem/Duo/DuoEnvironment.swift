@@ -76,7 +76,7 @@ struct ContentGeometry: Equatable, Sendable {
     static let zero = ContentGeometry(width: 0, height: 0, fold: nil)
 
     #if DEBUG
-    static let log = Logger(subsystem: "com.example.gebetszeiten", category: "duo")
+    static let log = Logger(subsystem: Bundle.main.bundleIdentifier ?? "Gebetszeiten", category: "duo")
     #endif
 
     init(width: CGFloat, height: CGFloat, fold: Fold?) {

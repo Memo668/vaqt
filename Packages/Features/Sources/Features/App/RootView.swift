@@ -193,6 +193,12 @@ struct AppContent: View {
 /// Angaben aus der Info.plist der App.
 enum AppInfo {
 
+    /// Die Bundle-ID der App (`APP_BUNDLE_ID` in project.yml): Subsystem des Protokolls und Anfang der
+    /// Kennung der Hintergrundaktualisierung. So steht sie nur in project.yml.
+    static var bundleIdentifier: String {
+        Bundle.main.bundleIdentifier ?? "Gebetszeiten"
+    }
+
     /// „0.1.0 (1)“ – Version und Build (`CFBundleShortVersionString`, `CFBundleVersion`).
     static var version: String {
         let info = Bundle.main.infoDictionary ?? [:]

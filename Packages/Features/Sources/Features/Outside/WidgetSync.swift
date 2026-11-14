@@ -46,7 +46,7 @@ public struct NoWidgetPublisher: WidgetPublishing {
 @MainActor
 public final class WidgetSync {
 
-    static let log = Logger(subsystem: "com.example.gebetszeiten", category: "widgets")
+    static let log = Logger(subsystem: AppInfo.bundleIdentifier, category: "widgets")
 
     public let settings: SettingsStore
     public let location: PlaceModel

@@ -42,7 +42,11 @@ final class HarnessTests: XCTestCase {
         guard let path = environment["HARNESS_SCRIPT"] else {
             throw XCTSkip("HARNESS_SCRIPT fehlt")
         }
-        let app = XCUIApplication(bundleIdentifier: environment["HARNESS_BUNDLE_ID"] ?? "com.example.gebetszeiten")
+        // Die Bundle-ID setzt scripts/ui-harness/run aus project.yml.
+        guard let bundleID = environment["HARNESS_BUNDLE_ID"] else {
+            throw XCTSkip("HARNESS_BUNDLE_ID fehlt")
+        }
+        let app = XCUIApplication(bundleIdentifier: bundleID)
         let screen = app.coordinate(withNormalizedOffset: .zero)
         for raw in try String(contentsOfFile: path, encoding: .utf8).split(separator: "\n") {
             let line = raw.trimmingCharacters(in: .whitespaces)

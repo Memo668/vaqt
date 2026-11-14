@@ -20,8 +20,10 @@ settings:
     SWIFT_VERSION: "6.0"
     MARKETING_VERSION: "0.1.0"
     CURRENT_PROJECT_VERSION: "1"
-    # Platzhalter – vor dem ersten Archiv ersetzen (docs/BUILD-PLAN.md, Spec § 6.9).
-    # Die App Group steht nur hier; die Entitlements beider Targets lesen sie von hier.
+    # Bundle-ID und App Group: Platzhalter bis zum Entwicklerkonto (entschieden am 14.11.2026, „Mit dem
+    # Konto festlegen“; docs/OPEN-QUESTIONS.md). Beide stehen nur hier: Info.plists, Entitlements und
+    # Hintergrundaufgabe beider Targets nehmen sie von hier, Makefile und Skripte über scripts/bundle-id,
+    # das Protokoll über die Bundle-ID der App. Kennungen einer Testinstallation nie hier einchecken.
     APP_BUNDLE_ID: com.example.gebetszeiten
     APP_GROUP_ID: group.com.example.gebetszeiten
     # TODO(placeholder): Adresse hinter Einstellungen › Quellcode („Open Source auf GitHub“). Das Repo hat

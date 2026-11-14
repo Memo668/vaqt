@@ -24,8 +24,8 @@ else
   BUILD_ROOT="${BUILD_ROOT:-$HOME/Library/Developer/Xcode/DerivedData/NamazVakti}"
 fi
 DERIVED="$BUILD_ROOT/ui-harness/DerivedData"
-# Die Bundle-ID der App aus project.yml – sie ist bis zur Beta ein Platzhalter.
-BUNDLE_ID="${BUNDLE_ID:-$(sed -nE 's/^ *APP_BUNDLE_ID: *([^ ]+).*/\1/p' "$ROOT/project.yml" | head -1)}"
+# Die Bundle-ID der App aus project.yml – bis zum Entwicklerkonto ein Platzhalter.
+BUNDLE_ID="${BUNDLE_ID:-$("$ROOT/scripts/bundle-id")}"
 if [ -n "${SIM_ID:-}" ]; then
   DEST="platform=iOS Simulator,id=$SIM_ID"
 else

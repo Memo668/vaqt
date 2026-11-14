@@ -7,7 +7,8 @@
 
 PROJECT   := Gebetszeiten.xcodeproj
 SCHEME    := Gebetszeiten
-BUNDLE_ID := com.example.gebetszeiten
+# Die Bundle-ID steht nur in project.yml (APP_BUNDLE_ID); bis zum Entwicklerkonto ein Platzhalter.
+BUNDLE_ID := $(shell scripts/bundle-id)
 
 # Simulator für Build, Tests und Abgleich: iPhone 18 Pro, entschieden am 10.11.2026
 # (docs/OPEN-QUESTIONS.md). Ein anderer Simulator: make test SIM='iPhone 17'

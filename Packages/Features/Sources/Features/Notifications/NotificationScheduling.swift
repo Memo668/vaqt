@@ -76,7 +76,7 @@ public struct SystemNotificationScheduler: NotificationScheduling {
         }
     }
 
-    static let log = Logger(subsystem: "com.example.gebetszeiten", category: "notifications")
+    static let log = Logger(subsystem: AppInfo.bundleIdentifier, category: "notifications")
 
     #if DEBUG
     /// Schreibt ins Protokoll, was iOS jetzt vormerkt – die ersten sechs und die letzten zwei, damit der

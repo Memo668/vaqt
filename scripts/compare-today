@@ -30,7 +30,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SIM="${SIM:-iPhone 18 Pro}"
-BUNDLE_ID=com.example.gebetszeiten
+BUNDLE_ID="${BUNDLE_ID:-$("$ROOT/scripts/bundle-id")}"
 REF="$ROOT/design/screenshots/iphone"
 OUT="${OUT:-$ROOT/screenshots-out/phase-3}"
 ZOOM="${ZOOM:-3}"
