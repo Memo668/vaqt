@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 13.11.2026, nach Phase 11.
+Stand: 14.11.2026, nach der Abnahme von Phase 11.
 
 ## Für die erste Beta
 
@@ -94,6 +94,7 @@ Diese Punkte standen bis Phase 10 unter „Braucht eine Entscheidung“.
 | 8 | 12.11.2026, „Abnehmen“ | `2a48ba8` | Ton zum Sonnenaufgang: „Systemton“ |
 | 9 | 12.11.2026, „Abnehmen“ | `402627e` | was nur ein Gerät zeigt (oben unter „Am Gerät prüfen“) |
 | 10 | 13.11.2026, „Abnehmen, zusammenführen (Empfohlen)“ | `4f39a9a` | was nur ein Gerät zeigt; die Breiten des Onboardings innen sind nur gerechnet |
+| 11 | 14.11.2026, „Abnehmen“ | `381c556` | `duo/open-*` nicht abgeglichen („Ohne innen abschließen“); was nur ein Gerät zeigt; für die Beta Konto, Kennungen und App Store Connect |
 
 ### Erste Beta, entschieden am 12.11.2026
 
