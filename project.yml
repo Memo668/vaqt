@@ -29,7 +29,6 @@ settings:
     SOURCE_CODE_URL: https://example.com/gebetszeiten
     DEVELOPMENT_TEAM: ""
     CODE_SIGN_STYLE: Automatic
-    TARGETED_DEVICE_FAMILY: "1"
     ENABLE_USER_SCRIPT_SANDBOXING: YES
     LOCALIZATION_PREFERS_STRING_CATALOGS: YES
 
@@ -50,6 +49,9 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID)
+        # Nur iPhone (das iPhone Duo gehört dazu). Am Target, nicht beim Projekt: XcodeGen setzt für
+        # iOS-Targets sonst „1,2“, und als iPad-App ohne alle vier Ausrichtungen lehnt Apple den Upload ab.
+        TARGETED_DEVICE_FAMILY: "1"
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         # TODO(placeholder): Platzhalter-Icon aus Phase 11 (Tagesbogen mit den fünf Gebeten), erzeugt von
         # scripts/app-icon.swift; das endgültige Icon folgt (Spec § 6.9).
@@ -98,6 +100,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID).widgets
+        # Wie die App: nur iPhone.
+        TARGETED_DEVICE_FAMILY: "1"
     info:
       path: Widgets/Info.plist
       properties:
