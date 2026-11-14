@@ -82,6 +82,9 @@ targets:
         # die Mitteilungen neu (Features: BackgroundRefresh). Die Kennung ist die Bundle-ID mit „.refresh“.
         UIBackgroundModes: [fetch]
         BGTaskSchedulerPermittedIdentifiers: [$(APP_BUNDLE_ID).refresh]
+        # Exportkontrolle: Die App verschlüsselt nicht selbst; ins Netz geht sie nur über MapKit, mit dem
+        # HTTPS des Systems. Damit entfällt die Frage bei jedem Upload (docs/APP-STORE.md).
+        ITSAppUsesNonExemptEncryption: false
     entitlements:
       path: App/Gebetszeiten.entitlements
       properties:
