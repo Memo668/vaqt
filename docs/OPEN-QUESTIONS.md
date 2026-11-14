@@ -2,19 +2,18 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 14.11.2026, nach der Abnahme von Phase 11.
+Stand: 14.11.2026, nach der Beta-Vorbereitung ohne Konto.
 
 ## Für die erste Beta
 
-Die erste Beta über TestFlight kommt nach Phase 11 und enthält alles, auch Mitteilungen, Widgets, Live-Aktivität und Duo (entschieden am 12.11.2026). Es fehlt:
+Die erste Beta über TestFlight kommt nach Phase 11 und enthält alles, auch Mitteilungen, Widgets, Live-Aktivität und Duo (entschieden am 12.11.2026). Was ohne Konto geht, ist vorbereitet (14.11.2026, unten). Es fehlt nur noch, was das Konto braucht; den Ablauf beschreibt `docs/APP-STORE.md` unter „Mit dem Konto“:
 
 - **Konto und Team:** das Apple-Entwicklerkonto; `DEVELOPMENT_TEAM` in `project.yml` ist leer. Ein Konto als Organisation braucht eine D-U-N-S-Nummer und kann Tage bis Wochen dauern.
-- **Kennungen:** echte Bundle-ID und App Group statt `com.example.gebetszeiten` und `group.com.example.gebetszeiten` (`APP_BUNDLE_ID`, `APP_GROUP_ID` in `project.yml`; die Kennung der Hintergrundaktualisierung und das UI-Hilfsprojekt lesen sie von dort, das `Makefile` hat sie noch einmal als `BUNDLE_ID`).
-- **App Store Connect:** Eintrag der App, die Datenschutzangabe „Keine Daten erfasst“ (vorbereitet in `docs/APP-STORE.md`), für externe Tester eine Datenschutzerklärung (URL) und die Beschreibung der Beta.
-- **Info.plist:** `ITSAppUsesNonExemptEncryption = NO` für die Exportkontrolle (`docs/APP-STORE.md`).
-- **Archiv und Upload.**
+- **Kennungen festlegen und registrieren:** Bundle-ID und App Group kommen mit dem Konto, nach der Domain seines Inhabers (entschieden am 14.11.2026: „Mit dem Konto festlegen“). Sie stehen nur noch in `project.yml` (`APP_BUNDLE_ID`, `APP_GROUP_ID`, bis dahin `com.example.gebetszeiten`); der Wechsel sind diese zwei Zeilen. Zu registrieren sind die App, die Extension (`<Bundle-ID>.widgets`) und die App Group.
+- **App Store Connect:** die App anlegen – der Name muss im Store eindeutig sein, „Gebetszeiten“ ist vermutlich vergeben –, App-Datenschutz „Keine Daten erfasst“, die Datenschutzerklärung als Adresse und die Testinformationen. Alles vorbereitet in `docs/APP-STORE.md`; einzutragen sind noch Feedback-E-Mail und Kontakt. Die Adresse der Datenschutzerklärung entsteht, sobald das Repo öffentlich auf GitHub liegt (entschieden am 14.11.2026); vorher Verantwortlichen und Aufbewahrung im Text ausfüllen. Mit dem öffentlichen Repo bekommt auch „Quellcode“ (`SOURCE_CODE_URL`) seine Adresse.
+- **Signiertes Archiv und Upload:** signiert archivieren, mit `scripts/check-archive` prüfen (dann auch die App Group in den Entitlements), hochladen; zuerst intern testen, dann extern.
 
-Erledigt mit Phase 11: das Platzhalter-Icon (`AppIcon`, Tagesbogen mit den fünf Gebeten) und die Datenschutz-Manifeste (`PrivacyInfo.xcprivacy` in App und Widgets). Die Platzhalter – Übersetzungen der Verse, Adhan-Aufnahmen, Texte der Anleitung, Icon – dürfen in der Beta bleiben.
+Erledigt ohne Konto am 14.11.2026: `make archive` baut das Release-Archiv ohne Signatur, und `scripts/check-archive` findet es in Ordnung – nur iPhone (vorher iPhone und iPad, unten unter „Annahmen in der Beta-Vorbereitung“), Exportkontrolle `ITSAppUsesNonExemptEncryption = NO`, beide Manifeste, Icon, alle Texte in vier Sprachen, kein Debug-Code. Dazu die Datenschutzerklärung (`docs/DATENSCHUTZ.md`, `docs/PRIVACY.md`) und die Texte für TestFlight (`docs/APP-STORE.md`). Mit Phase 11 kamen das Platzhalter-Icon und die Datenschutz-Manifeste. Die Platzhalter – Übersetzungen der Verse, Adhan-Aufnahmen, Texte der Anleitung, Icon, Link „Quellcode“ – dürfen in der Beta bleiben; „Was testen“ nennt sie.
 
 ## Vor dem App Store
 
@@ -24,8 +23,10 @@ Erledigt mit Phase 11: das Platzhalter-Icon (`AppIcon`, Tagesbogen mit den fünf
 - **Adhan-Aufnahmen** (Phase 7, Spec § 6.5): Stimme 1 und 2 sind freie Aufnahmen von Wikimedia Commons; die Lizenzangaben (CC0 1.0, gemeinfrei) stammen von den Hochladenden. Herkunft und Rechte prüfen oder durch die endgültigen Aufnahmen ersetzen; Stimme 3 und die Fadschr-Variante fehlen.
 - **Texte der Anleitung** (Phase 5, Spec § 6.14): Niemand hat sie fachlich geprüft (Imam oder Gelehrter je Sprache). Offen sind auch eine neutrale Fassung oder Varianten je Rechtsschule und für Frauen, echte Illustrationen und Audio für die Formeln.
 - **Icon und Name** (Spec § 6.9): Das Icon ist ein Platzhalter (Phase 11). Das Zeichen in Onboarding und Tagline ist weiter die Mondsichel des Prototyps (`iphone/01`, `72`); mit dem endgültigen Icon gleich mit festlegen.
-- **Datenschutzerklärung** als Adresse für App Store Connect; der Text der Seite „Datenschutz“ kann die Grundlage sein.
-- **Quellcode und Version** (Phase 7): Die Adresse hinter „Quellcode“ ist ein Platzhalter (`SOURCE_CODE_URL`), die Version steht auf 0.1.0.
+- **Datenschutzerklärung:** Der Text liegt auf Deutsch und Englisch in `docs/DATENSCHUTZ.md` und `docs/PRIVACY.md` (Beta-Vorbereitung). Vor dem App Store: auf Türkisch und Spanisch übersetzen und den Text prüfen lassen.
+- **Seite „Datenschutz“ in der App:** Sie sagt wie im Prototyp, der Standort werde „nur auf diesem Gerät zur Berechnung verwendet und verlässt es nie“ (`privacyBody2`); ähnlich die Begründung der Standortabfrage (`alLocBody`). Für den Stadtnamen gehen die Koordinaten aber an Apple (MapKit), ebenso der Suchtext der Ortssuche. Die Datenschutzerklärung sagt das genau. Offen: den Text im Prototyp in allen vier Sprachen anpassen oder so lassen.
+- **Lizenzhinweis für Adhan Swift** (MIT): Die Lizenz verlangt, Copyright und Lizenztext mit jeder Kopie weiterzugeben. Eine Seite dafür haben weder Spec noch App; offen ist, wo der Hinweis stehen soll, etwa unter „Über“.
+- **Quellcode und Version** (Phase 7): Die Adresse hinter „Quellcode“ ist ein Platzhalter (`SOURCE_CODE_URL`), bis das Repo öffentlich auf GitHub liegt; die Version steht auf 0.1.0.
 - **Türkische Texte:** Die Endung der Vorab-Erinnerung rechnet die App seit Phase 11 („12:53’te“). Jemand mit Türkisch als Muttersprache sollte die Texte einmal lesen.
 
 **Rechnung**
@@ -37,7 +38,7 @@ Erledigt mit Phase 11: das Platzhalter-Icon (`AppIcon`, Tagesbogen mit den fünf
 - **Kompass** (Phase 4): dass die Skala ruhig und in die richtige Richtung dreht, geografisch Nord mit und magnetisch Nord ohne Standortfreigabe, ab welcher Abweichung die Karte „Kompass kalibrieren“ erscheint (angenommen 25°), die Haptik beim Ausrichten, der Verbrauch bei offener Seite.
 - **Mitteilungen** (Phase 8): die Aufnahmen als Mitteilungston, die Hintergrundaktualisierung über Tage (rollt das Fenster weiter?), Fokus und geplante Übersicht, die Gruppierung über mehrere Tage.
 - **Widgets und Live-Aktivität** (Phase 9): der geplante Start über Stunden und Tage mit gesperrtem Gerät und beendeter App; wie schnell iOS ab Gebetsbeginn „Jetzt“ zeichnet (im Simulator bis zu zwei Minuten „0:00“); das Ende 15 Minuten nach Beginn ohne laufende App; der stille Hinweis, Apple Watch und StandBy; die Grenze von fünf Aktivitäten; getönte und klare Widgets; große Schrift (Phase 11: Die Texte wachsen bis zum 1,2-Fachen).
-- **iPhone Duo** (Phase 10): Auf- und Zuklappen bei laufender App, auch beim Scrollen und mit offenem Sheet; der Wechsel in die Tischhaltung und ihr echter Winkel, die Haltung wie ein Buch; der Kompass außen und innen; Widgets und Live-Aktivität. Dazu der Abgleich innen (`duo/open-*`) mit dem Stand von Phase 11 und große Schrift innen – im Simulator braucht beides jemanden, der in Device Hub aufklappt.
+- **iPhone Duo** (Phase 10): Auf- und Zuklappen bei laufender App, auch beim Scrollen und mit offenem Sheet; der Wechsel in die Tischhaltung und ihr echter Winkel, die Haltung wie ein Buch; der Kompass außen und innen; Widgets und Live-Aktivität. Dazu der Abgleich innen (`duo/open-*`) mit dem Stand von Phase 11 und große Schrift innen – im Simulator braucht beides jemanden, der in Device Hub aufklappt. Seit der Beta-Vorbereitung ist die App nur noch für die Gerätefamilie iPhone gebaut, zu der das Duo gehört, vorher für iPhone und iPad: innen einmal ansehen, ob Querformat, Hochformat, Tischhaltung und Split View unverändert laufen.
 - **Leistung und Akku** (Phase 11): Verbrauch am Gerät mit Instruments (Energy Log) – auf der Zeiten-Seite, mit offenem Kompass, mit laufender Live-Aktivität und über einen Tag mit Hintergrundaktualisierung. Im Simulator gemessen ist nur die CPU-Zeit („Annahmen in Phase 11“).
 - **VoiceOver von Hand** (Phase 11): Geprüft sind der Baum der Bedienungshilfen und die Prüfung von Xcode, nicht VoiceOver selbst; einmal mit VoiceOver durch alle Seiten, Widgets und die Live-Aktivität gehen.
 - **iOS 26:** Getestet ist mit iOS 27.2. Auf iOS 26, der Mindestversion, Leisten, Liquid Glass und die Silbentrennung ansehen.
@@ -49,6 +50,18 @@ Zurzeit nichts. Die Punkte 1 bis 6, die bis Phase 10 offen waren, sind entschied
 ## Entschieden
 
 Die Entscheidungen stehen in der Reihenfolge, in der sie fielen, die neuesten zuerst; die Antwort des Nutzers steht jeweils wörtlich in Anführungszeichen.
+
+### Beta-Vorbereitung ohne Konto, entschieden am 14.11.2026
+
+Der Plan für die Beta-Vorbereitung ohne Konto wurde am 14.11.2026 freigegeben („Freigeben, bauen (Empfohlen)“), über die Auswahl-Fragen:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Bundle-ID und App Group | „Mit dem Konto festlegen (Empfohlen)“ | Die Platzhalter bleiben bis zum Konto; die Kennung hängt an dessen Inhaber (Person oder Verein). Sie steht nur noch in `project.yml`; Makefile, Skripte, UI-Hilfsprojekt, Hintergrundaufgabe und Protokoll lesen sie von dort. |
+| Adresse der Datenschutzerklärung | „GitHub, beim Quellcode (Empfohlen)“ | Der Text liegt im Repo (`docs/DATENSCHUTZ.md`, `docs/PRIVACY.md`); die Adresse ist die der Dateien auf GitHub, sobald das Repo öffentlich ist – dort, wohin auch „Quellcode“ zeigen soll. |
+| Sprachen von Datenschutzerklärung und TestFlight-Texten | „Deutsch und Englisch“ (die Empfehlung war „Deutsch“) | Beide liegen auf Deutsch und Englisch vor; Türkisch und Spanisch folgen vor dem App Store. |
+
+Mit dem Plan freigegeben sind auch seine Annahmen; sie stehen unten unter „Annahmen in der Beta-Vorbereitung“.
 
 ### Entschieden mit dem Plan für Phase 11 am 13.11.2026
 
@@ -313,6 +326,17 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 | Ausrichtung | „Ja, so lassen“ | nur Hochformat. Phase 10: Die Info.plist bleibt so; auf dem inneren Display des iPhone Duo zeigt iOS die App trotzdem quer und hoch (siehe „Annahmen in Phase 10“). |
 | Nachholen | „Ja, so lassen“ | Die App startet leer: kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr. `iphone/60` und `61` zeigen die Beispielzahlen des Prototyps; die gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Annahme für Phase 6: Mit `-debugFixtureTimes` zeigt die Seite sie. |
 | JAKIM und Kemenag | „Ja, so lassen“ | reine Winkel 20°/18°. Vor der Veröffentlichung gegen offizielle Tabellen zu prüfen, siehe oben. |
+
+## Annahmen in der Beta-Vorbereitung
+
+Ohne Konto am 14.11.2026, auf dem Stand von Phase 11. Geprüft: `make archive` mit `scripts/check-archive` (in Ordnung bis auf die Platzhalter), `make build` ohne Warnung, `make test` mit 928 Tests, die App im iPhone 18 Pro im Zustand von `iphone/10` (wie das Referenzbild) und ein Lauf des UI-Hilfsprojekts.
+
+- **Nur iPhone:** `TARGETED_DEVICE_FAMILY` steht jetzt mit „1“ an beiden Targets. XcodeGen setzte dort „1,2“ und überschrieb damit das „1“ des Projekts; App und Extension waren bisher als iPhone- und iPad-App gebaut. Als iPad-App mit nur Hochformat hätte Apple den Upload abgelehnt; es war auch die einzige Warnung im Release-Build. Auf dem iPhone ändert sich nichts, auf dem Duo innen ist es nicht geprüft (oben unter „Am Gerät prüfen“).
+- **Debug in Release:** Die Startargumente wertet nur `LaunchOptions` aus, hinter `#if DEBUG`; in Release startet die App mit `.live`. `DebugClock` steht jetzt ebenfalls hinter `#if DEBUG`. `WidgetState.Debug` bleibt in Release, weil App und Widget dasselbe Format lesen; es ist dort immer leer. `scripts/check-archive` sucht in den Binärdateien nach Debug-Startargumenten und Debug-Typen.
+- **Protokoll:** Das Subsystem ist die Bundle-ID der App (`AppInfo.bundleIdentifier`) statt des festen „com.example.gebetszeiten“; die Befehle im README lesen sie über `scripts/bundle-id`.
+- **Seite „Datenschutz“ und Begründung der Standortabfrage:** bleiben wie im Prototyp (oben unter „Vor dem App Store“).
+- **Link „Quellcode“:** bleibt ein Platzhalter, bis das Repo öffentlich ist; „Was testen“ nennt ihn als bekannt.
+- **Testinstallation auf dem iPhone:** bleibt bei den vorläufigen Kennungen des persönlichen Teams, nichts davon im Repo. Die echte Bundle-ID nicht mit einem persönlichen Team verwenden, sonst registriert Xcode sie dort (README, „Bundle-ID und App Group“).
 
 ## Annahmen in Phase 11
 

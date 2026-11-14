@@ -6,7 +6,7 @@ Elf Phasen, jede für sich abnehmbar. Pro Phase stehen hier Ziel, Inhalt, die pa
 
 | Thema | Standard | Spec |
 |---|---|---|
-| Arbeitstitel / Bundle-ID | „Gebetszeiten“ / `com.example.gebetszeiten` (vor dem ersten Archiv ersetzen) | § 6.9 |
+| Arbeitstitel / Bundle-ID | „Gebetszeiten“ / `com.example.gebetszeiten` (Platzhalter bis zum Entwicklerkonto, entschieden am 14.11.2026; steht nur in `project.yml`) | § 6.9 |
 | Mindestversion | iOS 26 | § 6.10 |
 | Rechenbibliothek | Adhan Swift (MIT) | § 6.3 |
 | Automatische Methode | DE, AT und TR → Diyanet, ES → MWL, SA → Umm al-Qura, ID → Kemenag, US und CA → ISNA, EG → Egyptian, PK, IN, BD und AF → Karachi, MY → JAKIM, SG → Singapore, IR → Tehran, alle übrigen Länder MWL (entschieden am 10.11.2026) | § 5, § 6.1 |
@@ -233,4 +233,4 @@ Gebaut am 13.11.2026 in acht Schritten:
 
 Entscheidungen, Annahmen und was abweicht stehen in `docs/OPEN-QUESTIONS.md` („Entschieden mit dem Plan für Phase 11“, „Annahmen in Phase 11“).
 
-**Danach:** erste Beta über TestFlight (entschieden am 12.11.2026). Was dafür noch fehlt – Konto, Kennungen, App Store Connect, Archiv und Upload –, steht in `docs/OPEN-QUESTIONS.md` unter „Für die erste Beta“.
+**Danach:** erste Beta über TestFlight (entschieden am 12.11.2026). Ohne Konto vorbereitet am 14.11.2026: Release-Archiv mit Prüfung (`make archive`, `scripts/check-archive`), nur iPhone, Exportkontrolle, Bundle-ID nur in `project.yml`, Datenschutzerklärung (`docs/DATENSCHUTZ.md`, `docs/PRIVACY.md`) und Texte für TestFlight (`docs/APP-STORE.md`). Was dann noch fehlt – Konto, Kennungen festlegen und registrieren, App Store Connect, signiertes Archiv und Upload –, steht in `docs/OPEN-QUESTIONS.md` unter „Für die erste Beta“.
