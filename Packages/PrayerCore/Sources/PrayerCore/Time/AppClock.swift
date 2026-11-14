@@ -45,7 +45,9 @@ public struct FixedClock: AppClock {
     }
 }
 
-/// Beginnt bei einem vorgegebenen Zeitpunkt und läuft von dort in Echtzeit weiter.
+#if DEBUG
+/// Beginnt bei einem vorgegebenen Zeitpunkt und läuft von dort in Echtzeit weiter – die Uhr von
+/// `-debugDate` und `-debugTime`. Nur in DEBUG-Builds, wie die Debug-Startargumente selbst.
 public struct DebugClock: AppClock {
     /// App-Zeit minus Gerätezeit, in Sekunden.
     public let offset: TimeInterval
@@ -63,3 +65,4 @@ public struct DebugClock: AppClock {
         date.addingTimeInterval(-offset)
     }
 }
+#endif
