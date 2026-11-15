@@ -97,14 +97,16 @@ struct WidgetComponentTests {
         #expect(height <= WidgetMetrics.liveSize.height)
     }
 
-    @Test("Rechteck mit Mini-Bogen wie `.acc-arcw`: Bogen 148 × 32 oben, die Zeilen (17,5 + 15 pt) ab 32,5 pt")
+    @Test("Rechteck wie `.acc-arcw`: Bogen 160 × 72 mittig, Name 11 pt und Countdown 17 pt reichen nicht an den Scheitel")
     func rectangularArcMetrics() {
-        let padding = WidgetMetrics.rectangularArcPadding
-        #expect(padding.leading + DayArcMetrics.lockScreen.size.width + padding.trailing == WidgetMetrics.rectangularSize.width)
-        let lines = 14 * WidgetMetrics.rectangularLineHeight + 12 * WidgetMetrics.rectangularLineHeight
-        // Im Prototyp gemessen: Die Zeile „Maghrib 16:27“ beginnt 32,5 pt unter der Oberkante.
-        #expect(WidgetMetrics.rectangularSize.height - padding.bottom - lines == 32.5)
-        #expect(WidgetMetrics.rectangularArcCountOpacity == 0.75)
+        let arc = DayArcMetrics.lockScreen
+        #expect(arc.size.height == WidgetMetrics.rectangularSize.height)
+        #expect((WidgetMetrics.rectangularSize.width - arc.size.width) / 2 == 5)
+        let text = 13 + WidgetMetrics.rectangularArcCountSize * WidgetMetrics.rectangularArcCountLineHeight
+        let textTop = arc.size.height - arc.contentBottomInset - text
+        // Oberkante des Textes unter dem tiefsten Gebet in seiner Breite (Asr bei 12,6 pt, Radius 7,5).
+        #expect(textTop > 12.6 + 7.5)
+        #expect(WidgetMetrics.rectangularArcNameOpacity == 0.86)
     }
 
     @Test("Maße der Live-Aktivität wie im CSS: 366 breit, höchstens 160 hoch, Countdown 30 und 38 pt")

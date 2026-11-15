@@ -54,8 +54,9 @@ public struct DayArcMetrics: Hashable, Sendable {
     public var tabularTimes: Bool
     /// Abstand des Inhalts im Bogen zur Unterkante (`.hero-text`, `.la-text`).
     public var contentBottomInset: CGFloat
-    /// Der Mini-Bogen des rechteckigen Widgets (`mini: true`): nur Punkte, ohne Symbole, Zeiten und Schein.
-    public var isMini: Bool = false
+    /// Ob am Bogen die Uhrzeiten stehen. Im rechteckigen Widget des Sperrbildschirms nicht (`times: false`) –
+    /// dort wären sie zu klein zum Lesen.
+    public var showsTimes: Bool = true
 
     /// `ARCS.home`: der Bogen der Zeiten-Seite, 358 × 180 pt. Kerahat liegt seit v0.8 auf der Spur.
     public static let home = DayArcMetrics(
@@ -90,16 +91,17 @@ public struct DayArcMetrics: Hashable, Sendable {
         timeFontSize: 10.5, timeScales: false, tabularTimes: false, contentBottomInset: 6
     )
 
-    /// `ARCS.acc`: der Mini-Bogen des rechteckigen Widgets auf dem Sperrbildschirm, 148 × 32 pt – nur
-    /// Punkte (3,6 pt, das laufende Gebet 4,6 pt), Spur 4 pt, Knopf 3,4 pt; Kerahat gestrichelt auf der
-    /// Spur (`.arc-acc`, Spec § 9.11).
+    /// `ARCS.acc`: der Bogen des rechteckigen Widgets auf dem Sperrbildschirm im Stil der Live-Aktivität,
+    /// 160 × 72 pt mit dem Text darin (Spec § 9.11, Nachtrag vom 15.11.2026): Gebete 13 pt mit Symbol, das
+    /// laufende 15 pt mit Schein, Spur 5 pt, Knopf 3,6 pt mit Ring; Kerahat gestreift auf der Spur; keine
+    /// Uhrzeiten. Gebet und Countdown stehen 4 pt über der Unterkante (`.acc-text`).
     public static let lockScreen = DayArcMetrics(
-        size: CGSize(width: 148, height: 32), center: CGPoint(x: 74, y: 104), radius: 100, endAngle: 0.84,
-        markerRadius: 3.6, currentMarkerRadius: 4.6, symbolSize: 0, currentSymbolSize: 0,
-        glowRadius: 0, knobRadius: 3.4,
+        size: CGSize(width: 160, height: 72), center: CGPoint(x: 80, y: 96), radius: 88, endAngle: 0.62,
+        markerRadius: 6.5, currentMarkerRadius: 7.5, symbolSize: 8, currentSymbolSize: 9,
+        glowRadius: 10, knobRadius: 3.6,
         timeBox: .zero, timeGap: 0, timeBelow: 0, kerahatInset: 0,
-        trackWidth: 4, kerahatWidth: 4, kerahatOnTrack: true, ringWidth: 0,
-        timeFontSize: 0, timeScales: false, tabularTimes: false, contentBottomInset: 0, isMini: true
+        trackWidth: 5, kerahatWidth: 5, kerahatOnTrack: true, ringWidth: 1,
+        timeFontSize: 0, timeScales: false, tabularTimes: false, contentBottomInset: 4, showsTimes: false
     )
 
     // MARK: - Geometrie

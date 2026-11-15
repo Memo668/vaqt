@@ -17,6 +17,18 @@ struct PrayerEntry: TimelineEntry {
 /// sie keinen Ort, zeigen die Widgets „Stadt wählen“; die App lädt sie neu, sobald es einen Ort gibt.
 struct PrayerTimelineProvider: TimelineProvider {
 
+    /// Das Widget, für das die Zeitleiste ist (`PrayerTimesWidget.kind`, `PrayerLiveWidget.kind`).
+    let kind: String
+
+    /// Abstand der Einträge für den Bogen je Widget und Größe: im Widget „Live“ alle 5 Minuten, im Rechteck
+    /// des Sperrbildschirms alle 10 Minuten, sonst nur zu den Ereignissen – die übrigen Größen zeigen keinen
+    /// Bogen, und jeder Eintrag vergrößert das Archiv, das iOS bei 10 MB ablehnt (Phase 14).
+    static func arcStep(kind: String, family: WidgetFamily) -> TimeInterval? {
+        if kind == PrayerLiveWidget.kind { return WidgetTimeline.arcStep }
+        if family == .accessoryRectangular { return WidgetTimeline.lockScreenArcStep }
+        return nil
+    }
+
     func placeholder(in context: Context) -> PrayerEntry {
         timeline(at: Date()).entries.first ?? Self.noPlace(at: Date(), language: nil)
     }
@@ -26,11 +38,11 @@ struct PrayerTimelineProvider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<PrayerEntry>) -> Void) {
-        completion(timeline(at: Date()))
+        completion(timeline(at: Date(), arcStep: Self.arcStep(kind: kind, family: context.family)))
     }
 
     /// Die Zeitleiste ab `deviceNow`.
-    func timeline(at deviceNow: Date) -> Timeline<PrayerEntry> {
+    func timeline(at deviceNow: Date, arcStep: TimeInterval? = nil) -> Timeline<PrayerEntry> {
         guard let state = WidgetState.sharedDefaults.flatMap(WidgetState.load(from:)) else {
             return Timeline(entries: [Self.noPlace(at: deviceNow, language: nil)], policy: .never)
         }
@@ -43,7 +55,7 @@ struct PrayerTimelineProvider: TimelineProvider {
         // Mit Zwischenschritten für den Bogen im Rechteck und im Widget „Live“ (Phase 14).
         let result = WidgetTimeline.entries(
             from: deviceNow.addingTimeInterval(offset), source: Self.timesSource(for: state), place: place,
-            settings: state.calculation, arcStep: WidgetTimeline.arcStep
+            settings: state.calculation, arcStep: arcStep
         )
         let entries = result.entries.map { entry in
             PrayerEntry(
@@ -130,10 +142,10 @@ struct PrayerTimesWidgetView: View {
 /// Das Widget der App in fünf Größen: klein und mittel auf dem Home-Bildschirm, rund, rechteckig und als
 /// Zeile auf dem Sperrbildschirm (Spec § 3). Das Rechteck zeigt seit Phase 14 den Mini-Bogen (§ 9.11).
 struct PrayerTimesWidget: Widget {
-    static let kind = "PrayerTimes"
+    nonisolated static let kind = "PrayerTimes"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: Self.kind, provider: PrayerTimelineProvider()) { entry in
+        StaticConfiguration(kind: Self.kind, provider: PrayerTimelineProvider(kind: Self.kind)) { entry in
             PrayerTimesWidgetView(entry: entry)
         }
         .configurationDisplayName(L10n.appName)
@@ -148,10 +160,10 @@ struct PrayerTimesWidget: Widget {
 /// Größe nur eine Ansicht je Widget gibt; in der Galerie heißt es wie die anderen nach der App
 /// (entschieden mit dem Plan für Phase 14).
 struct PrayerLiveWidget: Widget {
-    static let kind = "PrayerLive"
+    nonisolated static let kind = "PrayerLive"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: Self.kind, provider: PrayerTimelineProvider()) { entry in
+        StaticConfiguration(kind: Self.kind, provider: PrayerTimelineProvider(kind: Self.kind)) { entry in
             PrayerLiveWidgetView(entry: entry)
         }
         .configurationDisplayName(L10n.appName)

@@ -107,27 +107,19 @@ public enum WidgetMetrics {
     public static func rectangularFont(_ scale: CGFloat = 1) -> Font { .system(size: 13 * scale, weight: .medium).monospacedDigit() }
     public static let rectangularLineHeight: CGFloat = 1.25
 
-    /// Das Rechteck mit dem Mini-Bogen (seit Phase 14, `.acc-arcw`: `padding: 6px 11px 7px`, ohne Abstand
-    /// zwischen den Zeilen). Den Bogen selbst beschreibt `DayArcMetrics.lockScreen`.
-    ///
-    /// Der Bogen liegt an der linken oberen Ecke des Widgets, nicht im Innenabstand: Im Prototyp ist das
-    /// SVG absolut gesetzt, und `backdrop-filter` macht `.acc` zu seinem Bezug – so steht er im Referenzbild
-    /// `system/90`. Die beiden Zeilen stehen unten, 7 pt über dem Rand: Im Prototyp passen Bogen (32 pt) und
-    /// Zeilen nicht in die 72 pt, und Flexbox lässt den leeren Platzhalter des Bogens (`.acc-arc`)
-    /// schrumpfen, nicht die Zeilen.
-    public static let rectangularArcPadding = EdgeInsets(top: 6, leading: 11, bottom: 7, trailing: 11)
-    /// „Maghrib 16:27“ mit Symbol (`.acc-arcw .ar-1`: 700 14px, Ziffern gleicher Breite, `gap: 5px`,
-    /// `ic(…, 13)`).
-    public static func rectangularArcTitleFont(_ scale: CGFloat = 1) -> Font {
-        .system(size: 14 * scale, weight: .bold).monospacedDigit()
-    }
-    public static let rectangularArcTitleGap: CGFloat = 5
-    public static let rectangularArcSymbolBox: CGFloat = 13
-    /// „in 2:01:59“ (`.acc-arcw .ar-2`: 500 12px, `opacity: .75`).
-    public static func rectangularArcCountFont(_ scale: CGFloat = 1) -> Font {
-        .system(size: 12 * scale, weight: .medium).monospacedDigit()
-    }
-    public static let rectangularArcCountOpacity: Double = 0.75
+    /// Das Rechteck mit dem Bogen im Stil der Live-Aktivität (seit Phase 14, Nachtrag vom 15.11.2026): Der
+    /// Bogen (`DayArcMetrics.lockScreen`, 160 × 72) steht mittig, darin „Maghrib · 16:27“ (`.acc-name`: 600
+    /// 11px/13px, `opacity: .86`) und der Countdown (`.acc-count`: 700 17px/1.05, gerundet, `-.2px`).
+    public static let rectangularArcNameFont = Font.system(size: 11, weight: .semibold).monospacedDigit()
+    public static let rectangularArcNameLineHeight: CGFloat = 13 / 11
+    public static let rectangularArcNameOpacity: Double = 0.86
+    public static let rectangularArcCountSize: CGFloat = 17
+    public static let rectangularArcCountFont = Font.system(size: 17, weight: .bold, design: .rounded).monospacedDigit()
+    public static let rectangularArcCountLineHeight: CGFloat = 1.05
+    public static let rectangularArcCountTracking: CGFloat = -0.2
+    /// So breit darf „Sonnenaufgang · 07:14“ werden, ohne an die Gebete an den Enden zu stoßen; sonst wird
+    /// die Zeile kleiner.
+    public static let rectangularArcNameMaxWidth: CGFloat = 124
     /// Symbol in der Zeile über der Uhr – `ic(…, 15)`.
     public static let inlineSymbolBox: CGFloat = 15
 

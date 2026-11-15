@@ -141,17 +141,24 @@ public enum Palette {
 
     // MARK: - Sperrbildschirm
 
-    /// Die Farben des Mini-Bogens im rechteckigen Widget (`.arc-acc`). Der Sperrbildschirm ist einfarbig:
-    /// Alles ist Weiß, unterschieden nur durch die Deckkraft; iOS tönt es passend zum Hintergrund.
+    /// Die Farben des Bogens im rechteckigen Widget (`.arc-acc`). Der Sperrbildschirm ist einfarbig: Alles ist
+    /// Weiß, unterschieden nur durch die Deckkraft; iOS tönt es passend zum Hintergrund und zeigt Dunkles
+    /// durchsichtig.
     public enum LockScreen {
         /// Bogen, kommender Teil: Weiß mit 32 % Deckkraft.
         public static let track = Color(RGBA.white.opacity(0.32))
-        /// Bogen bis „jetzt“, begonnene Punkte, Kerahat und der Knopf.
+        /// Bogen bis „jetzt“, begonnene Gebete, Symbole kommender, Kerahat und der Ring des Knopfes.
         public static let foreground = Color(RGBA.white)
-        /// Punkte kommender Gebete: Weiß mit 45 % Deckkraft.
-        public static let marker = Color(RGBA.white.opacity(0.45))
-        /// Rand des Knopfes: Schwarz mit 35 % Deckkraft.
-        public static let knobStroke = Color(RGBA.black.opacity(0.35))
+        /// Kommende Gebete: Weiß mit 30 % Deckkraft (wie Weiß zu 30 % auf dem Akzent in der Live-Aktivität).
+        public static let marker = Color(RGBA.white.opacity(0.3))
+        /// Schein um das laufende Gebet: Weiß mit 22 % Deckkraft.
+        public static let glow = Color(RGBA.white.opacity(0.22))
+        /// Symbol auf einem begonnenen Gebet: Schwarz mit 70 % – erscheint wie ausgestanzt.
+        public static let cutOut = Color(RGBA.black.opacity(0.7))
+        /// Mitte des Knopfes: Schwarz mit 55 %.
+        public static let knob = Color(RGBA.black.opacity(0.55))
+        /// Ring um eng liegende Gebete und Grund unter den Strichen von Kerahat: Schwarz mit 45 %.
+        public static let gap = Color(RGBA.black.opacity(0.45))
     }
 
     // MARK: - Werte

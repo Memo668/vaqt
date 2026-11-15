@@ -61,9 +61,15 @@ public enum WidgetTimeline {
     /// So weit reicht eine Zeitleiste.
     public static let horizon: TimeInterval = 24 * 60 * 60
 
-    /// Abstand der Einträge für den Bogen: fünf Minuten, auf volle fünf Minuten der Uhr. Im Widget „Live“
-    /// rückt der Knopf damit um gut 2 pt weiter, im rechteckigen um 1 pt.
+    /// Abstand der Einträge für den Bogen im Widget „Live“: fünf Minuten, auf volle fünf Minuten der Uhr. Der
+    /// Knopf rückt damit um gut 2 pt weiter.
     public static let arcStep: TimeInterval = 5 * 60
+
+    /// Abstand der Einträge für den Bogen im rechteckigen Widget des Sperrbildschirms: zehn Minuten. Der
+    /// Bogen ist dort kleiner, der Knopf rückt so ebenfalls um gut 2 pt. Mit fünf Minuten wurde das Archiv der
+    /// Zeitleiste über 10 MB groß, und iOS lehnte sie ab („too large timeline archive“, im Simulator gemessen
+    /// am 15.11.2026: 10,5 MB; mit zehn Minuten etwa die Hälfte).
+    public static let lockScreenArcStep: TimeInterval = 10 * 60
 
     /// Was ein Eintrag zeigt.
     public enum Content: Hashable, Sendable {

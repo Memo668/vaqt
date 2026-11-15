@@ -7,7 +7,10 @@ import Foundation
 public struct KerahatWindow: Hashable, Sendable, Identifiable {
 
     /// Die drei Fenster eines Tages. Die Rohwerte sind die Kennungen des Prototyps (`id`).
-    public enum Kind: String, CaseIterable, Sendable {
+    ///
+    /// `Codable`, weil der Bogen sie als Kennung in `ForEach` nutzt und WidgetKit die Ansichten der Widgets
+    /// archiviert – sonst meldet SwiftUI dort „ID type is not Encodable“ (Phase 14).
+    public enum Kind: String, CaseIterable, Codable, Sendable {
         /// Nach dem Sonnenaufgang.
         case sunrise
         /// Vor Dhuhr, wenn die Sonne im Zenit steht.

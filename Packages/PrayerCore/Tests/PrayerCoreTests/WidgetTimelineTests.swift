@@ -229,6 +229,17 @@ struct WidgetTimelineTests {
         #expect(result.entries.count > 140 && result.entries.count < 200)
     }
 
+    @Test("für das Rechteck alle 10 Minuten: halb so viele Einträge, damit das Archiv unter 10 MB bleibt")
+    func lockScreenArcSteps() {
+        let result = WidgetTimeline.entries(
+            from: day.at("18:20", in: .berlin), source: FixtureTimesSource(), place: berlin,
+            settings: CalculationSettings(), arcStep: WidgetTimeline.lockScreenArcStep
+        )
+        let times = result.entries.map { ClockTime($0.date, in: .berlin).description }
+        #expect(times.contains("05:20") && !times.contains("05:25") && times.contains("05:30"))
+        #expect(result.entries.count > 70 && result.entries.count < 100)
+    }
+
     // MARK: - Ohne Zeiten
 
     @Test("in einer Gegend ohne Zeiten: ein Eintrag mit dem Hinweis, neu gerechnet um Mitternacht")

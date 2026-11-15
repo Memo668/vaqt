@@ -95,7 +95,7 @@ struct DayArcLayoutTests {
         #expect(metrics.timeFontSize == 10.5)
         #expect(!metrics.timeScales)
         #expect(!metrics.tabularTimes)
-        #expect(!metrics.isMini)
+        #expect(metrics.showsTimes)
     }
 
     @Test("ARCS.wla: 314 × 116 pt, Mitte 157 | 182, Radius 158 – sonst wie die Live-Aktivität")
@@ -109,21 +109,24 @@ struct DayArcLayoutTests {
         #expect(metrics.markerRadius == live.markerRadius && metrics.currentMarkerRadius == live.currentMarkerRadius)
         #expect(metrics.trackWidth == 7 && metrics.kerahatWidth == 7 && metrics.kerahatOnTrack)
         #expect(metrics.timeFontSize == live.timeFontSize)
-        #expect(!metrics.isMini)
+        #expect(metrics.showsTimes)
     }
 
-    @Test("ARCS.acc: 148 × 32 pt, Radius 100, nur Punkte 3,6 / 4,6 pt, Spur 4 pt, Knopf 3,4 pt")
+    @Test("ARCS.acc: 160 × 72 pt im Stil der Live-Aktivität – Gebete 13/15 pt mit Symbol, Spur 5 pt, Knopf 3,6 pt, ohne Zeiten")
     func lockScreenMetrics() {
         let metrics = DayArcMetrics.lockScreen
-        #expect(metrics.size == CGSize(width: 148, height: 32))
-        #expect(metrics.center == CGPoint(x: 74, y: 104))
-        #expect(metrics.radius == 100)
-        #expect(metrics.endAngle == 0.84)
-        #expect(metrics.markerRadius == 3.6 && metrics.currentMarkerRadius == 4.6)
-        #expect(metrics.symbolSize == 0 && metrics.glowRadius == 0)
-        #expect(metrics.knobRadius == 3.4)
-        #expect(metrics.trackWidth == 4 && metrics.kerahatWidth == 4 && metrics.kerahatOnTrack)
-        #expect(metrics.isMini)
+        #expect(metrics.size == CGSize(width: 160, height: 72))
+        #expect(metrics.center == CGPoint(x: 80, y: 96))
+        #expect(metrics.radius == 88)
+        #expect(metrics.endAngle == 0.62)
+        #expect(metrics.markerRadius == 6.5 && metrics.currentMarkerRadius == 7.5)
+        #expect(metrics.symbolSize == 8 && metrics.currentSymbolSize == 9 && metrics.glowRadius == 10)
+        #expect(metrics.knobRadius == 3.6)
+        #expect(metrics.trackWidth == 5 && metrics.kerahatWidth == 5 && metrics.kerahatOnTrack)
+        #expect(metrics.contentBottomInset == 4)
+        #expect(!metrics.showsTimes)
+        // Der Scheitel liegt 8 pt unter der Oberkante: Platz für das laufende Gebet mit 7,5 pt.
+        #expect(metrics.center.y - metrics.radius == 8)
     }
 
     @Test("arcAngle und arcPoint: Fadschr links unten, Ischa rechts unten, die Mitte ganz oben")
@@ -353,17 +356,21 @@ struct DayArcLayoutTests {
         #expect(layout.kerahatRadius == 158)
     }
 
-    @Test("ARCS.acc: der Mini-Bogen mit den Punkten wie `arcPoint()` des Prototyps")
+    @Test("ARCS.acc: die Gebete wie `arcPoint()` des Prototyps; die Enden lassen die Mitte für den Text frei")
     func lockScreenLayout() {
         let layout = layout("berlin", "14:25", metrics: .lockScreen)
-        #expect(layout.markers.map(\.radius) == [3.6, 3.6, 4.6, 3.6, 3.6])
-        #expect(close(marker(layout, .fajr).center, 7.254, 29.536))
-        #expect(close(marker(layout, .dhuhr).center, 75.029, 4.005))
-        #expect(close(marker(layout, .asr).center, 98.725, 7.105))
-        #expect(close(marker(layout, .maghrib).center, 124.116, 17.465))
-        #expect(close(marker(layout, .isha).center, 140.746, 29.536))
-        #expect(close(layout.knobCenter, 103.229, 8.367))
+        #expect(layout.markers.map(\.radius) == [6.5, 6.5, 7.5, 6.5, 6.5])
+        #expect(layout.markers.map(\.symbolSize) == [8, 8, 9, 8, 8])
+        #expect(close(marker(layout, .fajr).center, 8.379, 44.869))
+        #expect(close(marker(layout, .dhuhr).center, 81.178, 8.008))
+        #expect(close(marker(layout, .asr).center, 108.103, 12.608))
+        #expect(close(marker(layout, .maghrib).center, 135.537, 27.738))
+        #expect(close(marker(layout, .isha).center, 151.621, 44.869))
+        #expect(close(layout.knobCenter, 113.124, 14.472))
         #expect(layout.kerahat.count == 3)
+        // Zwischen den Gebeten an den Enden bleiben gut 124 pt für „Sonnenaufgang · 07:14“.
+        let inner = marker(layout, .isha).center.x - marker(layout, .fajr).center.x - 2 * 6.5
+        #expect(inner >= WidgetMetrics.rectangularArcNameMaxWidth)
     }
 
     @Test("ARCS.la, Jakarta: Ischa ist auch im kleinen Bogen eng")
