@@ -51,7 +51,7 @@ struct QiblaModelTests {
 
     // MARK: - Referenzbilder
 
-    @Test("iphone/30: Berlin, Kurs 98° – „Nach rechts drehen 39°“")
+    @Test("iphone/30: Berlin, Kurs 98° – seit v0.8 im Toleranzbereich, „Nach rechts drehen 39°“ darunter")
     func turnRight() async throws {
         let model = await make().model
 
@@ -65,8 +65,11 @@ struct QiblaModelTests {
 
         let bearing = try #require(model.bearing)
         #expect(abs(bearing - 136.68) < 0.01)
-        #expect(model.status == .turn(.right, degrees: 39))
-        #expect(model.statusText == "\(L10n.turnRight) 39°")
+        #expect(model.status == .withinTolerance(.right, degrees: 39))
+        #expect(model.statusText == L10n.inTol)
+        #expect(model.statusDetail == "\(L10n.turnRight) 39°")
+        #expect(model.isWithinToleranceRange)
+        #expect(model.showsToleranceLegend)
         #expect(!model.isAligned)
 
         let direction = L10n.qiblaAt(deg: "137", dir: abbreviation(.southEast))
@@ -84,7 +87,9 @@ struct QiblaModelTests {
         #expect(readout.direction == abbreviation(.southEast))
         #expect(model.status == .facing)
         #expect(model.statusText == L10n.facing)
+        #expect(model.statusDetail == nil)
         #expect(model.isAligned)
+        #expect(model.isWithinToleranceRange)
         #expect(model.alignment?.turn == nil)
     }
 
@@ -99,6 +104,7 @@ struct QiblaModelTests {
         #expect(model.status == nil)
         #expect(model.statusText == nil)
         #expect(!model.isAligned)
+        #expect(!model.showsToleranceLegend)
         #expect(model.info == L10n.inMecca)
         // Die Skala dreht sich weiter mit dem Kurs.
         #expect(model.dialHeading == 138)
@@ -109,12 +115,39 @@ struct QiblaModelTests {
 
     // MARK: - Statuszeile
 
-    @Test("liegt die Qibla links vom Kurs, steht „Nach links drehen“ da")
+    @Test("liegt die Qibla links vom Kurs, steht „Nach links drehen“ da – im Toleranzbereich darunter")
     func turnLeft() async {
-        let model = await make(heading: Heading(degrees: 180)).model
-        #expect(model.status == .turn(.left, degrees: 43))
-        #expect(model.statusText == "\(L10n.turnLeft) 43°")
+        let model = await make(heading: Heading(degrees: 170)).model
+        #expect(model.status == .withinTolerance(.left, degrees: 33))
+        #expect(model.statusDetail == "\(L10n.turnLeft) 33°")
         #expect(!model.isAligned)
+
+        let outside = await make(heading: Heading(degrees: 180)).model
+        #expect(outside.status == .turn(.left, degrees: 43))
+        #expect(outside.statusText == "\(L10n.turnLeft) 43°")
+        #expect(outside.statusDetail == nil)
+        #expect(!outside.isWithinToleranceRange)
+    }
+
+    @Test("iphone/33 und 34: Kurs 112° im Toleranzbereich (25°), Kurs 60° außerhalb (77°)")
+    func toleranceRange() async {
+        let inside = await make(heading: Heading(degrees: 112)).model
+        #expect(inside.status == .withinTolerance(.right, degrees: 25))
+        #expect(inside.statusText == L10n.inTol)
+        #expect(inside.statusDetail == "\(L10n.turnRight) 25°")
+        let outside = await make(heading: Heading(degrees: 60)).model
+        #expect(outside.status == .turn(.right, degrees: 77))
+        #expect(outside.statusText == "\(L10n.turnRight) 77°")
+        #expect(!outside.isWithinToleranceRange)
+        #expect(outside.showsToleranceLegend)
+    }
+
+    @Test("der Toleranzbereich reicht 40° nach beiden Seiten", arguments: [
+        (96.0, false), (97.0, true), (136.68, true), (176.0, true), (177.0, false),
+    ])
+    func toleranceEdges(heading: Double, expected: Bool) async {
+        let model = await make(heading: Heading(degrees: heading)).model
+        #expect(model.isWithinToleranceRange == expected)
     }
 
     @Test("ausgerichtet gilt bis 3° nach beiden Seiten", arguments: [
@@ -129,7 +162,7 @@ struct QiblaModelTests {
     @Test("der Startwert des Prototyps, Kurs 99°: 38° nach rechts")
     func prototypeStart() async {
         let model = await make(heading: Heading(degrees: 99)).model
-        #expect(model.statusText == "\(L10n.turnRight) 38°")
+        #expect(model.statusDetail == "\(L10n.turnRight) 38°")
     }
 
     @Test("die Kursanzeige nennt ganze Grad von 0 bis 359", arguments: [
@@ -233,7 +266,7 @@ struct QiblaModelTests {
         let model = await make(heading: Heading(degrees: 98, accuracy: accuracy)).model
         #expect(model.showsCalibration == expected)
         // Der Kurs gilt weiter, auch wenn er ungenau ist.
-        #expect(model.status == .turn(.right, degrees: 39))
+        #expect(model.status == .withinTolerance(.right, degrees: 39))
     }
 
     @Test("ein ungültiger Kurs meldet keine Ausrichtung, die Karte erscheint")
@@ -301,7 +334,7 @@ struct QiblaModelTests {
         let model = await make(place: .unnamed(latitude: 52.52, longitude: 13.405)).model
         #expect(model.title == "\(L10n.qibla) · \(L10n.currentLocation)")
         #expect(model.info?.hasSuffix(L10n.distance(km: "4.130")) == true)
-        #expect(model.status == .turn(.right, degrees: 39))
+        #expect(model.status == .withinTolerance(.right, degrees: 39))
     }
 
     @Test("wird eine andere Stadt gewählt, folgt die Seite")
@@ -315,7 +348,7 @@ struct QiblaModelTests {
         let bearing = try #require(fixture.model.bearing)
         #expect(Int(bearing.rounded()) == 152)
         // Istanbul: 152°. Mit Kurs 137° sind es 15° nach rechts.
-        #expect(fixture.model.status == .turn(.right, degrees: 15))
+        #expect(fixture.model.status == .withinTolerance(.right, degrees: 15))
         #expect(!fixture.model.isAligned)
     }
 
@@ -352,7 +385,7 @@ struct QiblaModelTests {
         try await waitUntil { await source.starts == 1 }
         await source.send(Heading(degrees: 98))
         try await waitUntil { model.heading != nil }
-        #expect(model.statusText == "\(L10n.turnRight) 39°")
+        #expect(model.statusDetail == "\(L10n.turnRight) 39°")
         #expect(await source.stops == 0)
 
         // Die Seite verschwindet: Der Kompass hört auf, der letzte Kurs bleibt stehen.

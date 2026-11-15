@@ -16,7 +16,9 @@ public final class QiblaModel {
     public enum Status: Hashable, Sendable {
         /// „Du blickst Richtung Qibla“ – in Akzent, mit Haken.
         case facing
-        /// „Nach rechts drehen 39°“.
+        /// „Im Toleranzbereich“ in Akzent mit Haken, darunter klein „Nach rechts drehen 25°“ (Spec § 9.5).
+        case withinTolerance(QiblaAlignment.Turn, degrees: Int)
+        /// „Nach rechts drehen 97°“ – außerhalb des Toleranzbereichs.
         case turn(QiblaAlignment.Turn, degrees: Int)
         /// „Kein Kompass verfügbar“ – das Gerät hat keinen.
         case noCompass
@@ -102,18 +104,39 @@ public final class QiblaModel {
         guard showsHeading else { return .noCompass }
         guard let alignment else { return nil }
         guard let turn = alignment.turn else { return .facing }
+        guard !alignment.isWithinToleranceRange else { return .withinTolerance(turn, degrees: alignment.degrees) }
         return .turn(turn, degrees: alignment.degrees)
+    }
+
+    /// Ob das Gerät im Toleranzbereich zeigt; dann ist der Keil des Kompasses kräftiger (`in-tol`).
+    public var isWithinToleranceRange: Bool {
+        alignment?.isWithinToleranceRange == true
     }
 
     /// Der Text der Statuszeile, wie `updateQibla()` ihn schreibt.
     public var statusText: String? {
         switch status {
         case .facing: L10n.facing
-        case .turn(.left, let degrees): "\(L10n.turnLeft) \(degrees)°"
-        case .turn(.right, let degrees): "\(L10n.turnRight) \(degrees)°"
+        case .withinTolerance: L10n.inTol
+        case .turn(let turn, let degrees): Self.turnText(turn, degrees: degrees)
         case .noCompass: L10n.noCompass
         case nil: nil
         }
+    }
+
+    /// Die kleine Zeile unter „Im Toleranzbereich“: wohin noch zu drehen ist.
+    public var statusDetail: String? {
+        guard case .withinTolerance(let turn, let degrees) = status else { return nil }
+        return Self.turnText(turn, degrees: degrees)
+    }
+
+    /// Ob unter der Info-Zeile die Legende zum Keil steht – überall, wo es eine Richtung gibt.
+    public var showsToleranceLegend: Bool {
+        bearing != nil
+    }
+
+    private static func turnText(_ turn: QiblaAlignment.Turn, degrees: Int) -> String {
+        "\(turn == .left ? L10n.turnLeft : L10n.turnRight) \(degrees)°"
     }
 
     /// Die Zeile unter dem Status: „Qibla 137° SO · 4.130 km bis zur Kaaba“, in Mekka der Hinweis

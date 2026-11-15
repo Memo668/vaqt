@@ -61,6 +61,14 @@ struct QiblaAlignmentTests {
         #expect(QiblaAlignment(bearing: 137, heading: 133.5).degrees == 4)
     }
 
+    @Test("Toleranzbereich: 40° zu jeder Seite, zusammen 80° (Spec § 9.5)", arguments: [
+        (96.0, false), (96.68, true), (137.0, true), (176.68, true), (177.0, false),
+    ])
+    func toleranceRange(heading: Double, expected: Bool) {
+        #expect(QiblaAlignment.toleranceRange == 40)
+        #expect(QiblaAlignment(bearing: 136.68, heading: heading).isWithinToleranceRange == expected)
+    }
+
     @Test("über Nord hinweg zählt der kürzere Weg")
     func acrossNorth() {
         let right = QiblaAlignment(bearing: 10, heading: 350)

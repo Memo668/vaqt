@@ -4,8 +4,8 @@ import SwiftUI
 /// Der Kompass der Qibla-Seite: eine Skala mit Strichen alle 5°, Zahlen alle 30° und den vier
 /// Himmelsrichtungen, das „N“ in Rot. Die Skala dreht sich mit dem Kurs des Geräts; Zahlen und
 /// Buchstaben bleiben dabei aufrecht. Eine Nadel in Akzent zeigt zur Kaaba, außen an der Skala sitzt
-/// die Kaaba-Marke. Oben steht fest die Peilmarke – zeigt das Gerät zur Qibla, wird sie Akzent und ein
-/// Ring läuft einmal nach außen.
+/// die Kaaba-Marke, um die Nadel ein Keil für den Toleranzbereich von ±40° (Spec § 9.5). Oben steht fest
+/// die Peilmarke – zeigt das Gerät zur Qibla, wird sie Akzent und ein Ring läuft einmal nach außen.
 ///
 /// Der Kompass wird nie gespiegelt, auch nicht bei RTL (Design Spec § 5). Er ist Bild, nicht Text: Was
 /// er zeigt, sagen Kursanzeige, Statuszeile und Info-Zeile der Seite; für VoiceOver ist er ausgeblendet.
@@ -14,6 +14,7 @@ public struct Compass: View {
     private let heading: Double?
     private let bearing: Double?
     private let isAligned: Bool
+    private let isWithinToleranceRange: Bool
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -25,10 +26,12 @@ public struct Compass: View {
     ///   - bearing: Richtung zur Kaaba in Grad ab Nord im Uhrzeigersinn. Ohne Richtung – in Mekka oder
     ///     solange kein Ort gilt – fehlen Nadel und Kaaba-Marke.
     ///   - isAligned: ob das Gerät zur Qibla zeigt.
-    public init(heading: Double?, bearing: Double?, isAligned: Bool = false) {
+    ///   - isWithinToleranceRange: ob das Gerät im Toleranzbereich ±40° zeigt; dann ist der Keil kräftiger.
+    public init(heading: Double?, bearing: Double?, isAligned: Bool = false, isWithinToleranceRange: Bool = false) {
         self.heading = heading
         self.bearing = bearing
         self.isAligned = isAligned
+        self.isWithinToleranceRange = isWithinToleranceRange
     }
 
     public var body: some View {
@@ -63,6 +66,27 @@ public struct Compass: View {
     /// Beschriftung und Kaaba-Marke drehen sich in ihr zurück und bleiben so aufrecht.
     private func dial(rotation: Double) -> some View {
         ZStack(alignment: .topLeading) {
+            // Der Toleranzbereich unter allem anderen (Spec § 9.5): ein Keil um die Richtung zur Kaaba.
+            if let bearing {
+                ZStack(alignment: .topLeading) {
+                    CompassToleranceWedge()
+                        .fill(Palette.accent.opacity(
+                            isWithinToleranceRange ? CompassMetrics.toleranceFillInside : CompassMetrics.toleranceFill
+                        ))
+                        .animation(.easeInOut(duration: CompassMetrics.alignedTransition), value: isWithinToleranceRange)
+                    CompassToleranceEdges()
+                        .stroke(
+                            Palette.accent.opacity(CompassMetrics.toleranceEdgeOpacity),
+                            style: StrokeStyle(
+                                lineWidth: CompassMetrics.toleranceEdgeWidth * CompassMetrics.scale,
+                                dash: CompassMetrics.toleranceEdgeDash.map { $0 * CompassMetrics.scale }
+                            )
+                        )
+                }
+                .frame(width: CompassMetrics.diameter, height: CompassMetrics.diameter)
+                .rotationEffect(.degrees(bearing))
+            }
+
             CompassTicks(layout: Self.layout, isMajor: false)
                 .stroke(Palette.labelTertiary, lineWidth: CompassMetrics.tickWidth * CompassMetrics.scale)
             CompassTicks(layout: Self.layout, isMajor: true)
@@ -115,6 +139,37 @@ public struct Compass: View {
 }
 
 // MARK: - Teile
+
+/// Der Keil des Toleranzbereichs mit der Qibla oben: von der Mitte bis Radius 144, 40° zu jeder Seite.
+struct CompassToleranceWedge: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        let center = CompassLayout.center
+        let half = CompassMetrics.toleranceDegrees
+        path.move(to: center)
+        path.addLine(to: CompassLayout.point(degrees: -half, radius: CompassMetrics.toleranceOuterRadius))
+        // Oben ist −90° im Koordinatensystem der Ansicht; im Uhrzeigersinn heißt hier `clockwise: false`.
+        path.addArc(
+            center: center, radius: CompassMetrics.toleranceOuterRadius * CompassMetrics.scale,
+            startAngle: .degrees(-90 - half), endAngle: .degrees(-90 + half), clockwise: false
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
+/// Die beiden gestrichelten Kanten des Keils, von Radius 22 bis 144.
+struct CompassToleranceEdges: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        for side in [-1.0, 1.0] {
+            let degrees = side * CompassMetrics.toleranceDegrees
+            path.move(to: CompassLayout.point(degrees: degrees, radius: CompassMetrics.toleranceEdgeInnerRadius))
+            path.addLine(to: CompassLayout.point(degrees: degrees, radius: CompassMetrics.toleranceOuterRadius))
+        }
+        return path
+    }
+}
 
 /// Die Striche der Skala, wahlweise die kurzen oder die langen.
 struct CompassTicks: Shape {

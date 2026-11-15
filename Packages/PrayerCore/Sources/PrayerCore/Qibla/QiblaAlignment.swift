@@ -8,6 +8,10 @@ public struct QiblaAlignment: Hashable, Sendable {
     /// Design Spec § 3: „Aligned within ±3°“).
     public static let tolerance = 3.0
 
+    /// Der Toleranzbereich: so weit darf das Gerät zu jeder Seite der Qibla zeigen – zusammen 80°
+    /// (Spec § 9.5, `Q_TOL`; entschieden am 15.11.2026). Der Kompass zeichnet ihn als Keil.
+    public static let toleranceRange = 40.0
+
     /// Die Richtung, in die zu drehen ist.
     public enum Turn: Hashable, Sendable {
         case left
@@ -27,6 +31,11 @@ public struct QiblaAlignment: Hashable, Sendable {
     /// Ob das Gerät zur Qibla zeigt.
     public var isAligned: Bool {
         abs(difference) <= Self.tolerance
+    }
+
+    /// Ob das Gerät im Toleranzbereich zeigt (`Math.abs(diff) <= Q_TOL`) – ausgerichtet eingeschlossen.
+    public var isWithinToleranceRange: Bool {
+        abs(difference) <= Self.toleranceRange
     }
 
     /// Wohin zu drehen ist; `nil`, wenn das Gerät ausgerichtet ist.

@@ -42,6 +42,21 @@ public enum CompassMetrics {
     public static let cardinalFontSize: CGFloat = 18
     public static let numberFontSize: CGFloat = 11
 
+    // MARK: - Toleranzbereich (Einheiten der Zeichnung, Spec § 9.5)
+
+    /// Der Keil reicht 40° zu jeder Seite der Qibla (`Q_TOL`), von der Mitte bis Radius 144; die
+    /// gestrichelten Kanten beginnen bei Radius 22 (`.q-tol`, `.q-tol-edge`).
+    public static let toleranceDegrees = 40.0
+    public static let toleranceOuterRadius: CGFloat = 144
+    public static let toleranceEdgeInnerRadius: CGFloat = 22
+    /// Fläche in Akzent zu 11 %, im Toleranzbereich zu 22 %; Kanten 1,5 stark, Akzent zu 50 %,
+    /// gestrichelt 3 / 4.
+    public static let toleranceFill = 0.11
+    public static let toleranceFillInside = 0.22
+    public static let toleranceEdgeOpacity = 0.5
+    public static let toleranceEdgeWidth: CGFloat = 1.5
+    public static let toleranceEdgeDash: [CGFloat] = [3, 4]
+
     // MARK: - Nadel und Kaaba-Marke (Einheiten der Zeichnung)
 
     /// Die Nadel läuft von Radius 12 bis 80 (`.q-needle`), 3 breit mit runden Enden.

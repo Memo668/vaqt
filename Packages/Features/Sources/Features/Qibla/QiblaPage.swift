@@ -46,7 +46,10 @@ struct QiblaPage: View {
                     readout
                 }
 
-                Compass(heading: model.dialHeading, bearing: model.bearing, isAligned: model.isAligned)
+                Compass(
+                    heading: model.dialHeading, bearing: model.bearing, isAligned: model.isAligned,
+                    isWithinToleranceRange: model.isWithinToleranceRange
+                )
                     .padding(.top, inColumns ? QiblaMetrics.compassTopInColumns : QiblaMetrics.compassTop)
                     .padding(.bottom, inColumns ? QiblaMetrics.compassBottomInColumns : QiblaMetrics.compassBottom)
 
@@ -58,7 +61,12 @@ struct QiblaPage: View {
             VStack(spacing: 0) {
                 info
                     .padding(.top, QiblaMetrics.infoTop)
-                    .padding(.bottom, QiblaMetrics.infoBottom)
+                    .padding(.bottom, model.showsToleranceLegend ? QiblaMetrics.legendTop : QiblaMetrics.infoBottom)
+
+                if model.showsToleranceLegend {
+                    ToleranceLegend()
+                        .padding(.bottom, QiblaMetrics.legendBottom)
+                }
 
                 if model.showsCalibration {
                     CalibrationCard(title: L10n.calibrate, text: L10n.calibrateBody)
@@ -115,24 +123,43 @@ struct QiblaPage: View {
         .accessibilityHidden(readout == nil)
     }
 
-    /// Die Statuszeile; leer bleibt ihr Platz stehen (`min-height: 26px`).
+    /// Die Statuszeile; leer bleibt ihr Platz stehen (`min-height: 48px` seit v0.8). Im Toleranzbereich
+    /// zwei Zeilen: „Im Toleranzbereich“ mit Haken in Akzent, darunter klein der Drehhinweis (`.q-status.tol`).
     private var status: some View {
-        HStack(spacing: QiblaMetrics.statusGap) {
-            if model.status == .facing {
-                Image(systemName: "checkmark")
-                    .font(.system(size: QiblaMetrics.checkSize, weight: QiblaMetrics.checkWeight))
-                    .frame(width: QiblaMetrics.checkBox, height: QiblaMetrics.checkBox)
-                    .accessibilityHidden(true)
+        VStack(spacing: QiblaMetrics.statusDetailGap) {
+            HStack(spacing: model.statusDetail == nil ? QiblaMetrics.statusGap : QiblaMetrics.toleranceGap) {
+                if model.status == .facing || model.statusDetail != nil {
+                    Image(systemName: "checkmark")
+                        .font(.system(
+                            size: model.statusDetail == nil ? QiblaMetrics.checkSize : QiblaMetrics.toleranceCheckSize,
+                            weight: QiblaMetrics.checkWeight
+                        ))
+                        .frame(width: QiblaMetrics.checkBox, height: QiblaMetrics.checkBox)
+                        .accessibilityHidden(true)
+                }
+                if let text = model.statusText {
+                    Text(text)
+                        .textStyle(.headline, lineHeight: QiblaMetrics.statusLineHeight)
+                        .multilineTextAlignment(.center)
+                }
             }
-            if let text = model.statusText {
-                Text(text)
-                    .textStyle(.headline, lineHeight: QiblaMetrics.statusLineHeight)
+            if let detail = model.statusDetail {
+                Text(detail)
+                    .textStyle(.subheadline, weight: .medium, lineHeight: QiblaMetrics.statusLineHeight)
+                    .foregroundStyle(Palette.textSecondary)
                     .multilineTextAlignment(.center)
             }
         }
-        .foregroundStyle(model.status == .facing ? Palette.accent : Palette.label)
+        .foregroundStyle(isAccentStatus ? Palette.accent : Palette.label)
         .frame(minHeight: QiblaMetrics.statusMinHeight)
         .accessibilityElement(children: .combine)
+    }
+
+    private var isAccentStatus: Bool {
+        switch model.status {
+        case .facing, .withinTolerance: true
+        default: false
+        }
     }
 
     /// Richtung und Entfernung, in Mekka der Hinweis; ohne Ort der Knopf „Stadt wählen“.
@@ -188,9 +215,14 @@ enum QiblaMetrics {
     /// Innenrand der rechten Spalte innen auf dem iPhone Duo (`.qibla .col-b`: `padding: 0 28px`).
     static let infoColumnPadding: CGFloat = 28
 
-    /// Statuszeile (`.q-status`: `gap: 6px; min-height: 26px; font: 600 …/1.3`).
+    /// Statuszeile (`.q-status`: `gap: 6px; min-height: 48px; font: 600 …/1.3`); im Toleranzbereich
+    /// zwei Zeilen mit 1 pt Abstand, Haken und Text mit 6 pt (`.q-status.tol`, `.q-tol-line`), der Haken
+    /// dort `ic('check', 16)`.
     static let statusGap: CGFloat = 6
-    static let statusMinHeight: CGFloat = 26
+    static let statusMinHeight: CGFloat = 48
+    static let statusDetailGap: CGFloat = 1
+    static let toleranceGap: CGFloat = 6
+    static let toleranceCheckSize: CGFloat = 11
     static let statusLineHeight: CGFloat = 1.3
     /// Der Haken vor „Du blickst Richtung Qibla“ – `ic('check', 18)`, als SF Symbol so groß wie das
     /// Häkchen im Stadt-Sheet. Die Zeichnung des Prototyps ist flacher: 12 × 8,5 pt.
@@ -203,6 +235,44 @@ enum QiblaMetrics {
     static let infoBottom: CGFloat = 24
     static let infoLineHeight: CGFloat = 1.3
 
+    /// Legende zum Keil (`.q-tolnote`: `margin: -14px 0 20px` – mit den 24 pt unter der Info-Zeile bleiben
+    /// 10 pt darüber; `gap: 8px`, Fußnote, Zeilenhöhe 1,35). Das Feld davor: 14 pt, Ecken 4, Akzent zu
+    /// 20 %, Rand 1,5 gestrichelt in Akzent zu 60 % (`.q-tol-swatch`).
+    static let legendTop: CGFloat = 24 - 14
+    static let legendBottom: CGFloat = 20
+    static let legendGap: CGFloat = 8
+    static let legendLineHeight: CGFloat = 1.35
+    static let swatchSize: CGFloat = 14
+    static let swatchRadius: CGFloat = 4
+    static let swatchFill = 0.2
+    static let swatchStroke = 0.6
+    static let swatchStrokeWidth: CGFloat = 1.5
+
     /// Der Knopf „Stadt wählen“ (`.text-btn`: `padding: 0 12px`).
     static let buttonPaddingX: CGFloat = 12
+}
+
+/// Die Legende unter der Info-Zeile: ein Feld wie der Keil und „Der markierte Bereich reicht 40° zu jeder
+/// Seite der Qibla.“ (`.q-tolnote`, Spec § 9.5).
+private struct ToleranceLegend: View {
+    var body: some View {
+        HStack(spacing: QiblaMetrics.legendGap) {
+            RoundedRectangle(cornerRadius: QiblaMetrics.swatchRadius, style: .continuous)
+                .fill(Palette.accent.opacity(QiblaMetrics.swatchFill))
+                .overlay {
+                    RoundedRectangle(cornerRadius: QiblaMetrics.swatchRadius, style: .continuous)
+                        .strokeBorder(
+                            Palette.accent.opacity(QiblaMetrics.swatchStroke),
+                            style: StrokeStyle(lineWidth: QiblaMetrics.swatchStrokeWidth, dash: [3, 2])
+                        )
+                }
+                .frame(width: QiblaMetrics.swatchSize, height: QiblaMetrics.swatchSize)
+                .accessibilityHidden(true)
+            Text(L10n.tolLegend)
+                .textStyle(.footnote, lineHeight: QiblaMetrics.legendLineHeight)
+                .foregroundStyle(Palette.textSecondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+    }
 }
