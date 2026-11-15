@@ -38,6 +38,12 @@ public struct GlassCircleButton: View {
             Label(label, systemImage: systemImage)
         }
     }
+
+    /// Durchmesser des Kreises bei der Schriftgröße `typeScale` – so breit ist auch der leere Platz, der
+    /// die Chips der oberen Leiste mittig hält (Spec § 9.2).
+    public static func diameter(typeScale: CGFloat) -> CGFloat {
+        GlassMetrics.barHeight(typeScale: typeScale)
+    }
 }
 
 /// Maße der Glass-Bausteine der oberen Leiste (`.gear-btn`, `.chip`).

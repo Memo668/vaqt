@@ -1,42 +1,61 @@
 import DesignSystem
 import SwiftUI
 
-/// Die obere Leiste des Gebete-Tabs: der Einstellungskreis und die Chips Zeiten, Qibla und Anleitung –
-/// vier einzelne Glass-Elemente, keine gemeinsame Kapsel. `topBarHTML()` im Prototyp.
+/// Die obere Leiste des Gebete-Tabs: die Chips Zeiten, Qibla und Anleitung in der Mitte, der
+/// Einstellungskreis rechts – vier einzelne Glass-Elemente, keine gemeinsame Kapsel. `topBarHTML()` im
+/// Prototyp. Links hält ein leerer Platz so breit wie der Kreis die Chips in der Mitte (Spec § 9.2); bei
+/// RTL steht der Kreis links.
 ///
 /// Passen die Titel aller Chips nicht nebeneinander (Deutsch, große Schrift), behält nur der gewählte
-/// Chip seinen Titel; die anderen werden zu Kreisen (Design Spec § 3, „TopBar“).
+/// Chip seinen Titel; die anderen werden zu Kreisen (Design Spec § 3, „TopBar“). Passt auch das nicht
+/// (größte Schrift), fällt der leere Platz links weg und die Chips rücken an den Rand – im Prototyp
+/// überdecken sie dann den Kreis.
 struct TopBar: View {
     @Binding var selection: PrayersPage
     let onSettings: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    @ScaledMetric(relativeTo: .body) private var typeScale: CGFloat = 1
+
     var body: some View {
         ViewThatFits(in: .horizontal) {
-            bar(collapsed: false)
-            bar(collapsed: true)
+            bar(collapsed: false, centred: true)
+            bar(collapsed: true, centred: true)
+            bar(collapsed: true, centred: false)
         }
     }
 
-    private func bar(collapsed: Bool) -> some View {
+    private func bar(collapsed: Bool, centred: Bool) -> some View {
         FloatingBar {
+            if centred {
+                // Der leere Platz links, so breit wie der Kreis rechts (`grid-template-columns`).
+                Color.clear
+                    .frame(width: GlassCircleButton.diameter(typeScale: typeScale), height: 1)
+                    .accessibilityHidden(true)
+            }
+            Spacer(minLength: 0)
+            chips(collapsed: collapsed)
+            Spacer(minLength: 0)
             GlassCircleButton(systemImage: "gearshape", label: L10n.tabSettings, action: onSettings)
-            HStack(spacing: Layout.chipGap) {
-                ForEach(PrayersPage.allCases) { page in
-                    GlassChip(
-                        page.title, symbol: page.symbol,
-                        isSelected: page == selection, showsTitle: !collapsed || page == selection
-                    ) {
-                        select(page)
-                    }
+        }
+    }
+
+    private func chips(collapsed: Bool) -> some View {
+        HStack(spacing: Layout.chipGap) {
+            ForEach(PrayersPage.allCases) { page in
+                GlassChip(
+                    page.title, symbol: page.symbol,
+                    isSelected: page == selection, showsTitle: !collapsed || page == selection
+                ) {
+                    select(page)
                 }
             }
-            // `role="tablist"` mit dem Namen des Tabs.
-            .accessibilityElement(children: .contain)
-            .accessibilityLabel(L10n.navPrayers)
-            .accessibilityAddTraits(.isTabBar)
         }
+        // `role="tablist"` mit dem Namen des Tabs.
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(L10n.navPrayers)
+        .accessibilityAddTraits(.isTabBar)
     }
 
     /// Wechselt die Seite. Bei „Bewegung reduzieren“ ohne Bewegung (Design Spec § 4).
