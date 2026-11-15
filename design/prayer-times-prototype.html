@@ -891,19 +891,27 @@ button.row:disabled{color:var(--label-3)}
 .w-la{display:block;width:338px;height:158px;padding:9px 12px 0;border-radius:22px;color:#fff;text-align:start;
   background:linear-gradient(160deg,color-mix(in srgb,var(--accent-l) 82%,#fff) 0%,var(--accent-l) 50%,color-mix(in srgb,var(--accent-l) 78%,#000) 100%)}
 .w-la .wla-arc{width:314px;height:116px;margin:2px auto 0}
-.acc-arcw{justify-content:flex-start;gap:0;padding:6px 11px 7px}
-.acc-arc{height:32px;margin:0 -1px 2px}
-.acc-arcw .ar-1{font-size:14px;font-variant-numeric:tabular-nums}
-.acc-arcw .ar-2{font-size:12px;opacity:.75}
-.arc-acc .arc-track{stroke:rgba(255,255,255,.32);stroke-width:4}
-.arc-acc .arc-done{stroke:#fff;stroke-width:4}
-.arc-acc .arc-k.on-track{stroke:#fff;stroke-width:4;stroke-linecap:butt;stroke-dasharray:1.6 1.4;opacity:.95}
+.acc-arcw{display:block;position:relative;padding:0}
+/* Nachtrag Phase 14: der Bogen mittig im Rechteck (vorher lag das SVG wegen backdrop-filter an der Ecke), Gebet und Countdown im Bogen wie in der Live-Aktivität */
+.acc-arc{position:relative;width:160px;height:72px;margin:0 auto}
+.acc-text{position:absolute;left:0;right:0;bottom:4px;text-align:center}
+.acc-name{font:600 11px/13px var(--font);opacity:.86;font-variant-numeric:tabular-nums}
+.acc-count{font:700 17px/1.05 var(--font-rounded);letter-spacing:-.2px;font-variant-numeric:tabular-nums}
+/* Einfarbig wie der Sperrbildschirm: alles Weiß, abgestuft über die Deckkraft; Dunkles erscheint dort durchsichtig */
+.arc-acc .arc-track{stroke:rgba(255,255,255,.32);stroke-width:5}
+.arc-acc .arc-done{stroke:#fff;stroke-width:5}
+.arc-acc .arc-k-base{fill:none;stroke:rgba(0,0,0,.45);stroke-width:5;stroke-linecap:butt;opacity:.95}
+.arc-acc .arc-k.on-track{stroke:#fff;stroke-width:5;stroke-linecap:butt;stroke-dasharray:1.6 1.4;opacity:.95}
+.arc-acc .arc-k-base.is-past,.arc-acc .arc-k.on-track.is-past{opacity:.5}
+.arc-acc .arc-k-base.is-now,.arc-acc .arc-k.on-track.is-now{opacity:1}
 .arc-acc .pm{color:#fff}
-.arc-acc .pm-c{fill:rgba(255,255,255,.45)}
+.arc-acc .pm-c{fill:rgba(255,255,255,.3)}
+.arc-acc .pm.is-passed,.arc-acc .pm.is-current{color:rgba(0,0,0,.7)}
 .arc-acc .pm.is-passed .pm-c,.arc-acc .pm.is-current .pm-c{fill:#fff}
-.arc-acc .pm.is-tight .pm-c{stroke:none}
+.arc-acc .pm-glow{fill:#fff;opacity:.22}
+.arc-acc .pm.is-tight .pm-c{stroke:rgba(0,0,0,.45);stroke-width:2}
 .arc-acc .arc-now{filter:none}
-.arc-acc .arc-now circle{fill:#fff;stroke:rgba(0,0,0,.35);stroke-width:1}
+.arc-acc .arc-now circle{fill:rgba(0,0,0,.55);stroke:#fff;stroke-width:1.6}
 /* Panel: Sprünge zu den Änderungen */
 .pn-chg{margin-top:16px;padding:12px;border-radius:12px;background:var(--accent-tint)}
 .pn-chg h3{color:var(--accent)}
@@ -2071,8 +2079,9 @@ const ARCS = {
   la:  {w:330, h:122, cx:165, cy:190, r:166, a0:.6, m:10.5, mc:12, is:12, isc:13, sw:2.3, glow:17, knob:4.5, lw:28, lh:11, gap:3, below:9, k:13.5},
   /* Wunsch 11: neues Home-Widget im Stil der Live-Aktivität (mittel, 338 × 158) – gleiche Zeichnung, etwas schmaler */
   wla: {w:314, h:116, cx:157, cy:182, r:158, a0:.6, m:10.5, mc:12, is:12, isc:13, sw:2.3, glow:17, knob:4.5, lw:28, lh:11, gap:3, below:9, k:13.5},
-  /* Wunsch 11: Sperrbildschirm-Widget (rechteckig): Mini-Bogen nur mit Punkten */
-  acc: {w:148, h:32, cx:74, cy:104, r:100, a0:.84, m:3.6, mc:4.6, is:0, isc:0, sw:2, glow:0, knob:3.4, lw:0, lh:0, gap:0, below:0, k:0, mini:true}
+  /* Wunsch 11: Sperrbildschirm-Widget (rechteckig), seit dem Nachtrag zu Phase 14 im Stil der Live-Aktivität: mittig,
+     Gebete mit Symbol, Jetzt-Punkt mit Ring, Gebet und Countdown im Bogen – ohne Uhrzeiten (zu klein zum Lesen) */
+  acc: {w:160, h:72, cx:80, cy:96, r:88, a0:.62, m:6.5, mc:7.5, is:8, isc:9, sw:2.6, glow:10, knob:3.6, lw:0, lh:0, gap:0, below:0, k:0, times:false, kBase:true}
 };
 const arcAngle = (f, g = ARCS.home) => g.a0 + f*(Math.PI - 2*g.a0);
 const arcPoint = (f, g = ARCS.home, rr = g.r) => { const a = arcAngle(f, g), x = g.cx - rr*Math.cos(a); return [S.rtl ? g.w - x : x, g.cy - rr*Math.sin(a)]; };
@@ -2093,16 +2102,18 @@ function arcHTML(ph, gk = 'home', skin = gk){
   const home = gk === 'home', nsMin = nowSec()/60;
   const kers = S.kerahat ? kerahatWins(ph.t).map(w => { const f0 = fOf(w.a), f1 = fOf(w.b); if (f1 - f0 < .001) return '';
       const now = !!(kNow && kNow.id === w.id), past = !now && nsMin >= w.b;
-      return `<path class="arc-k on-track ${now ? 'is-now' : ''} ${past ? 'is-past' : ''}" d="${arcPath(f0, f1, g)}"/>`; }).join('') : '';
+      const cls = `on-track ${now ? 'is-now' : ''} ${past ? 'is-past' : ''}`, dd = arcPath(f0, f1, g);
+      /* Sperrbildschirm (einfarbig): Kerahat gestreift – dunkler Grund, darüber weiße Striche, auf hellem wie dunklem Teil der Spur zu sehen */
+      return (g.kBase ? `<path class="arc-k-base ${cls}" d="${dd}"/>` : '') + `<path class="arc-k ${cls}" d="${dd}"/>`; }).join('') : '';
   let marks = '', labels = '', prev = null;
   FIVE.forEach(p => {
     const f = (ph.t[p] - ph.t.fajr)/span, [x, y] = arcPoint(f, g);
     const cur = !!(ph.current && ph.current.d === 0 && ph.current.p === p), r = cur ? g.mc : g.m, is = cur ? g.isc : g.is;
     const tight = prev && Math.hypot(x - prev[0], y - prev[1]) < r + prev[2] + (prev[3] ? 14 : 6); prev = [x, y, r, cur];
     marks += `<g class="pm ${cur ? 'is-current' : ph.passed[p] ? 'is-passed' : ''} ${tight ? 'is-tight' : ''}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})">`
-      + (cur && !g.mini ? `<circle class="pm-glow" r="${g.glow}"/>` : '') + `<circle class="pm-c" r="${r}"/>`
-      + (g.mini ? '' : `<svg x="${-is/2}" y="${-is/2}" width="${is}" height="${is}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${g.sw}" stroke-linecap="round" stroke-linejoin="round">${P[PICON[p]]}</svg>`) + `</g>`;
-    if (g.mini) return;   // Mini-Bogen im Sperrbildschirm-Widget: nur Punkte, keine Uhrzeiten
+      + (cur && g.glow ? `<circle class="pm-glow" r="${g.glow}"/>` : '') + `<circle class="pm-c" r="${r}"/>`
+      + (is ? `<svg x="${-is/2}" y="${-is/2}" width="${is}" height="${is}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${g.sw}" stroke-linecap="round" stroke-linejoin="round">${P[PICON[p]]}</svg>` : '') + `</g>`;
+    if (g.times === false) return;   // Sperrbildschirm-Widget: keine Uhrzeiten am Bogen
     const [lx, ly] = arcLabelPos(p, f, x, y, r, g);
     labels += `<text class="arc-t ${cur ? 'is-cur' : ''}" x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="central">${fmt(ph.t[p])}</text>`;
   });
@@ -2432,9 +2443,8 @@ function lockScreenHTML(withNotifs, live){
         <svg class="acc-ring" viewBox="0 0 72 72" aria-hidden="true"><circle class="ring-bg" cx="36" cy="36" r="30"/>
           <circle class="ring-fg" cx="36" cy="36" r="30" stroke-dasharray="${RING_C.toFixed(1)}" stroke-dashoffset="${(RING_C*(1 - prog)).toFixed(1)}" transform="rotate(-90 36 36)" data-tick="ring"/></svg>
         <div class="acc-circ-in">${ic(PICON[nx.p],16)}<span>${nxTime}</span></div></div>
-      <div class="acc acc-rect acc-arcw" role="img" aria-label="${esc(nxName + ' ' + nxTime)}"><div class="acc-arc" aria-hidden="true">${arcHTML(ph, 'acc')}</div>
-        <div class="ar-1">${ic(PICON[nx.p],13)}<span>${nxName} ${nxTime}</span></div>
-        <div class="ar-2"><span data-tick="wcount">${t('wIn',{t:cdDigital(ph.remaining)})}</span></div></div></div>`;
+      <div class="acc acc-rect acc-arcw" role="img" aria-label="${esc(nxName + ' ' + nxTime + ', ' + cdText(ph.remaining))}"><div class="acc-arc" aria-hidden="true">${arcHTML(ph, 'acc')}
+        <div class="acc-text"><div class="acc-name">${nxName} · ${nxTime}</div><div class="acc-count" data-tick="cd">${cdDigital(ph.remaining)}</div></div></div></div></div>`;
   const rem = S.reminder || 10, pn = t('p_dhuhr');
   const card = (title, body, when) => `<div class="notif">${appIconImg(38, 'ai-sm', S.sysTheme)}<div class="n-main">
       <div class="n-head"><span>${title}</span><time>${when}</time></div><p>${body}</p></div></div>`;

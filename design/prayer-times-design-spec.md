@@ -225,7 +225,7 @@ The real app icon (light and dark variant of `AppIcon`) replaces the crescent gl
 On iPhone and the Duo when not in rail mode the chips sit centred; the Settings circle moves to the **trailing** edge; a leading spacer of the circle's width keeps the chips centred. The collapse rule is unchanged (unselected chips shrink to circles when the labels don't fit). Duo rail: the circle stays at the top of the column. RTL mirrors (circle leading).
 
 ### 9.3 Kerahat drawn on the arc
-The three kerahat windows are drawn **on the track itself**: full track width (12 pt Home, 7 pt Live Activity and Live widget, 4 pt dashed on the Lock Screen widget), butt caps, colour `kerahat` (light `#C7862A`, dark `#D9A04E`; on the accent background of Live Activity/widget `#F3C979`); opacity 0.92, windows already over 0.42, the active one 1.0. No times in the arc – the times stay on the Sunrise/Dhuhr/Asr rows exactly as in v0.6 ("Kerahat 07:14–07:59", "Kerahat bis 07:59"). Settings footer: "Im Bogen eingezeichnet, die Uhrzeiten stehen bei den Zeiten …".
+The three kerahat windows are drawn **on the track itself**: full track width (12 pt Home, 7 pt Live Activity and Live widget, 5 pt striped on the Lock Screen widget), butt caps, colour `kerahat` (light `#C7862A`, dark `#D9A04E`; on the accent background of Live Activity/widget `#F3C979`); opacity 0.92, windows already over 0.42, the active one 1.0. No times in the arc – the times stay on the Sunrise/Dhuhr/Asr rows exactly as in v0.6 ("Kerahat 07:14–07:59", "Kerahat bis 07:59"). Settings footer: "Im Bogen eingezeichnet, die Uhrzeiten stehen bei den Zeiten …".
 
 ### 9.4 Previous and next day
 - Under the city: the date block (Gregorian + Hijri) with a chevron button on each side – 16 pt glyph, `label-3`, no background, 44 pt hit area. Range ±365 days. RTL mirrors.
@@ -258,7 +258,7 @@ DE, TR, EN, ES plus **FR, NL, BS, SQ, AR, UR, ID, MS, BN, FA, RU, IT** (decided 
 
 ### 9.11 Live Activity and widgets with the same arc
 - Live Activity: kerahat on the track as in § 9.3.
-- Lock Screen rectangular widget: a mini arc on top (148 × 32 pt; dots 3.6/4.6 pt, track 4 pt, knob 3.4 pt, kerahat dashed – the Lock Screen is monochrome), below it the next prayer with time and the countdown.
+- Lock Screen rectangular widget, in the Live Activity style (changed after review, 15.11.2026): the arc centred in the widget (ARCS `acc`, 160 × 72 pt incl. the text; track 5 pt with the filled progress, prayer markers 13 pt with symbol, the current one 15 pt with a glow, knob 3.6 pt with a white ring), inside the arc "{p} · {time}" (11 pt semibold) and the countdown (17 pt rounded bold). No times at the arc ends – too small to read. The Lock Screen is monochrome: everything is white, graded by opacity; dark parts (symbols on begun markers, the knob's centre, the gap ring of close markers) show through. Kerahat is striped on the track (dark base, white dashes 1.6/1.4) so it reads on the filled and the open part; windows already over 0.5.
 - New **medium Home Screen widget "Live"** in the Live Activity look: accent gradient, header (icon + app name, city), arc 314 × 116 pt with times, "{p} · {time}", countdown 30 pt rounded bold. The existing widgets stay.
 - Assumption: "das große Sperrbildschirm-Widget" = the rectangular Lock Screen widget. If the medium list widget was meant, it gets the arc instead.
 
@@ -274,6 +274,7 @@ Decided by the product owner on 15.11.2026 ("Vaqt als Arbeitsname"): the app is 
 ---
 
 ## Changelog
+- **v0.8, addendum 2 (15.11.2026):** Lock Screen rectangular widget in the Live Activity style – arc centred, markers with symbols, knob with ring, prayer and countdown inside the arc, kerahat striped (§ 9.11).
 - **v0.8, addendum (15.11.2026):** working name "Vaqt" under the icon and in the app, App Store name "Vaqt – Prayer Time" (§ 9.13).
 - **v0.8 (15.11.2026):** Changes before the first beta (§ 9): app icon everywhere, top bar centred with Settings on the trailing side, kerahat drawn on the arc (times stay on the rows), previous/next day, Qibla tolerance ±40°, prayer step by step, Amiri typefaces, qada calculator card at the bottom, onboarding page "Kostenlos. Ohne Werbung." and support page, 16 languages with RTL, same arc in Live Activity and widgets plus a Live-style medium widget, manual twilight angles for high latitudes.
 
