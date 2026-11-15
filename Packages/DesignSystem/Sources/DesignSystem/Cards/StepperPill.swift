@@ -13,6 +13,17 @@ public struct StepperPill: View {
     let canIncrement: Bool
     let onDecrement: () -> Void
     let onIncrement: () -> Void
+    let size: Size
+
+    /// Größe des Steppers: die übliche (32 pt hoch, Tasten 47 pt) oder die kleinere in den Feldern des
+    /// Nachhol-Rechners (`.qc-field .stepper`: 30 pt hoch, Tasten 36 pt).
+    public enum Size: Sendable {
+        case regular
+        case compact
+
+        var height: CGFloat { self == .regular ? StepperMetrics.height : StepperMetrics.compactHeight }
+        var keyWidth: CGFloat { self == .regular ? StepperMetrics.keyWidth : StepperMetrics.compactKeyWidth }
+    }
 
     /// - Parameters:
     ///   - label: wofür der Stepper steht, z. B. „Pro Tag nachholen“ – der VoiceOver-Text der Gruppe.
@@ -21,9 +32,10 @@ public struct StepperPill: View {
     public init(
         _ label: String,
         canDecrement: Bool = true, canIncrement: Bool = true,
-        decrementLabel: String? = nil, incrementLabel: String? = nil,
+        decrementLabel: String? = nil, incrementLabel: String? = nil, size: Size = .regular,
         onDecrement: @escaping () -> Void, onIncrement: @escaping () -> Void
     ) {
+        self.size = size
         self.label = label
         self.decrementLabel = decrementLabel ?? L10n.stepLess(x: label)
         self.incrementLabel = incrementLabel ?? L10n.stepMore(x: label)
@@ -56,7 +68,7 @@ public struct StepperPill: View {
                 .overlay(alignment: .leading) {
                     Rectangle()
                         .fill(Palette.separator)
-                        .frame(width: 1, height: StepperMetrics.height - 2 * StepperMetrics.dividerInset)
+                        .frame(width: 1, height: size.height - 2 * StepperMetrics.dividerInset)
                 }
         }
         .background(Palette.fillTertiary, in: .rect(cornerRadius: StepperMetrics.radius, style: .continuous))
@@ -68,7 +80,7 @@ public struct StepperPill: View {
         Button(action: action) {
             Image(systemName: systemImage)
                 .font(.system(size: StepperMetrics.symbolSize))
-                .frame(width: StepperMetrics.keyWidth, height: StepperMetrics.height)
+                .frame(width: size.keyWidth, height: size.height)
                 .contentShape(TapArea())
         }
         .buttonStyle(StepperKeyStyle())
@@ -87,6 +99,8 @@ enum StepperMetrics {
     /// Symbole der Tasten – `ic('minus', 18)`, `ic('plus', 18)`. Als Schriftgröße eines SF Symbols so
     /// gewählt, dass die Striche so lang erscheinen wie im Prototyp (gut 10 pt).
     static let symbolSize: CGFloat = 12.5
+    static let compactHeight: CGFloat = 30
+    static let compactKeyWidth: CGFloat = 36
 }
 
 /// Das Tippziel einer Taste reicht oben und unten 6 pt über die Fläche hinaus – 44 pt Höhe

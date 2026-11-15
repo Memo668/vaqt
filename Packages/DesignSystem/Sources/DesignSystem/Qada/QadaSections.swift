@@ -98,29 +98,11 @@ public struct QadaDetails: View {
                     )
                 }
             }
-            InsetGroup(
-                header: L10n.qadaCalc,
-                footer: L10n.qadaResult(
-                    d: QadaSummary.number(ledger.periodDays), n: QadaSummary.number(ledger.periodPrayers)
-                )
-            ) {
-                QadaFieldRow(field: .years, ledger: ledger, onAction: onAction)
-                QadaFieldRow(field: .months, ledger: ledger, onAction: onAction)
-                QadaFieldRow(field: .days, ledger: ledger, onAction: onAction)
-                SwitchRow(L10n.witr, detail: L10n.witrSub, isOn: Binding(
-                    get: { ledger.includesWitr },
-                    set: { onAction(.setWitr($0)) }
-                ))
-            }
-            .padding(.top, QadaLayout.calculatorTop)
-            InsetGroup(footer: L10n.qadaApplyFooter) {
-                LinkRow(L10n.qadaApply, systemImage: QadaLayout.applySymbol) {
-                    onAction(.applyPeriod)
-                }
-            }
-            .padding(.top, InsetGroupMetrics.spacingBelow)
+            // Der Rechner als Karte ganz unten, nach den Zählern (Spec § 9.8).
+            QadaCalculatorCard(ledger: ledger, onAction: onAction)
+                .padding(.top, QadaLayout.calculatorTop)
             CardFootnote(L10n.qadaFooter)
-                .padding(.top, InsetGroupMetrics.spacingBelow)
+                .padding(.top, QadaLayout.cardBottom)
                 .padding(.bottom, QadaLayout.footnoteBottom)
         }
         .padding(.horizontal, Layout.inset)
@@ -147,12 +129,10 @@ private struct QadaFieldRow: View {
 enum QadaLayout {
     /// Abstand unter der Zusammenfassung (`.card`: `margin-bottom: 10px`).
     static let cardBottom: CGFloat = 10
-    /// Abstand zwischen „Nach Gebet“ und dem Rechner (`.qrows+.group-wrap`: `margin-top: 24px`).
-    static let calculatorTop: CGFloat = 24
+    /// Abstand zwischen den Zählern und der Karte des Rechners (`.qc-gap`: 22 pt).
+    static let calculatorTop: CGFloat = 22
     /// Abstand unter der Fußnote (`.card-foot`: `margin-bottom: 8px`).
     static let footnoteBottom: CGFloat = 8
-    /// Symbol von „Als offen übernehmen“ (`ic('check')`).
-    static let applySymbol = "checkmark"
 
     /// Abstand über „Nach Gebet“. Im CSS fallen der Abstand unter dem Teil davor und der über der
     /// Überschrift (24 pt) zusammen: unter dem Plan gelten dessen 32 pt (`.group-wrap`), ohne Plan – im
