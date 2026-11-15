@@ -1,5 +1,18 @@
 # Schlussabgleich der Referenzbilder
 
+## Phase 15 (15.11.2026, Prototyp v0.8 mit `PLURAL`)
+
+Die Referenz ist der Prototyp in derselben Sprache: `make compare-language LANGUAGE=<sprache>` nimmt 20 Zustände aus dem Prototyp (`scripts/capture-prototype` mit `PROTO_LANG`) und aus der App auf und legt sie in gleicher Höhe nebeneinander (`screenshots-out/phase-15/<sprache>/pair-*.png`, nicht in Git). Verglichen wird von Auge; Schrift (Chromium gegen SF), Breite (390 gegen 402 pt) und Laufweite weichen wie in den Phasen davor ab. Was abweicht und bleibt, steht in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 15“.
+
+| Sprache | Befehl | Ergebnis |
+|---|---|---|
+| Arabisch (`ar`, Ziffern 0–9) | `make compare-language LANGUAGE=ar` | stimmt in allen 20 Zuständen – gespiegelt: Leiste (Kreis links, Chips rechts), Pfeile am Datum, Bogen (Fadschr rechts), Zeilen (Glocke links), Tabs, Kompass nicht gespiegelt wie im Prototyp, Rakʿa-Folge von rechts, Durchlauf (Kreis rechts, Fortschritt von rechts, Pfeile), Nachholen (Balken von rechts), Einstellungen, Widgets und Live-Aktivität im Katalog. Gefunden und behoben: Zeitspannen standen von links nach rechts (Kerahat-Zeile, Kopf der Anleitung), jetzt mit dem Beginn rechts; im Vers ohne Übersetzung stand die Quelle 10 pt zu tief. Bleibt: das kurze Datum eines anderen Tages mit kurzem Wochentag von iOS („أربعاء“; im Prototyp läuft die lange Form über die Zeiten am Rand) |
+| Arabisch, Region Saudi-Arabien | `make compare-language LANGUAGE=ar REGION=ar_SA STATES='10 23 60'` | stimmt mit der Entscheidung – ٠–٩ in Zeiten, Bogen, Countdown, Datum, Hijri und Nachholen; die erste Datumszeile bleibt gregorianisch, obwohl der Kalender der Region Umm al-Qura ist. Der Prototyp schreibt mit `ar` ohne Region 0–9 |
+| Arabisch, Wahl in der App | UI-Hilfsprojekt `language-choice-rtl.txt` | stimmt – Gerät Deutsch, in der App „العربية“ gewählt: die ganze App von rechts nach links, auch Navigationsleiste (Zurück rechts) und Tab-Leiste |
+| Bengali (`bn_BD`) | `make compare-language LANGUAGE=bn` | stimmt – Schrift Bengali in Leiste, Karten, Einstellungen und Durchlauf ohne Kürzung, Zeilenhöhen passen. Wie entschieden 0–9 in Datum und Hijri („মঙ্গলবার, 10 নভেম্বর“); der Prototyp (Chromium) schreibt dort ০–৯, iOS für `bn_BD` nicht |
+| Französisch (`fr_FR`) | `make compare-language LANGUAGE=fr` | stimmt – Leiste „Horaires“, Datum und Hijri („30 joumada al oula 1448“), Zeilen mit „Makrouh“, „MAINTENANT“, Tabs; keine Texte abgeschnitten (Texterkennung) |
+| Russisch (`ru_RU`) | `make compare-language LANGUAGE=ru` | stimmt – Mehrzahl aus `PLURAL` wie im Prototyp („Зухр · 4 ракаата“, „все 4 ракаата намаза …“), Datum und Hijri („30 джумад-уль-авваль 1448 г“), Leiste mit „Время“, Tabs |
+
 ## Phase 14 (15.11.2026, Prototyp v0.8)
 
 Neu aus dem Prototyp sind `system/90`–`96` (`scripts/capture-prototype`, Ansichten `widgets`/`live` und die der Mitteilungen), dazu wegen des Namens „Vaqt“ `iphone/04`, `05`, `71`, `72`, `83`. Abgeglichen in zwei Schritten: im Katalog (`make compare-system`, Ausschnitte gegen die Referenz) und im System mit dem UI-Hilfsprojekt (Aufnahmen in `screenshots-out/phase-14/system-*.png`, nicht in Git). Die Zahlen sind der Anteil der Pixel, die um mehr als 24 von 255 abweichen. Was abweicht und bleibt, steht in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 14“.

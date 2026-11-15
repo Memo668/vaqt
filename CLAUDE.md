@@ -31,7 +31,7 @@ Werte und Formeln von dort übernehmen, nicht schätzen. Bei Widerspruch gilt: S
   - `Features` – Bildschirme: Today, Qibla, Guide, Verses, Qada, Settings, Onboarding.
 - Einzige Fremdabhängigkeit: **Adhan Swift** (MIT) für die Gebetszeiten. Dazu eingebettet die Schriften **Amiri** und **Amiri Quran** (SIL OFL 1.1, seit Phase 13); Herkunft, Versionen und Prüfsummen in `docs/THIRD-PARTY.md`, Lizenzen in der App unter Einstellungen › Über › Lizenzen. Keine Analytics, keine Crash-Reporter von Dritten, kein eigener Server. Netzwerk nur über Apple-Dienste (Ortssuche, Geocoding).
 - Daten bleiben auf dem Gerät (`@AppStorage`/UserDefaults, auch für das Nachholen – entschieden am 12.11.2026 statt SwiftData). App Group für Widgets und Live Activity.
-- Texte: String Catalog `Localizable.xcstrings` mit 16 Sprachen (DE, TR, EN, ES, FR, NL, BS, SQ, AR, UR, ID, MS, BN, FA, RU, IT; Spec § 9.10), erzeugt aus `T` – dazu die Platzhalter der Verse aus `VERSES` und `SURAH`. Keine fest verdrahteten Texte.
+- Texte: String Catalog `Localizable.xcstrings` mit 16 Sprachen (DE, TR, EN, ES, FR, NL, BS, SQ, AR, UR, ID, MS, BN, FA, RU, IT; Spec § 9.10), erzeugt aus `T` – dazu die Platzhalter der Verse aus `VERSES` und `SURAH` und die Mehrzahlformen aus `PLURAL` (seit Phase 15). Die zwölf Sprachen ab FR sind KI-Entwürfe („Needs Review“ im Katalog). AR, UR und FA laufen von rechts nach links; Ziffern und Kalender wie das System der Region (Spec § 9.10). Keine fest verdrahteten Texte.
 - Systemkomponenten bevorzugen: `TabView`, `NavigationStack`, `.glassEffect`, `GlassEffectContainer`, `.buttonStyle(.glass)`, `.searchable`, `.sheet`, `Text(timerInterval:)`, `Calendar(identifier: .islamicUmmAlQura)`. Eigene Leisten nur dort, wo die Spec sie verlangt (Chips oben im Gebete-Tab).
 - Barrierefreiheit wie in der Spec: Dynamic Type bis AX, VoiceOver-Labels, 44-pt-Tippziele, Reduce Motion, Farbe nie als einziges Signal.
 
@@ -71,6 +71,6 @@ Uhrzeit, Datum und Ort laufen über eine injizierbare `Clock`/`LocationSource`, 
   3. Screenshot mit `xcrun simctl io booted screenshot` aufnehmen.
   4. Neben die Referenz aus `design/screenshots/` legen.
   5. Abweichungen bei Abständen, Größen, Farben, Texten und Zuständen auflisten und beheben.
-- Befehle: `make build`, `make test`, `make run`, `make screenshot` (Übersicht mit `make help`, Einzelheiten in `README.md`). Das Xcode-Projekt entsteht mit `make project` aus `project.yml`. Die Build-Daten liegen auf der externen Platte „Extern“ (`/Volumes/Extern/Builds/NamazVakti`), weil die interne Platte knapp ist – `xcodebuild` deshalb nicht ohne `-derivedDataPath` aufrufen.
+- Befehle: `make build`, `make test`, `make run`, `make screenshot` (Übersicht mit `make help`, Einzelheiten in `README.md`). Andere Sprachen: `make run LANGUAGE=ar`, Abgleich mit dem Prototyp in derselben Sprache `make compare-language LANGUAGE=ar`. Das Xcode-Projekt entsteht mit `make project` aus `project.yml`. Die Build-Daten liegen auf der externen Platte „Extern“ (`/Volumes/Extern/Builds/NamazVakti`), weil die interne Platte knapp ist – `xcodebuild` deshalb nicht ohne `-derivedDataPath` aufrufen.
 - Kleine Commits pro abgeschlossenem Schritt, Phase im Commit-Text (`Phase 3: Zeiten-Seite – Gebetskarten`).
 - Keine neuen Funktionen über Spec und Screenshots hinaus.

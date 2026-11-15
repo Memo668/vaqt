@@ -50,9 +50,10 @@ open Gebetszeiten.xcodeproj
 | `make compare-qada` | Nachholen im Zustand von `iphone/60` aufnehmen und neben die Referenz legen, dazu `61`, wenn aufgenommen |
 | `make compare-settings` | Einstellungen, Onboarding und Adhan-Sheet in den Zuständen von `iphone/01`–`03`, `05`, `70`, `73`–`81`, `83` und `86` aufnehmen und neben die Referenz legen, dazu `71`, `72` und `82`, wenn aufgenommen |
 | `make compare-system` | Widgets und Live-Aktivität im Katalog in den Zuständen von `system/90`, `91` und `93`–`96` aufnehmen und neben die Referenz legen |
+| `make compare-language` | eine Sprache gegen den Prototyp in derselben Sprache: 20 Zustände (Onboarding, Zeiten, Qibla, Anleitung, Durchlauf, Verse, Nachholen, Einstellungen, Widgets, Live-Aktivität) aus dem Prototyp und der App nebeneinander (`LANGUAGE=ar STATES='10 43'`, `REGION=ar_SA` für eine andere Region; Phase 15) |
 | `make compare-duo` | auf dem Simulator „iPhone Duo“ die Zustände von `duo/open-*` (`MODE=open`, aufgeklappt und quer) oder `duo/closed-*` (`MODE=closed`) aufnehmen und neben die Referenz legen; auf- und zuklappen in Device Hub |
 | `make harness` | Skripte des UI-Hilfsprojekts ausführen, das antippt, wischt und aufnimmt (`SCRIPTS='scripts/ui-harness/scripts/iphone-61-qada.txt'`) – für Zustände mit Tipp |
-| `make capture` | jeden Bildschirm ganz aufnehmen, in Sprachen, Schriftgrößen, hell und dunkel, RTL, mit der Prüfung der Bedienungshilfen von Xcode und einem Kontaktbogen (`VARIANTS='de tr-ax5 de-dark de-rtl'`) |
+| `make capture` | jeden Bildschirm ganz aufnehmen, in allen 16 Sprachen, Schriftgrößen, hell und dunkel, RTL, mit der Prüfung der Bedienungshilfen von Xcode und einem Kontaktbogen (`VARIANTS='de tr-ax5 ar fa-dark de-rtl'`) |
 | `make strings` | String Catalog und `L10n.swift` aus dem Prototyp neu erzeugen |
 | `make archive` | Release-Archiv für das iPhone ohne Signatur bauen und mit `scripts/check-archive` prüfen (Abschnitt „App Store“) |
 
@@ -107,7 +108,7 @@ Nur in DEBUG-Builds. Damit lässt sich jeder Referenz-Screenshot nachstellen:
 -debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|widgets|live|all   Katalog der Bausteine statt der App, für den Abgleich
 ```
 
-Die Sprache kommt über die Systemargumente `-AppleLanguages '(tr)' -AppleLocale tr_TR`. Welche Argumente zu welchem Screenshot gehören, steht in `docs/PROMPTS.md`.
+Die Sprache kommt über die Systemargumente `-AppleLanguages '(tr)' -AppleLocale tr_TR` – für jede der 16 Sprachen mit der Region aus `LOC` im Prototyp (`make run LANGUAGE=ar`; Arabisch, Urdu und Persisch laufen dann von rechts nach links). Welche Argumente zu welchem Screenshot gehören, steht in `docs/PROMPTS.md`.
 
 Versteht die App ein Debug-Argument nicht, schreibt sie das beim Start in die Konsole (`Debug-Startargumente: …`). Was die Argumente bewirken:
 
@@ -286,7 +287,7 @@ Nach dem Standort fragt das Onboarding im zweiten Schritt, nach den Mitteilungen
 
 Die Einstellungen schieben sich im Stapel des Tabs über die Seite, aus dem der Einstellungskreis sie öffnet. Jede Änderung liegt sofort im `SettingsStore` und wirkt in der ganzen App: Methode, Asr, Regel für hohe Breiten und Minutenkorrektur rechnen die Zeiten neu, der Kerahat-Schalter wirkt auf Bogen und Karten, das Erscheinungsbild auf alle Seiten und Sheets.
 
-Die Sprache wählt man in der App (Einstellungen › Sprache). Ohne eigene Wahl gilt die, die iOS für die App wählt. Nach einer Wahl liest `L10n` die Texte aus dem Teil-Bundle dieser Sprache; die Seiten bauen sich neu auf, man bleibt dort, wo man war. Texte des Systems – die Dialoge für Standort und Mitteilungen, das Teilen-Menü – erscheinen weiter in der Sprache des Geräts.
+Die Sprache wählt man in der App (Einstellungen › Sprache, 16 Sprachen seit Phase 15). Ohne eigene Wahl gilt die, die iOS für die App wählt. Nach einer Wahl liest `L10n` die Texte aus dem Teil-Bundle dieser Sprache; die Seiten bauen sich neu auf, man bleibt dort, wo man war. Arabisch, Urdu und Persisch laufen von rechts nach links, auch wenn das Gerät eine andere Sprache spricht – `RootView`, Widgets und Live-Aktivität setzen die Leserichtung aus der Sprache der App (`L10n.layoutDirection`). Texte des Systems – die Dialoge für Standort und Mitteilungen, das Teilen-Menü – erscheinen weiter in der Sprache des Geräts.
 
 Der Adhan-Player spielt die Ausschnitte in `App/Sounds/` über `AVAudioPlayer`. TODO(placeholder): Stimme 1 und 2 sind freie Aufnahmen von Wikimedia Commons (CC0 bzw. gemeinfrei, Quellen im Kopf von `scripts/adhan-clip.swift`), Stimme 3 und die Fadschr-Variante haben keine Aufnahme und laufen stumm wie im Prototyp. Die Ausschnitte sind kürzer als 30 Sekunden und liegen in einem Format, das iOS auch für Mitteilungstöne annimmt (IMA4 in CAF). Hat der Simulator kein Ausgabegerät, bleibt der Player beim Abspielen einer Aufnahme stehen.
 
@@ -458,9 +459,13 @@ xcrun simctl spawn 'iPhone Duo' log stream --level debug --predicate "subsystem 
 
 ## Texte
 
-Alle Texte stehen im Prototyp im Objekt `T` (DE, TR, EN, ES). `scripts/import-strings` erzeugt daraus `Localizable.xcstrings` und `L10n.swift` im Paket `DesignSystem` und `App/InfoPlist.xcstrings`. Die Dateien werden nicht von Hand geändert: Text im Prototyp ändern, dann `make strings`. Im Code heißt `t('navPrayers')` aus dem Prototyp `L10n.navPrayers`.
+Alle Texte stehen im Prototyp im Objekt `T`, seit Phase 15 in 16 Sprachen (DE, TR, EN, ES, FR, NL, BS, SQ, AR, UR, ID, MS, BN, FA, RU, IT; Spec § 9.10). Die zwölf Sprachen ab FR sind KI-Entwürfe und stehen im Katalog mit dem Status „Needs Review“; vor dem App Store prüfen sie Muttersprachler. `scripts/import-strings` erzeugt daraus `Localizable.xcstrings` und `L10n.swift` im Paket `DesignSystem` und `App/InfoPlist.xcstrings`. Die Dateien werden nicht von Hand geändert: Text im Prototyp ändern, dann `make strings`. Im Code heißt `t('navPrayers')` aus dem Prototyp `L10n.navPrayers`.
 
-Die Verse kommen aus `VERSES` und `SURAH` im Prototyp: Übersetzungen und Namen der Suren als `verse_<Sure>_<Vers>` und `surah_<Sure>` in den String Catalog (`L10n.verseTranslation(surah:ayah:)`, `L10n.surahName(_:)`), Stelle und arabischer Text nach `Packages/PrayerCore/Sources/PrayerCore/Verses/VerseList.swift`. Die Übersetzungen sind Platzhalter und tragen im Katalog den Kommentar `TODO(placeholder)` (Spec § 6.12).
+**Mehrzahl** (Phase 15): Texte mit Zahl und Zählwort haben ihre Formen in `PLURAL` im Prototyp, je Sprache nach den Kategorien von CLDR (`zero`, `one`, `two`, `few`, `many`, `other`) – etwa „1 Tag“/„2 Tage“, russisch „1 день“/„2 дня“/„5 дней“, arabisch mit Dual. Im Katalog werden sie zu Plural-Varianten, in `L10n` ist die Zahl ein `Int` (`L10n.qcResultDetail(d:k:)`). `L10n.text` schreibt mit der Locale der Textsprache – nur dann wählt iOS die richtige Form.
+
+**Ziffern und Kalender** (Phase 15, entschieden mit dem Plan): Die App schreibt Zahlen wie das System – Persisch ۰–۹, Arabisch ٠–٩ dort, wo die Region es tut (z. B. `ar_SA`), sonst 0–9; das gilt für Uhrzeiten (`L10n.time`), Countdown, Zahlen und die Ziffern in den Texten (`LocalizedDigits`). Das Datum steht im Kalender der Region (Persisch: persisch); ist er selbst islamisch, bleibt die erste Zeile gregorianisch (`L10n.displayCalendar`). Zeitspannen beginnen von rechts nach links rechts (`L10n.timeRange`).
+
+Die Verse kommen aus `VERSES` und `SURAH` im Prototyp: Übersetzungen und Namen der Suren als `verse_<Sure>_<Vers>` und `surah_<Sure>` in den String Catalog (`L10n.verseTranslation(surah:ayah:)`, `L10n.surahName(_:)`), Stelle und arabischer Text nach `Packages/PrayerCore/Sources/PrayerCore/Verses/VerseList.swift`. Die Übersetzungen sind Platzhalter und tragen im Katalog den Kommentar `TODO(placeholder)` (Spec § 6.12). Es gibt sie nur in DE/TR/EN/ES; die übrigen Sprachen zeigen den englischen Platzhalter und den englischen Namen der Sure, Arabisch keine Übersetzung – der Vers selbst steht darüber (Spec § 9.10).
 
 `App/InfoPlist.xcstrings` enthält die Begründung der Standortabfrage im System-Dialog (`NSLocationWhenInUseUsageDescription`) – der Text `alLocBody` aus `T`. Die Info.plist braucht ihn zusätzlich als Grundwert; der steht in `project.yml`, und `make check-strings` prüft, dass er dem deutschen Text entspricht.
 
@@ -468,7 +473,7 @@ Die Vorab-Erinnerung braucht im Türkischen eine Endung, die von der Uhrzeit abh
 
 `L10n.locale` nennt die Sprache, in der die Texte gerade erscheinen; mit ihr schreibt die App Datum und Ländernamen. `L10n.chosenLanguage` ist die in der App gewählte Sprache (`nil`: wie das Gerät).
 
-Neben `noTimes` (Phase 3) und `noCompass` (Phase 4) hat der Prototyp in Phase 7 den Text `hlMoonsighting` bekommen: der Hinweis unter „Hohe Breitengrade“, dass die Regel bei Moonsighting nicht wirkt. Der Katalog hat damit 273 Einträge.
+Neben `noTimes` (Phase 3) und `noCompass` (Phase 4) hat der Prototyp in Phase 7 den Text `hlMoonsighting` bekommen: der Hinweis unter „Hohe Breitengrade“, dass die Regel bei Moonsighting nicht wirkt. Der Katalog hatte damit 273 Einträge, seit Phase 13 sind es 337.
 
 Die Adresse hinter „Quellcode“ steht als Platzhalter in `project.yml` (`SOURCE_CODE_URL`) und kommt über die Info.plist (`SourceCodeURL`) in die App.
 

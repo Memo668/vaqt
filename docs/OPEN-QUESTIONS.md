@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 15.11.2026, nach der Abnahme von Phase 14.
+Stand: 15.11.2026, Phase 15 (16 Sprachen) gebaut, noch nicht abgenommen.
 
 ## Für die erste Beta
 
@@ -34,8 +34,8 @@ Der Nutzer hat zwölf Änderungen gewünscht, im Prototyp angesehen, korrigiert 
 Offen bzw. Annahmen:
 
 - **Welches Widget bekommt den Halbkreis?** Gesagt: „Homescreen-Widget, also das große Sperrbildschirm-Widget“. Entschieden mit dem Plan für Phase 14: das rechteckige Sperrbildschirm-Widget („Das rechteckige (Empfohlen)“).
-- **Übersetzungen der zwölf neuen Sprachen** sind KI-Entwürfe (Hilfsagenten, 15.11.2026): vor dem App Store von Muttersprachlern prüfen lassen, besonders die religiösen Begriffe. Mehrzahlformen sind in einigen Entwürfen fest (z. B. Bosnisch „{n} rekata“, Arabisch) – Plural-Varianten im String Catalog.
-- **Vers-Übersetzungen** gibt es nur für DE/TR/EN/ES (Platzhalter); die übrigen Sprachen fallen auf Englisch zurück, Arabisch zeigt keine Übersetzung. Lizenzierte Übersetzungen je Sprache gehören zur Frage „Übersetzungen der Verse“ unten.
+- **Übersetzungen der zwölf neuen Sprachen** sind KI-Entwürfe (Hilfsagenten, 15.11.2026), seit Phase 15 in der App: vor dem App Store von Muttersprachlern prüfen lassen, besonders die religiösen Begriffe (unten unter „Vor dem App Store“). Die festen Mehrzahlformen der Entwürfe (z. B. Bosnisch „{n} rekata“, Arabisch, Russisch „Дней: {d}“) sind seit Phase 15 Plural-Varianten im String Catalog, Quelle `PLURAL` im Prototyp.
+- **Vers-Übersetzungen** gibt es nur für DE/TR/EN/ES (Platzhalter); die übrigen Sprachen fallen auf Englisch zurück, Arabisch zeigt keine Übersetzung – so entschieden am 15.11.2026 und so gebaut in Phase 15. Lizenzierte Übersetzungen je Sprache gehören zur Frage „Übersetzungen der Verse“ unten.
 - **Neue Texte der Anleitung** (kurzes Sitzen, zweite Niederwerfung, erstes/letztes Sitzen) sind wie die übrige Anleitung fachlich ungeprüft. Seit Phase 13 tragen sie und alle übrigen Texte der Anleitung im String Catalog den Kommentar `TODO(review)` (unten unter „Texte der Anleitung“).
 - **Duo:** Der Prototyp zeigt die neuen Elemente nur auf dem iPhone ausführlich; auf dem Duo gelten die Regeln aus Spec § 8 (Durchlauf als Vollbild, Tage-Navigation in der linken Spalte).
 
@@ -43,6 +43,7 @@ Offen bzw. Annahmen:
 
 **Inhalte und Rechte**
 
+- **Die zwölf neuen Sprachen** (Phase 15, Spec § 9.10): FR, NL, BS, SQ, AR, UR, ID, MS, BN, FA, RU, IT sind KI-Entwürfe vom 15.11.2026. Vor dem App Store liest je Sprache jemand mit Muttersprache alle Texte durch – besonders die religiösen Begriffe, die Anleitung (`TODO(review)`), die Mehrzahlformen in `PLURAL` und die Texte, die die App selbst zusammensetzt (Zeitspannen, Countdown, „Rakʿa 1 von 4“). Im String Catalog tragen sie den Status „Needs Review“ (`needs_review`); nach der Durchsicht wird er im Prototyp-Import auf `translated` gesetzt (`draftLanguages` in `scripts/import-strings.swift`). Dazu die Store-Texte und die Datenschutzerklärung, falls die App in diesen Sprachen im Store erscheinen soll.
 - **Übersetzungen der Verse** (Phase 6, Spec § 6.12): Platzhalter mit `TODO(placeholder)` im String Catalog. Offen sind Übersetzungen mit Lizenz, die Quelle des arabischen Textes und die Auswahl der Verse.
 - **Adhan-Aufnahmen** (Phase 7, Spec § 6.5): Stimme 1 und 2 sind freie Aufnahmen von Wikimedia Commons; die Lizenzangaben (CC0 1.0, gemeinfrei) stammen von den Hochladenden. Herkunft und Rechte prüfen oder durch die endgültigen Aufnahmen ersetzen; Stimme 3 und die Fadschr-Variante fehlen.
 - **Texte der Anleitung** (Phase 5, Spec § 6.14): Niemand hat sie fachlich geprüft (Imam oder Gelehrter je Sprache). Offen sind auch eine neutrale Fassung oder Varianten je Rechtsschule und für Frauen, echte Illustrationen und Audio für die Formeln. Seit Phase 13 gehören die Texte von „Gebet Schritt für Schritt“ dazu (Spec § 9.6: Start, Stehen in Rakʿa 1–2, „Sprich dreimal“, kurzes Sitzen, zweite Niederwerfung, erstes und letztes Sitzen, Schluss). Im String Catalog tragen alle 43 Texte den Kommentar `TODO(review)`; `scripts/import-strings` setzt ihn (`walkReviewKeys`, `guideReviewKeys`).
@@ -78,6 +79,15 @@ Offen bzw. Annahmen:
 Zurzeit nichts. Die Punkte 1 bis 6, die bis Phase 10 offen waren, sind entschieden (unten unter „Offene Punkte 1 bis 6“).
 
 ## Entschieden
+
+### Entschieden mit dem Plan für Phase 15 am 15.11.2026
+
+Der Plan für Phase 15 wurde am 15.11.2026 freigegeben („Freigeben, bauen (Empfohlen)“), über die Auswahl-Fragen:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Welche Ziffern auf Persisch und Arabisch? | „Wie das System (Empfohlen)“ | Die App schreibt Zahlen wie das System der Region: Persisch immer ۰–۹, Arabisch ٠–٩ dort, wo die Region es tut (z. B. Saudi-Arabien, Ägypten; auf Arabisch ohne passende Region 0–9), Urdu und Bengali 0–9. Das gilt einheitlich für Uhrzeiten, Countdown, Zahlen, Datum und die Ziffern in den Texten. Die Alternative war „Immer 0–9“. Der Prototyp mischt (Uhrzeiten 0–9, Zahlen und Datum über `Intl`). |
+| Welcher Kalender in der Datumszeile? | „Wie die Region, Hijri nie doppelt (Empfohlen)“ | Die erste Zeile über dem Bogen, das kurze Datum eines anderen Tages, die Verse und das voraussichtliche Ende im Nachholen nehmen den Kalender der Region – auf Persisch den persischen (Spec § 9.10). Ist er selbst islamisch (z. B. `ar_SA`), bleibt es beim gregorianischen, weil darunter das Hijri-Datum steht. Die Alternative war „Immer gregorianisch“ wie bis Phase 14. |
 
 Die Entscheidungen stehen in der Reihenfolge, in der sie fielen, die neuesten zuerst; die Antwort des Nutzers steht jeweils wörtlich in Anführungszeichen.
 
@@ -394,6 +404,35 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 | Ausrichtung | „Ja, so lassen“ | nur Hochformat. Phase 10: Die Info.plist bleibt so; auf dem inneren Display des iPhone Duo zeigt iOS die App trotzdem quer und hoch (siehe „Annahmen in Phase 10“). |
 | Nachholen | „Ja, so lassen“ | Die App startet leer: kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr. `iphone/60` und `61` zeigen die Beispielzahlen des Prototyps; die gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Annahme für Phase 6: Mit `-debugFixtureTimes` zeigt die Seite sie. |
 | JAKIM und Kemenag | „Ja, so lassen“ | reine Winkel 20°/18°. Vor der Veröffentlichung gegen offizielle Tabellen zu prüfen, siehe oben. |
+
+## Annahmen in Phase 15
+
+Geprüft am 15.11.2026 auf dem iPhone 18 Pro mit iOS 27.2 gegen den Prototyp in derselben Sprache (`make compare-language`: AR, AR mit Region Saudi-Arabien, RU, FR, BN; dazu die Wahl in der App) und mit `make capture` in allen 16 Sprachen. `make test`: TESTZAHL. Die Übersicht steht in `docs/REFERENCE-CHECK.md` unter „Phase 15“.
+
+### Was mit dem Prototyp übereinstimmt
+
+- **Rechts nach links** (AR, UR, FA): Leiste (Kreis links, Chips rechts), Pfeile am Datum, Bogen (Fadschr rechts) und Zeilen, Tabs, Rakʿa-Folge von rechts, Durchlauf (Kreis rechts, Fortschritt von rechts, „Zurück“ rechts, Pfeile gespiegelt), Balken im Nachholen, Einstellungen mit Zurück rechts, Widgets und Live-Aktivität (Bogen gespiegelt). Kompass und Haltungsfiguren bleiben ungespiegelt wie im Prototyp.
+- **Mehrzahl:** die Formen aus `PLURAL` (z. B. „Зухр · 4 ракаата“, arabisch „ركعتا فرض“ bei zwei Rakʿas).
+- **Datum und Hijri** je Sprache wie `Intl` im Prototyp, auf Persisch im persischen Kalender.
+
+### Was abweicht und bleibt
+
+- **Ziffern** (entschieden mit dem Plan): Die App schreibt Uhrzeiten, Countdown und die Ziffern in Texten wie das System der Region – auf Persisch ۰–۹, in Saudi-Arabien und Ägypten ٠–٩. Der Prototyp schreibt Uhrzeiten immer mit 0–9 und Zahlen über `Intl` (in Chromium ist Bengali dort ০–৯, unter iOS 0–9).
+- **Kalender der Datumszeile** (entschieden mit dem Plan): Ist der Kalender der Region islamisch (`ar_SA`), steht in der ersten Zeile das gregorianische Datum; der Prototyp kennt nur `ar` ohne Region.
+- **Kurzes Datum eines anderen Tages:** iOS schreibt den kurzen Wochentag („أربعاء، 11 نوفمبر“); im Prototyp gibt `Intl` auf Arabisch die lange Form, die dort über die Zeiten am Rand läuft. Wie seit Phase 12 im Deutschen folgt die App iOS.
+- **Russische Texte mit Zahl:** Die Entwürfe umgingen die Mehrzahl („Дней: {d} · намазов: {n}“, „нужно восполнить“). Mit `PLURAL` stehen natürliche Formen („21 день × 5 намазов“, „намазов к восполнению“); geändert im Prototyp, also kein Unterschied zum Prototyp.
+
+### Annahmen in der Umsetzung
+
+- **Status „Needs Review“:** Die zwölf Sprachen ab FR stehen im String Catalog mit `needs_review`; iOS zeigt die Texte wie übersetzte. Ein eigener Kommentar je Text wäre doppelt.
+- **Mehrzahl nur, wo sich die Form ändert:** `PLURAL` hat Einträge für 15 Texte und nur in den Sprachen, deren Zählwort sich ändert (DE, EN, ES, FR, NL, BS, SQ, AR, UR, RU, IT). Türkisch, Indonesisch, Malaiisch, Bengali und Persisch behalten die Einzahl nach Zahlen. Texte, deren Zahlen nie eine andere Form verlangen (Rakʿas 2–4 im Deutschen), bleiben wie in `T`. Ohne Zahl im Text (`qcResultUnit`, `qadaOpen`, `rakFard`) bekommt der Text die Zahl trotzdem, damit die Einheit unter der großen Zahl passt.
+- **Formatieren mit der Locale der Textsprache:** Nur so wählt iOS die Mehrzahl der Sprache und nicht die des Geräts. `String(format:locale:)` setzt dabei Argumente in Texten von rechts nach links in Isolierzeichen (U+2068 … U+2069); unsichtbar und für die Leserichtung richtig.
+- **Zeitspannen von rechts nach links:** Im Isolat eines Arguments stand „07:14–07:59“ von links nach rechts, mit dem Beginn links. `L10n.timeRange` setzt davor eine Markierung der Richtung (U+200F); so beginnt die Spanne rechts wie im Prototyp, wo der Browser Ziffern und Strich im Absatz von rechts nach links ordnet.
+- **Leserichtung aus der App:** Wählt man in der App eine Sprache, die nicht die des Geräts ist, folgt die Leserichtung der App (`L10n.layoutDirection` in `RootView`, Widgets, Live-Aktivität); SwiftUI spiegelt dann auch Navigationsleiste und Tab-Leiste. Die Plätze der Dynamic Island (links/rechts) bestimmt iOS nach der Sprache des Geräts; nur ihr Inhalt folgt der App.
+- **Arabisch ohne Region:** Wird Arabisch in der App gewählt und spricht das Gerät eine andere Sprache, gilt `ar` ohne Region wie `LOC` – also 0–9 und gregorianisch. Mit einem arabischen Gerät gilt dessen Region (z. B. `ar_SA`: ٠–٩).
+- **Verse ohne Übersetzung:** In den zwölf Sprachen steht der englische Platzhalter und der englische Name der Sure; auf Arabisch keine Übersetzung – die Zeile entfällt in Karte, Liste und beim Teilen.
+- **Widgets und Live-Aktivität in RTL** sind im Katalog (`-debugCatalog widgets|live`) gegen den Prototyp geprüft, nicht im System auf Home- und Sperrbildschirm.
+- **Nicht geprüft:** iPhone Duo (Simulator aus), echtes Gerät, VoiceOver von Hand in RTL.
 
 ## Annahmen in Phase 14
 

@@ -279,9 +279,14 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 
 ## Phase 15 – Sechzehn Sprachen
 
-- String Catalog um FR, NL, BS, SQ, AR, UR, ID, MS, BN, FA, RU, IT aus `T` erweitern, mit Plural-Varianten, wo Zahlen vorkommen (Spec § 9.10).
-- Rechts nach links für AR, UR, FA prüfen: Bogen, Pfeile, Spalten, Kompass, Durchlauf; Datumsformate je Sprache.
-- Textlängen in allen Sprachen prüfen (`make capture`).
+*Gebaut am 15.11.2026 auf dem Zweig `claude/phase-15-9c9615` (ab `dae1611`, Phase 14 abgenommen), abgeglichen gegen den Prototyp in derselben Sprache (`make compare-language`: AR, AR mit Region Saudi-Arabien, RU, FR, BN) und mit `make capture` in allen 16 Sprachen; Annahmen in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 15“.*
+
+- String Catalog um FR, NL, BS, SQ, AR, UR, ID, MS, BN, FA, RU, IT aus `T` erweitert (Spec § 9.10); die zwölf Sprachen mit dem Status „Needs Review“, ebenso `App/InfoPlist.xcstrings`. Verse und Suren fallen auf Englisch zurück, Arabisch ohne Übersetzung.
+- Plural-Varianten, wo Zahlen mit Zählwort vorkommen: Formen in `PLURAL` im Prototyp (15 Texte, Kategorien nach CLDR), im Katalog als `substitutions`, in `L10n` die Zahl als `Int`; `L10n.text` schreibt mit der Locale der Textsprache.
+- Rechts nach links für AR, UR, FA geprüft und richtiggestellt: Leserichtung aus der Sprache der App (auch bei eigener Wahl in der App) in App, Widgets und Live-Aktivität; Zeitspannen mit dem Beginn rechts. Bogen, Pfeile, Spalten, Kompass, Durchlauf, Widgets und Live-Aktivität stimmen mit dem Prototyp.
+- Ziffern wie das System (entschieden mit dem Plan): Persisch ۰–۹, Arabisch ٠–٩ nach Region, sonst 0–9 – in Uhrzeiten, Countdown, Zahlen, Datum und Texten. Datum im Kalender der Region (Persisch: persisch), ein islamischer bleibt gregorianisch.
+- Textlängen in allen 16 Sprachen geprüft (`make capture`, Prüfung „textClipped“ von Xcode).
+- Werkzeuge: `make compare-language` (Prototyp und App nebeneinander), `capture-prototype` mit `PROTO_LANG`, `capture-matrix` mit 16 Sprachen und den Bildschirmen der Phasen 12–14, `check-archive` mit 16 Sprachen.
 - Die Übersetzungen sind KI-Entwürfe: vor dem App Store von Muttersprachlern prüfen lassen (`docs/OPEN-QUESTIONS.md`).
 
 **Danach:** erste Beta über TestFlight, Ablauf in `docs/APP-STORE.md` („Mit dem Konto“); Konto, Team und Kennungen sind seit dem 15.11.2026 eingetragen.
