@@ -15,13 +15,12 @@ public enum LiveActivityMetrics {
     /// Der Bogen rückt 2 pt an den Kopf heran (`.la-arc`: `margin-top: -2px`).
     public static let arcTop: CGFloat = -2
 
-    /// Kopf: Zeichen und Name der App, rechts die Stadt (`.la-head`: 600 13px/16px, `-.08px`).
+    /// Kopf: App-Symbol und Name der App, rechts die Stadt (`.la-head`: 600 13px/16px, `-.08px`).
     public static let headFont = Font.system(size: 13, weight: .semibold)
     public static let headLineHeight: CGFloat = 16 / 13
     public static let headTracking: CGFloat = -0.08
-    /// Zeichen der App im Kopf – `ic('appGlyph', 14)`, 5 pt vor dem Namen.
-    public static let glyphSize: CGFloat = 14
-    public static let glyphGap: CGFloat = 5
+    /// Das App-Symbol steht 5 pt vor dem Namen (`.la-app`: `gap: 5px`); Größe in `AppMark.Size.header`.
+    public static let iconGap: CGFloat = 5
     /// Die Stadt ist schwächer (`.la-city`: `opacity: .72`, 500).
     public static let cityOpacity: Double = 0.72
 
@@ -172,22 +171,7 @@ public struct LiveActivityLockScreen: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 0) {
-                HStack(spacing: LiveActivityMetrics.glyphGap) {
-                    AppGlyph()
-                        .frame(width: LiveActivityMetrics.glyphSize, height: LiveActivityMetrics.glyphSize)
-                        .accessibilityHidden(true)
-                    Text(L10n.appName)
-                }
-                Spacer(minLength: 8)
-                Text(content.cityName)
-                    .fontWeight(.medium)
-                    .opacity(LiveActivityMetrics.cityOpacity)
-            }
-            .font(LiveActivityMetrics.headFont)
-            .tracking(LiveActivityMetrics.headTracking)
-            .lineLimit(1)
-            .lineHeight(LiveActivityMetrics.headLineHeight, fontSize: 13)
+            LiveHeader(cityName: content.cityName)
 
             DayArc(phase: hasBegun ? content.begun : content.countdown, style: .liveActivity, showKerahat: content.showKerahat) {
                 VStack(spacing: 0) {
@@ -208,6 +192,29 @@ public struct LiveActivityLockScreen: View {
         }
         .padding(LiveActivityMetrics.lockScreenPadding)
         .foregroundStyle(.white)
+    }
+}
+
+/// Kopf der Live-Aktivität und des Widgets „Live“: App-Symbol und Name der App, rechts die Stadt
+/// (`.la-head`; Spec § 9.1: das App-Symbol statt der Mondsichel).
+struct LiveHeader: View {
+    let cityName: String
+
+    var body: some View {
+        HStack(spacing: 0) {
+            HStack(spacing: LiveActivityMetrics.iconGap) {
+                AppMark(size: .header)
+                Text(L10n.appName)
+            }
+            Spacer(minLength: 8)
+            Text(cityName)
+                .fontWeight(.medium)
+                .opacity(LiveActivityMetrics.cityOpacity)
+        }
+        .font(LiveActivityMetrics.headFont)
+        .tracking(LiveActivityMetrics.headTracking)
+        .lineLimit(1)
+        .lineHeight(LiveActivityMetrics.headLineHeight, fontSize: 13)
     }
 }
 

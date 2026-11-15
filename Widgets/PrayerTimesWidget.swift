@@ -40,16 +40,17 @@ struct PrayerTimelineProvider: TimelineProvider {
         // Mit `-debugTime` läuft die Uhr der App anders als die des Geräts: gerechnet wird in App-Zeit,
         // die Einträge stehen in Gerätezeit.
         let offset = state.clockOffset
+        // Mit Zwischenschritten für den Bogen im Rechteck und im Widget „Live“ (Phase 14).
         let result = WidgetTimeline.entries(
             from: deviceNow.addingTimeInterval(offset), source: Self.timesSource(for: state), place: place,
-            settings: state.calculation
+            settings: state.calculation, arcStep: WidgetTimeline.arcStep
         )
         let entries = result.entries.map { entry in
             PrayerEntry(
                 date: entry.date.addingTimeInterval(-offset),
                 content: PrayerWidgetContent(
                     state: Self.widgetState(entry.content), cityName: state.cityName,
-                    isCurrentLocation: state.isCurrentLocation, clockOffset: offset
+                    isCurrentLocation: state.isCurrentLocation, clockOffset: offset, showKerahat: state.showKerahat
                 ),
                 language: state.language
             )
@@ -114,7 +115,6 @@ struct PrayerTimesWidgetView: View {
                 AccessoryWidgetBackground()
                     .clipShape(.rect(cornerRadius: WidgetMetrics.rectangularRadius, style: .continuous))
                 RectangularPrayerWidget(content: entry.content)
-                    .padding(WidgetMetrics.rectangularPadding)
             }
             .containerBackground(for: .widget) { Color.clear }
         case .accessoryInline:
@@ -128,7 +128,7 @@ struct PrayerTimesWidgetView: View {
 }
 
 /// Das Widget der App in fünf Größen: klein und mittel auf dem Home-Bildschirm, rund, rechteckig und als
-/// Zeile auf dem Sperrbildschirm (Spec § 3).
+/// Zeile auf dem Sperrbildschirm (Spec § 3). Das Rechteck zeigt seit Phase 14 den Mini-Bogen (§ 9.11).
 struct PrayerTimesWidget: Widget {
     static let kind = "PrayerTimes"
 
@@ -140,5 +140,35 @@ struct PrayerTimesWidget: Widget {
         .supportedFamilies([.systemSmall, .systemMedium, .accessoryCircular, .accessoryRectangular, .accessoryInline])
         // Die Abstände setzt das Widget selbst, wie im Prototyp.
         .contentMarginsDisabled()
+    }
+}
+
+/// Das mittlere Widget „Live“ im Stil der Live-Aktivität: Akzentverlauf, Tagesbogen, nächstes Gebet und
+/// Countdown (Spec § 9.11, seit Phase 14). Ein eigenes Widget neben `PrayerTimesWidget`, weil es von jeder
+/// Größe nur eine Ansicht je Widget gibt; in der Galerie heißt es wie die anderen nach der App
+/// (entschieden mit dem Plan für Phase 14).
+struct PrayerLiveWidget: Widget {
+    static let kind = "PrayerLive"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: Self.kind, provider: PrayerTimelineProvider()) { entry in
+            PrayerLiveWidgetView(entry: entry)
+        }
+        .configurationDisplayName(L10n.appName)
+        .supportedFamilies([.systemMedium])
+        .contentMarginsDisabled()
+    }
+}
+
+/// Die Ansicht des Widgets „Live“: der Verlauf der Live-Aktivität als Hintergrund des Containers.
+struct PrayerLiveWidgetView: View {
+    let entry: PrayerEntry
+
+    var body: some View {
+        // Die Texte in der Sprache der App, bevor die Ansichten sie lesen.
+        L10n.chosenLanguage = entry.language
+        return LivePrayerWidget(content: entry.content)
+            .environment(\.locale, L10n.locale)
+            .containerBackground(for: .widget) { LiveActivityBackground() }
     }
 }

@@ -3,7 +3,8 @@
 import PrayerCore
 import SwiftUI
 
-/// Widgets und Live-Aktivität im Katalog – zum Abgleich mit `system/90`, `91` und `93`–`96`.
+/// Widgets und Live-Aktivität im Katalog – zum Abgleich mit `system/90`, `91` und `93`–`96` (seit Phase 14
+/// mit dem Widget „Live“ und dem Rechteck mit Mini-Bogen, Spec § 9.11).
 ///
 /// Der Katalog zeigt die Ansichten der Extension in den Maßen des Prototyps auf einem Hintergrund wie
 /// `.wall`. Was iOS selbst zeichnet – Fläche, Ecken und Schatten der Widgets, die Form der Dynamic Island,
@@ -41,7 +42,10 @@ public struct CatalogOutsideState: Sendable {
             debugStart: now
         )
         return CatalogOutsideState(
-            widget: PrayerWidgetContent(state: state, cityName: cityName, isCurrentLocation: isCurrentLocation, clockOffset: clockOffset),
+            widget: PrayerWidgetContent(
+                state: state, cityName: cityName, isCurrentLocation: isCurrentLocation, clockOffset: clockOffset,
+                showKerahat: showKerahat
+            ),
             liveActivity: plan.first?.content
         )
     }
@@ -65,15 +69,16 @@ public struct CatalogOutsideState: Sendable {
 /// Lage der Bausteine im Katalog, in pt vom oberen Rand. Die Bausteine stehen dort, wo die Dynamic Island
 /// des Simulators sie nicht verdeckt; `scripts/compare-system` schneidet an diesen Stellen aus.
 public enum CatalogOutsideMetrics {
-    /// Mittleres und kleines Widget wie in `system/91`: 26 pt vom Rand, das mittlere 66 pt von oben, das
-    /// kleine darunter nach Name (5 + 13 pt) und Abstand (16 pt).
+    /// Die Widgets wie in `system/91`: 26 pt vom Rand, oben das Widget „Live“ 66 pt von oben, darunter
+    /// das mittlere und das kleine, jeweils nach Name (5 + 13 pt) und Abstand (16 pt).
     public static let homeLeft: CGFloat = 26
-    public static let mediumTop: CGFloat = 66
-    public static let smallTop: CGFloat = 254
+    public static let liveTop: CGFloat = 66
+    public static let mediumTop: CGFloat = 258
+    public static let smallTop: CGFloat = 446
     /// Die Widgets des Sperrbildschirms: die Zeile über der Uhr, darunter Ring und Rechteck wie in
-    /// `system/90` mit 14 pt Abstand, mittig.
-    public static let inlineTop: CGFloat = 450
-    public static let accessoryTop: CGFloat = 500
+    /// `system/90` mit 14 pt Abstand, mittig – unter den Widgets des Home-Bildschirms.
+    public static let inlineTop: CGFloat = 640
+    public static let accessoryTop: CGFloat = 690
     public static let accessoryGap: CGFloat = 14
     /// Die Insel kompakt und erweitert, und die Live-Aktivität auf dem Sperrbildschirm wie in `system/93`.
     public static let compactTop: CGFloat = 120
@@ -105,7 +110,7 @@ struct CatalogWallpaper: View {
     }
 }
 
-/// Die fünf Widgets: mittleres und kleines wie auf dem Home-Bildschirm, darunter die drei des
+/// Die sechs Widgets: „Live“, mittleres und kleines wie auf dem Home-Bildschirm, darunter die drei des
 /// Sperrbildschirms.
 struct CatalogWidgets: View {
     let state: CatalogOutsideState
@@ -114,6 +119,12 @@ struct CatalogWidgets: View {
         let content = state.widget
         ZStack(alignment: .topLeading) {
             CatalogWallpaper()
+            LivePrayerWidget(content: content)
+                .frame(width: WidgetMetrics.liveSize.width, height: WidgetMetrics.liveSize.height)
+                .background(LiveActivityBackground())
+                .clipShape(.rect(cornerRadius: WidgetMetrics.cornerRadius, style: .continuous))
+                .shadow(color: .black.opacity(0.14), radius: 9, y: 4)
+                .offset(x: CatalogOutsideMetrics.homeLeft, y: CatalogOutsideMetrics.liveTop)
             homeWidget(MediumPrayerWidget(content: content), size: WidgetMetrics.mediumSize)
                 .offset(x: CatalogOutsideMetrics.homeLeft, y: CatalogOutsideMetrics.mediumTop)
             homeWidget(SmallPrayerWidget(content: content), size: WidgetMetrics.smallSize)
@@ -132,7 +143,6 @@ struct CatalogWidgets: View {
                     .background(.white.opacity(0.15), in: .circle)
                 RectangularPrayerWidget(content: content)
                     .foregroundStyle(.white)
-                    .padding(WidgetMetrics.rectangularPadding)
                     .frame(width: WidgetMetrics.rectangularSize.width, height: WidgetMetrics.rectangularSize.height)
                     .background(.white.opacity(0.15), in: .rect(cornerRadius: WidgetMetrics.rectangularRadius, style: .continuous))
             }

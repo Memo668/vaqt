@@ -1,7 +1,8 @@
 import SwiftUI
 
 /// Das Zeichen der App: das App-Symbol selbst (Spec § 9.1, `appIconImg()` im Prototyp). Es steht groß im
-/// ersten Schritt des Onboardings und klein über der Tagline der Einstellungen.
+/// ersten Schritt des Onboardings, klein über der Tagline der Einstellungen und seit Phase 14 im Kopf der
+/// Live-Aktivität und des Widgets „Live“ sowie im Ring auf dem Sperrbildschirm, solange es keine Zeiten gibt.
 ///
 /// SwiftUI kann `AppIcon` nicht als Bild laden; deshalb liegt dieselbe Zeichnung als Bildsatz `AppMark` im
 /// Paket (hell und dunkel, 360 px, aus `App/Assets.xcassets/AppIcon.appiconset`). Ändert sich das Symbol,
@@ -16,6 +17,11 @@ public struct AppMark: View {
         case large
         /// 34 pt über der Tagline (`.app-icon-img.ai-tag`).
         case small
+        /// 16 pt mit Radius 4 im Kopf der Live-Aktivität und des Widgets „Live“ (`.app-icon-img.ai-la`).
+        case header
+        /// 24 pt im Ring auf dem Sperrbildschirm, solange es keine Zeiten gibt – so groß wie bis Phase 13
+        /// die Mondsichel dort.
+        case accessory
     }
 
     private let size: Size
@@ -26,7 +32,7 @@ public struct AppMark: View {
 
     public var body: some View {
         let side = AppMarkMetrics.side(for: size)
-        let shape = RoundedRectangle(cornerRadius: side * AppMarkMetrics.cornerRatio, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: AppMarkMetrics.cornerRadius(for: size), style: .continuous)
         Image("AppMark", bundle: .module)
             .resizable()
             .interpolation(.high)
@@ -54,57 +60,25 @@ enum AppMarkMetrics {
         switch size {
         case .large: 120
         case .small: 34
+        case .header: 16
+        case .accessory: 24
         }
     }
 
-    /// `border-radius: 22.4 %` – der Eckenradius der Symbole auf dem Home-Bildschirm.
+    /// `border-radius: 22.4 %` – der Eckenradius der Symbole auf dem Home-Bildschirm; im Kopf der
+    /// Live-Aktivität fest 4 pt (`.ai-la`).
+    static func cornerRadius(for size: AppMark.Size) -> CGFloat {
+        size == .header ? headerCornerRadius : side(for: size) * cornerRatio
+    }
+
     static let cornerRatio: CGFloat = 0.224
+    static let headerCornerRadius: CGFloat = 4
     static let shadowOpacity = 0.18
     static let shadowBlur: CGFloat = 34
     static let shadowY: CGFloat = 14
     /// Der feine Rand um das große Zeichen (`0 0 0 .5px rgba(0,0,0,.06)`).
     static let rimOpacity = 0.06
     static let rimWidth: CGFloat = 0.5
-}
-
-/// Mondsichel und Punkt im Feld 24 × 24 des Prototyps (`appGlyph`) – bis Phase 14 noch im Kopf der
-/// Live-Aktivität und der Widgets (Spec § 9.1 ersetzt es auch dort durch das App-Symbol): Die Sichel ist der Kreis um
-/// (11,59 | 12,41) mit Radius 7,7 ohne den Kreis um (15,19 | 8,81) mit Radius 7,6 – die beiden Bögen des
-/// SVG-Pfads `M18.6 15.6A7.6 7.6 0 0 1 8.4 5.4a7.7 7.7 0 1 0 10.2 10.2z` –, der Punkt der Kreis um
-/// (16,6 | 7,4) mit Radius 1,7.
-public struct AppGlyph: Shape {
-
-    public init() {}
-
-    public func path(in rect: CGRect) -> Path {
-        let scale = min(rect.width, rect.height) / AppGlyphGeometry.viewBox
-        let origin = CGPoint(
-            x: rect.midX - AppGlyphGeometry.viewBox * scale / 2,
-            y: rect.midY - AppGlyphGeometry.viewBox * scale / 2
-        )
-        func circle(_ center: CGPoint, _ radius: CGFloat) -> Path {
-            Path(ellipseIn: CGRect(
-                x: origin.x + (center.x - radius) * scale, y: origin.y + (center.y - radius) * scale,
-                width: 2 * radius * scale, height: 2 * radius * scale
-            ))
-        }
-        var glyph = circle(AppGlyphGeometry.outerCenter, AppGlyphGeometry.outerRadius)
-            .subtracting(circle(AppGlyphGeometry.innerCenter, AppGlyphGeometry.innerRadius))
-        glyph.addPath(circle(AppGlyphGeometry.dotCenter, AppGlyphGeometry.dotRadius))
-        return glyph
-    }
-}
-
-/// Die Geometrie von `appGlyph`. Die Mittelpunkte der Bögen sind aus dem SVG-Pfad gerechnet (Endpunkte
-/// 18,6 | 15,6 und 8,4 | 5,4; Radien 7,6 und 7,7; Flags wie im Pfad).
-enum AppGlyphGeometry {
-    static let viewBox: CGFloat = 24
-    static let outerCenter = CGPoint(x: 11.5934, y: 12.4066)
-    static let outerRadius: CGFloat = 7.7
-    static let innerCenter = CGPoint(x: 15.1941, y: 8.8059)
-    static let innerRadius: CGFloat = 7.6
-    static let dotCenter = CGPoint(x: 16.6, y: 7.4)
-    static let dotRadius: CGFloat = 1.7
 }
 
 /// Ein Symbol in Akzent auf einem getönten Kreis von 112 pt – `.onb-badge` im Prototyp: Standort und

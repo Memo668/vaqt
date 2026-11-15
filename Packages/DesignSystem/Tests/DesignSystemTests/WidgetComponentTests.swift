@@ -87,6 +87,26 @@ struct WidgetComponentTests {
         #expect(WidgetMetrics.symbolSize(box: 22) == 14.5)
     }
 
+    @Test("Widget „Live“ wie `.w-la`: 338 × 158; Kopf, 2 pt und der Bogen 314 × 116 passen hinein")
+    func liveWidgetMetrics() {
+        #expect(WidgetMetrics.liveSize == CGSize(width: 338, height: 158))
+        let arc = DayArcMetrics.liveWidget.size
+        #expect(WidgetMetrics.livePadding.leading + arc.width + WidgetMetrics.livePadding.trailing == WidgetMetrics.liveSize.width)
+        let height = WidgetMetrics.livePadding.top + 16 + WidgetMetrics.liveArcTop + arc.height
+        #expect(height == 143)
+        #expect(height <= WidgetMetrics.liveSize.height)
+    }
+
+    @Test("Rechteck mit Mini-Bogen wie `.acc-arcw`: 6 + 32 + 2 + 17,5 + 15 pt – wie im Prototyp knapp über 72")
+    func rectangularArcMetrics() {
+        let padding = WidgetMetrics.rectangularArcPadding
+        #expect(padding.leading + DayArcMetrics.lockScreen.size.width + padding.trailing == WidgetMetrics.rectangularSize.width)
+        let lines = 14 * WidgetMetrics.rectangularLineHeight + 12 * WidgetMetrics.rectangularLineHeight
+        let height = padding.top + DayArcMetrics.lockScreen.size.height + WidgetMetrics.rectangularArcBottom + lines
+        #expect(height == 72.5)
+        #expect(WidgetMetrics.rectangularArcCountOpacity == 0.75)
+    }
+
     @Test("Maße der Live-Aktivität wie im CSS: 366 breit, höchstens 160 hoch, Countdown 30 und 38 pt")
     func liveActivityMetrics() {
         #expect(LiveActivityMetrics.lockScreenWidth == 366)

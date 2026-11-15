@@ -73,20 +73,14 @@ struct SettingsComponentTests {
 
     // MARK: - Zeichen der App
 
-    @Test("die Mondsichel liegt zwischen den beiden Kreisen des SVG-Pfads")
-    func glyphGeometry() {
-        // Beide Bögen gehen durch die Endpunkte des Pfads (18,6 | 15,6) und (8,4 | 5,4).
-        for point in [CGPoint(x: 18.6, y: 15.6), CGPoint(x: 8.4, y: 5.4)] {
-            let outer = hypot(point.x - AppGlyphGeometry.outerCenter.x, point.y - AppGlyphGeometry.outerCenter.y)
-            let inner = hypot(point.x - AppGlyphGeometry.innerCenter.x, point.y - AppGlyphGeometry.innerCenter.y)
-            #expect(abs(outer - AppGlyphGeometry.outerRadius) < 0.001)
-            #expect(abs(inner - AppGlyphGeometry.innerRadius) < 0.001)
-        }
-        let path = AppGlyph().path(in: CGRect(x: 0, y: 0, width: 24, height: 24))
-        // In der Sichel: links unten im großen Kreis; nicht im ausgesparten Kreis oben rechts.
-        #expect(path.contains(CGPoint(x: 6, y: 14)))
-        #expect(!path.contains(CGPoint(x: 15, y: 9)))
-        #expect(path.contains(AppGlyphGeometry.dotCenter))
+    @Test("das App-Symbol: 120 und 34 pt mit 22,4 % Radius, im Kopf der Live-Aktivität 16 pt mit Radius 4")
+    func appMarkMetrics() {
+        #expect(AppMarkMetrics.side(for: .large) == 120)
+        #expect(AppMarkMetrics.side(for: .small) == 34)
+        #expect(AppMarkMetrics.side(for: .header) == 16)
+        #expect(AppMarkMetrics.cornerRadius(for: .header) == 4)
+        #expect(abs(AppMarkMetrics.cornerRadius(for: .small) - 34 * 0.224) < 0.0001)
+        #expect(abs(AppMarkMetrics.cornerRadius(for: .accessory) - 24 * 0.224) < 0.0001)
     }
 
     // MARK: - Onboarding

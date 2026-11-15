@@ -139,6 +139,21 @@ public enum Palette {
         public static let kerahat = Color(Values.liveActivityKerahat)
     }
 
+    // MARK: - Sperrbildschirm
+
+    /// Die Farben des Mini-Bogens im rechteckigen Widget (`.arc-acc`). Der Sperrbildschirm ist einfarbig:
+    /// Alles ist Weiß, unterschieden nur durch die Deckkraft; iOS tönt es passend zum Hintergrund.
+    public enum LockScreen {
+        /// Bogen, kommender Teil: Weiß mit 32 % Deckkraft.
+        public static let track = Color(RGBA.white.opacity(0.32))
+        /// Bogen bis „jetzt“, begonnene Punkte, Kerahat und der Knopf.
+        public static let foreground = Color(RGBA.white)
+        /// Punkte kommender Gebete: Weiß mit 45 % Deckkraft.
+        public static let marker = Color(RGBA.white.opacity(0.45))
+        /// Rand des Knopfes: Schwarz mit 35 % Deckkraft.
+        public static let knobStroke = Color(RGBA.black.opacity(0.35))
+    }
+
     // MARK: - Werte
 
     /// Die Zahlen hinter den Farben, wörtlich aus Spec und Prototyp.

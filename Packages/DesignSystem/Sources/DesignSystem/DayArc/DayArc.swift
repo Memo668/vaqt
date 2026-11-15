@@ -7,18 +7,27 @@ public enum DayArcStyle: Hashable, Sendable {
     case home
     /// Der kleine Bogen der Live-Aktivität: weiß auf Akzent (`ARCS.la`, `.arc-la`).
     case liveActivity
+    /// Der Bogen des mittleren Widgets „Live“: wie in der Live-Aktivität, etwas schmaler (`ARCS.wla` mit
+    /// dem Aussehen `la`; Spec § 9.11).
+    case liveWidget
+    /// Der Mini-Bogen des rechteckigen Widgets auf dem Sperrbildschirm: nur Punkte, einfarbig, Kerahat
+    /// gestrichelt (`ARCS.acc`, `.arc-acc`; Spec § 9.11).
+    case lockScreen
 
     public var metrics: DayArcMetrics {
         switch self {
         case .home: .home
         case .liveActivity: .liveActivity
+        case .liveWidget: .liveWidget
+        case .lockScreen: .lockScreen
         }
     }
 
     var colors: DayArcColors {
         switch self {
         case .home: .home
-        case .liveActivity: .liveActivity
+        case .liveActivity, .liveWidget: .liveActivity
+        case .lockScreen: .lockScreen
         }
     }
 }
@@ -29,7 +38,8 @@ public enum DayArcStyle: Hashable, Sendable {
 /// getönt, begonnene gefüllt, das laufende ist größer und hat einen Schein. Der Teil bis „jetzt“ ist in
 /// Akzent gefüllt, ein weißer Knopf markiert „jetzt“. Die Zeiten stehen außen am Bogen, bei den beiden
 /// Endmarkern darunter. Kerahat-Fenster liegen als goldene Abschnitte auf der Spur, ohne Uhrzeiten – die
-/// stehen in den Gebetskarten (Spec § 9.3); in der Live-Aktivität bis Phase 14 als dünne Segmente innerhalb.
+/// stehen in den Gebetskarten (Spec § 9.3); seit Phase 14 auch in der Live-Aktivität und den Widgets
+/// (§ 9.11), auf dem Sperrbildschirm gestrichelt.
 ///
 /// Bei RTL beginnt Fadschr rechts; Zahlen und Symbole werden nicht gespiegelt. Der Sonnenaufgang ist kein
 /// Marker, weil er kein Gebet ist. Design Spec § 3 („DayArc“), `ARCS` und `arcHTML()` im Prototyp.
@@ -141,6 +151,9 @@ struct DayArcColors {
     let kerahatOpacity: Double
     let kerahatPastOpacity: Double
     let kerahatActiveOpacity: Double
+    /// Strichmuster der Kerahat-Abschnitte; `nil` heißt durchgezogen. Auf dem einfarbigen Sperrbildschirm
+    /// gestrichelt (`stroke-dasharray: 1.6 1.4`).
+    var kerahatDash: [CGFloat]? = nil
     let knob: Color
     let knobStroke: Color
     let knobStrokeWidth: CGFloat
@@ -166,12 +179,27 @@ struct DayArcColors {
         markerBegun: Palette.LiveActivity.foreground, symbolBegun: Palette.LiveActivity.background,
         glow: Palette.LiveActivity.foreground.opacity(0.22), ring: Palette.LiveActivity.background,
         time: Palette.LiveActivity.time, timeCurrent: Palette.LiveActivity.foreground,
-        kerahat: Palette.LiveActivity.kerahat, kerahatOpacity: 0.75, kerahatPastOpacity: 0.75, kerahatActiveOpacity: 1,
+        // `.arc-la .arc-k.on-track`: 0,95, vorbei 0,5; laufend 1 wie in Spec § 9.3 (Phase 14). Im CSS gewinnt
+        // für das laufende Fenster die spätere Regel mit 0,95 – der Unterschied ist nicht zu sehen.
+        kerahat: Palette.LiveActivity.kerahat, kerahatOpacity: 0.95, kerahatPastOpacity: 0.5, kerahatActiveOpacity: 1,
         knob: Palette.LiveActivity.background, knobStroke: Palette.LiveActivity.foreground, knobStrokeWidth: 2,
         knobShadow: nil,
         // Die Symbole sind hier nur gut 8 pt groß; erst mit dieser Stärke ist der Strich so kräftig
         // wie im Prototyp (1,15 pt).
         symbolWeight: .heavy
+    )
+
+    /// `.arc-acc`: alles Weiß; Kerahat in jedem Zustand 0,95 (die Regel steht im CSS nach `is-past`).
+    static let lockScreen = DayArcColors(
+        track: Palette.LockScreen.track, done: Palette.LockScreen.foreground,
+        markerUpcoming: Palette.LockScreen.marker, symbolUpcoming: .clear,
+        markerBegun: Palette.LockScreen.foreground, symbolBegun: .clear,
+        glow: .clear, ring: .clear,
+        time: .clear, timeCurrent: .clear,
+        kerahat: Palette.LockScreen.foreground, kerahatOpacity: 0.95, kerahatPastOpacity: 0.95, kerahatActiveOpacity: 0.95,
+        kerahatDash: [1.6, 1.4],
+        knob: Palette.LockScreen.foreground, knobStroke: Palette.LockScreen.knobStroke, knobStrokeWidth: 1,
+        knobShadow: nil, symbolWeight: .bold
     )
 }
 
@@ -201,7 +229,8 @@ struct DayArcDrawing: View {
             ForEach(layout.kerahat) { window in
                 segment(from: window.start, to: window.end, radius: layout.kerahatRadius)
                     .stroke(colors.kerahat, style: StrokeStyle(
-                        lineWidth: metrics.kerahatWidth, lineCap: metrics.kerahatOnTrack ? .butt : .round
+                        lineWidth: metrics.kerahatWidth, lineCap: metrics.kerahatOnTrack ? .butt : .round,
+                        dash: colors.kerahatDash ?? []
                     ))
                     .opacity(opacity(of: window))
             }
@@ -215,7 +244,8 @@ struct DayArcDrawing: View {
                 self.marker(marker).position(marker.center)
             }
 
-            ForEach(layout.markers) { marker in
+            // Im Mini-Bogen stehen keine Zeiten (`if (g.mini) return`).
+            ForEach(metrics.isMini ? [] : layout.markers) { marker in
                 Text(marker.time.description)
                     .font(Typography.arcTime(
                         size: metrics.timeFontSize, isCurrent: marker.state == .current,
@@ -255,12 +285,12 @@ struct DayArcDrawing: View {
         let metrics = layout.metrics
         let begun = marker.state != .upcoming
         return ZStack {
-            if marker.state == .current {
+            if marker.state == .current, metrics.glowRadius > 0 {
                 Circle()
                     .fill(colors.glow)
                     .frame(width: metrics.glowRadius * 2, height: metrics.glowRadius * 2)
             }
-            if marker.isTight {
+            if marker.isTight, metrics.ringWidth > 0 {
                 Circle()
                     .fill(colors.ring)
                     .frame(width: (marker.radius + metrics.ringWidth) * 2, height: (marker.radius + metrics.ringWidth) * 2)
@@ -268,10 +298,12 @@ struct DayArcDrawing: View {
             Circle()
                 .fill(begun ? colors.markerBegun : colors.markerUpcoming)
                 .frame(width: marker.radius * 2, height: marker.radius * 2)
-            Image(systemName: marker.prayer.symbolName)
-                .font(.system(size: marker.symbolSize * Self.symbolFontScale, weight: colors.symbolWeight))
-                .foregroundStyle(begun ? colors.symbolBegun : colors.symbolUpcoming)
-                .frame(width: marker.symbolSize, height: marker.symbolSize)
+            if !metrics.isMini {
+                Image(systemName: marker.prayer.symbolName)
+                    .font(.system(size: marker.symbolSize * Self.symbolFontScale, weight: colors.symbolWeight))
+                    .foregroundStyle(begun ? colors.symbolBegun : colors.symbolUpcoming)
+                    .frame(width: marker.symbolSize, height: marker.symbolSize)
+            }
         }
     }
 }

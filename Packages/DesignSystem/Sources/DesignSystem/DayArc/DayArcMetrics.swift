@@ -54,6 +54,8 @@ public struct DayArcMetrics: Hashable, Sendable {
     public var tabularTimes: Bool
     /// Abstand des Inhalts im Bogen zur Unterkante (`.hero-text`, `.la-text`).
     public var contentBottomInset: CGFloat
+    /// Der Mini-Bogen des rechteckigen Widgets (`mini: true`): nur Punkte, ohne Symbole, Zeiten und Schein.
+    public var isMini: Bool = false
 
     /// `ARCS.home`: der Bogen der Zeiten-Seite, 358 × 180 pt. Kerahat liegt seit v0.8 auf der Spur.
     public static let home = DayArcMetrics(
@@ -66,15 +68,38 @@ public struct DayArcMetrics: Hashable, Sendable {
     )
 
     /// `ARCS.la`: dieselbe Zeichnung kleiner und flacher, für die Live-Aktivität auf dem
-    /// Sperrbildschirm, 330 × 122 pt. Kerahat noch als dünne Striche innerhalb; auf die Spur kommt es in
-    /// Phase 14 (Spec § 9.11).
+    /// Sperrbildschirm, 330 × 122 pt. Kerahat liegt seit Phase 14 auf der Spur, 7 pt breit
+    /// (`.arc-la .arc-k.on-track`, Spec § 9.11).
     public static let liveActivity = DayArcMetrics(
         size: CGSize(width: 330, height: 122), center: CGPoint(x: 165, y: 190), radius: 166, endAngle: 0.6,
         markerRadius: 10.5, currentMarkerRadius: 12, symbolSize: 12, currentSymbolSize: 13,
         glowRadius: 17, knobRadius: 4.5,
-        timeBox: CGSize(width: 28, height: 11), timeGap: 3, timeBelow: 9, kerahatInset: 13.5,
-        trackWidth: 7, kerahatWidth: 2, kerahatOnTrack: false, ringWidth: 1.5,
+        timeBox: CGSize(width: 28, height: 11), timeGap: 3, timeBelow: 9, kerahatInset: 0,
+        trackWidth: 7, kerahatWidth: 7, kerahatOnTrack: true, ringWidth: 1.5,
         timeFontSize: 10.5, timeScales: false, tabularTimes: false, contentBottomInset: 6
+    )
+
+    /// `ARCS.wla`: der Bogen des mittleren Widgets „Live“ im Stil der Live-Aktivität, etwas schmaler,
+    /// 314 × 116 pt (Spec § 9.11). Sonst wie `liveActivity`.
+    public static let liveWidget = DayArcMetrics(
+        size: CGSize(width: 314, height: 116), center: CGPoint(x: 157, y: 182), radius: 158, endAngle: 0.6,
+        markerRadius: 10.5, currentMarkerRadius: 12, symbolSize: 12, currentSymbolSize: 13,
+        glowRadius: 17, knobRadius: 4.5,
+        timeBox: CGSize(width: 28, height: 11), timeGap: 3, timeBelow: 9, kerahatInset: 0,
+        trackWidth: 7, kerahatWidth: 7, kerahatOnTrack: true, ringWidth: 1.5,
+        timeFontSize: 10.5, timeScales: false, tabularTimes: false, contentBottomInset: 6
+    )
+
+    /// `ARCS.acc`: der Mini-Bogen des rechteckigen Widgets auf dem Sperrbildschirm, 148 × 32 pt – nur
+    /// Punkte (3,6 pt, das laufende Gebet 4,6 pt), Spur 4 pt, Knopf 3,4 pt; Kerahat gestrichelt auf der
+    /// Spur (`.arc-acc`, Spec § 9.11).
+    public static let lockScreen = DayArcMetrics(
+        size: CGSize(width: 148, height: 32), center: CGPoint(x: 74, y: 104), radius: 100, endAngle: 0.84,
+        markerRadius: 3.6, currentMarkerRadius: 4.6, symbolSize: 0, currentSymbolSize: 0,
+        glowRadius: 0, knobRadius: 3.4,
+        timeBox: .zero, timeGap: 0, timeBelow: 0, kerahatInset: 0,
+        trackWidth: 4, kerahatWidth: 4, kerahatOnTrack: true, ringWidth: 0,
+        timeFontSize: 0, timeScales: false, tabularTimes: false, contentBottomInset: 0, isMini: true
     )
 
     // MARK: - Geometrie

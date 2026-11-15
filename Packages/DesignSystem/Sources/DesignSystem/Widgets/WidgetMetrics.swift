@@ -18,6 +18,14 @@ public enum WidgetMetrics {
     /// Eckenradius der Widgets (`--r-widget`, Spec § 2) – nur für den Katalog; auf dem Gerät rundet iOS.
     public static let cornerRadius: CGFloat = 22
 
+    /// Das mittlere Widget „Live“ im Prototyp (`.w-la`: 338 × 158, seit Phase 14). Auf dem Gerät gibt iOS
+    /// die Größe vor; der Bogen behält seine feste Größe (`DayArcMetrics.liveWidget`) und steht mittig.
+    public static let liveSize = CGSize(width: 338, height: 158)
+    /// Innenabstand (`padding: 9px 12px 0`).
+    public static let livePadding = EdgeInsets(top: 9, leading: 12, bottom: 0, trailing: 12)
+    /// Der Bogen steht 2 pt unter dem Kopf (`.wla-arc`: `margin: 2px auto 0`).
+    public static let liveArcTop: CGFloat = 2
+
     /// Innenabstand des kleinen Widgets (`padding: 14px 15px`).
     public static let smallPadding = EdgeInsets(top: 14, leading: 15, bottom: 14, trailing: 15)
     /// Innenabstand des mittleren Widgets (`padding: 14px 14px 14px 16px`).
@@ -90,18 +98,34 @@ public enum WidgetMetrics {
     /// accessoryRectangular im Prototyp (`.acc-rect`: 170 × 72, Radius 18).
     public static let rectangularSize = CGSize(width: 170, height: 72)
     public static let rectangularRadius: CGFloat = 18
-    /// Innenabstand (`padding: 8px 12px`) und Abstand der Zeilen (`gap: 2px`).
+    /// Innenabstand ohne Zeiten (`padding: 8px 12px`) und Abstand der Zeilen (`gap: 2px`).
     public static let rectangularPadding = EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12)
     public static let rectangularGap: CGFloat = 2
-    /// Erste Zeile: Symbol und Name (`.ar-1`: 700 15px, `gap: 5px`, `ic(…, 15)`).
+    /// Name der App, wenn es keine Zeiten gibt (`.ar-1`: 700 15px).
     public static func rectangularTitleFont(_ scale: CGFloat = 1) -> Font { .system(size: 15 * scale, weight: .bold) }
-    public static let rectangularTitleGap: CGFloat = 5
-    public static let rectangularSymbolBox: CGFloat = 15
-    /// Zweite und dritte Zeile (`.acc-rect`: 500 13px/1.25).
+    /// Der Hinweis darunter (`.acc-rect`: 500 13px/1.25).
     public static func rectangularFont(_ scale: CGFloat = 1) -> Font { .system(size: 13 * scale, weight: .medium).monospacedDigit() }
     public static let rectangularLineHeight: CGFloat = 1.25
-    /// Dritte Zeile, das Gebet danach (`.ar-3`: `opacity: .68`).
-    public static let followingOpacity: Double = 0.68
+
+    /// Das Rechteck mit dem Mini-Bogen (seit Phase 14, `.acc-arcw`: `padding: 6px 11px 7px`, ohne Abstand
+    /// zwischen den Zeilen). Den Bogen selbst beschreibt `DayArcMetrics.lockScreen`.
+    public static let rectangularArcPadding = EdgeInsets(top: 6, leading: 11, bottom: 7, trailing: 11)
+    /// Der Bogen ragt 1 pt nach links über den Inhalt hinaus und hält 2 pt Abstand zur Zeile darunter
+    /// (`.acc-arc`: `margin: 0 -1px 2px`).
+    public static let rectangularArcLeading: CGFloat = -1
+    public static let rectangularArcBottom: CGFloat = 2
+    /// „Maghrib 16:27“ mit Symbol (`.acc-arcw .ar-1`: 700 14px, Ziffern gleicher Breite, `gap: 5px`,
+    /// `ic(…, 13)`).
+    public static func rectangularArcTitleFont(_ scale: CGFloat = 1) -> Font {
+        .system(size: 14 * scale, weight: .bold).monospacedDigit()
+    }
+    public static let rectangularArcTitleGap: CGFloat = 5
+    public static let rectangularArcSymbolBox: CGFloat = 13
+    /// „in 2:01:59“ (`.acc-arcw .ar-2`: 500 12px, `opacity: .75`).
+    public static func rectangularArcCountFont(_ scale: CGFloat = 1) -> Font {
+        .system(size: 12 * scale, weight: .medium).monospacedDigit()
+    }
+    public static let rectangularArcCountOpacity: Double = 0.75
     /// Symbol in der Zeile über der Uhr – `ic(…, 15)`.
     public static let inlineSymbolBox: CGFloat = 15
 

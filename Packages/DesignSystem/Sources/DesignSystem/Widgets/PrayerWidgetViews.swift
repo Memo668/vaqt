@@ -21,12 +21,17 @@ public struct PrayerWidgetContent: Hashable, Sendable {
     public let isCurrentLocation: Bool
     /// Uhr der App minus Gerätezeit (`-debugTime`); sonst 0.
     public let clockOffset: TimeInterval
+    /// Der Schalter „Kerahat-Zeiten zeigen“: Kerahat im Bogen des Rechtecks und des Widgets „Live“.
+    public let showKerahat: Bool
 
-    public init(state: State, cityName: String, isCurrentLocation: Bool, clockOffset: TimeInterval = 0) {
+    public init(
+        state: State, cityName: String, isCurrentLocation: Bool, clockOffset: TimeInterval = 0, showKerahat: Bool = true
+    ) {
         self.state = state
         self.cityName = cityName
         self.isCurrentLocation = isCurrentLocation
         self.clockOffset = clockOffset
+        self.showKerahat = showKerahat
     }
 
     /// Der Zeitpunkt der Gerätezeit zu einem der App-Uhr. Countdown und Ring laufen in Gerätezeit.
@@ -384,8 +389,9 @@ public struct CircularPrayerWidget: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(WidgetTexts.nameAndTime(of: snapshot.next, in: snapshot))
         case .noTimes, .noPlace:
-            AppGlyph()
-                .frame(width: 24, height: 24)
+            // Das App-Symbol statt der Mondsichel (Spec § 9.1); iOS zeigt es auf dem Sperrbildschirm einfarbig.
+            AppMark(size: .accessory)
+                .accessibilityElement(children: .ignore)
                 .accessibilityLabel(L10n.appName)
         }
     }
@@ -439,8 +445,11 @@ public struct CatalogRing: View {
 
 // MARK: - accessoryRectangular
 
-/// Das Rechteck auf dem Sperrbildschirm: nächstes Gebet, Uhrzeit mit Countdown, das Gebet danach
-/// (`.acc-rect`).
+/// Das Rechteck auf dem Sperrbildschirm: oben der Mini-Bogen des Tages mit Punkten und Jetzt-Punkt, darunter
+/// das nächste Gebet mit Uhrzeit und der Countdown (`.acc-arcw` in `lockScreenHTML()`; Spec § 9.11). Der
+/// Sperrbildschirm ist einfarbig: Kerahat ist deshalb gestrichelt statt golden.
+///
+/// Ohne Zeiten oder Ort stehen wie bisher der Name der App und der Hinweis da.
 public struct RectangularPrayerWidget: View {
     private let content: PrayerWidgetContent
 
@@ -452,53 +461,120 @@ public struct RectangularPrayerWidget: View {
         WidgetTextScaling {
             RectangularPrayerWidgetLines(content: content)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .accessibilityElement(children: .combine)
     }
 }
 
-/// Die drei Zeilen des Rechtecks, in der Schrift, die `WidgetTextScaling` vorgibt.
+/// Bogen und Zeilen des Rechtecks, in der Schrift, die `WidgetTextScaling` vorgibt.
 struct RectangularPrayerWidgetLines: View {
     let content: PrayerWidgetContent
 
     @Environment(\.widgetTextScale) private var scale
 
     var body: some View {
-        VStack(alignment: .leading, spacing: WidgetMetrics.rectangularGap) {
-            switch content.state {
-            case .times(let snapshot):
-                HStack(spacing: WidgetMetrics.rectangularTitleGap) {
-                    WidgetSymbol(name: snapshot.next.prayer.symbolName, box: WidgetMetrics.rectangularSymbolBox, weight: .bold)
-                    Text(snapshot.next.prayer.localizedName)
-                        .font(WidgetMetrics.rectangularTitleFont(scale))
+        switch content.state {
+        case .times(let snapshot):
+            VStack(alignment: .leading, spacing: 0) {
+                DayArc(phase: snapshot.phase, style: .lockScreen, showKerahat: content.showKerahat)
+                    .accessibilityHidden(true)
+                    .padding(.leading, WidgetMetrics.rectangularArcLeading)
+                    .padding(.bottom, WidgetMetrics.rectangularArcBottom)
+                HStack(spacing: WidgetMetrics.rectangularArcTitleGap) {
+                    WidgetSymbol(name: snapshot.next.prayer.symbolName, box: WidgetMetrics.rectangularArcSymbolBox, weight: .bold)
+                    Text(WidgetTexts.nameAndTime(of: snapshot.next, in: snapshot))
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
                 }
-                Text("\(Text(verbatim: WidgetTexts.time(of: snapshot.next, in: snapshot) + " · "))\(TimerText.text(L10n.wIn(t:), until: content.deviceDate(snapshot.next.date), from: content.deviceDate(snapshot.now)))")
-                    .font(WidgetMetrics.rectangularFont(scale))
+                .font(WidgetMetrics.rectangularArcTitleFont(scale))
+                .lineHeight(WidgetMetrics.rectangularLineHeight, fontSize: 14 * scale)
+                TimerText.text(L10n.wIn(t:), until: content.deviceDate(snapshot.next.date), from: content.deviceDate(snapshot.now))
+                    .font(WidgetMetrics.rectangularArcCountFont(scale))
+                    .lineHeight(WidgetMetrics.rectangularLineHeight, fontSize: 12 * scale)
+                    .opacity(WidgetMetrics.rectangularArcCountOpacity)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
-                Text(WidgetTexts.nameAndTime(of: snapshot.following, in: snapshot))
-                    .font(WidgetMetrics.rectangularFont(scale))
-                    .opacity(WidgetMetrics.followingOpacity)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-            case .noTimes:
+            }
+            .padding(WidgetMetrics.rectangularArcPadding)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        case .noTimes, .noPlace:
+            VStack(alignment: .leading, spacing: WidgetMetrics.rectangularGap) {
                 Text(L10n.appName)
                     .font(WidgetMetrics.rectangularTitleFont(scale))
-                Text(L10n.noTimes)
+                Text(content.state == .noTimes ? L10n.noTimes : L10n.citySheetTitle)
                     .font(WidgetMetrics.rectangularFont(scale))
                     .lineLimit(2)
                     .minimumScaleFactor(0.8)
+            }
+            .lineHeight(WidgetMetrics.rectangularLineHeight, fontSize: 13 * scale)
+            .padding(WidgetMetrics.rectangularPadding)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        }
+    }
+}
+
+// MARK: - systemMedium „Live“
+
+/// Das mittlere Widget „Live“ im Stil der Live-Aktivität: Kopf mit App-Symbol, Name der App und Stadt,
+/// darunter der Tagesbogen in Weiß auf Akzent, im Bogen „Maghrib · 16:27“ und der Countdown (`.w-la` in
+/// `homeScreenHTML()`; Spec § 9.11). Den Verlauf dahinter setzt `LiveActivityBackground`.
+///
+/// Die Schrift wächst wie in der Live-Aktivität nicht mit Dynamic Type: Der Text steht im Bogen, und der
+/// hat eine feste Größe.
+public struct LivePrayerWidget: View {
+    private let content: PrayerWidgetContent
+
+    public init(content: PrayerWidgetContent) {
+        self.content = content
+    }
+
+    public var body: some View {
+        VStack(spacing: 0) {
+            switch content.state {
+            case .times(let snapshot):
+                LiveHeader(cityName: content.cityName)
+                DayArc(phase: snapshot.phase, style: .liveWidget, showKerahat: content.showKerahat) {
+                    VStack(spacing: 0) {
+                        Text(snapshot.next.prayer.localizedName + " · " + WidgetTexts.time(of: snapshot.next, in: snapshot))
+                            .font(LiveActivityMetrics.nameFont)
+                            .opacity(LiveActivityMetrics.nameOpacity)
+                            .lineHeight(LiveActivityMetrics.nameLineHeight, fontSize: 13)
+                        Text(timerInterval: countdown(snapshot), countsDown: true)
+                            .font(LiveActivityMetrics.countFont)
+                            .tracking(LiveActivityMetrics.countTracking)
+                            .multilineTextAlignment(.center)
+                            .lineHeight(LiveActivityMetrics.countLineHeight, fontSize: LiveActivityMetrics.countSize)
+                    }
+                    .accessibilityElement(children: .combine)
+                }
+                .padding(.top, WidgetMetrics.liveArcTop)
+            case .noTimes:
+                LiveHeader(cityName: content.cityName)
+                message(L10n.noTimes)
             case .noPlace:
-                Text(L10n.appName)
-                    .font(WidgetMetrics.rectangularTitleFont(scale))
-                Text(L10n.citySheetTitle)
-                    .font(WidgetMetrics.rectangularFont(scale))
+                LiveHeader(cityName: "")
+                message(L10n.citySheetTitle)
             }
         }
-        .lineHeight(WidgetMetrics.rectangularLineHeight, fontSize: 13 * scale)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(WidgetMetrics.livePadding)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .foregroundStyle(.white)
+        .accessibilityElement(children: .combine)
+    }
+
+    /// Countdown in Gerätezeit bis zum nächsten Ereignis.
+    private func countdown(_ snapshot: WidgetSnapshot) -> ClosedRange<Date> {
+        let end = content.deviceDate(snapshot.next.date)
+        return min(content.deviceDate(snapshot.now), end)...end
+    }
+
+    /// Ein Hinweis mitten im Widget, wo sonst der Bogen steht – in der Schrift von „Maghrib · 16:27“.
+    private func message(_ text: String) -> some View {
+        Text(text)
+            .font(LiveActivityMetrics.nameFont)
+            .multilineTextAlignment(.center)
+            .minimumScaleFactor(0.8)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
