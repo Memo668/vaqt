@@ -45,7 +45,7 @@ SHOT ?= screenshots-out/screenshot.png
 
 XCODEBUILD := xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' -derivedDataPath '$(DERIVED)'
 
-.PHONY: help project strings check-strings build test test-core coverage archive boot run statusbar screenshot compare compare-today compare-qibla compare-guide compare-verses compare-qada compare-settings compare-system compare-duo harness capture clean
+.PHONY: help project strings check-strings build test test-core coverage archive boot run statusbar screenshot compare compare-today compare-qibla compare-guide compare-walk compare-verses compare-qada compare-settings compare-system compare-duo harness capture clean
 
 help: ## Diese Übersicht
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -114,6 +114,10 @@ compare-qibla: build boot ## Qibla-Seite wie in den Referenzbildern aufnehmen un
 compare-guide: build boot ## Anleitung wie in iphone/40 aufnehmen und danebenlegen, dazu 41 und 42, wenn aufgenommen
 	xcrun simctl install '$(SIM)' '$(APP)'
 	SIM='$(SIM)' scripts/compare-guide
+
+compare-walk: build boot ## Gebet Schritt für Schritt wie in iphone/43–49 aufnehmen und danebenlegen (STATES='47 49-dark' für einzelne)
+	xcrun simctl install '$(SIM)' '$(APP)'
+	SIM='$(SIM)' scripts/compare-walk $(STATES)
 
 compare-verses: build boot ## Verse wie in iphone/50 (hell) und 51 (dunkel) aufnehmen und danebenlegen
 	xcrun simctl install '$(SIM)' '$(APP)'

@@ -1,0 +1,29 @@
+# Gebet Schritt für Schritt (Phase 13, Spec § 9.6): aus der Anleitung öffnen, blättern, schließen – mit Tippen
+# statt -debugWalk. Erst Asr (aktuelles Gebet, 14:25), dann nach der Wahl von Maghrib.
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25 -debugTab guide
+wait 3
+taplabel Gebet Schritt für Schritt
+wait 1.5
+shot {OUT}/flow-1-intro.png
+dump {OUT}/flow-1-intro-tree.txt
+taplabel Beginnen
+wait 1
+taplabel Weiter
+wait 1
+taplabel Weiter
+wait 1
+shot {OUT}/flow-2-step2.png
+dump {OUT}/flow-2-step2-tree.txt
+taplabel Zurück
+wait 1
+shot {OUT}/flow-3-step1.png
+taplabel Schließen
+wait 1.5
+shot {OUT}/flow-4-closed.png
+dump {OUT}/flow-4-closed-tree.txt
+taplabel Maghrib
+wait 1
+taplabel Gebet Schritt für Schritt
+wait 1.5
+shot {OUT}/flow-5-maghrib.png
+dump {OUT}/flow-5-maghrib-tree.txt

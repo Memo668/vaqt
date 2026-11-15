@@ -88,6 +88,9 @@ public struct ActionButtonLabel: View {
     let placement: Placement
     var style: SymbolStyle = .standard
 
+    /// Kleine Symbole wachsen mit dem Titel, sonst wirkten sie bei großer Schrift verloren.
+    @ScaledMetric(relativeTo: .body) private var typeScale: CGFloat = 1
+
     public var body: some View {
         HStack(spacing: PrimaryButtonMetrics.gap) {
             if placement == .leading { symbol }
@@ -110,8 +113,11 @@ public struct ActionButtonLabel: View {
                     .accessibilityHidden(true)
             case .compact:
                 Image(systemName: systemImage)
-                    .font(.system(size: PrimaryButtonMetrics.compactSize, weight: PrimaryButtonMetrics.compactWeight))
-                    .frame(width: PrimaryButtonMetrics.compactBox)
+                    .font(.system(
+                        size: PrimaryButtonMetrics.compactSize * max(typeScale, 1),
+                        weight: PrimaryButtonMetrics.compactWeight
+                    ))
+                    .frame(width: PrimaryButtonMetrics.compactBox * max(typeScale, 1))
                     .accessibilityHidden(true)
             }
         }

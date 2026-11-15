@@ -36,7 +36,6 @@ public struct GuideWalkScreen: View {
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.layoutDirection) private var layoutDirection
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     /// - Parameters:
@@ -95,6 +94,9 @@ public struct GuideWalkScreen: View {
             }
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity)
+            // Wie die obere Leiste wächst der Kopf nur bis AX1 (Spec § 3, „TopBar“); sonst bliebe für die
+            // Seite bei den größten Schriften kaum Platz.
+            .dynamicTypeSize(...WalkMetrics.headerMaxTypeSize)
             // Platzhalter so breit wie der Kreis, damit Titel und Zeile mittig stehen (`.walk-spacer`).
             Color.clear
                 .frame(width: WalkMetrics.sideSlot, height: 1)
@@ -155,16 +157,18 @@ public struct GuideWalkScreen: View {
             } else if walk.isLast(index) {
                 PrimaryButton(L10n.wkDone, action: onClose)
                     .walkFocus(focus, .next)
-            } else if dynamicTypeSize.isAccessibilitySize {
-                // Nebeneinander passen „Zurück“ und „Weiter“ ab den AX-Größen nicht mehr.
-                VStack(spacing: WalkMetrics.actionsGap) {
-                    nextButton
-                    previousButton
-                }
             } else {
-                ProportionalRow(spacing: WalkMetrics.actionsGap, ratios: WalkMetrics.actionsRatios) {
-                    previousButton
-                    nextButton
+                // Nebeneinander, solange beide Titel in eine Zeile passen; bei großer Schrift untereinander,
+                // „Weiter“ oben.
+                ViewThatFits(in: .horizontal) {
+                    ProportionalRow(spacing: WalkMetrics.actionsGap, ratios: WalkMetrics.actionsRatios) {
+                        previousButton
+                        nextButton
+                    }
+                    VStack(spacing: WalkMetrics.actionsGap) {
+                        nextButton
+                        previousButton
+                    }
                 }
             }
         }
@@ -237,12 +241,16 @@ struct WalkProgressBar: View {
 
 /// Kinder nebeneinander in festen Anteilen der Breite, z. B. 1 : 1,6 (`grid-template-columns: 1fr 1.6fr`),
 /// alle so hoch wie das höchste.
+///
+/// Ohne vorgegebene Breite (ideale Größe) ist die Zeile so breit, dass jedes Kind in seinem Anteil ohne
+/// Umbruch Platz hat – so kann `ViewThatFits` erkennen, wann die Knöpfe nicht mehr nebeneinander passen.
 struct ProportionalRow: SwiftUI.Layout {
     let spacing: CGFloat
     let ratios: [CGFloat]
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: LayoutSubviews, cache: inout ()) -> CGSize {
-        let widths = columnWidths(total: proposal.width, count: subviews.count)
+        let ideal = subviews.map { $0.sizeThatFits(.unspecified).width }
+        let widths = columnWidths(total: proposal.width, idealWidths: ideal)
         let height = zip(subviews, widths).map { subview, width in
             subview.sizeThatFits(ProposedViewSize(width: width, height: proposal.height)).height
         }.max() ?? 0
@@ -251,7 +259,7 @@ struct ProportionalRow: SwiftUI.Layout {
     }
 
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: LayoutSubviews, cache: inout ()) {
-        let widths = columnWidths(total: bounds.width, count: subviews.count)
+        let widths = columnWidths(total: bounds.width, idealWidths: subviews.map { _ in 0 })
         // SwiftUI spiegelt eigene Layouts bei der Leserichtung von rechts nach links; „Zurück“ steht dann
         // rechts, wie im Prototyp (`dir="rtl"` auf dem Grid).
         var x = bounds.minX
@@ -264,10 +272,16 @@ struct ProportionalRow: SwiftUI.Layout {
         }
     }
 
-    func columnWidths(total: CGFloat?, count: Int) -> [CGFloat] {
+    /// Breite jeder Spalte. Ohne Gesamtbreite die kleinste, in der jedes Kind seine ideale Breite bekommt.
+    func columnWidths(total: CGFloat?, idealWidths: [CGFloat]) -> [CGFloat] {
+        let count = idealWidths.count
         let ratios = (0..<count).map { $0 < self.ratios.count ? self.ratios[$0] : 1 }
         let sum = ratios.reduce(0, +)
-        guard let total, sum > 0 else { return ratios.map { _ in PrimaryButtonMetrics.height * 2 } }
+        guard sum > 0 else { return idealWidths }
+        guard let total else {
+            let unit = zip(idealWidths, ratios).map { $0 / $1 }.max() ?? 0
+            return ratios.map { unit * $0 }
+        }
         let available = max(total - spacing * CGFloat(max(count - 1, 0)), 0)
         return ratios.map { available * $0 / sum }
     }
@@ -288,6 +302,8 @@ enum WalkMetrics {
     static let titleTracking: CGFloat = -0.3
     /// `.walk-count`: `font: 500 footnote/1.3`, Ziffern gleich breit.
     static let countLineHeight: CGFloat = 1.3
+    /// Größte Schrift des Kopfs, wie die Chips der oberen Leiste.
+    static let headerMaxTypeSize = DynamicTypeSize.accessibility1
     /// `.walk-bar`: `height: 4px; margin: 6px 20px 0; border-radius: 2px`.
     static let barHeight: CGFloat = 4
     static let barTop: CGFloat = 6

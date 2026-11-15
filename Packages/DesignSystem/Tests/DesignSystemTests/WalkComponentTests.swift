@@ -144,12 +144,16 @@ struct WalkComponentTests {
     @Test("Knöpfe im Verhältnis 1 : 1,6: im Prototyp 127,69 und 204,31 pt")
     func proportionalRow() {
         let row = ProportionalRow(spacing: 10, ratios: [1, 1.6])
-        let prototype = row.columnWidths(total: 342, count: 2)
+        let prototype = row.columnWidths(total: 342, idealWidths: [0, 0])
         #expect(abs(prototype[0] - 127.69) < 0.01)
         #expect(abs(prototype[1] - 204.31) < 0.01)
-        let app = row.columnWidths(total: 354, count: 2)
+        let app = row.columnWidths(total: 354, idealWidths: [0, 0])
         #expect(abs(app[0] + app[1] + 10 - 354) < 0.001)
         #expect(abs(app[1] / app[0] - 1.6) < 0.001)
+        // Ideale Breite: „Zurück“ braucht 150 pt, „Weiter“ 160 pt – die Spalte 1 bestimmt die Breite.
+        let ideal = row.columnWidths(total: nil, idealWidths: [150, 160])
+        #expect(ideal[0] == 150)
+        #expect(abs(ideal[1] - 240) < 0.001)
     }
 
     @Test("Knopf in der Kopfkarte: „Gebet Schritt für Schritt“ mit `play.fill`, 18 pt unter dem Hinweis")
