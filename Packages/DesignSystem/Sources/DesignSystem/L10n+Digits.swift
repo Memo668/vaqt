@@ -52,6 +52,14 @@ extension L10n {
         digits(time.description)
     }
 
+    /// Eine Spanne „15:42–16:27“; Wortverbinder um den Strich halten sie in einer Zeile. Von rechts nach links
+    /// beginnt sie mit einer Markierung der Richtung (U+200F): Ohne sie stünde die Spanne – etwa im Isolat eines
+    /// eingesetzten Arguments – von links nach rechts, mit dem Beginn links. So steht der Beginn rechts wie im
+    /// Prototyp, wo der Browser Ziffern und Strich im Absatz von rechts nach links ordnet.
+    public static func timeRange(_ start: ClockTime, _ end: ClockTime) -> String {
+        (layoutDirection == .rightToLeft ? "\u{200F}" : "") + time(start) + "\u{2060}–\u{2060}" + time(end)
+    }
+
     /// Eine ganze Zahl ohne Tausendertrennung in den Ziffern der Sprache, z. B. die Nummer einer Rakʿa.
     public static func number(_ value: Int) -> String {
         digits(String(value))

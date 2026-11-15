@@ -5,6 +5,7 @@
 #   scripts/capture-prototype              alle Zustände nach design/screenshots/
 #   scripts/capture-prototype 10 23        nur Dateien, die so beginnen
 #   OUT=screenshots-out/proto scripts/capture-prototype
+#   PROTO_LANG=ar OUT=screenshots-out/phase-15/ar/proto scripts/capture-prototype 10   in einer anderen Sprache
 #
 # Braucht Node und Playwright mit Chromium. Ohne PLAYWRIGHT_DIR nimmt das Skript das Playwright, das
 # `npx @playwright/mcp` im Cache von npm abgelegt hat (~/.npm/_npx/*/node_modules/playwright).

@@ -1,0 +1,10 @@
+# Phase 15 (Spec § 9.10): Sprache in der App wählen, während das Gerät eine andere spricht. Gerät Deutsch, in der
+# App Arabisch: Die App läuft danach von rechts nach links (Seite der Sprachen, Einstellungen, Zeiten); zurück auf
+# Deutsch wieder von links nach rechts. Die Mock-Einstellungen gelten nur für diesen Lauf.
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25 -debugTab language
+wait 3
+shot {OUT}/choice-1-language-de.png
+taplabel العربية
+wait 2
+shot {OUT}/choice-2-language-ar.png
+dump {OUT}/choice-2-tree.txt

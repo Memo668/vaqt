@@ -38,7 +38,8 @@ public struct VerseCard: View {
                 Text(verse.localizedReference)
                     .textStyle(.subheadline, weight: .semibold, lineHeight: VerseCardMetrics.referenceLineHeight)
                     .foregroundStyle(Palette.accent)
-                    .padding(.top, VerseCardMetrics.referenceTop)
+                    // Ohne Übersetzung fallen im CSS die Ränder von Vers (12) und Quelle (10) zusammen: 12.
+                    .padding(.top, verse.localizedTranslation.isEmpty ? 0 : VerseCardMetrics.referenceTop)
                 FlowLayout(horizontalSpacing: VerseCardMetrics.actionGap, verticalSpacing: VerseCardMetrics.actionGap) {
                     ShareLink(item: verse.shareText) {
                         PillButtonLabel(L10n.share, systemImage: VerseCardMetrics.shareSymbol)

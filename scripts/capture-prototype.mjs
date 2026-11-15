@@ -8,6 +8,9 @@
 //   scripts/capture-prototype                 alle Zustände nach design/screenshots/
 //   scripts/capture-prototype 10 23-dark      nur diese (Präfix des Dateinamens)
 //   OUT=screenshots-out/proto scripts/capture-prototype   anderer Ordner
+//   PROTO_LANG=ar OUT=screenshots-out/phase-15/ar/proto scripts/capture-prototype 10 43
+//                                             alle Zustände in einer anderen Sprache (Phase 15, Spec § 9.10);
+//                                             ar, ur und fa spiegeln sich wie im Prototyp von selbst
 //
 // Datum und Uhr: Das Datum steht fest auf dem 10.11.2026 (wie in allen Referenzbildern), die Uhr des
 // Prototyps auf der Zeit des Zustands. Zeitzone Europe/Berlin – in ihr rechnet der Prototyp das Datum.
@@ -22,6 +25,8 @@ const require = createRequire(join(process.env.PLAYWRIGHT_DIR, 'package.json'));
 const { chromium } = require('playwright');
 
 const OUT = resolve(ROOT, process.env.OUT || 'design/screenshots');
+// Sprache aller Zustände statt der eigenen (`S.lang`); nicht `LANG`, das ist die Locale der Shell.
+const PROTO_LANG = process.env.PROTO_LANG || null;
 const PROTOTYPE = pathToFileURL(join(ROOT, 'design/prayer-times-prototype.html')).href;
 
 const hm = (h, m, s = 0) => h * 3600 + m * 60 + s;
@@ -139,7 +144,7 @@ try {
     for (const st of batch) {
       // Drei Bildschirme nebeneinander (`live`) passen erst in 2400 px ohne Verkleinerung (`layout()`).
       await page.setViewportSize({ width: st.s.view === 'live' ? 2400 : 1600, height: 1100 });
-      await page.evaluate(({ st, dark }) => {
+      await page.evaluate(({ st, dark, lang }) => {
         // Jeder Zustand beginnt beim Ausgangszustand des Prototyps – auch der Bildlauf: `render()` übernimmt
         // die Lage der Bereiche aus dem DOM, sonst stünde etwa iphone/42 noch so weit unten wie 41 (bis
         // Phase 13 so aufgenommen).
@@ -151,7 +156,7 @@ try {
           stack: { settings: [] }, sheet: null, alert: null, city: 'berlin', deviceCity: 'berlin', autoLocation: true,
           hlRule: 'angle', hlDeg: { fajr: 15, isha: 15 }, kerahat: true, appearance: 'system',
           qibla: { heading: 99, drag: true }, scrollPos: {}, focusNext: null, _focus: null,
-        }, st.s);
+        }, st.s, lang ? { lang } : {});
         S.clock = { base: st.at, anchor: Date.now(), preset: 'custom' };
         render();
         for (const [key, value] of Object.entries(st.scroll || {})) {
@@ -161,7 +166,7 @@ try {
           markScrolled(el);
         }
         if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
-      }, { st, dark });
+      }, { st, dark, lang: PROTO_LANG });
       await page.waitForTimeout(700);   // Übergänge und Animationen des Prototyps abwarten
       const target = join(OUT, `${st.file}.png`);
       mkdirSync(dirname(target), { recursive: true });

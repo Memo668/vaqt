@@ -9,7 +9,8 @@
 #   SCREENS='today guide' scripts/capture-matrix de     nur diese Bildschirme
 #   SIM_ID=<Kennung> scripts/capture-matrix de          auf einem Simulator über seine Kennung (Duo)
 #
-# Sprachen: de, tr, en, es (Region wie `LOC` im Prototyp). Größen wie `simctl ui content_size`: xs, s, m, l
+# Sprachen: de, tr, en, es, seit Phase 15 auch fr, nl, bs, sq, ar, ur, id, ms, bn, fa, ru, it (Region wie `LOC` im
+# Prototyp; ar, ur und fa laufen von selbst von rechts nach links). Größen wie `simctl ui content_size`: xs, s, m, l
 # (Standard), xl, xxl, xxxl, ax1 … ax5. Die Bildschirme stehen unten in SCREEN_LIST.
 #
 # Ausgabe in screenshots-out/phase-11/matrix/<variante>/, mit angesteckter externer Platte dort unter
@@ -55,6 +56,13 @@ adhan|-debugTab adhan
 onboarding-1|-debugOnboarding 1
 onboarding-2|-debugOnboarding 2
 onboarding-3|-debugOnboarding 3
+onboarding-4|-debugOnboarding 4
+today-nextday|-debugDayOffset 1
+walk-intro|-debugTab guide -debugWalk dhuhr -debugWalkStep 0
+walk-step|-debugTab guide -debugWalk dhuhr -debugWalkStep 14
+walk-done|-debugTab guide -debugWalk dhuhr -debugWalkStep 29
+support|-debugTab support
+licenses|-debugTab licenses
 catalog-widgets|-debugCatalog widgets
 catalog-live|-debugCatalog live
 '
@@ -97,6 +105,20 @@ for variant in "$@"; do
     tr) locale=tr_TR city=istanbul ;;
     en) locale=en_GB city=berlin ;;
     es) locale=es_ES city=madrid ;;
+    # Phase 15: die zwölf weiteren Sprachen (Region wie `LOC`); Indonesisch und Malaiisch in Jakarta, die übrigen
+    # in Berlin wie die Referenzbilder.
+    fr) locale=fr_FR city=berlin ;;
+    nl) locale=nl_NL city=berlin ;;
+    bs) locale=bs_BA city=berlin ;;
+    sq) locale=sq_AL city=berlin ;;
+    ar) locale=ar city=berlin ;;
+    ur) locale=ur_PK city=berlin ;;
+    id) locale=id_ID city=jakarta ;;
+    ms) locale=ms_MY city=jakarta ;;
+    bn) locale=bn_BD city=berlin ;;
+    fa) locale=fa_IR city=berlin ;;
+    ru) locale=ru_RU city=berlin ;;
+    it) locale=it_IT city=berlin ;;
     *) echo "unbekannte Sprache „$language“" >&2; exit 2 ;;
   esac
 

@@ -31,12 +31,24 @@ ARCHIVE    := $(BUILD_ROOT)/Archives/Gebetszeiten.xcarchive
 
 # Startargumente für `make run`. Standard ist der Haupt-Screenshot iphone/10:
 # Deutsch, Berlin, 10.11.2026, 14:25. Weitere Sätze stehen in docs/PROMPTS.md.
-# Sprache und Region wie `LOC` im Prototyp (de-DE, tr-TR, en-GB, es-ES).
+# Sprache und Region wie `LOC` im Prototyp (de-DE, tr-TR, en-GB, es-ES … seit Phase 15 alle 16, Spec § 9.10).
 LANGUAGE  ?= de
 LOCALE_de := de_DE
 LOCALE_tr := tr_TR
 LOCALE_en := en_GB
 LOCALE_es := es_ES
+LOCALE_fr := fr_FR
+LOCALE_nl := nl_NL
+LOCALE_bs := bs_BA
+LOCALE_sq := sq_AL
+LOCALE_ar := ar
+LOCALE_ur := ur_PK
+LOCALE_id := id_ID
+LOCALE_ms := ms_MY
+LOCALE_bn := bn_BD
+LOCALE_fa := fa_IR
+LOCALE_ru := ru_RU
+LOCALE_it := it_IT
 LOCALE    ?= $(LOCALE_$(LANGUAGE))
 ARGS      ?= -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25
 # Uhrzeit in der Statusleiste und Ziel für `make screenshot`.
@@ -45,7 +57,7 @@ SHOT ?= screenshots-out/screenshot.png
 
 XCODEBUILD := xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' -derivedDataPath '$(DERIVED)'
 
-.PHONY: help project strings check-strings build test test-core coverage archive boot run statusbar screenshot compare compare-today compare-qibla compare-guide compare-walk compare-verses compare-qada compare-settings compare-system compare-duo harness capture clean
+.PHONY: help project strings check-strings build test test-core coverage archive boot run statusbar screenshot compare compare-today compare-qibla compare-guide compare-walk compare-verses compare-qada compare-settings compare-system compare-language compare-duo harness capture clean
 
 help: ## Diese Übersicht
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -134,6 +146,10 @@ compare-settings: build boot ## Einstellungen, Onboarding und Adhan wie in iphon
 compare-system: build boot ## Widgets und Live-Aktivität wie in system/90, 91, 93–96 im Katalog aufnehmen und danebenlegen (STATES='93 96' für einzelne)
 	xcrun simctl install '$(SIM)' '$(APP)'
 	SIM='$(SIM)' scripts/compare-system $(STATES)
+
+compare-language: build boot ## Eine Sprache gegen den Prototyp in derselben Sprache (LANGUAGE=ar STATES='10 43', REGION=ar_SA)
+	xcrun simctl install '$(SIM)' '$(APP)'
+	SIM='$(SIM)' scripts/compare-language $(LANGUAGE) $(STATES)
 
 compare-duo: build ## iPhone Duo wie in duo/* aufnehmen und danebenlegen (MODE=open|closed, STATES='10 85'); auf- und zuklappen in Device Hub
 	xcrun simctl install '$(DUO_SIM)' '$(APP)'

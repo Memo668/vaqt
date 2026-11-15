@@ -1,0 +1,98 @@
+#!/bin/bash
+# Phase 15: Abgleich einer Sprache mit dem Prototyp in derselben Sprache (Spec § 9.10).
+#
+#   scripts/compare-language ar                  alle Zustände
+#   scripts/compare-language ru 10 43 70         nur diese Nummern
+#   REGION=ar_SA scripts/compare-language ar     mit einer anderen Region (dort ٠–٩ und Kalender Umm al-Qura)
+#
+# 1. Nimmt die Zustände aus dem Prototyp in dieser Sprache auf (scripts/capture-prototype mit PROTO_LANG);
+#    ar, ur und fa spiegeln sich dort wie in der App von selbst.
+# 2. Startet die App je Zustand mit -AppleLanguages (<sprache>), der Region wie `LOC` im Prototyp und den
+#    Debug-Argumenten des Zustands und nimmt den Bildschirm auf.
+# 3. Legt je Zustand Prototyp und App in gleicher Höhe nebeneinander (scripts/side-by-side.swift).
+#
+# Ausgabe in screenshots-out/phase-15/<sprache>/ (OUT=… änderbar): proto/ (Prototyp), app-<nr>.png und
+# pair-<nr>.png. Verglichen wird von Auge – Schriften, Laufweiten und Breiten (390 gegen 402 pt) weichen ab,
+# ein Unterschiedsbild wie bei scripts/compare-shot hilft hier nicht. Die App muss gebaut und installiert sein
+# (make build, dann xcrun simctl install).
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SIM="${SIM:-iPhone 18 Pro}"
+BUNDLE_ID="${BUNDLE_ID:-$("$ROOT/scripts/bundle-id")}"
+WAIT="${WAIT:-3}"
+
+[ $# -gt 0 ] || { echo "Aufruf: scripts/compare-language <sprache> [nummer …]" >&2; exit 2; }
+LANGUAGE="$1"; shift
+case "$LANGUAGE" in
+  de) region=de_DE ;; tr) region=tr_TR ;; en) region=en_GB ;; es) region=es_ES ;;
+  fr) region=fr_FR ;; nl) region=nl_NL ;; bs) region=bs_BA ;; sq) region=sq_AL ;;
+  ar) region=ar ;; ur) region=ur_PK ;; id) region=id_ID ;; ms) region=ms_MY ;;
+  bn) region=bn_BD ;; fa) region=fa_IR ;; ru) region=ru_RU ;; it) region=it_IT ;;
+  *) echo "unbekannte Sprache „$LANGUAGE“" >&2; exit 2 ;;
+esac
+REGION="${REGION:-$region}"
+suffix=""
+[ "$REGION" = "$region" ] || suffix="-$REGION"
+OUT="${OUT:-$ROOT/screenshots-out/phase-15/$LANGUAGE$suffix}"
+
+# Nummer | Bild im Prototyp | hell oder dunkel | Debug-Argumente der App (dazu -debugFixtureTimes, Datum, Berlin)
+STATES='
+01|iphone/01-onboarding-1-welcome|light|-debugOnboarding 1 -debugTime 14:25
+05|iphone/05-onboarding-4-free|light|-debugOnboarding 4 -debugTime 14:25
+10|iphone/10-home-asr-active|light|-debugSkipOnboarding -debugTime 14:25
+14|iphone/14-home-kerahat-active|light|-debugSkipOnboarding -debugTime 07:30
+23|iphone/23-home-next-day|light|-debugSkipOnboarding -debugTime 14:25 -debugDayOffset 1
+30|iphone/30-qibla|light|-debugSkipOnboarding -debugTab qibla -debugTime 14:25 -debugQiblaHeading 98 -debugQiblaAccuracy 40
+33|iphone/33-qibla-tolerance|light|-debugSkipOnboarding -debugTab qibla -debugTime 14:25 -debugQiblaHeading 112
+40|iphone/40-guide-asr|light|-debugSkipOnboarding -debugTab guide -debugTime 14:25
+43|iphone/43-walk-intro|light|-debugSkipOnboarding -debugTab guide -debugTime 14:25 -debugWalk dhuhr -debugWalkStep 0
+45|iphone/45-walk-qiyam-silent|light|-debugSkipOnboarding -debugTab guide -debugTime 14:25 -debugWalk dhuhr -debugWalkStep 2
+47|iphone/47-walk-sujud|light|-debugSkipOnboarding -debugTab guide -debugTime 14:25 -debugWalk dhuhr -debugWalkStep 5
+48|iphone/48-walk-tash-first|light|-debugSkipOnboarding -debugTab guide -debugTime 14:25 -debugWalk dhuhr -debugWalkStep 14
+49|iphone/49-walk-done|light|-debugSkipOnboarding -debugTab guide -debugTime 14:25 -debugWalk dhuhr -debugWalkStep 29
+50|iphone/50-verses|light|-debugSkipOnboarding -debugTab verses -debugTime 14:25
+60|iphone/60-qada|light|-debugSkipOnboarding -debugTab qada -debugTime 14:25
+70|iphone/70-settings|light|-debugSkipOnboarding -debugTab settings -debugTime 14:25
+75|iphone/75-settings-hl|light|-debugSkipOnboarding -debugTab hl -debugTime 14:25
+83|iphone/83-settings-support|light|-debugSkipOnboarding -debugTab support -debugTime 14:25
+91|system/91-homescreen-widgets|light|-debugCatalog widgets -debugTime 14:25
+93|system/93-live-activity-lockscreen|light|-debugCatalog live -debugTime 14:25
+'
+
+selected() { [ $# -eq 0 ] || printf '%s\n' "$@" | grep -qx "$number"; }
+
+mkdir -p "$OUT/proto"
+# 1. Prototyp: nur die Bilder der gewählten Zustände (Präfix des Dateinamens).
+prefixes=()
+while IFS='|' read -r number file _ _; do
+  [ -n "$number" ] || continue
+  selected "$@" || continue
+  prefixes+=("${file##*/}")   # capture-prototype wählt nach dem Anfang des Dateinamens
+done <<< "$STATES"
+[ ${#prefixes[@]} -gt 0 ] || { echo "kein Zustand passt zu $*" >&2; exit 2; }
+echo "== Prototyp ($LANGUAGE)"
+PROTO_LANG="$LANGUAGE" OUT="$OUT/proto" "$ROOT/scripts/capture-prototype" "${prefixes[@]}"
+
+# 2. App
+echo "== App ($LANGUAGE, $REGION)"
+xcrun simctl bootstatus "$SIM" -b >/dev/null
+xcrun simctl status_bar "$SIM" override --time 14:25 --batteryState discharging --batteryLevel 100 \
+  --cellularBars 4 --wifiBars 3
+xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" -debugSkipOnboarding -debugFixtureTimes >/dev/null
+sleep 3
+while IFS='|' read -r number file appearance arguments; do
+  [ -n "$number" ] || continue
+  selected "$@" || continue
+  xcrun simctl ui "$SIM" appearance "$appearance"
+  # shellcheck disable=SC2086
+  xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" \
+    -AppleLanguages "($LANGUAGE)" -AppleLocale "$REGION" \
+    -debugFixtureTimes -debugDate 2026-11-10 -debugCity berlin $arguments >/dev/null
+  sleep "$WAIT"
+  xcrun simctl io "$SIM" screenshot "$OUT/app-$number.png" >/dev/null 2>&1
+  swift "$ROOT/scripts/side-by-side.swift" "$OUT/pair-$number.png" "$number · $LANGUAGE ($REGION)" \
+    "Prototyp=$OUT/proto/$file.png" "App=$OUT/app-$number.png"
+  echo "  pair-$number.png"
+done <<< "$STATES"
+xcrun simctl ui "$SIM" appearance light
+echo "Ergebnis in $OUT"

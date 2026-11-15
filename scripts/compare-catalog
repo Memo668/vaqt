@@ -56,6 +56,18 @@ locale_of() {
     tr) echo tr_TR ;;
     en) echo en_GB ;;
     es) echo es_ES ;;
+    fr) echo fr_FR ;;
+    nl) echo nl_NL ;;
+    bs) echo bs_BA ;;
+    sq) echo sq_AL ;;
+    ar) echo ar ;;
+    ur) echo ur_PK ;;
+    id) echo id_ID ;;
+    ms) echo ms_MY ;;
+    bn) echo bn_BD ;;
+    fa) echo fa_IR ;;
+    ru) echo ru_RU ;;
+    it) echo it_IT ;;
     *) echo de_DE ;;
   esac
 }

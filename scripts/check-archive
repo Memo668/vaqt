@@ -27,7 +27,7 @@ EXT="$APP/PlugIns/GebetszeitenWidgets.appex"
 INFO="$APP/Info.plist"
 EXT_INFO="$EXT/Info.plist"
 CATALOG="$ROOT/Packages/DesignSystem/Sources/DesignSystem/Resources/Localizable.xcstrings"
-LANGUAGES=(de tr en es)
+LANGUAGES=(de tr en es fr nl bs sq ar ur id ms bn fa ru it)
 
 [ -f "$INFO" ] || { echo "Kein Archiv der App unter $ARCHIVE – erst make archive" >&2; exit 2; }
 
@@ -108,10 +108,11 @@ fi
 
 # Texte
 localizations="$(json "$INFO" CFBundleLocalizations)"
-if [ "$localizations" = '["de","tr","en","es"]' ]; then
-  ok "Sprachen der App: de, tr, en, es (CFBundleLocalizations)"
+expected_localizations="[$(printf '"%s",' "${LANGUAGES[@]}" | sed 's/,$//')]"
+if [ "$localizations" = "$expected_localizations" ]; then
+  ok "Sprachen der App: ${LANGUAGES[*]} (CFBundleLocalizations)"
 else
-  fail "CFBundleLocalizations ist $localizations statt [\"de\",\"tr\",\"en\",\"es\"]"
+  fail "CFBundleLocalizations ist $localizations statt $expected_localizations"
 fi
 expected="$(plutil -extract strings raw -o - "$CATALOG" | wc -l | tr -d ' ')"
 for bundle in "$APP" "$EXT"; do
@@ -132,7 +133,7 @@ for language in "${LANGUAGES[@]}"; do
   [ -n "$(value "$APP/$language.lproj/InfoPlist.strings" NSLocationWhenInUseUsageDescription)" ] || missing="$missing $language"
 done
 if [ -z "$missing" ]; then
-  ok "Begründung der Standortabfrage in allen vier Sprachen (InfoPlist.strings)"
+  ok "Begründung der Standortabfrage in allen ${#LANGUAGES[@]} Sprachen (InfoPlist.strings)"
 else
   fail "Begründung der Standortabfrage fehlt in InfoPlist.strings:$missing"
 fi
