@@ -1,0 +1,27 @@
+#!/bin/bash
+# Referenzbilder aus dem Prototyp aufnehmen (Spec v0.8, seit Phase 12) – Einzelheiten und Zustände in
+# scripts/capture-prototype.mjs.
+#
+#   scripts/capture-prototype              alle Zustände nach design/screenshots/
+#   scripts/capture-prototype 10 23        nur Dateien, die so beginnen
+#   OUT=screenshots-out/proto scripts/capture-prototype
+#
+# Braucht Node und Playwright mit Chromium. Ohne PLAYWRIGHT_DIR nimmt das Skript das Playwright, das
+# `npx @playwright/mcp` im Cache von npm abgelegt hat (~/.npm/_npx/*/node_modules/playwright).
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+if [ -z "${PLAYWRIGHT_DIR:-}" ]; then
+  PLAYWRIGHT_DIR="$(ls -d "$HOME"/.npm/_npx/*/node_modules/playwright 2>/dev/null | head -1 || true)"
+fi
+if [ -z "$PLAYWRIGHT_DIR" ] || [ ! -f "$PLAYWRIGHT_DIR/package.json" ]; then
+  echo "capture-prototype: Playwright nicht gefunden – PLAYWRIGHT_DIR=<pfad>/node_modules/playwright setzen" >&2
+  exit 1
+fi
+export PLAYWRIGHT_DIR
+# Chromium aus dem Cache von Playwright, falls der passende zur Version fehlt.
+if [ -z "${CHROMIUM_PATH:-}" ]; then
+  CHROMIUM_PATH="$(ls -d "$HOME"/Library/Caches/ms-playwright/chromium-*/chrome-mac*/*.app/Contents/MacOS/* 2>/dev/null | tail -1 || true)"
+fi
+export CHROMIUM_PATH
+cd "$ROOT"
+exec node "$ROOT/scripts/capture-prototype.mjs" "$@"

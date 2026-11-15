@@ -1,19 +1,31 @@
 # Referenz-Screenshots
 
-Aus dem Prototyp `prayer-times-prototype.html` (v0.7) erzeugt, nur der Bildschirm ohne Gerätrahmen, 2x.
+Aus dem Prototyp `prayer-times-prototype.html` erzeugt, nur der Bildschirm ohne Gerätrahmen, 2x.
 iPhone: 390 × 844 pt · iPhone Duo zu: 466 × 678 pt · iPhone Duo auf: 951 × 669 pt.
 Uhrzeiten/Zahlen stammen aus den Mock-Daten des Prototyps (Berlin, 10.11.2026). Mit `-debugFixtureTimes` zeigt die App dieselben Werte.
 Wenn nichts anderes steht: Deutsch, hell, Berlin, 14:25 (Asr aktiv).
 
+**Stand v0.8 (Phase 12, 15.11.2026):** Die Bilder unter `iphone/` hat `scripts/capture-prototype` aus dem Prototyp v0.8 neu aufgenommen (Spec § 9) – alle Zustände stehen in `scripts/capture-prototype.mjs`. Neu sind die dunklen Fassungen der geänderten Bildschirme (`-dark`) und `05`, `23`, `33`, `34`, `82`, `83`. Noch von v0.7 sind `04`, `73`, `74`, `76`–`81`, `85`, `86` (unverändert bis auf die Punkte des Onboardings hinter dem Dialog in `04`), alle `system/*` (Phase 14) und alle `duo/*`.
+
+Was der Prototyp v0.8 schon zeigt, die App aber erst später bekommt:
+- **Phase 13:** Knopf „Gebet Schritt für Schritt“ in der Anleitung (`40`–`42`), Amiri Quran in den Versen (`50`, `51`).
+- **Phase 15:** weitere Sprachen.
+
+Abweichungen des Prototyps, denen die App nicht folgt (Spec > Screenshot > HTML):
+- **`23` (anderer Tag):** Der Prototyp blendet die Kerahat-Abschnitte nach der heutigen Uhrzeit ab; laut Spec § 9.4 hat ein anderer Tag keinen Zustand „vorbei“ – in der App sind alle drei gleich kräftig.
+- **`19` (große Schrift):** Die Chips überdecken im Prototyp das Zahnrad; die App lässt bei Platzmangel den Platzhalter links weg (Spec § 9.2, Zusammenklappen wie bisher).
 
 ## Onboarding & Berechtigungen – Phase 7
 
 | Datei | Zeigt |
 |---|---|
 | `iphone/01-onboarding-1-welcome.png` | Onboarding step 1 (welcome) |
+| `iphone/01-onboarding-1-welcome-dark.png` | Same in dark mode – app icon instead of the crescent (§ 9.1) |
 | `iphone/02-onboarding-2-location.png` | Onboarding step 2 (location priming) |
 | `iphone/03-onboarding-3-notifications.png` | Onboarding step 3 (notification priming) |
 | `iphone/04-alert-location.png` | iOS location alert over step 2 (system UI, for flow context only) |
+| `iphone/05-onboarding-4-free.png` | Onboarding step 4 „Kostenlos. Ohne Werbung.“ (§ 9.9) |
+| `iphone/05-onboarding-4-free-dark.png` | Same in dark mode |
 
 ## Zeiten (Home) – Phase 2 + 3
 
@@ -24,6 +36,7 @@ Wenn nichts anderes steht: Deutsch, hell, Berlin, 14:25 (Asr aktiv).
 | `iphone/12-home-before-fajr.png` | Before Fajr: nothing highlighted, countdown to Fajr |
 | `iphone/13-home-after-sunrise.png` | After sunrise: no current prayer, white "now" knob on the arc |
 | `iphone/14-home-kerahat-active.png` | 07:30 – Kerahat after sunrise active (caption in gold, arc segment stronger) |
+| `iphone/14-home-kerahat-active-dark.png` | Same in dark mode – kerahat drawn on the track (§ 9.3) |
 | `iphone/15-home-kerahat-before-maghrib.png` | 16:05 – Kerahat before Maghrib active on the Asr row |
 | `iphone/16-home-after-isha-dark.png` | After Isha (dark): Isha highlighted, "Fajr tomorrow in" |
 | `iphone/17-home-location-denied-offline.png` | Location denied banner + offline pill |
@@ -32,14 +45,19 @@ Wenn nichts anderes steht: Deutsch, hell, Berlin, 14:25 (Asr aktiv).
 | `iphone/20-home-rtl.png` | RTL preview (arc runs right → left, numbers not mirrored) |
 | `iphone/21-home-turkish-istanbul.png` | Turkish, Istanbul (Diyanet) |
 | `iphone/22-home-jakarta-close-markers.png` | Jakarta, Maghrib active: close markers (Maghrib → Isha 72 min) get a ring |
+| `iphone/23-home-next-day.png` | Next day (`-debugDayOffset 1`): that day's times, relative day + date instead of the countdown, „Zurück zu heute“ (§ 9.4) |
+| `iphone/23-home-next-day-dark.png` | Same in dark mode |
 
 ## Qibla – Phase 4
 
 | Datei | Zeigt |
 |---|---|
-| `iphone/30-qibla.png` | Qibla page (compass, drag to rotate in prototype) |
+| `iphone/30-qibla.png` | Qibla page, heading 98° – now inside the ±40° wedge (compass, drag to rotate in prototype) |
 | `iphone/31-qibla-aligned.png` | Qibla aligned (±3°): accent + haptic |
 | `iphone/32-qibla-mecca.png` | In Mecca: message instead of a needle |
+| `iphone/33-qibla-tolerance.png` | Heading 112°: inside the ±40° wedge – „Im Toleranzbereich“, „Nach rechts drehen 25°“ (§ 9.5) |
+| `iphone/33-qibla-tolerance-dark.png` | Same in dark mode |
+| `iphone/34-qibla-outside.png` | Heading 60°: outside the wedge – only the turn hint |
 
 ## Anleitung – Phase 5
 
@@ -61,7 +79,8 @@ Wenn nichts anderes steht: Deutsch, hell, Berlin, 14:25 (Asr aktiv).
 | Datei | Zeigt |
 |---|---|
 | `iphone/60-qada.png` | Nachholen: percent as largest figure |
-| `iphone/61-qada-calculator.png` | Nachholen scrolled: plan + missed-period calculator |
+| `iphone/61-qada-calculator.png` | Nachholen scrolled to the end: counters + calculator card (§ 9.8) |
+| `iphone/61-qada-calculator-dark.png` | Same in dark mode – calculator as a card at the very bottom (§ 9.8) |
 
 ## Einstellungen – Phase 7
 
@@ -70,6 +89,7 @@ Wenn nichts anderes steht: Deutsch, hell, Berlin, 14:25 (Asr aktiv).
 | `iphone/70-settings.png` | Settings root (top) |
 | `iphone/71-settings-middle.png` | Settings: notifications (incl. Live Activity) + appearance (Kerahat toggle) |
 | `iphone/72-settings-bottom.png` | Settings: about + disclaimer + tagline |
+| `iphone/72-settings-bottom-dark.png` | Same in dark mode – support row, app icon over the tagline (§ 9.1, 9.9) |
 | `iphone/73-settings-method.png` | Settings › Calculation method (searchable, auto per country) |
 | `iphone/74-settings-asr.png` | Settings › Asr (standard / Hanafi) |
 | `iphone/75-settings-hl.png` | Settings › High latitude rule |
@@ -79,6 +99,10 @@ Wenn nichts anderes steht: Deutsch, hell, Berlin, 14:25 (Asr aktiv).
 | `iphone/79-settings-live.png` | Settings › Live Activity lead time |
 | `iphone/80-settings-sound.png` | Settings › Sound |
 | `iphone/81-settings-privacy.png` | Settings › Privacy page |
+| `iphone/82-settings-hl-manual.png` | Settings › High latitude with „Manuelle Winkel“ selected: twilight angle steppers (§ 9.12) |
+| `iphone/82-settings-hl-manual-dark.png` | Same in dark mode |
+| `iphone/83-settings-support.png` | Settings › Unterstützen (§ 9.9) |
+| `iphone/83-settings-support-dark.png` | Same in dark mode |
 
 ## Sheets – Phase 3 (Stadt) und 7 (Adhan)
 
