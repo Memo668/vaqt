@@ -475,28 +475,15 @@ struct RectangularPrayerWidgetLines: View {
     var body: some View {
         switch content.state {
         case .times(let snapshot):
-            VStack(alignment: .leading, spacing: 0) {
+            ZStack(alignment: .topLeading) {
                 DayArc(phase: snapshot.phase, style: .lockScreen, showKerahat: content.showKerahat)
                     .accessibilityHidden(true)
-                    .padding(.leading, WidgetMetrics.rectangularArcLeading)
-                    .padding(.bottom, WidgetMetrics.rectangularArcBottom)
-                HStack(spacing: WidgetMetrics.rectangularArcTitleGap) {
-                    WidgetSymbol(name: snapshot.next.prayer.symbolName, box: WidgetMetrics.rectangularArcSymbolBox, weight: .bold)
-                    Text(WidgetTexts.nameAndTime(of: snapshot.next, in: snapshot))
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.8)
-                }
-                .font(WidgetMetrics.rectangularArcTitleFont(scale))
-                .lineHeight(WidgetMetrics.rectangularLineHeight, fontSize: 14 * scale)
-                TimerText.text(L10n.wIn(t:), until: content.deviceDate(snapshot.next.date), from: content.deviceDate(snapshot.now))
-                    .font(WidgetMetrics.rectangularArcCountFont(scale))
-                    .lineHeight(WidgetMetrics.rectangularLineHeight, fontSize: 12 * scale)
-                    .opacity(WidgetMetrics.rectangularArcCountOpacity)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                arcLines(snapshot)
+                    .padding(.horizontal, WidgetMetrics.rectangularArcPadding.leading)
+                    .padding(.bottom, WidgetMetrics.rectangularArcPadding.bottom)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
             }
-            .padding(WidgetMetrics.rectangularArcPadding)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         case .noTimes, .noPlace:
             VStack(alignment: .leading, spacing: WidgetMetrics.rectangularGap) {
                 Text(L10n.appName)
@@ -509,6 +496,28 @@ struct RectangularPrayerWidgetLines: View {
             .lineHeight(WidgetMetrics.rectangularLineHeight, fontSize: 13 * scale)
             .padding(WidgetMetrics.rectangularPadding)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        }
+    }
+
+    /// „Maghrib 16:27“ mit Symbol und „in 2:01:59“, unten im Widget.
+    private func arcLines(_ snapshot: WidgetSnapshot) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: WidgetMetrics.rectangularArcTitleGap) {
+                WidgetSymbol(name: snapshot.next.prayer.symbolName, box: WidgetMetrics.rectangularArcSymbolBox, weight: .bold)
+                Text(WidgetTexts.nameAndTime(of: snapshot.next, in: snapshot))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+            .font(WidgetMetrics.rectangularArcTitleFont(scale))
+            .lineHeight(WidgetMetrics.rectangularLineHeight, fontSize: 14 * scale)
+            .fixedSize(horizontal: false, vertical: true)
+            TimerText.text(L10n.wIn(t:), until: content.deviceDate(snapshot.next.date), from: content.deviceDate(snapshot.now))
+                .font(WidgetMetrics.rectangularArcCountFont(scale))
+                .lineHeight(WidgetMetrics.rectangularLineHeight, fontSize: 12 * scale)
+                .opacity(WidgetMetrics.rectangularArcCountOpacity)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 }

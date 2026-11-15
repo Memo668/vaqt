@@ -97,13 +97,13 @@ struct WidgetComponentTests {
         #expect(height <= WidgetMetrics.liveSize.height)
     }
 
-    @Test("Rechteck mit Mini-Bogen wie `.acc-arcw`: 6 + 32 + 2 + 17,5 + 15 pt – wie im Prototyp knapp über 72")
+    @Test("Rechteck mit Mini-Bogen wie `.acc-arcw`: Bogen 148 × 32 oben, die Zeilen (17,5 + 15 pt) ab 32,5 pt")
     func rectangularArcMetrics() {
         let padding = WidgetMetrics.rectangularArcPadding
         #expect(padding.leading + DayArcMetrics.lockScreen.size.width + padding.trailing == WidgetMetrics.rectangularSize.width)
         let lines = 14 * WidgetMetrics.rectangularLineHeight + 12 * WidgetMetrics.rectangularLineHeight
-        let height = padding.top + DayArcMetrics.lockScreen.size.height + WidgetMetrics.rectangularArcBottom + lines
-        #expect(height == 72.5)
+        // Im Prototyp gemessen: Die Zeile „Maghrib 16:27“ beginnt 32,5 pt unter der Oberkante.
+        #expect(WidgetMetrics.rectangularSize.height - padding.bottom - lines == 32.5)
         #expect(WidgetMetrics.rectangularArcCountOpacity == 0.75)
     }
 

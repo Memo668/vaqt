@@ -109,11 +109,13 @@ public enum WidgetMetrics {
 
     /// Das Rechteck mit dem Mini-Bogen (seit Phase 14, `.acc-arcw`: `padding: 6px 11px 7px`, ohne Abstand
     /// zwischen den Zeilen). Den Bogen selbst beschreibt `DayArcMetrics.lockScreen`.
+    ///
+    /// Der Bogen liegt an der linken oberen Ecke des Widgets, nicht im Innenabstand: Im Prototyp ist das
+    /// SVG absolut gesetzt, und `backdrop-filter` macht `.acc` zu seinem Bezug – so steht er im Referenzbild
+    /// `system/90`. Die beiden Zeilen stehen unten, 7 pt über dem Rand: Im Prototyp passen Bogen (32 pt) und
+    /// Zeilen nicht in die 72 pt, und Flexbox lässt den leeren Platzhalter des Bogens (`.acc-arc`)
+    /// schrumpfen, nicht die Zeilen.
     public static let rectangularArcPadding = EdgeInsets(top: 6, leading: 11, bottom: 7, trailing: 11)
-    /// Der Bogen ragt 1 pt nach links über den Inhalt hinaus und hält 2 pt Abstand zur Zeile darunter
-    /// (`.acc-arc`: `margin: 0 -1px 2px`).
-    public static let rectangularArcLeading: CGFloat = -1
-    public static let rectangularArcBottom: CGFloat = 2
     /// „Maghrib 16:27“ mit Symbol (`.acc-arcw .ar-1`: 700 14px, Ziffern gleicher Breite, `gap: 5px`,
     /// `ic(…, 13)`).
     public static func rectangularArcTitleFont(_ scale: CGFloat = 1) -> Font {
