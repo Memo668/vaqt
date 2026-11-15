@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 15.11.2026, Phase 13 gebaut (Abnahme steht aus).
+Stand: 15.11.2026, nach der Abnahme von Phase 13.
 
 ## Für die erste Beta
 
@@ -155,6 +155,7 @@ Diese Punkte standen bis Phase 10 unter „Braucht eine Entscheidung“.
 | 10 | 13.11.2026, „Abnehmen, zusammenführen (Empfohlen)“ | `4f39a9a` | was nur ein Gerät zeigt; die Breiten des Onboardings innen sind nur gerechnet |
 | 11 | 14.11.2026, „Abnehmen“ | `381c556` | `duo/open-*` nicht abgeglichen („Ohne innen abschließen“); was nur ein Gerät zeigt; für die Beta Konto, Kennungen und App Store Connect |
 | 12 | 15.11.2026, „Abnehmen, Phase 13“ | `a47cf8c` | Duo nicht geprüft; Anleitung und Verse erst nach Phase 13 gegen v0.8; Live-Aktivität und Widgets mit Phase 14; `APP_STORE_URL` ist ein Platzhalter |
+| 13 | 15.11.2026, „Abnehmen, Phase 14“ | `4281498` | VoiceOver von Hand, Duo und echtes Gerät nicht geprüft; fachliche Prüfung der Anleitung (43 Texte `TODO(review)`) |
 
 ### Erste Beta, entschieden am 12.11.2026
 
