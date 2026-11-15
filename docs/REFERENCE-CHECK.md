@@ -1,5 +1,33 @@
 # Schlussabgleich der Referenzbilder
 
+## Phase 12 (15.11.2026, Prototyp v0.8)
+
+Seit Phase 12 stammen die Bilder unter `iphone/` aus dem Prototyp v0.8 (`scripts/capture-prototype`). Abgeglichen ist, was sich mit Spec § 9 geändert hat; die Zahlen sind die mittlere Abweichung der Ausschnitte (Anteil der Pixel über 24 von 255). Was abweicht und bleibt, steht in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 12“.
+
+| Bild | Befehl | Ergebnis |
+|---|---|---|
+| `iphone/01`, `01-…-dark` | `make compare-settings STATES=01`; dunkel einzeln | stimmt – App-Symbol statt Mondsichel, dunkel die dunkle Fassung |
+| `iphone/02`, `03` | `make compare-settings STATES='02 03'` | stimmt – vier Punkte, „Überspringen“ auch auf Schritt 3 |
+| `iphone/05`, `05-…-dark` | `make compare-settings STATES=05` | stimmt – Seite 4 mit Herz und Chips (Seite 6,4 %) |
+| `iphone/10`–`22` | `make compare-today` | stimmt – Leiste mittig (Chips 6,6 %, Kreis 5 %), Pfeile am Datum, Kerahat auf der Spur; Kopf 4–5 %, Bogen 5–7 % wie bisher |
+| `iphone/14-…-dark` | `make compare-today STATES=14d` | stimmt |
+| `iphone/19` | `make compare-today STATES=19` | stimmt bis auf die Leiste: Chips mittig mit Abstand zum Kreis statt darunter (Annahmen in Phase 12) |
+| `iphone/23`, `23-…-dark` | `make compare-today STATES='23 23d'` | stimmt – anderer Tag, „Zurück zu heute“, Tag statt Countdown (Bogen 5,5 %); Kerahat-Abschnitte ohne „vorbei“, kurzes Datum im Format von iOS |
+| `iphone/30`–`34`, `33-…-dark` | `make compare-qibla` | stimmt – Keil ±40°, „Im Toleranzbereich“ mit Drehhinweis, Legende; Kompass 1,0–1,5 % |
+| `iphone/40`–`42` **T** | `make compare-guide` (41, 42 mit dem UI-Hilfsprojekt) | Leiste stimmt; Kopfkarte und Ablauf erst mit Phase 13 (Knopf „Gebet Schritt für Schritt“) |
+| `iphone/50`, `51` | `make compare-verses` | Kreis rechts stimmt; Vers erst mit Phase 13 (Amiri Quran) |
+| `iphone/60` | `make compare-qada` | stimmt – Kreis rechts |
+| `iphone/61`, `61-…-dark` **T** | `make harness SCRIPTS=scripts/ui-harness/scripts/iphone-61-qada.txt`, dann `make compare-qada` | stimmt – Rechner als Karte ganz unten (rechts 4,7 %); die Einleitung ist in der breiteren App eine Zeile kürzer |
+| `iphone/70`–`81`, `86` | `make compare-settings` | wie bisher; `71` mit dem neuen Text unter „Kerahat-Zeiten zeigen“ |
+| `iphone/72`, `72-…-dark` **T** | UI-Hilfsprojekt `iphone-71-72-settings.txt`, dann `make compare-settings STATES=72` | stimmt – Zeile „Gebetszeiten unterstützen“, App-Symbol über der Tagline |
+| `iphone/75` | `make compare-settings STATES=75` | stimmt – vier Regeln |
+| `iphone/82`, `82-…-dark` **T** | UI-Hilfsprojekt `iphone-82-settings-hl-manual.txt`, dann `make compare-settings STATES=82` | stimmt – „Dämmerungswinkel“ mit zwei Steppern |
+| `iphone/83`, `83-…-dark` | `make compare-settings STATES=83` | stimmt – 17 pt tiefer wie alle Unterseiten |
+
+Nicht neu abgeglichen: `system/*` (Phase 14) und `duo/*` (Duo-Simulator aus).
+
+## Phase 11 (13.11.2026, Prototyp v0.7)
+
 Phase 11, 13.11.2026: die Bilder aus `design/screenshots/` nachgestellt, mit dem Befehl dafür und dem Ergebnis – 56 von 64. Offen sind die acht Bilder des aufgeklappten iPhone Duo (`duo/open-*`): Aufklappen geht nur in Device Hub, und der Nutzer hat „Ohne innen abschließen“ gewählt. „Stimmt“ heißt: Inhalt, Zustand, Texte, Farben und Abstände wie im Referenzbild – im Rahmen der Abweichungen, die für alle Bilder gelten (unten). Jede weitere Abweichung ist benannt, mit dem Abschnitt in `docs/OPEN-QUESTIONS.md`, der sie erklärt.
 
 **Kennzeichen:** **T** braucht einen Tipp oder eine Geste (UI-Hilfsprojekt, `make harness`), **N** braucht den Nutzer (iPhone Duo in Device Hub auf- oder zuklappen), **G** lässt sich vollständig nur am Gerät prüfen.

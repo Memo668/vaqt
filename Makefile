@@ -103,7 +103,7 @@ compare: build boot ## Bausteine wie in den Referenzbildern aufnehmen und danebe
 	xcrun simctl install '$(SIM)' '$(APP)'
 	SIM='$(SIM)' scripts/compare-catalog $(STATES)
 
-compare-today: build boot ## Zeiten-Seite wie in den Referenzbildern aufnehmen und danebenlegen (STATES='10 17' für einzelne)
+compare-today: build boot ## Zeiten-Seite wie in den Referenzbildern (iphone/10–23) aufnehmen und danebenlegen (STATES='10 17' für einzelne)
 	xcrun simctl install '$(SIM)' '$(APP)'
 	SIM='$(SIM)' scripts/compare-today $(STATES)
 

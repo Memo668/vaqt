@@ -46,7 +46,8 @@ Offen bzw. Annahmen:
 - **Übersetzungen der Verse** (Phase 6, Spec § 6.12): Platzhalter mit `TODO(placeholder)` im String Catalog. Offen sind Übersetzungen mit Lizenz, die Quelle des arabischen Textes und die Auswahl der Verse.
 - **Adhan-Aufnahmen** (Phase 7, Spec § 6.5): Stimme 1 und 2 sind freie Aufnahmen von Wikimedia Commons; die Lizenzangaben (CC0 1.0, gemeinfrei) stammen von den Hochladenden. Herkunft und Rechte prüfen oder durch die endgültigen Aufnahmen ersetzen; Stimme 3 und die Fadschr-Variante fehlen.
 - **Texte der Anleitung** (Phase 5, Spec § 6.14): Niemand hat sie fachlich geprüft (Imam oder Gelehrter je Sprache). Offen sind auch eine neutrale Fassung oder Varianten je Rechtsschule und für Frauen, echte Illustrationen und Audio für die Formeln.
-- **Icon und Name** (Spec § 6.9): Das Icon ist ein Platzhalter (Phase 11). Das Zeichen in Onboarding und Tagline ist weiter die Mondsichel des Prototyps (`iphone/01`, `72`); mit dem endgültigen Icon gleich mit festlegen.
+- **Icon und Name** (Spec § 6.9): Das Icon ist ein Platzhalter (Phase 11). Seit Phase 12 zeigen Onboarding und Tagline das App-Symbol selbst (Spec § 9.1, Bildsatz `AppMark` im DesignSystem); ändert sich das Icon, den Bildsatz neu erzeugen (Kommentar in `AppMark.swift`). Live-Aktivität und Widgets zeigen bis Phase 14 noch die Mondsichel.
+- **App-Store-Link** (Phase 12): „App weiterempfehlen“ auf der Seite „Unterstützen“ teilt `APP_STORE_URL` aus `project.yml` – bis zum Anlegen der App in App Store Connect ein Platzhalter (`id0000000000`). Die Kennung dort eintragen, sobald es sie gibt; vor der Freigabe zeigt der Link „nicht verfügbar“.
 - **Datenschutzerklärung:** Der Text liegt auf Deutsch und Englisch in `docs/DATENSCHUTZ.md` und `docs/PRIVACY.md` (Beta-Vorbereitung). Vor dem App Store: auf Türkisch und Spanisch übersetzen und den Text prüfen lassen.
 - **Seite „Datenschutz“ in der App:** Sie sagt wie im Prototyp, der Standort werde „nur auf diesem Gerät zur Berechnung verwendet und verlässt es nie“ (`privacyBody2`); ähnlich die Begründung der Standortabfrage (`alLocBody`). Für den Stadtnamen gehen die Koordinaten aber an Apple (MapKit), ebenso der Suchtext der Ortssuche. Die Datenschutzerklärung sagt das genau. Offen: den Text im Prototyp in allen vier Sprachen anpassen oder so lassen.
 - **Lizenzhinweis für Adhan Swift** (MIT): Die Lizenz verlangt, Copyright und Lizenztext mit jeder Kopie weiterzugeben. Eine Seite dafür haben weder Spec noch App; offen ist, wo der Hinweis stehen soll, etwa unter „Über“.
@@ -74,6 +75,17 @@ Zurzeit nichts. Die Punkte 1 bis 6, die bis Phase 10 offen waren, sind entschied
 ## Entschieden
 
 Die Entscheidungen stehen in der Reihenfolge, in der sie fielen, die neuesten zuerst; die Antwort des Nutzers steht jeweils wörtlich in Anführungszeichen.
+
+### Entschieden mit dem Plan für Phase 12 am 15.11.2026
+
+Der Plan für Phase 12 wurde am 15.11.2026 freigegeben („Freigeben, bauen (Empfohlen)“), über die Auswahl-Fragen:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Wann gelten die „Manuellen Winkel“? | „Nur in hellen Nächten (Empfohlen)“ | Die Methode rechnet wie bei „Winkelbasiert“. Nur wenn diese Regel Fadschr oder Ischa des Tages bestimmt (Probe gegen „Nachtmitte“ wie bei der Info-Marke), gilt für diese Zeit der eigene Winkel, mit Winkel ÷ 60 der Nacht als Grenze (Adhan: eigene `fajrAngle`/`ishaAngle`, `.twilightAngle`). Im Winter ändert sich nichts; Moonsighting übergeht auch diese Regel. Die Alternative war „Das ganze Jahr“. |
+| Was teilt „App weiterempfehlen“? | „App-Store-Link (Empfohlen)“ | Das Teilen-Menü bekommt die Adresse der App im App Store (`APP_STORE_URL`, bis zum Anlegen ein Platzhalter, oben unter „Vor dem App Store“). Ohne Adresse fehlt der Knopf. |
+
+Mit dem Plan freigegeben sind auch seine Annahmen; sie stehen unten unter „Annahmen in Phase 12“.
 
 ### Beta-Vorbereitung ohne Konto, entschieden am 14.11.2026
 
@@ -350,6 +362,33 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 | Ausrichtung | „Ja, so lassen“ | nur Hochformat. Phase 10: Die Info.plist bleibt so; auf dem inneren Display des iPhone Duo zeigt iOS die App trotzdem quer und hoch (siehe „Annahmen in Phase 10“). |
 | Nachholen | „Ja, so lassen“ | Die App startet leer: kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr. `iphone/60` und `61` zeigen die Beispielzahlen des Prototyps; die gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Annahme für Phase 6: Mit `-debugFixtureTimes` zeigt die Seite sie. |
 | JAKIM und Kemenag | „Ja, so lassen“ | reine Winkel 20°/18°. Vor der Veröffentlichung gegen offizielle Tabellen zu prüfen, siehe oben. |
+
+## Annahmen in Phase 12
+
+Geprüft am 15.11.2026 auf dem iPhone 18 Pro mit iOS 27.2 gegen die Referenzbilder aus dem Prototyp v0.8 (`scripts/capture-prototype`, `design/screenshots/INDEX.md`): `make compare-today`, `-qibla`, `-guide`, `-verses`, `-qada`, `-settings` mit den neuen Zuständen, dazu die dunklen Fassungen von `01`, `05`, `61`, `72`, `82`, `83` einzeln. `make test`: 960 Tests grün. Die Übersicht steht in `docs/REFERENCE-CHECK.md` unter „Phase 12“.
+
+### Was mit den Referenzbildern übereinstimmt
+
+- Obere Leiste mittig mit dem Kreis rechts (`10`–`23`, `30`–`34`, `40`–`42`; Verse und Nachholen nur der Kreis), auch in RTL.
+- Kerahat auf der Spur in allen drei Zuständen (`10`, `14`, `15`), Tage-Navigation, Textlink und der andere Tag (`23`), der Keil und die Statuszeilen der Qibla (`30`, `33`, `34`; Kompass 1,5 % Abweichung), der Rechner als Karte (`61`), Onboarding-Seite 4 (`05`), „Unterstützen“ (`83`), „Manuelle Winkel“ (`82`), Zeile und Symbol unten in den Einstellungen (`72`).
+
+### Was abweicht und bleibt
+
+- **Kerahat an einem anderen Tag** (`23`): Der Prototyp blendet die Abschnitte nach der Uhrzeit von heute ab („vorbei“); die App folgt der Spec (§ 9.4: kein „jetzt“, kein „vorbei“) und zeichnet alle drei gleich kräftig.
+- **Kurzes Datum im Bogen** (`23`): Die App nimmt das Format des Systems – auf Deutsch „Mi. 11. Nov.“, der Prototyp (Chromium) „Mi., 11. Nov.“. Wie bei allen Daten der App gilt das Format von iOS.
+- **Leiste, wenn die Chips nicht ganz passen** (`19`, `40`–`42` auf Deutsch): Im Prototyp laufen die Chips dann unter den Kreis; die App lässt sie mittig, so weit es geht, und hält 8 pt Abstand zum Kreis. Auf der Anleitung stehen die Chips deshalb rund 8 pt weiter links als im Prototyp.
+- **Anleitung und Verse** (`40`–`42`, `50`, `51`): Der Prototyp v0.8 zeigt schon den Knopf „Gebet Schritt für Schritt“ und die Amiri-Schrift; beides kommt mit Phase 13. Bis dahin weichen dort Kopfkarte, Ablauf und Vers ab; die Leiste stimmt.
+- **Breitere Fläche:** Die Einleitung der Rechner-Karte, die Legende der Qibla und die Zusätze der Regeln für hohe Breiten brechen in der 12 pt breiteren App anders um (eine Zeile weniger), wie bisher bei Fließtexten.
+
+### Annahmen in der Umsetzung
+
+- **Gewählter Tag:** wird nicht gespeichert; er bleibt, solange die App läuft, auch beim Wechsel der Tabs, und rückt um Mitternacht mit (der Abstand zu heute bleibt). Countdown, Anleitung, Mitteilungen, Widgets und Live-Aktivität bleiben bei heute. Gibt es an dem Tag keine Zeiten (Mitternachtssonne), steht der Hinweis „keine Zeiten“ statt Bogen und Karten.
+- **Mock-Zeiten für andere Tage und „Manuelle Winkel“:** Mit `-debugFixtureTimes` rechnet die App wie der Prototyp – Mock-Zeiten von heute plus die Verschiebung aus dessen Sonnenmodell (`dayTimes()`, `manualHL()`; `FixtureSunModel`, nur DEBUG). Die Werte stimmen mit den im Prototyp gerechneten überein (Tests). Echt rechnet immer Adhan Swift für das Datum.
+- **Textlink „Zurück zu heute“:** steht im Prototyp auf einer Textzeile des Kopfes – 5 pt unter dem Datum, der Bogen rückt um 22,1 pt (im Browser gemessen); die App übernimmt diese Maße.
+- **Live-Aktivität:** zeichnet Kerahat bis Phase 14 weiter als dünne Striche innerhalb des Bogens und zeigt im Kopf noch die Mondsichel (Bauplan, Phase 14).
+- **Neue Texte:** Der Import liest die Nachträge vom 15.11.2026 hinter `T` (DE/TR/EN/ES, 333 Einträge); die Texte von „Schritt für Schritt“ sind schon im Katalog, gebraucht werden sie in Phase 13. Die zwölf weiteren Sprachen übergeht der Import bis Phase 15; die Sprachauswahl hat bis dahin vier Sprachen.
+- **„Überspringen“:** steht wie im Prototyp v0.8 auf den Schritten 1 bis 3 und führt zu Seite 4; erst „Los geht’s“ schließt das Onboarding ab.
+- **Duo:** Die Bilder `duo/*` sind von v0.7 und nicht neu aufgenommen; der Duo-Simulator ist aus (Platte). Die senkrechte Leiste ist unverändert; die neuen Elemente (Pfeile, Keil, Karte, Seite 4) stehen innen nach Spec § 8 in der linken bzw. rechten Spalte, ungeprüft.
 
 ## Annahmen in der Beta-Vorbereitung
 

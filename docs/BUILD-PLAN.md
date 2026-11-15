@@ -241,6 +241,8 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 
 ## Phase 12 – Änderungen am Bestand
 
+*Gebaut am 15.11.2026 auf dem Zweig `phase-12` (ab `3047222`), geprüft gegen die Referenzbilder aus dem Prototyp v0.8; Annahmen in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 12“.*
+
 - **App-Symbol** statt Mondsichel: Onboarding, Zeile am Ende der Einstellungen (Spec § 9.1); Bildsatz mit hell/dunkel.
 - **Obere Leiste mittig**, Einstellungskreis rechts, Zusammenklappen wie bisher; Duo-Leiste unverändert (§ 9.2).
 - **Kerahat auf der Spur** des Bogens, Uhrzeiten weiter in den Zeilen (§ 9.3).

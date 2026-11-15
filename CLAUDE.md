@@ -5,7 +5,7 @@ Gemeinnützige Gebetszeiten-App: werbefrei, ohne Tracking, ohne Konto. Wir bauen
 ## Quellen der Wahrheit
 
 1. `design/prayer-times-design-spec.md` – Design Spec v0.8: Tokens, Komponenten, Verhalten, Zustände, iPhone Duo (§ 8), offene Fragen (§ 6), Varianten (§ 7), Änderungen vor der Beta (§ 9).
-2. `design/screenshots/` – Referenzbilder je Bildschirm und Zustand. Übersicht: `design/screenshots/INDEX.md`.
+2. `design/screenshots/` – Referenzbilder je Bildschirm und Zustand. Übersicht: `design/screenshots/INDEX.md`. Seit Spec v0.8 nimmt `scripts/capture-prototype` sie aus dem Prototyp auf.
 3. `design/prayer-times-prototype.html` – Quelltext des Prototyps (~2 400 Zeilen, nicht komplett einlesen, gezielt suchen):
    - Tokens: `:root`-CSS am Anfang (Farben hell/dunkel, Abstände, Radien, Schriftgrößen)
    - alle Texte, 16 Sprachen (Spec § 9.10): JS-Objekt `T`
@@ -48,8 +48,9 @@ Nur in DEBUG: Startargumente, mit denen sich jeder Referenz-Screenshot nachstell
 -debugHighLatitude            # Berlin, 21. Juni
 -debugLocationDenied  -debugOffline
 -debugTab today|qibla|guide|verses|qada|settings
-          method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|adhan|city   # Seiten der Einstellungen (PAGES), adhan = Adhan-Sheet, city = Stadt-Sheet
--debugOnboarding 1|2|3        # Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
+          method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|support|adhan|city   # Seiten der Einstellungen (PAGES), adhan = Adhan-Sheet, city = Stadt-Sheet
+-debugOnboarding 1|2|3|4      # Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
+-debugDayOffset 1             # Zeiten-Seite zeigt einen anderen Tag, −365 bis 365 (iphone/23)
 -debugQiblaHeading 137
 -debugQiblaAccuracy 40        # Genauigkeit des Kompasses; über 25° erscheint die Kalibrierungskarte (iphone/30–32)
 -debugNotifications           # echte Mitteilungen auch mit Mock-Zeiten, fragt beim Start nach der Erlaubnis (system/92)

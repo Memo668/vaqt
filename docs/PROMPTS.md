@@ -65,6 +65,7 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 | `iphone/01` | `-debugFixtureTimes -debugDate 2026-11-10 -debugTime 09:10 -debugOnboarding 1` (Statusleiste `make statusbar TIME=09:10`) |
 | `iphone/02` | wie `01` mit `-debugOnboarding 2` |
 | `iphone/03` | wie `01` mit `-debugOnboarding 3` |
+| `iphone/05` | wie `01` mit `-debugOnboarding 4` (seit Phase 12) |
 | `iphone/04` | wie `02`, dann „Standort erlauben“ – ohne `-debugFixtureTimes` und mit noch nicht beantworteter Standortabfrage; der Dialog ist der des Systems |
 | `iphone/10` | `-debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25` |
 | `iphone/12` | … `-debugTime 05:14` |
@@ -76,9 +77,12 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 | `iphone/18` | … `-debugHighLatitude -debugTime 23:47` |
 | `iphone/21` | … `-debugCity istanbul -debugTime 16:01`, Sprache Türkisch |
 | `iphone/22` | … `-debugCity jakarta -debugTime 17:57` |
+| `iphone/23` | … `-debugTime 14:25 -debugDayOffset 1` (seit Phase 12; `23-…-dark` dunkel) |
 | `iphone/30` | … `-debugTime 14:25 -debugTab qibla -debugQiblaHeading 98 -debugQiblaAccuracy 40` |
 | `iphone/31` | … `-debugTime 14:25 -debugTab qibla -debugQiblaHeading 137 -debugQiblaAccuracy 40` |
 | `iphone/32` | … `-debugCity mecca -debugTime 15:42 -debugTab qibla -debugQiblaHeading 138 -debugQiblaAccuracy 40` |
+| `iphone/33` | … `-debugTime 14:25 -debugTab qibla -debugQiblaHeading 112 -debugQiblaAccuracy 40` (seit Phase 12; `33-…-dark` dunkel) |
+| `iphone/34` | … `-debugTime 14:25 -debugTab qibla -debugQiblaHeading 60 -debugQiblaAccuracy 40` (seit Phase 12) |
 | `iphone/40` | … `-debugTab guide` |
 | `iphone/41` | wie `40`, dann nach unten scrollen, bis die erste Karte des Ablaufs 133 pt unter der Oberkante steht (UI-Hilfsprojekt, `scripts/ui-harness/scripts/iphone-41-42-guide.txt`) |
 | `iphone/42` | wie `40`, dann „Maghrib“ in der Auswahl antippen (UI-Hilfsprojekt, `scripts/ui-harness/scripts/iphone-41-42-guide.txt`) |
@@ -98,6 +102,8 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 | `iphone/79` | … `-debugTab live` |
 | `iphone/80` | … `-debugTab sound` |
 | `iphone/81` | … `-debugTab privacy` |
+| `iphone/82` | wie `75`, dann „Manuelle Winkel“ antippen (UI-Hilfsprojekt, `scripts/ui-harness/scripts/iphone-82-settings-hl-manual.txt`; seit Phase 12) |
+| `iphone/83` | … `-debugTab support` (seit Phase 12) |
 | `iphone/85` | … `-debugTime 14:25 -debugTab city` (seit Phase 10; vorher ein Tipp auf die Stadt) |
 | `iphone/86` | … `-debugTime 14:25 -debugTab adhan` |
 | `system/92` | `-debugSkipOnboarding -debugFixtureTimes -debugNotifications -debugDate 2026-11-10 -debugTime 11:41`, Systemsprache des Simulators Deutsch, `make statusbar TIME=11:52`; Gerät sperren, gut elf Minuten warten, den Stapel aufklappen, aufnehmen (UI-Hilfsprojekt, `scripts/ui-harness/scripts/system-92.txt`). Die Erinnerung kommt nach einer Minute, Dhuhr nach elf |

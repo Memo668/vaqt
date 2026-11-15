@@ -40,12 +40,12 @@ open Gebetszeiten.xcodeproj
 | `make statusbar` | Statusleiste wie in den Referenzbildern (14:25, volles Netz, voller Akku) |
 | `make screenshot` | Screenshot nach `screenshots-out/screenshot.png` |
 | `make compare` | Bausteine in den Zuständen der Referenzbilder aufnehmen und neben die Referenz legen |
-| `make compare-today` | Zeiten-Seite in den Zuständen der Referenzbilder `iphone/10` bis `22` aufnehmen und neben die Referenz legen |
-| `make compare-qibla` | Qibla-Seite in den Zuständen der Referenzbilder `iphone/30` bis `32` aufnehmen und neben die Referenz legen |
+| `make compare-today` | Zeiten-Seite in den Zuständen der Referenzbilder `iphone/10` bis `23` aufnehmen und neben die Referenz legen |
+| `make compare-qibla` | Qibla-Seite in den Zuständen der Referenzbilder `iphone/30` bis `34` aufnehmen und neben die Referenz legen |
 | `make compare-guide` | Anleitung im Zustand von `iphone/40` aufnehmen und neben die Referenz legen, dazu `41` und `42`, wenn aufgenommen |
 | `make compare-verses` | Verse in den Zuständen von `iphone/50` (hell) und `51` (dunkel) aufnehmen und neben die Referenz legen |
 | `make compare-qada` | Nachholen im Zustand von `iphone/60` aufnehmen und neben die Referenz legen, dazu `61`, wenn aufgenommen |
-| `make compare-settings` | Einstellungen, Onboarding und Adhan-Sheet in den Zuständen von `iphone/01`–`03`, `70`, `73`–`81` und `86` aufnehmen und neben die Referenz legen, dazu `71` und `72`, wenn aufgenommen |
+| `make compare-settings` | Einstellungen, Onboarding und Adhan-Sheet in den Zuständen von `iphone/01`–`03`, `05`, `70`, `73`–`81`, `83` und `86` aufnehmen und neben die Referenz legen, dazu `71`, `72` und `82`, wenn aufgenommen |
 | `make compare-system` | Widgets und Live-Aktivität im Katalog in den Zuständen von `system/90`, `91` und `93`–`96` aufnehmen und neben die Referenz legen |
 | `make compare-duo` | auf dem Simulator „iPhone Duo“ die Zustände von `duo/open-*` (`MODE=open`, aufgeklappt und quer) oder `duo/closed-*` (`MODE=closed`) aufnehmen und neben die Referenz legen; auf- und zuklappen in Device Hub |
 | `make harness` | Skripte des UI-Hilfsprojekts ausführen, das antippt, wischt und aufnimmt (`SCRIPTS='scripts/ui-harness/scripts/iphone-61-qada.txt'`) – für Zustände mit Tipp |
@@ -92,8 +92,9 @@ Nur in DEBUG-Builds. Damit lässt sich jeder Referenz-Screenshot nachstellen:
 -debugHighLatitude            Berlin, 21. Juni 2027
 -debugLocationDenied  -debugOffline
 -debugTab today|qibla|guide|verses|qada|settings
-          method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|adhan|city
--debugOnboarding 1|2|3        Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
+          method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|support|adhan|city
+-debugOnboarding 1|2|3|4      Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
+-debugDayOffset 1             Zeiten-Seite zeigt einen anderen Tag, −365 bis 365
 -debugQiblaHeading 137
 -debugQiblaAccuracy 40        Genauigkeit des Kompasses in Grad; über 25 erscheint die Kalibrierungskarte
 -debugNotifications           echte Mitteilungen auch mit Mock-Zeiten; fragt beim Start nach der Erlaubnis
@@ -114,8 +115,9 @@ Versteht die App ein Debug-Argument nicht, schreibt sie das beim Start in die Ko
 | `-debugCity`, `-debugHighLatitude` | feste Standortquelle mit dieser Stadt, Standort erlaubt |
 | `-debugLocationDenied` | Standort verweigert: Banner auf der Zeiten-Seite, „Aktueller Standort“ im Stadt-Sheet gesperrt |
 | `-debugOffline` | fest „kein Netz“: Hinweis unter dem Datum, im Stadt-Sheet nur gespeicherte Städte |
-| `-debugTab` | `verses` und `qada` wählen den Tab; `qibla` und `guide` die Seite im Tab „Gebete“; `settings` öffnet dort die Einstellungen, die Kennungen aus `PAGES` im Prototyp (`method`, `asr`, `hl`, `adjust`, `perPrayer`, `reminder`, `live`, `sound`, `appearance`, `language`, `privacy`) eine ihrer Seiten darüber; `adhan` öffnet das Adhan-Sheet über den Einstellungen, `city` das Stadt-Sheet über der Zeiten-Seite |
-| `-debugOnboarding` | zeigt das Onboarding ab Schritt 1, 2 oder 3, auch wenn es schon durchlaufen ist; geht vor `-debugSkipOnboarding` |
+| `-debugTab` | `verses` und `qada` wählen den Tab; `qibla` und `guide` die Seite im Tab „Gebete“; `settings` öffnet dort die Einstellungen, die Kennungen aus `PAGES` im Prototyp (`method`, `asr`, `hl`, `adjust`, `perPrayer`, `reminder`, `live`, `sound`, `appearance`, `language`, `privacy`, `support`) eine ihrer Seiten darüber; `adhan` öffnet das Adhan-Sheet über den Einstellungen, `city` das Stadt-Sheet über der Zeiten-Seite |
+| `-debugOnboarding` | zeigt das Onboarding ab Schritt 1, 2, 3 oder 4, auch wenn es schon durchlaufen ist; geht vor `-debugSkipOnboarding` |
+| `-debugDayOffset` | die Zeiten-Seite zeigt beim Start den Tag mit diesem Abstand zu heute, −365 bis 365 (Spec § 9.4); Mitteilungen, Widgets und Countdown bleiben bei heute. Mit `-debugFixtureTimes` verschiebt das Sonnenmodell des Prototyps die Mock-Zeiten wie `dayTimes()` |
 | `-debugQiblaHeading` | fester Kompasskurs statt des Kompasses des Geräts. Mit `-debugFixtureTimes` gilt ohne Angabe 99°, der Startwert des Prototyps (`S.qibla.heading`) |
 | `-debugQiblaAccuracy` | Genauigkeit dieses Kurses in Grad, wie `CLHeading.headingAccuracy` (negativ heißt ungültig). Über 25° erscheint die Karte „Kompass kalibrieren“ – die Referenzbilder zeigen sie immer, die App nur bei ungenauem Kompass |
 | `-debugCatalog` | Katalog der Bausteine statt der App |
@@ -142,6 +144,7 @@ scripts/compare-system  nimmt Widgets und Live-Aktivität im Katalog in den Zust
 scripts/compare-duo     nimmt die Seiten auf dem iPhone Duo (außen oder innen) in den Zuständen der Referenzbilder auf
 scripts/compare-shot    legt einen Ausschnitt einer Aufnahme neben die Referenz
 scripts/ui-harness      UI-Hilfsprojekt: ein UI-Test, der die App antippt, wischt, aufnimmt und prüft; Skripte für die Referenzbilder mit Tipp
+scripts/capture-prototype nimmt die Referenzbilder aus dem Prototyp auf (Playwright, 2x, ohne Rahmen; Zustände in scripts/capture-prototype.mjs)
 scripts/capture-matrix  nimmt jeden Bildschirm in Varianten auf (Sprache, Schriftgröße, hell/dunkel, RTL), mit Prüfung der Bedienungshilfen
 scripts/contact-sheet.swift legt Aufnahmen als Kontaktbogen in ein Raster
 scripts/app-icon.swift  zeichnet das Platzhalter-Icon (hell, dunkel, getönt) nach App/Assets.xcassets/AppIcon.appiconset
@@ -335,7 +338,7 @@ make compare-verses
 make compare-qada
 ```
 
-`make compare-settings` stellt die Einstellungen (`iphone/70`, `73` bis `81`), das Adhan-Sheet (`86`) und das Onboarding (`01` bis `03`) mit den Debug-Argumenten nach – `-debugTab settings|method|…|privacy|adhan` und `-debugOnboarding 1|2|3` – und schreibt Aufnahmen und Ausschnitte nach `screenshots-out/phase-7/`. Gruppen und Karten werden in zwei Hälften verglichen; die Lage in der Höhe folgt den Leisten des Systems (Kopf des Skripts). `iphone/71` und `72` sind die Einstellungen gescrollt; liegen ihre Aufnahmen `settings-71.png` und `settings-72.png` dort – aufgenommen mit dem UI-Hilfsprojekt –, vergleicht das Skript sie mit. `iphone/04` zeigt nur den Dialog des Systems.
+`make compare-settings` stellt die Einstellungen (`iphone/70`, `73` bis `81`, `83`), das Adhan-Sheet (`86`) und das Onboarding (`01` bis `03`, `05`) mit den Debug-Argumenten nach – `-debugTab settings|method|…|privacy|support|adhan` und `-debugOnboarding 1|2|3|4` – und schreibt Aufnahmen und Ausschnitte nach `screenshots-out/phase-7/`. Gruppen und Karten werden in zwei Hälften verglichen; die Lage in der Höhe folgt den Leisten des Systems (Kopf des Skripts). `iphone/71` und `72` sind die Einstellungen gescrollt, `82` „Hohe Breitengrade“ mit „Manuelle Winkel“; liegen ihre Aufnahmen `settings-71.png`, `settings-72.png` und `settings-82.png` dort – aufgenommen mit dem UI-Hilfsprojekt –, vergleicht das Skript sie mit. `iphone/04` zeigt nur den Dialog des Systems.
 
 ```bash
 make compare-settings
