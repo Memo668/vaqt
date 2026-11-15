@@ -269,9 +269,9 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 *Gebaut am 15.11.2026 auf dem Zweig `claude/phase-14-306a00` (ab `81492cf`, Phase 13 abgenommen), geprüft gegen die Referenzbilder aus dem Prototyp v0.8 (`system/90`, `91`, `93`–`96` neu) im Katalog und im System; Annahmen in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 14“.*
 
 - Live-Aktivität: Kerahat auf der Spur (Spec § 9.11).
-- Sperrbildschirm-Widget (rechteckig) mit Mini-Bogen, einfarbig, Kerahat gestrichelt (entschieden mit dem Plan: das rechteckige).
+- Sperrbildschirm-Widget (rechteckig) mit Bogen, einfarbig (entschieden mit dem Plan: das rechteckige); nach dem Änderungswunsch vom 15.11.2026 im Stil der Live-Aktivität: mittig, Gebete mit Symbol, Jetzt-Punkt mit Ring, Gebet und Countdown im Bogen, Kerahat gestreift.
 - Neues mittleres Home-Widget „Live“ im Stil der Live-Aktivität; die bisherigen Widgets bleiben. In der Galerie heißt es wie die anderen „Vaqt“.
-- Jetzt-Punkt der Widgets: Einträge alle 5 Minuten zwischen Fadschr und Ischa und an den Grenzen der Kerahat-Fenster (PrayerCore `WidgetTimeline.arcStep`).
+- Jetzt-Punkt der Widgets: Einträge zwischen Fadschr und Ischa und an den Grenzen der Kerahat-Fenster – im Widget „Live“ alle 5 Minuten, im Rechteck alle 10 Minuten (Archivgrenze von 10 MB), in den übrigen Größen keine (PrayerCore `WidgetTimeline.arcStep`, `lockScreenArcStep`).
 - App-Symbol statt Mondsichel in Live-Aktivität und Widgets (Spec § 9.1).
 - Debug-Katalog um die neuen Widgets erweitern (`-debugCatalog widgets|live`).
 - Referenzbilder `system/90`–`96` aus dem Prototyp (`scripts/capture-prototype`), `make compare-system`, Aufnahmen im System mit dem UI-Hilfsprojekt.
