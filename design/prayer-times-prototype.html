@@ -1467,6 +1467,25 @@ Object.assign(T, {
  ['ru','Ручные углы','Свои углы сумерек для фаджра и иша','Угол сумерек','Если солнце не опускается до заданного угла, берётся соответствующая доля ночи (угол ÷ 60).'],
  ['it','Angoli manuali','Angoli del crepuscolo personali per Fajr e Isha','Angolo del crepuscolo','Se il sole non raggiunge l’angolo impostato, si usa la parte di notte corrispondente (angolo ÷ 60).']
 ].forEach(([l, a, b, c, d]) => Object.assign(T[l], {hlManual:a, hlManualSub:b, hlDegHeader:c, hlManualFooter:d}));
+/* Phase 13 (Spec § 9.7): Seite „Lizenzen“ unter Einstellungen › Über – Amiri/Amiri Quran (SIL OFL 1.1) und
+   Adhan Swift (MIT). Nur in der App gebaut, nicht im Prototyp; die Lizenztexte selbst stehen im englischen Original. */
+[['de','Lizenzen','Schrift der Verse und Formeln','Berechnung der Gebetszeiten','Die App enthält freie Software und Schriften. Die Lizenztexte stehen im englischen Original.'],
+ ['tr','Lisanslar','Ayetlerin ve duaların yazı tipi','Namaz vakitlerinin hesaplanması','Uygulama özgür yazılım ve yazı tipleri içerir. Lisans metinleri İngilizce asıllarıyla gösterilir.'],
+ ['en','Licences','Typeface for verses and formulas','Prayer time calculation','The app includes open-source software and fonts. The licence texts are shown in the original English.'],
+ ['es','Licencias','Tipografía de los versículos y las fórmulas','Cálculo de los horarios de oración','La app incluye software y tipografías libres. Los textos de las licencias se muestran en su versión original en inglés.'],
+ ['fr','Licences','Police des versets et des formules','Calcul des horaires de prière','L’app contient des logiciels et des polices libres. Les textes des licences sont affichés dans leur version originale en anglais.'],
+ ['nl','Licenties','Lettertype van de verzen en formules','Berekening van de gebedstijden','De app bevat vrije software en lettertypen. De licentieteksten staan in het Engelse origineel.'],
+ ['bs','Licence','Font ajeta i formula','Izračun namaskih vakata','Aplikacija sadrži slobodni softver i fontove. Tekstovi licenci su u engleskom originalu.'],
+ ['sq','Licencat','Shkronjat e ajeteve dhe formulave','Llogaritja e vakteve të namazit','Aplikacioni përmban softuer dhe shkronja të lira. Tekstet e licencave janë në origjinalin anglisht.'],
+ ['ar','التراخيص','خط الآيات والأذكار','حساب مواقيت الصلاة','يتضمن التطبيق برمجيات وخطوطًا حرة. نصوص التراخيص معروضة بلغتها الإنجليزية الأصلية.'],
+ ['ur','لائسنس','آیات اور اذکار کا فونٹ','نماز کے اوقات کا حساب','ایپ میں آزاد سافٹ ویئر اور فونٹس شامل ہیں۔ لائسنس کی عبارتیں اصل انگریزی میں ہیں۔'],
+ ['id','Lisensi','Huruf untuk ayat dan bacaan','Perhitungan waktu salat','Aplikasi ini memuat perangkat lunak dan huruf bebas. Teks lisensi ditampilkan dalam bahasa Inggris aslinya.'],
+ ['ms','Lesen','Fon untuk ayat dan bacaan','Pengiraan waktu solat','Aplikasi ini mengandungi perisian dan fon bebas. Teks lesen dipaparkan dalam bahasa Inggeris asal.'],
+ ['bn','লাইসেন্স','আয়াত ও দোয়ার ফন্ট','নামাজের সময়ের হিসাব','অ্যাপটিতে মুক্ত সফটওয়্যার ও ফন্ট রয়েছে। লাইসেন্সের লেখাগুলো মূল ইংরেজিতে দেখানো হয়েছে।'],
+ ['fa','مجوزها','قلم آیات و اذکار','محاسبهٔ اوقات نماز','این برنامه نرم‌افزار و قلم‌های آزاد دارد. متن مجوزها به زبان اصلی انگلیسی آمده است.'],
+ ['ru','Лицензии','Шрифт аятов и формул','Расчёт времени намаза','Приложение использует свободное ПО и шрифты. Тексты лицензий приведены в английском оригинале.'],
+ ['it','Licenze','Carattere dei versetti e delle formule','Calcolo degli orari di preghiera','L’app contiene software e caratteri liberi. I testi delle licenze sono riportati nell’originale inglese.']
+].forEach(([l, a, b, c, d]) => Object.assign(T[l], {licenses:a, licAmiriSub:b, licAdhanSub:c, licensesFooter:d}));
 const SURAH = {2:{de:'Al-Baqara', tr:'Bakara', en:'Al-Baqarah', es:'Al-Baqara'}, 13:{de:'Ar-Raʿd', tr:'Ra‘d', en:'Ar-Ra‘d', es:'Ar-Ra‘d'},
                20:{de:'Tā-Hā', tr:'Tâhâ', en:'Ta-Ha', es:'Ta-Ha'}, 94:{de:'Asch-Scharh', tr:'İnşirâh', en:'Ash-Sharh', es:'Ash-Sharh'}};
 const VERSES = [

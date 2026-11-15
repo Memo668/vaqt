@@ -30,6 +30,8 @@ public enum SettingsRoute: String, CaseIterable, Hashable, Sendable {
     case language
     /// Einstellungen › Datenschutz (`privacy`).
     case privacy
+    /// Einstellungen › Lizenzen (Spec § 9.7) – nur in der App, der Prototyp hat die Seite nicht.
+    case licenses
     /// Einstellungen › Unterstützen (`support`, Spec § 9.9).
     case support
 
@@ -48,6 +50,7 @@ public enum SettingsRoute: String, CaseIterable, Hashable, Sendable {
         case .appearance: L10n.appearance
         case .language: L10n.language
         case .privacy: L10n.privacy
+        case .licenses: L10n.licenses
         case .support: L10n.supportTitle
         }
     }

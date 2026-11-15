@@ -255,6 +255,34 @@ var accessors: [Accessor] = []
 var missing: [String] = []
 var notable: [String] = []
 
+/// Texte der Anleitung, die niemand fachlich geprüft hat (Spec § 6.14): Sie bekommen im Katalog den
+/// Kommentar `TODO(review)`, damit Übersetzer und Prüfer sie finden. Die Schritte des Durchlaufs „Gebet
+/// Schritt für Schritt“ kamen mit v0.8 dazu (Spec § 9.6) – entschieden mit dem Plan für Phase 13.
+let walkReviewKeys: Set<String> = [
+    "wkIntroBody", "wkQiyam12", "wkSujudD", "wkJalsa", "wkJalsaD", "wkSujud2", "wkSujud2D",
+    "wkTashFirst", "wkTashFirstD", "wkTashLast", "wkTashLastD", "wkDoneBody",
+]
+let guideReviewKeys: Set<String> = [
+    "b_clean", "b_cleanD", "b_niyya", "b_niyyaD", "b_qibla", "b_qiblaD", "b_wudu", "b_wuduD",
+    "s_takbir", "s_takbirD", "s_qiyam", "s_qiyamD", "s_ruku", "s_rukuD", "s_itidal", "s_itidalD",
+    "s_sujud", "s_sujudD", "s_tash", "s_tashD", "s_salam", "s_salamD",
+    "sunna_fajr", "sunna_dhuhr", "sunna_asr", "sunna_maghrib", "sunna_isha",
+    "onlyFatiha", "repeatNote", "tashSit", "tashEnd",
+]
+
+/// Kommentar für einen ungeprüften Text der Anleitung; `nil` für alle übrigen.
+func reviewNote(for key: String) -> String? {
+    if walkReviewKeys.contains(key) {
+        return "TODO(review): Entwurf für „Gebet Schritt für Schritt“ (Spec § 9.6) – fachlich ungeprüft wie die "
+            + "übrige Anleitung; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14)."
+    }
+    if guideReviewKeys.contains(key) {
+        return "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder "
+            + "Gelehrten prüfen lassen (Spec § 6.14)."
+    }
+    return nil
+}
+
 func makeEntry(key: String, perLanguage: [String: String], note: String? = nil) -> CatalogEntry {
     var names: [String] = []
     var repeated = false
@@ -278,6 +306,10 @@ func makeEntry(key: String, perLanguage: [String: String], note: String? = nil) 
     return CatalogEntry(key: key, names: names, texts: texts, source: perLanguage, note: note)
 }
 
+for key in walkReviewKeys.union(guideReviewKeys).sorted() where table[key] == nil {
+    fail("Text der Anleitung `\(key)` (TODO(review)) fehlt in `T`")
+}
+
 for key in order {
     let values = table[key]!
     var textValues: [String: String] = [:]
@@ -289,7 +321,7 @@ for key in order {
         }
     }
     if listValues.isEmpty {
-        let entry = makeEntry(key: key, perLanguage: textValues)
+        let entry = makeEntry(key: key, perLanguage: textValues, note: reviewNote(for: key))
         entries.append(entry)
         accessors.append(.text(key: key, names: entry.names, german: textValues["de"] ?? ""))
     } else {

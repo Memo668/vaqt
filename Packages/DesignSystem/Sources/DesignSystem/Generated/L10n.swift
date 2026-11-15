@@ -639,6 +639,14 @@ public enum L10n {
     public static var hlDegHeader: String { text("hlDegHeader") }
     /// „Erreicht die Sonne den eingestellten Winkel nicht, gilt der entsprechende Anteil der Nacht (Winkel ÷ 60).“
     public static var hlManualFooter: String { text("hlManualFooter") }
+    /// „Lizenzen“
+    public static var licenses: String { text("licenses") }
+    /// „Schrift der Verse und Formeln“
+    public static var licAmiriSub: String { text("licAmiriSub") }
+    /// „Berechnung der Gebetszeiten“
+    public static var licAdhanSub: String { text("licAdhanSub") }
+    /// „Die App enthält freie Software und Schriften. Die Lizenztexte stehen im englischen Original.“
+    public static var licensesFooter: String { text("licensesFooter") }
 
     /// Name einer Sure aus `SURAH` im Prototyp, z. B. „Al-Baqara“ für 2.
     public static func surahName(_ surah: Int) -> String { text("surah_\(surah)") }
@@ -971,6 +979,10 @@ public enum L10n {
         "hlManualSub",
         "hlDegHeader",
         "hlManualFooter",
+        "licenses",
+        "licAmiriSub",
+        "licAdhanSub",
+        "licensesFooter",
         "surah_2",
         "surah_13",
         "surah_20",

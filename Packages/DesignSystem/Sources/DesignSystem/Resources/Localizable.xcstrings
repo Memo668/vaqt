@@ -906,6 +906,7 @@
       }
     },
     "b_clean" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -935,6 +936,7 @@
       }
     },
     "b_cleanD" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -964,6 +966,7 @@
       }
     },
     "b_niyya" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -993,7 +996,7 @@
       }
     },
     "b_niyyaD" : {
-      "comment" : "Argumente: 1 = p, 2 = n",
+      "comment" : "Argumente: 1 = p, 2 = n TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -1023,6 +1026,7 @@
       }
     },
     "b_qibla" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -1081,6 +1085,7 @@
       }
     },
     "b_qiblaD" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -1110,6 +1115,7 @@
       }
     },
     "b_wudu" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -1139,6 +1145,7 @@
       }
     },
     "b_wuduD" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -3175,6 +3182,122 @@
         }
       }
     },
+    "licAdhanSub" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berechnung der Gebetszeiten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prayer time calculation"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cálculo de los horarios de oración"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Namaz vakitlerinin hesaplanması"
+          }
+        }
+      }
+    },
+    "licAmiriSub" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schrift der Verse und Formeln"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Typeface for verses and formulas"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipografía de los versículos y las fórmulas"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayetlerin ve duaların yazı tipi"
+          }
+        }
+      }
+    },
+    "licenses" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lizenzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Licences"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Licencias"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lisanslar"
+          }
+        }
+      }
+    },
+    "licensesFooter" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die App enthält freie Software und Schriften. Die Lizenztexte stehen im englischen Original."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The app includes open-source software and fonts. The licence texts are shown in the original English."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La app incluye software y tipografías libres. Los textos de las licencias se muestran en su versión original en inglés."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulama özgür yazılım ve yazı tipleri içerir. Lisans metinleri İngilizce asıllarıyla gösterilir."
+          }
+        }
+      }
+    },
     "linkToast" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4725,6 +4848,7 @@
       }
     },
     "onlyFatiha" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -6329,6 +6453,7 @@
       }
     },
     "repeatNote" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -6358,6 +6483,7 @@
       }
     },
     "s_itidal" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -6387,6 +6513,7 @@
       }
     },
     "s_itidalD" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -6416,6 +6543,7 @@
       }
     },
     "s_qiyam" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -6445,6 +6573,7 @@
       }
     },
     "s_qiyamD" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -6474,6 +6603,7 @@
       }
     },
     "s_ruku" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -6503,6 +6633,7 @@
       }
     },
     "s_rukuD" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -6532,6 +6663,7 @@
       }
     },
     "s_salam" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -6561,6 +6693,7 @@
       }
     },
     "s_salamD" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -6590,6 +6723,7 @@
       }
     },
     "s_sujud" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -6619,6 +6753,7 @@
       }
     },
     "s_sujudD" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -6648,6 +6783,7 @@
       }
     },
     "s_takbir" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -6677,6 +6813,7 @@
       }
     },
     "s_takbirD" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -6706,6 +6843,7 @@
       }
     },
     "s_tash" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -6735,6 +6873,7 @@
       }
     },
     "s_tashD" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -7491,6 +7630,7 @@
       }
     },
     "sunna_asr" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -7520,6 +7660,7 @@
       }
     },
     "sunna_dhuhr" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -7549,6 +7690,7 @@
       }
     },
     "sunna_fajr" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -7578,6 +7720,7 @@
       }
     },
     "sunna_isha" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -7607,6 +7750,7 @@
       }
     },
     "sunna_maghrib" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -8309,6 +8453,7 @@
       }
     },
     "tashEnd" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -8338,6 +8483,7 @@
       }
     },
     "tashSit" : {
+      "comment" : "TODO(review): Text der Anleitung – fachlich ungeprüft; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -9042,6 +9188,7 @@
       }
     },
     "wkDoneBody" : {
+      "comment" : "TODO(review): Entwurf für „Gebet Schritt für Schritt“ (Spec § 9.6) – fachlich ungeprüft wie die übrige Anleitung; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -9100,7 +9247,7 @@
       }
     },
     "wkIntroBody" : {
-      "comment" : "Argumente: 1 = p",
+      "comment" : "Argumente: 1 = p TODO(review): Entwurf für „Gebet Schritt für Schritt“ (Spec § 9.6) – fachlich ungeprüft wie die übrige Anleitung; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -9160,6 +9307,7 @@
       }
     },
     "wkJalsa" : {
+      "comment" : "TODO(review): Entwurf für „Gebet Schritt für Schritt“ (Spec § 9.6) – fachlich ungeprüft wie die übrige Anleitung; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -9189,6 +9337,7 @@
       }
     },
     "wkJalsaD" : {
+      "comment" : "TODO(review): Entwurf für „Gebet Schritt für Schritt“ (Spec § 9.6) – fachlich ungeprüft wie die übrige Anleitung; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -9276,6 +9425,7 @@
       }
     },
     "wkQiyam12" : {
+      "comment" : "TODO(review): Entwurf für „Gebet Schritt für Schritt“ (Spec § 9.6) – fachlich ungeprüft wie die übrige Anleitung; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -9424,6 +9574,7 @@
       }
     },
     "wkSujud2" : {
+      "comment" : "TODO(review): Entwurf für „Gebet Schritt für Schritt“ (Spec § 9.6) – fachlich ungeprüft wie die übrige Anleitung; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -9453,6 +9604,7 @@
       }
     },
     "wkSujud2D" : {
+      "comment" : "TODO(review): Entwurf für „Gebet Schritt für Schritt“ (Spec § 9.6) – fachlich ungeprüft wie die übrige Anleitung; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -9482,6 +9634,7 @@
       }
     },
     "wkSujudD" : {
+      "comment" : "TODO(review): Entwurf für „Gebet Schritt für Schritt“ (Spec § 9.6) – fachlich ungeprüft wie die übrige Anleitung; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -9511,6 +9664,7 @@
       }
     },
     "wkTashFirst" : {
+      "comment" : "TODO(review): Entwurf für „Gebet Schritt für Schritt“ (Spec § 9.6) – fachlich ungeprüft wie die übrige Anleitung; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -9540,6 +9694,7 @@
       }
     },
     "wkTashFirstD" : {
+      "comment" : "TODO(review): Entwurf für „Gebet Schritt für Schritt“ (Spec § 9.6) – fachlich ungeprüft wie die übrige Anleitung; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -9569,6 +9724,7 @@
       }
     },
     "wkTashLast" : {
+      "comment" : "TODO(review): Entwurf für „Gebet Schritt für Schritt“ (Spec § 9.6) – fachlich ungeprüft wie die übrige Anleitung; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -9598,6 +9754,7 @@
       }
     },
     "wkTashLastD" : {
+      "comment" : "TODO(review): Entwurf für „Gebet Schritt für Schritt“ (Spec § 9.6) – fachlich ungeprüft wie die übrige Anleitung; vor dem App Store von einem Imam oder Gelehrten prüfen lassen (Spec § 6.14).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {

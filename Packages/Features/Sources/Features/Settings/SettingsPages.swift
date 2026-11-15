@@ -31,6 +31,7 @@ struct SettingsDestination: View {
         case .appearance: AppearancePage()
         case .language: LanguagePage()
         case .privacy: PrivacyPage()
+        case .licenses: LicensesPage()
         case .support: SupportPage()
         }
     }
@@ -185,6 +186,11 @@ struct SettingsPage: View {
             }
             NavigationLink(value: SettingsRoute.privacy) {
                 ValueRowLabel(L10n.privacy, value: L10n.privacyValue)
+            }
+            .listRowMetrics()
+            // Spec § 9.7: Lizenzen der Schriften Amiri und Amiri Quran (OFL) und von Adhan Swift (MIT).
+            NavigationLink(value: SettingsRoute.licenses) {
+                ValueRowLabel(L10n.licenses, value: nil)
             }
             .listRowMetrics()
             ValueRowLabel(L10n.version, value: model.version)
@@ -494,6 +500,38 @@ struct PrivacyPage: View {
                 .padding(.top, SettingsMetrics.subpageGap)
         }
         .background(Palette.backgroundGrouped)
+    }
+}
+
+/// Einstellungen › Lizenzen (Spec § 9.7): je fremdem Teil eine Gruppe mit seinem Namen, die Lizenz und wofür
+/// die App ihn braucht; der Lizenztext klappt darunter auf, im englischen Original und auswählbar. Der
+/// Prototyp hat diese Seite nicht; sie folgt den Gruppen der übrigen Unterseiten.
+struct LicensesPage: View {
+    var body: some View {
+        SettingsList {
+            ForEach(SoftwareLicense.allCases) { license in
+                Section {
+                    DisclosureGroup {
+                        Text(license.text)
+                            .font(.footnote)
+                            .foregroundStyle(Palette.textSecondary)
+                            .textSelection(.enabled)
+                            // Lizenztexte sind englisch: VoiceOver liest sie mit englischer Stimme.
+                            .environment(\.locale, Locale(identifier: "en"))
+                            .listRowMetrics()
+                    } label: {
+                        RowTitle(license.licenseName, detail: license.localizedPurpose)
+                    }
+                    .listRowMetrics()
+                } header: {
+                    ListSectionHeader(license.component)
+                } footer: {
+                    if license == SoftwareLicense.allCases.last {
+                        ListSectionFooter(L10n.licensesFooter)
+                    }
+                }
+            }
+        }
     }
 }
 
