@@ -175,12 +175,12 @@ public struct GuideWalkScreen: View {
     }
 
     private var previousButton: some View {
-        TintedButton(L10n.wkPrev, chevron: "chevron.backward", imagePlacement: .leading, action: onPrevious)
+        TintedButton(L10n.wkPrev, compactSymbol: "chevron.backward", action: onPrevious)
             .walkFocus(focus, .previous)
     }
 
     private var nextButton: some View {
-        PrimaryButton(L10n.wkNext, chevron: "chevron.forward", imagePlacement: .trailing, action: onNext)
+        PrimaryButton(L10n.wkNext, compactSymbol: "chevron.forward", imagePlacement: .trailing, action: onNext)
             .walkFocus(focus, .next)
     }
 }

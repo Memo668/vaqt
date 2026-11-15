@@ -92,16 +92,25 @@ public enum ArabicFont: CaseIterable, Sendable {
 extension View {
 
     /// Arabischer Text in Amiri oder Amiri Quran wie `font: 400 <size>/<lineHeight> "Amiri"` im Prototyp:
-    /// jede Zeile ein Kasten der Höhe `lineHeight × size`, die Schrift mittig darin wie im Browser.
+    /// jede Zeile ein Kasten der Höhe `lineHeight × size`, die Schrift darin wie im Browser – halb so viel
+    /// Raum über der Oberlänge wie unter der Unterlänge (`half-leading`).
     ///
-    /// Amiri ist höher als ihre Schriftgröße (Amiri Quran fast das Zweieinhalbfache); die Zeilenhöhe der
-    /// Verse liegt darunter. Deshalb setzt die App die Zeilenhöhe genau (`lineHeight(.exact)`, iOS 26)
-    /// statt mit Zeilenabstand, der nicht negativ werden kann.
+    /// Gerechnet wird mit der echten Höhe der Schrift (`naturalLineHeight`), nicht mit der von SF Pro:
+    /// Amiri ist höher als ihre Schriftgröße, Amiri Quran fast das Zweieinhalbfache. `lineHeight(.exact)`
+    /// (iOS 26) trifft zwar die Höhe der Zeile, setzt die Grundlinie aber anders als der Browser – bei Amiri
+    /// Quran 31 pt fast 20 pt höher (gemessen in Phase 13). Deshalb wie bei den übrigen Texten Zeilenabstand
+    /// und halber Rand oben und unten.
+    ///
+    /// Ist die Zeile niedriger als die Schrift (die Verse: 2,15 gegen 2,449), wird der Rand negativ: Eine
+    /// Zeile steht genau wie im Prototyp; bricht der Vers um, haben seine Zeilen den Abstand der Schrift
+    /// statt des engeren aus dem CSS, denn Zeilenabstand kann nicht negativ werden.
     ///
     /// - Parameter size: Schriftgröße in pt, schon mit Dynamic Type skaliert.
     public func arabicFont(_ typeface: ArabicFont, size: CGFloat, lineHeight: CGFloat) -> some View {
-        font(typeface.font(size: size))
-            .lineHeight(.exact(points: size * lineHeight))
+        let extra = size * (lineHeight - typeface.naturalLineHeight)
+        return font(typeface.font(size: size))
+            .lineSpacing(max(0, extra))
+            .padding(.vertical, extra / 2)
             .typesettingLanguage(Locale.Language(identifier: "ar"))
     }
 }

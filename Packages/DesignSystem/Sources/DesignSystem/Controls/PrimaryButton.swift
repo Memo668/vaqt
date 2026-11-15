@@ -18,10 +18,14 @@ public struct PrimaryButton: View {
         self.action = action
     }
 
-    /// Mit einem Pfeil wie `ic('chevronRight', 18)`: kleiner als die übrigen Symbole und in einem Feld
-    /// von 18 pt, so dass der Abstand zum Titel dem des Prototyps entspricht.
-    public init(_ title: String, chevron: String, imagePlacement: ActionButtonLabel.Placement, action: @escaping () -> Void) {
-        self.label = ActionButtonLabel(title: title, systemImage: chevron, placement: imagePlacement, style: .chevron)
+    /// Mit einem kleinen Symbol wie `ic('chevronRight', 18)` oder `ic('play', 18)`: kleiner als die übrigen
+    /// Symbole und mittig in einem Feld von 18 pt, so dass der Abstand zum Titel dem des Prototyps
+    /// entspricht.
+    public init(
+        _ title: String, compactSymbol: String, imagePlacement: ActionButtonLabel.Placement = .leading,
+        action: @escaping () -> Void
+    ) {
+        self.label = ActionButtonLabel(title: title, systemImage: compactSymbol, placement: imagePlacement, style: .compact)
         self.action = action
     }
 
@@ -45,9 +49,13 @@ public struct TintedButton: View {
         self.action = action
     }
 
-    /// Mit einem Pfeil wie `ic('chevronLeft', 18)` (siehe `PrimaryButton.init(_:chevron:imagePlacement:action:)`).
-    public init(_ title: String, chevron: String, imagePlacement: ActionButtonLabel.Placement, action: @escaping () -> Void) {
-        self.label = ActionButtonLabel(title: title, systemImage: chevron, placement: imagePlacement, style: .chevron)
+    /// Mit einem kleinen Symbol wie `ic('chevronLeft', 18)` (siehe
+    /// `PrimaryButton.init(_:compactSymbol:imagePlacement:action:)`).
+    public init(
+        _ title: String, compactSymbol: String, imagePlacement: ActionButtonLabel.Placement = .leading,
+        action: @escaping () -> Void
+    ) {
+        self.label = ActionButtonLabel(title: title, systemImage: compactSymbol, placement: imagePlacement, style: .compact)
         self.action = action
     }
 
@@ -70,9 +78,9 @@ public struct ActionButtonLabel: View {
     enum SymbolStyle: Sendable {
         /// 15 pt halbfett, so breit wie es ist – z. B. der Haken (`ic('check', 18)`).
         case standard
-        /// Pfeil (`ic('chevronLeft', 18)`): 12 pt, mittig in einem Feld von 18 pt wie die Zeichnung im
-        /// Prototyp, die nur die Mitte ihres Felds füllt.
-        case chevron
+        /// Pfeil oder Abspielen (`ic('chevronLeft', 18)`, `ic('play', 18)`): 12 pt, mittig in einem Feld von
+        /// 18 pt wie die Zeichnung im Prototyp, die nur die Mitte ihres Felds füllt.
+        case compact
     }
 
     let title: String
@@ -100,10 +108,10 @@ public struct ActionButtonLabel: View {
                 Image(systemName: systemImage)
                     .font(.system(size: PrimaryButtonMetrics.symbolSize, weight: .semibold))
                     .accessibilityHidden(true)
-            case .chevron:
+            case .compact:
                 Image(systemName: systemImage)
-                    .font(.system(size: PrimaryButtonMetrics.chevronSize, weight: PrimaryButtonMetrics.chevronWeight))
-                    .frame(width: PrimaryButtonMetrics.chevronBox)
+                    .font(.system(size: PrimaryButtonMetrics.compactSize, weight: PrimaryButtonMetrics.compactWeight))
+                    .frame(width: PrimaryButtonMetrics.compactBox)
                     .accessibilityHidden(true)
             }
         }
@@ -147,10 +155,11 @@ enum PrimaryButtonMetrics {
     static let gap: CGFloat = 8
     /// `ic('check', 18)`
     static let symbolSize: CGFloat = 15
-    /// `ic('chevronLeft', 18)`: Pfeil 4,9 × 9,75 pt mit Strich 1,35 pt in einem Feld von 18 pt.
-    static let chevronSize: CGFloat = 12
-    static let chevronWeight: Font.Weight = .medium
-    static let chevronBox: CGFloat = 18
+    /// `ic('chevronLeft', 18)`: Pfeil 4,9 × 9,75 pt mit Strich 1,35 pt in einem Feld von 18 pt;
+    /// `ic('play', 18)`: Dreieck 9,3 × 10,2 pt.
+    static let compactSize: CGFloat = 12
+    static let compactWeight: Font.Weight = .medium
+    static let compactBox: CGFloat = 18
     static let disabledOpacity = 0.4
     static let pressedScale: CGFloat = 0.97
 }

@@ -69,7 +69,7 @@ public struct GuideHeaderCard: View {
     /// Dhuhr.“ (`.g-walk`, `.g-walk-sub`).
     private var walk: some View {
         VStack(spacing: 0) {
-            PrimaryButton(L10n.wkStart, systemImage: GuideHeaderMetrics.walkSymbol, action: onWalk)
+            PrimaryButton(L10n.wkStart, compactSymbol: GuideHeaderMetrics.walkSymbol, action: onWalk)
             Text(L10n.wkStartSub(n: String(header.rakahs.count), p: header.prayer.localizedName))
                 .textStyle(.footnote, lineHeight: GuideHeaderMetrics.walkSubLineHeight)
                 .foregroundStyle(Palette.textSecondary)
