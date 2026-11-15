@@ -127,9 +127,9 @@ No account or sign-in is needed. Location access is optional: without it, choose
 
 Was ohne Konto nicht geht, in der Reihenfolge, in der es dran ist. Noch nicht ausprobiert; die Liste steht auch unter „Für die erste Beta“ in `docs/OPEN-QUESTIONS.md`.
 
-1. **Konto und Team:** Apple Developer Program, als Person oder als Organisation (die braucht eine D-U-N-S-Nummer). Die Team-ID kommt nach `DEVELOPMENT_TEAM` in `project.yml`.
-2. **Kennungen:** Bundle-ID und App Group festlegen (umgekehrte Domain des Kontoinhabers) und in `project.yml` eintragen (`APP_BUNDLE_ID`, `APP_GROUP_ID`), danach `make project`. Registriert werden die App-ID, die der Extension (`<Bundle-ID>.widgets`) und die App Group beim ersten signierten Build mit automatischer Signatur oder von Hand unter Certificates, Identifiers & Profiles. Als Fähigkeit brauchen beide nur App Groups; Mitteilungen und Live-Aktivität kommen ohne Push aus.
-3. **App Store Connect:** die App anlegen – iOS, Name, Primärsprache Deutsch, Bundle-ID, SKU. Der Name muss im Store eindeutig sein; „Gebetszeiten“ ist vermutlich vergeben (auf dem Home-Bildschirm bleibt `CFBundleDisplayName`). Dann App-Datenschutz „Keine Daten erfasst“, die Adressen der Datenschutzerklärung und die Testinformationen von oben.
+1. **Konto und Team (erledigt am 15.11.2026):** Apple Developer Program als Einzelperson, Team `V7652FBKMY` in `DEVELOPMENT_TEAM` (`project.yml`).
+2. **Kennungen (eingetragen am 15.11.2026):** `de.mehmetyilmaz.gebetszeiten`, `.widgets` und `group.de.mehmetyilmaz.gebetszeiten` in `project.yml` (`APP_BUNDLE_ID`, `APP_GROUP_ID`), danach `make project`. Registriert werden die App-ID, die der Extension (`<Bundle-ID>.widgets`) und die App Group beim ersten signierten Build mit automatischer Signatur oder von Hand unter Certificates, Identifiers & Profiles. Als Fähigkeit brauchen beide nur App Groups; Mitteilungen und Live-Aktivität kommen ohne Push aus.
+3. **App Store Connect:** die App anlegen – iOS, Name „Gebetszeiten – Namaz Vakti“ (entschieden am 15.11.2026; „Gebetszeiten“ allein ist vergeben, auf dem Home-Bildschirm bleibt `CFBundleDisplayName`), Primärsprache Deutsch, Bundle-ID, SKU. Dann App-Datenschutz „Keine Daten erfasst“, die Adressen der Datenschutzerklärung und die Testinformationen von oben.
 4. **Signiertes Archiv** und Prüfung, auch der App Group in den Entitlements:
 
    ```bash

@@ -6,7 +6,7 @@ Elf Phasen, jede für sich abnehmbar. Pro Phase stehen hier Ziel, Inhalt, die pa
 
 | Thema | Standard | Spec |
 |---|---|---|
-| Arbeitstitel / Bundle-ID | „Gebetszeiten“ / `com.example.gebetszeiten` (Platzhalter bis zum Entwicklerkonto, entschieden am 14.11.2026; steht nur in `project.yml`) | § 6.9 |
+| Arbeitstitel / Bundle-ID | „Gebetszeiten“ / `de.mehmetyilmaz.gebetszeiten` (bis 15.11.2026 Platzhalter `com.example.gebetszeiten`; steht nur in `project.yml`); im App Store „Gebetszeiten – Namaz Vakti“ | § 6.9 |
 | Mindestversion | iOS 26 | § 6.10 |
 | Rechenbibliothek | Adhan Swift (MIT) | § 6.3 |
 | Automatische Methode | DE, AT und TR → Diyanet, ES → MWL, SA → Umm al-Qura, ID → Kemenag, US und CA → ISNA, EG → Egyptian, PK, IN, BD und AF → Karachi, MY → JAKIM, SG → Singapore, IR → Tehran, alle übrigen Länder MWL (entschieden am 10.11.2026) | § 5, § 6.1 |

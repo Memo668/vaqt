@@ -20,16 +20,16 @@ settings:
     SWIFT_VERSION: "6.0"
     MARKETING_VERSION: "0.1.0"
     CURRENT_PROJECT_VERSION: "1"
-    # Bundle-ID und App Group: Platzhalter bis zum Entwicklerkonto (entschieden am 14.11.2026, „Mit dem
-    # Konto festlegen“; docs/OPEN-QUESTIONS.md). Beide stehen nur hier: Info.plists, Entitlements und
-    # Hintergrundaufgabe beider Targets nehmen sie von hier, Makefile und Skripte über scripts/bundle-id,
-    # das Protokoll über die Bundle-ID der App. Kennungen einer Testinstallation nie hier einchecken.
-    APP_BUNDLE_ID: com.example.gebetszeiten
-    APP_GROUP_ID: group.com.example.gebetszeiten
+    # Bundle-ID und App Group des Entwicklerkontos (Einzelperson, entschieden am 15.11.2026: „Mit deinem
+    # Namen“; docs/OPEN-QUESTIONS.md). Nach dem ersten Upload nicht mehr ändern. Beide stehen nur hier:
+    # Info.plists, Entitlements und Hintergrundaufgabe beider Targets nehmen sie von hier, Makefile und
+    # Skripte über scripts/bundle-id, das Protokoll über die Bundle-ID der App.
+    APP_BUNDLE_ID: de.mehmetyilmaz.gebetszeiten
+    APP_GROUP_ID: group.de.mehmetyilmaz.gebetszeiten
     # TODO(placeholder): Adresse hinter Einstellungen › Quellcode („Open Source auf GitHub“). Das Repo hat
     # noch keine öffentliche Adresse; vor dem ersten Archiv eintragen.
     SOURCE_CODE_URL: https://example.com/gebetszeiten
-    DEVELOPMENT_TEAM: ""
+    DEVELOPMENT_TEAM: V7652FBKMY
     CODE_SIGN_STYLE: Automatic
     ENABLE_USER_SCRIPT_SANDBOXING: YES
     LOCALIZATION_PREFERS_STRING_CATALOGS: YES

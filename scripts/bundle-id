@@ -2,7 +2,7 @@
 # Gibt die Bundle-ID der App aus: `APP_BUNDLE_ID` in project.yml, die einzige Stelle, an der sie steht.
 # Makefile, Abgleich-Skripte, UI-Hilfsprojekt und scripts/check-archive lesen sie hierüber.
 #
-#   scripts/bundle-id        z. B. com.example.gebetszeiten (Platzhalter bis zum Entwicklerkonto)
+#   scripts/bundle-id        z. B. de.mehmetyilmaz.gebetszeiten
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 id="$(sed -nE 's/^ *APP_BUNDLE_ID: *([^ #]+).*/\1/p' "$ROOT/project.yml" | head -1)"
