@@ -249,7 +249,8 @@ public final class TodayModel {
     }
 
     static func dateText(for day: CalendarDay, template: String, locale: Locale) -> String {
-        var calendar = Calendar(identifier: .gregorian)
+        // Der Kalender der Region, persisch auf Persisch; ein islamischer bleibt gregorianisch (Spec § 9.10).
+        var calendar = L10n.displayCalendar(for: locale)
         calendar.timeZone = .gmt
         let formatter = DateFormatter()
         formatter.calendar = calendar

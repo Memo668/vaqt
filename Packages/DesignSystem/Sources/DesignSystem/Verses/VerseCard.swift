@@ -27,10 +27,13 @@ public struct VerseCard: View {
                 arabic(verse)
                     .padding(.top, VerseCardMetrics.arabicTop)
                     .padding(.bottom, VerseCardMetrics.arabicBottom)
-                Text(verse.localizedTranslation)
-                    .textStyle(.body, lineHeight: VerseCardMetrics.translationLineHeight)
-                    .foregroundStyle(Palette.label)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                // Auf Arabisch steht keine Übersetzung, der Vers selbst genügt (`verseTr()`, Spec § 9.10).
+                if !verse.localizedTranslation.isEmpty {
+                    Text(verse.localizedTranslation)
+                        .textStyle(.body, lineHeight: VerseCardMetrics.translationLineHeight)
+                        .foregroundStyle(Palette.label)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
                 // `letter-spacing: -.24px` ist die Laufweite, die das System bei 15 pt ohnehin setzt.
                 Text(verse.localizedReference)
                     .textStyle(.subheadline, weight: .semibold, lineHeight: VerseCardMetrics.referenceLineHeight)
@@ -89,11 +92,16 @@ public struct VerseListItem: View {
                 Text(day.listTitle)
                     .textStyle(.footnote, lineHeight: VerseListMetrics.lineHeight)
                     .foregroundStyle(Palette.textSecondary)
-                Text(day.verse.localizedTranslation)
-                    .textStyle(.subheadline, lineHeight: VerseListMetrics.translationLineHeight)
-                    .lineLimit(VerseListMetrics.translationLines)
-                    .foregroundStyle(Palette.label)
-                    .padding(.vertical, VerseListMetrics.translationGap)
+                if day.verse.localizedTranslation.isEmpty {
+                    // Arabisch: ohne Übersetzung bleibt vom leeren `.vitem-tr` nur sein Rand (3 px).
+                    Color.clear.frame(height: VerseListMetrics.translationGap)
+                } else {
+                    Text(day.verse.localizedTranslation)
+                        .textStyle(.subheadline, lineHeight: VerseListMetrics.translationLineHeight)
+                        .lineLimit(VerseListMetrics.translationLines)
+                        .foregroundStyle(Palette.label)
+                        .padding(.vertical, VerseListMetrics.translationGap)
+                }
                 Text(day.verse.localizedReference)
                     .textStyle(.footnote, weight: .semibold, lineHeight: VerseListMetrics.lineHeight)
                     .foregroundStyle(Palette.accent)

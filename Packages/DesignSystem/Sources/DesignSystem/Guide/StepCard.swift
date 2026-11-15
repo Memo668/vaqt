@@ -63,7 +63,7 @@ public struct StepCard<Leading: View, Extra: View>: View {
         var heading = AttributedString(title)
         heading.tracking = StepCardMetrics.titleTracking
         guard let number else { return heading }
-        var prefix = AttributedString(String(number))
+        var prefix = AttributedString(L10n.number(number))
         prefix.foregroundColor = Palette.textSecondary
         prefix.font = TypeScale.headline.font(weight: .medium).leading(.tight)
         // Laufweite steht hinter jedem Zeichen; bei einer einstelligen Nummer ist das genau der Abstand.

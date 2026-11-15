@@ -106,6 +106,7 @@ struct PrayerTimesWidgetView: View {
         L10n.chosenLanguage = entry.language
         return content
             .environment(\.locale, L10n.locale)
+            .environment(\.layoutDirection, L10n.layoutDirection)
     }
 
     @ViewBuilder
@@ -181,6 +182,7 @@ struct PrayerLiveWidgetView: View {
         L10n.chosenLanguage = entry.language
         return LivePrayerWidget(content: entry.content)
             .environment(\.locale, L10n.locale)
+            .environment(\.layoutDirection, L10n.layoutDirection)
             .containerBackground(for: .widget) { LiveActivityBackground() }
     }
 }

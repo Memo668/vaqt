@@ -74,7 +74,7 @@ public struct PrayerRow: View {
     }
 
     private var time: some View {
-        Text(model.time.description)
+        Text(L10n.time(model.time))
             .font(TypeScale.body.font(weight: isCurrent ? .semibold : nil))
             .monospacedDigit()
             .tracking(Typography.prayerTimeTracking)

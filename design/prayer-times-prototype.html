@@ -1494,6 +1494,115 @@ Object.assign(T, {
  ['ru','Лицензии','Шрифт аятов и формул','Расчёт времени намаза','Приложение использует свободное ПО и шрифты. Тексты лицензий приведены в английском оригинале.'],
  ['it','Licenze','Carattere dei versetti e delle formule','Calcolo degli orari di preghiera','L’app contiene software e caratteri liberi. I testi delle licenze sono riportati nell’originale inglese.']
 ].forEach(([l, a, b, c, d]) => Object.assign(T[l], {licenses:a, licAmiriSub:b, licAdhanSub:c, licensesFooter:d}));
+/* Phase 15 (Spec § 9.10): Mehrzahl für Texte mit Zahl. Je Sprache und Text die Formen nach CLDR (zero, one,
+   two, few, many, other – `other` ist Pflicht); `t()` wählt sie mit `Intl.PluralRules`, der String Catalog
+   bekommt sie als Plural-Varianten. `text` ersetzt dann den Text aus `T`: Darin steht {n} für die Form,
+   in der Form selbst {n} für die Zahl (fehlt sie dort, steht die Zahl nicht im Text – etwa „Gebete noch
+   offen“ unter der großen Zahl). Sprachen ohne Eintrag behalten den Text aus `T`, so Türkisch, Indonesisch,
+   Malaiisch, Bengali und Persisch, in denen das Zählwort gleich bleibt, und Texte, deren Zahlen nie eine
+   andere Form verlangen (Rakʿas 2–4). Entwurf vom 15.11.2026 wie die zwölf Sprachen: vor dem App Store
+   von Muttersprachlern prüfen lassen. */
+const PL_AR_RAK = {zero:'{n} ركعة', one:'ركعة واحدة', two:'ركعتان', few:'{n} ركعات', many:'{n} ركعة', other:'{n} ركعة'};
+const PL_AR_MIN = {zero:'{n} دقيقة', one:'دقيقة واحدة', two:'دقيقتان', few:'{n} دقائق', many:'{n} دقيقة', other:'{n} دقيقة'};
+const PL_AR_MIN_GEN = {zero:'{n} دقيقة', one:'دقيقة واحدة', two:'دقيقتين', few:'{n} دقائق', many:'{n} دقيقة', other:'{n} دقيقة'};
+const PL_AR_DAYS = d => ({zero:`{${d}} يوم`, one:'يوم واحد', two:'يومان', few:`{${d}} أيام`, many:`{${d}} يومًا`, other:`{${d}} يوم`});
+const PL_AR_PRAYERS = k => ({zero:`{${k}} صلاة`, one:'صلاة واحدة', two:'صلاتان', few:`{${k}} صلوات`, many:`{${k}} صلاة`, other:`{${k}} صلاة`});
+const PL_RU_DAYS = d => ({one:`{${d}} день`, few:`{${d}} дня`, many:`{${d}} дней`, other:`{${d}} дня`});
+const PL_RU_PRAYERS = k => ({one:`{${k}} намаз`, few:`{${k}} намаза`, many:`{${k}} намазов`, other:`{${k}} намаза`});
+const PL_RU_RAK = {one:'{n} ракаат', few:'{n} ракаата', many:'{n} ракаатов', other:'{n} ракаата'};
+const PLURAL = {
+  de: {
+    arcPrayers:{text:'{n}', n:{one:'{n} von 5 Gebetszeiten hat heute begonnen', other:'{n} von 5 Gebetszeiten haben heute begonnen'}},
+    qadaResult:{text:'{d} · {n}', d:{one:'{d} Tag', other:'{d} Tage'}, n:{one:'{n} Gebet', other:'{n} Gebete'}},
+    qadaOpen:{text:'{n}', n:{one:'Gebet noch offen', other:'Gebete noch offen'}},
+    qcResultUnit:{text:'{n}', n:{one:'Gebet nachzuholen', other:'Gebete nachzuholen'}},
+    qcResultDetail:{text:'{d} × {k}', d:{one:'{d} Tag', other:'{d} Tage'}, k:{one:'{k} Gebet', other:'{k} Gebete'}},
+    qadaApplied:{text:'{n} als offen übernommen', n:{one:'{n} Gebet', other:'{n} Gebete'}},
+    notifReminderTitle:{text:'{p} in {n}', n:{one:'{n} Minute', other:'{n} Minuten'}}},
+  en: {
+    arcPrayers:{text:'{n}', n:{one:'{n} of 5 prayer times has begun today', other:'{n} of 5 prayer times have begun today'}},
+    qadaResult:{text:'{d} · {n}', d:{one:'{d} day', other:'{d} days'}, n:{one:'{n} prayer', other:'{n} prayers'}},
+    qadaOpen:{text:'{n}', n:{one:'prayer still open', other:'prayers still open'}},
+    qcResultUnit:{text:'{n}', n:{one:'prayer to make up', other:'prayers to make up'}},
+    qcResultDetail:{text:'{d} × {k}', d:{one:'{d} day', other:'{d} days'}, k:{one:'{k} prayer', other:'{k} prayers'}},
+    qadaApplied:{text:'{n} set as open', n:{one:'{n} prayer', other:'{n} prayers'}},
+    notifReminderTitle:{text:'{p} in {n}', n:{one:'{n} minute', other:'{n} minutes'}}},
+  es: {
+    arcPrayers:{text:'{n}', n:{one:'Hoy ha empezado {n} de las 5 oraciones', other:'Hoy han empezado {n} de las 5 oraciones'}},
+    qadaResult:{text:'{d} · {n}', d:{one:'{d} día', other:'{d} días'}, n:{one:'{n} oración', other:'{n} oraciones'}},
+    qadaOpen:{text:'{n}', n:{one:'oración pendiente', other:'oraciones pendientes'}},
+    qcResultUnit:{text:'{n}', n:{one:'oración por recuperar', other:'oraciones por recuperar'}},
+    qcResultDetail:{text:'{d} × {k}', d:{one:'{d} día', other:'{d} días'}, k:{one:'{k} oración', other:'{k} oraciones'}},
+    qadaApplied:{text:'{n}', n:{one:'{n} oración marcada como pendiente', other:'{n} oraciones marcadas como pendientes'}},
+    notifReminderTitle:{text:'{p} en {n}', n:{one:'{n} minuto', other:'{n} minutos'}},
+    adjChanged:{text:'{n}', n:{one:'{n} cambiado', other:'{n} cambiados'}}},
+  fr: {
+    qadaResult:{text:'{d} · {n}', d:{one:'{d} jour', other:'{d} jours'}, n:{one:'{n} prière', other:'{n} prières'}},
+    qadaOpen:{text:'{n}', n:{one:'prière à rattraper', other:'prières à rattraper'}},
+    qcResultUnit:{text:'{n}', n:{one:'prière à rattraper', other:'prières à rattraper'}},
+    qcResultDetail:{text:'{d} × {k}', d:{one:'{d} jour', other:'{d} jours'}, k:{one:'{k} prière', other:'{k} prières'}},
+    qadaApplied:{text:'{n}', n:{one:'{n} prière définie comme restante', other:'{n} prières définies comme restantes'}},
+    notifReminderTitle:{text:'{p} dans {n}', n:{one:'{n} minute', other:'{n} minutes'}}},
+  nl: {
+    qadaResult:{text:'{d} · {n}', d:{one:'{d} dag', other:'{d} dagen'}, n:{one:'{n} gebed', other:'{n} gebeden'}},
+    qadaOpen:{text:'{n}', n:{one:'gebed nog open', other:'gebeden nog open'}},
+    qcResultUnit:{text:'{n}', n:{one:'gebed in te halen', other:'gebeden in te halen'}},
+    qcResultDetail:{text:'{d} × {k}', d:{one:'{d} dag', other:'{d} dagen'}, k:{one:'{k} gebed', other:'{k} gebeden'}},
+    qadaApplied:{text:'{n} ingesteld als openstaand', n:{one:'{n} gebed', other:'{n} gebeden'}},
+    notifReminderTitle:{text:'{p} over {n}', n:{one:'{n} minuut', other:'{n} minuten'}}},
+  bs: {
+    arcPrayers:{text:'{n}', n:{one:'Danas je nastupio {n} od 5 namaskih vakata', few:'Danas su nastupila {n} od 5 namaskih vakata', other:'Danas je nastupilo {n} od 5 namaskih vakata'}},
+    qadaResult:{text:'{d} · {n}', d:{one:'{d} dan', few:'{d} dana', other:'{d} dana'}, n:{one:'{n} namaz', few:'{n} namaza', other:'{n} namaza'}},
+    qadaOpen:{text:'{n}', n:{one:'preostali namaz', few:'preostala namaza', other:'preostalih namaza'}},
+    qcResultUnit:{text:'{n}', n:{one:'namaz za naklanjanje', few:'namaza za naklanjanje', other:'namaza za naklanjanje'}},
+    qcResultDetail:{text:'{d} × {k}', d:{one:'{d} dan', few:'{d} dana', other:'{d} dana'}, k:{one:'{k} namaz', few:'{k} namaza', other:'{k} namaza'}},
+    qadaApplied:{text:'{n}', n:{one:'{n} namaz upisan kao preostao', few:'{n} namaza upisana kao preostala', other:'{n} namaza upisano kao preostalo'}},
+    notifReminderTitle:{text:'{p} za {n}', n:{one:'{n} minutu', few:'{n} minute', other:'{n} minuta'}}},
+  sq: {
+    arcPrayers:{text:'{n}', n:{one:'Sot ka hyrë {n} nga 5 vaktet e namazit', other:'Sot kanë hyrë {n} nga 5 vaktet e namazit'}},
+    qadaResult:{text:'{d} ditë · {n}', n:{one:'{n} namaz', other:'{n} namaze'}},
+    qadaOpen:{text:'{n}', n:{one:'namaz i mbetur', other:'namaze të mbetura'}},
+    qcResultUnit:{text:'{n}', n:{one:'namaz për t’u falur kaza', other:'namaze për t’u falur kaza'}},
+    qcResultDetail:{text:'{d} ditë × {k}', k:{one:'{k} namaz', other:'{k} namaze'}},
+    qadaApplied:{text:'{n}', n:{one:'{n} namaz u vendos si i mbetur', other:'{n} namaze u vendosën si të mbetura'}},
+    notifReminderTitle:{text:'{p} pas {n}', n:{one:'{n} minute', other:'{n} minutash'}}},
+  ar: {
+    b_niyyaD:{text:'انوِ بقلبك: {p}، {n}.', n:PL_AR_RAK},
+    wkIntroTitle:{text:'{p} · {n}', n:PL_AR_RAK},
+    wkStartSub:{text:'{n}', n:{two:'وضعيةً تلو الأخرى خلال ركعتَي {p} كلتيهما.', few:'وضعيةً تلو الأخرى خلال ركعات {p} الـ{n} كلها.', other:'وضعيةً تلو الأخرى خلال ركعات {p} الـ{n} كلها.'}},
+    rakFard:{text:'{n}', n:{zero:'ركعة فرض', one:'ركعة فرض', two:'ركعتا فرض', few:'ركعات فرض', many:'ركعة فرض', other:'ركعة فرض'}},
+    qadaResult:{text:'{d} · {n}', d:PL_AR_DAYS('d'), n:PL_AR_PRAYERS('n')},
+    qadaOpen:{text:'{n}', n:{zero:'صلاة متبقية', one:'صلاة متبقية', two:'صلاتان متبقيتان', few:'صلوات متبقية', many:'صلاة متبقية', other:'صلاة متبقية'}},
+    qcResultUnit:{text:'{n}', n:{zero:'صلاة للقضاء', one:'صلاة للقضاء', two:'صلاتان للقضاء', few:'صلوات للقضاء', many:'صلاة للقضاء', other:'صلاة للقضاء'}},
+    qcResultDetail:{text:'{d} × {k}', d:PL_AR_DAYS('d'), k:PL_AR_PRAYERS('k')},
+    qadaApplied:{text:'تم تعيين {n} كمتبقية', n:{zero:'{n} صلاة', one:'صلاة واحدة', two:'صلاتين', few:'{n} صلوات', many:'{n} صلاة', other:'{n} صلاة'}},
+    min:{text:'{n}', n:PL_AR_MIN},
+    minBefore:{text:'قبل {n}', n:PL_AR_MIN_GEN},
+    minAfterMaghrib:{text:'{n} بعد المغرب', n:PL_AR_MIN},
+    notifReminderTitle:{text:'{p} بعد {n}', n:PL_AR_MIN_GEN}},
+  ur: {
+    arcPrayers:{text:'{n}', n:{one:'آج 5 میں سے {n} نماز کا وقت شروع ہو چکا ہے', other:'آج 5 میں سے {n} نمازوں کا وقت شروع ہو چکا ہے'}},
+    qadaResult:{text:'{d} دن · {n}', n:{one:'{n} نماز', other:'{n} نمازیں'}},
+    qadaOpen:{text:'{n}', n:{one:'نماز ابھی باقی ہے', other:'نمازیں ابھی باقی ہیں'}},
+    qcResultUnit:{text:'{n}', n:{one:'قضا نماز', other:'قضا نمازیں'}},
+    qcResultDetail:{text:'{d} دن × {k}', k:{one:'{k} نماز', other:'{k} نمازیں'}},
+    qadaApplied:{text:'{n}', n:{one:'{n} نماز بطور باقی مقرر ہو گئی', other:'{n} نمازیں بطور باقی مقرر ہو گئیں'}}},
+  ru: {
+    b_niyyaD:{text:'Сделайте в сердце намерение: {p}, {n}.', n:PL_RU_RAK},
+    wkIntroTitle:{text:'{p} · {n}', n:PL_RU_RAK},
+    wkStartSub:{text:'Положение за положением – все {n} намаза {p}.', n:PL_RU_RAK},
+    qadaResult:{text:'{d} · {n}', d:PL_RU_DAYS('d'), n:PL_RU_PRAYERS('n')},
+    qcResultUnit:{text:'{n}', n:{one:'намаз к восполнению', few:'намаза к восполнению', many:'намазов к восполнению', other:'намаза к восполнению'}},
+    qcResultDetail:{text:'{d} × {k}', d:PL_RU_DAYS('d'), k:PL_RU_PRAYERS('k')},
+    qadaApplied:{text:'{n}', n:{one:'{n} намаз отмечен к восполнению', few:'{n} намаза отмечены к восполнению', many:'{n} намазов отмечено к восполнению', other:'{n} намаза отмечено к восполнению'}}},
+  it: {
+    arcPrayers:{text:'{n}', n:{one:'Oggi è iniziato {n} orario di preghiera su 5', other:'Oggi sono iniziati {n} orari di preghiera su 5'}},
+    qadaResult:{text:'{d} · {n}', d:{one:'{d} giorno', other:'{d} giorni'}, n:{one:'{n} preghiera', other:'{n} preghiere'}},
+    qadaOpen:{text:'{n}', n:{one:'preghiera ancora da recuperare', other:'preghiere ancora da recuperare'}},
+    qcResultUnit:{text:'{n}', n:{one:'preghiera da recuperare', other:'preghiere da recuperare'}},
+    qcResultDetail:{text:'{d} × {k}', d:{one:'{d} giorno', other:'{d} giorni'}, k:{one:'{k} preghiera', other:'{k} preghiere'}},
+    qadaApplied:{text:'{n}', n:{one:'{n} preghiera impostata come da recuperare', other:'{n} preghiere impostate come da recuperare'}}}
+};
 const SURAH = {2:{de:'Al-Baqara', tr:'Bakara', en:'Al-Baqarah', es:'Al-Baqara'}, 13:{de:'Ar-Raʿd', tr:'Ra‘d', en:'Ar-Ra‘d', es:'Ar-Ra‘d'},
                20:{de:'Tā-Hā', tr:'Tâhâ', en:'Ta-Ha', es:'Ta-Ha'}, 94:{de:'Asch-Scharh', tr:'İnşirâh', en:'Ash-Sharh', es:'Ash-Sharh'}};
 const VERSES = [
@@ -1590,10 +1699,21 @@ const S = {
    survives inside the mirrored layout (like <bdi>). Real Arabic strings would not need this. */
 const iso = s => S.rtl ? '\u2068' + s + '\u2069' : s;
 function t(key, vars){
-  const s0 = (T[S.lang] && T[S.lang][key] !== undefined) ? T[S.lang][key] : (T.en[key] !== undefined ? T.en[key] : key);
+  let s0 = (T[S.lang] && T[S.lang][key] !== undefined) ? T[S.lang][key] : (T.en[key] !== undefined ? T.en[key] : key);
   if (typeof s0 !== 'string') return s0;
+  // Phase 15: Mehrzahl aus `PLURAL` – die Form nach der Zahl, die Zahl selbst kommt danach wie jeder Platzhalter.
+  const pl = vars && PLURAL[S.lang] && PLURAL[S.lang][key];
+  if (pl) {
+    const rules = new Intl.PluralRules(LOC[S.lang]);
+    s0 = Object.keys(pl).filter(k => k !== 'text' && vars[k] !== undefined).reduce((s, k) =>
+      s.split('{' + k + '}').join(pl[k][rules.select(plainNumber(vars[k]))] ?? pl[k].other), pl.text);
+  }
   return iso(vars ? s0.replace(/\{(\w+)\}/g, (m,k) => (vars[k] !== undefined ? vars[k] : m)) : s0);
 }
+/* Die Zahl hinter einem Platzhalter, auch wenn er schon mit `num()` geschrieben ist („1.825“, „۴٬۱۳۰“): nur ganze Zahlen. */
+const plainNumber = v => typeof v === 'number' ? v : Number(String(v)
+  .replace(/[٠-٩]/g, c => c.charCodeAt(0) - 0x660).replace(/[۰-۹]/g, c => c.charCodeAt(0) - 0x6F0)
+  .replace(/[০-৯]/g, c => c.charCodeAt(0) - 0x9E6).replace(/\D/g, '') || 0);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad = n => String(n).padStart(2,'0');
 const toMin = s => { const [h,m] = s.split(':').map(Number); return h*60 + m; };
@@ -1926,7 +2046,7 @@ function guidePage(ph){
       <div class="card-eyebrow"><span>${status}</span><span class="tabnum">${fmt(ph.t[p])}–${fmt(ph.t[NEXT_OF[p]])}</span></div>
       <div class="g-head"><span class="g-ic">${ic(PICON[p],24)}</span><h1 class="g-title">${name}</h1></div>
       <div class="facts">
-        <div class="fact"><b class="big">${r.n}</b><span>${t('rakFard')}</span></div>
+        <div class="fact"><b class="big">${r.n}</b><span>${t('rakFard',{n:r.n})}</span></div>
         <div class="fact"><b>${rec}</b><span>${t('recite')}</span></div>
         <div class="fact"><b>${t('sunna_' + p)}</b><span>${t('sunna')}</span></div>
       </div>
@@ -2045,7 +2165,7 @@ function qadaPage(){
           <div class="qc-fields">${field('years', t('years'), 0, 60)}${field('months', t('months'), 0, 11)}${field('days', t('days'), 0, 30)}</div></div></li>
         <li><span class="qc-n" aria-hidden="true">2</span><div class="qc-body qc-witr">${rowSwitch({id:'sw-witr', label:t('witr'), subText:t('witrSub'), on:q.witr, act:'qwitr'})}</div></li>
         <li><span class="qc-n" aria-hidden="true">3</span><div class="qc-body"><div class="qc-label">${t('qcStep3')}</div>
-          <div class="qc-result" aria-live="polite"><b class="tabnum">${num(days*keys.length)}</b><span>${t('qcResultUnit')}</span></div>
+          <div class="qc-result" aria-live="polite"><b class="tabnum">${num(days*keys.length)}</b><span>${t('qcResultUnit',{n:days*keys.length})}</span></div>
           <div class="qc-detail tabnum">${t('qcResultDetail',{d:num(days), k:keys.length})}</div></div></li>
       </ol>
       <button class="btn btn-primary qc-apply" data-act="qapply" data-fkey="qc-apply" ${days ? '' : 'disabled'}>${ic('check',18)}<span>${t('qadaApply')}</span></button>

@@ -30,12 +30,12 @@ public struct PrayerRowModel: Hashable, Sendable, Identifiable {
 
         /// Die Spanne „15:42–16:27“. Wortverbinder um den Strich halten sie in einer Zeile.
         public var range: String {
-            start.description + "\u{2060}–\u{2060}" + end.description
+            L10n.time(start) + "\u{2060}–\u{2060}" + L10n.time(end)
         }
 
         /// Der Text der Zeile aus dem String Catalog (`kerahatNow`, `kerahatRow`).
         public var text: String {
-            isActive ? L10n.kerahatNow(b: end.description) : L10n.kerahatRow(r: range)
+            isActive ? L10n.kerahatNow(b: L10n.time(end)) : L10n.kerahatRow(r: range)
         }
     }
 

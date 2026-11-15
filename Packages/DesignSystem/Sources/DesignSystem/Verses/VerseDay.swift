@@ -50,7 +50,8 @@ public struct VerseDay: Identifiable, Hashable, Sendable {
 
     /// Schreibt einen Kalendertag mit einer Vorlage von `DateFormatter`, unabhängig von der Zeitzone.
     static func format(_ day: CalendarDay, template: String, locale: Locale) -> String {
-        var calendar = Calendar(identifier: .gregorian)
+        // Der Kalender der Region, persisch auf Persisch; ein islamischer bleibt gregorianisch (Spec § 9.10).
+        var calendar = L10n.displayCalendar(for: locale)
         calendar.timeZone = .gmt
         let formatter = DateFormatter()
         formatter.calendar = calendar
@@ -79,12 +80,12 @@ extension Verse {
 
     /// Die Quelle wie `verseRef()`: „Al-Baqara 2:45“.
     public var localizedReference: String {
-        "\(localizedSurahName) \(surah):\(ayah)"
+        "\(localizedSurahName) \(L10n.number(surah)):\(L10n.number(ayah))"
     }
 
     /// Text zum Teilen und Kopieren: Arabisch, Übersetzung und Quelle, je eine Zeile (Spec § 4: „Share
     /// opens the system share sheet with Arabic, translation and reference“).
     public var shareText: String {
-        [arabic, localizedTranslation, localizedReference].joined(separator: "\n")
+        [arabic, localizedTranslation, localizedReference].filter { !$0.isEmpty }.joined(separator: "\n")
     }
 }

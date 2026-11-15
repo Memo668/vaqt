@@ -471,7 +471,8 @@ struct AppearancePage: View {
     }
 }
 
-/// Einstellungen › Sprache: Deutsch, Türkçe, English, Español (`PAGES.language`). Die Wahl wirkt sofort.
+/// Einstellungen › Sprache: die 16 Sprachen in der Reihenfolge von `LANG_NAMES` (`PAGES.language`). Die Wahl wirkt
+/// sofort, auch auf die Leserichtung.
 struct LanguagePage: View {
     @Environment(SettingsModel.self) private var model
 

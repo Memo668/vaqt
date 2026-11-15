@@ -124,7 +124,7 @@ public enum GuidePreparation: String, CaseIterable, Identifiable, Sendable {
         case .wudu: L10n.b_wuduD
         case .clean: L10n.b_cleanD
         case .qibla: L10n.b_qiblaD
-        case .niyya: L10n.b_niyyaD(p: prayer.localizedName, n: String(rakahs.count))
+        case .niyya: L10n.b_niyyaD(p: prayer.localizedName, n: rakahs.count)
         }
     }
 }

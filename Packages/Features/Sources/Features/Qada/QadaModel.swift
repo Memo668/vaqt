@@ -70,8 +70,7 @@ public final class QadaModel {
         ledger.apply(action)
         save()
         if action == .applyPeriod {
-            let count = QadaSummary.number(ledger.periodPrayers, locale: locale)
-            toast.show(L10n.qadaApplied(n: count), systemImage: QadaModel.appliedSymbol)
+            toast.show(L10n.qadaApplied(n: ledger.periodPrayers), systemImage: QadaModel.appliedSymbol)
         }
     }
 

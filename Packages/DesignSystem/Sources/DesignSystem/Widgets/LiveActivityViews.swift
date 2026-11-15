@@ -123,14 +123,14 @@ public enum LiveActivityTexts {
 
     /// „Maghrib · 16:27“ (`.la-name`).
     public static func nameAndTime(_ content: LiveActivityContent) -> String {
-        content.prayer.prayer.localizedName + " · " + content.prayerTime.description
+        content.prayer.prayer.localizedName + " · " + L10n.time(content.prayerTime)
     }
 
     /// „Asr 14:00“ und „Maghrib 16:27“ an den Enden des Balkens (`.di-ends`).
     public static func ends(_ content: LiveActivityContent) -> (start: String, end: String) {
         (
-            content.previous.prayer.localizedName + " " + content.previousTime.description,
-            content.prayer.prayer.localizedName + " " + content.prayerTime.description
+            content.previous.prayer.localizedName + " " + L10n.time(content.previousTime),
+            content.prayer.prayer.localizedName + " " + L10n.time(content.prayerTime)
         )
     }
 }
@@ -310,7 +310,7 @@ public struct LiveActivityExpandedLeading: View {
     public var body: some View {
         HStack(spacing: LiveActivityMetrics.leadGap) {
             WidgetSymbol(name: content.prayer.prayer.symbolName, box: LiveActivityMetrics.leadSymbolBox)
-            Text(content.prayerTime.description)
+            Text(L10n.time(content.prayerTime))
         }
         .font(LiveActivityMetrics.topFont)
         .foregroundStyle(LiveActivityMetrics.islandAccent)

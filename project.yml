@@ -72,12 +72,12 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         # Die Texte liegen im Paket DesignSystem. Ohne diese Liste würde iOS die App
         # nur in der Entwicklungssprache starten.
-        CFBundleLocalizations: [de, tr, en, es]
+        CFBundleLocalizations: [de, tr, en, es, fr, nl, bs, sq, ar, ur, id, ms, bn, fa, ru, it]
         UILaunchScreen: {}
         # Hochformat; die Ausrichtung auf dem iPhone Duo klärt Phase 10 (docs/OPEN-QUESTIONS.md).
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         NSSupportsLiveActivities: true
-        # Begründung im System-Dialog der Standortabfrage. Grundwert für die Info.plist; die vier
+        # Begründung im System-Dialog der Standortabfrage. Grundwert für die Info.plist; die 16
         # Sprachen stehen in App/InfoPlist.xcstrings. Beides kommt aus `T.alLocBody` im Prototyp –
         # `scripts/import-strings --check` prüft, dass dieser Wert dem deutschen Text entspricht.
         NSLocationWhenInUseUsageDescription: "Dein Standort wird nur auf diesem Gerät zur Berechnung der Gebetszeiten verwendet."
@@ -122,7 +122,7 @@ targets:
         CFBundleDisplayName: Vaqt
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
-        CFBundleLocalizations: [de, tr, en, es]
+        CFBundleLocalizations: [de, tr, en, es, fr, nl, bs, sq, ar, ur, id, ms, bn, fa, ru, it]
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
         # Die App Group, aus der Widgets und Live-Aktivität den Stand der App lesen (DesignSystem: WidgetState).

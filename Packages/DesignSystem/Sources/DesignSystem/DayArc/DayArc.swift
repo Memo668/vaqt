@@ -119,7 +119,7 @@ extension DayArc {
     /// „3 von 5 Gebetszeiten heute begonnen“; auf der Zeiten-Seite dazu die Kerahat-Zeiten, die im Bogen
     /// nur eingezeichnet sind (`kerahatArc`, Spec § 9.3).
     func accessibilityLabel(for layout: DayArcLayout) -> String {
-        let prayers = L10n.arcPrayers(n: String(layout.begunCount))
+        let prayers = L10n.arcPrayers(n: layout.begunCount)
         guard style == .home, !layout.kerahat.isEmpty else { return prayers }
         return prayers + " " + L10n.kerahatArc(list: layout.kerahatList)
     }
@@ -260,7 +260,7 @@ struct DayArcDrawing: View {
 
             // Im Widget des Sperrbildschirms stehen keine Zeiten (`times: false`).
             ForEach(metrics.showsTimes ? layout.markers : []) { marker in
-                Text(marker.time.description)
+                Text(L10n.time(marker.time))
                     .font(Typography.arcTime(
                         size: metrics.timeFontSize, isCurrent: marker.state == .current,
                         scales: metrics.timeScales, tabular: metrics.tabularTimes, typeScale: typeScale

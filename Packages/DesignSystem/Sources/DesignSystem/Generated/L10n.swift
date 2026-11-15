@@ -24,7 +24,8 @@ public enum L10n {
     /// „Zum aktuellen Gebet“
     public static var guideBack: String { text("guideBack") }
     /// „Rakʿa Fard“
-    public static var rakFard: String { text("rakFard") }
+    /// Mehrzahl nach `n` (`PLURAL` im Prototyp).
+    public static func rakFard(n: Int) -> String { text("rakFard", n) }
     /// „Rezitation“
     public static var recite: String { text("recite") }
     /// „laut“
@@ -74,7 +75,8 @@ public enum L10n {
     /// „Absicht (Niyya)“
     public static var b_niyya: String { text("b_niyya") }
     /// „Fasse im Herzen die Absicht: {p}, {n} Rakʿa.“
-    public static func b_niyyaD(p: String, n: String) -> String { text("b_niyyaD", p, n) }
+    /// Mehrzahl nach `n` (`PLURAL` im Prototyp).
+    public static func b_niyyaD(p: String, n: Int) -> String { text("b_niyyaD", p, n) }
     /// „Takbīr“
     public static var s_takbir: String { text("s_takbir") }
     /// „Hebe die Hände und sage – damit beginnt das Gebet:“
@@ -108,7 +110,8 @@ public enum L10n {
     /// „Die Anleitung zeigt den üblichen Ablauf. Einzelheiten unterscheiden sich je nach Rechtsschule – lerne das Gebet am besten mit deiner Moschee.“
     public static var guideFooter: String { text("guideFooter") }
     /// „{n} von 5 Gebetszeiten haben heute begonnen“
-    public static func arcPrayers(n: String) -> String { text("arcPrayers", n) }
+    /// Mehrzahl nach `n` (`PLURAL` im Prototyp).
+    public static func arcPrayers(n: Int) -> String { text("arcPrayers", n) }
     /// „Vers des Tages“
     public static var verseToday: String { text("verseToday") }
     /// „Letzte Tage“
@@ -142,13 +145,15 @@ public enum L10n {
     /// „Nach hanafitischer Lehre verpflichtend“
     public static var witrSub: String { text("witrSub") }
     /// „{d} Tage · {n} Gebete“
-    public static func qadaResult(d: String, n: String) -> String { text("qadaResult", d, n) }
+    /// Mehrzahl nach `d`, `n` (`PLURAL` im Prototyp).
+    public static func qadaResult(d: Int, n: Int) -> String { text("qadaResult", d, n) }
     /// „Als offen übernehmen“
     public static var qadaApply: String { text("qadaApply") }
     /// „Ersetzt die offenen Zahlen. Ein Jahr zählt 365 Tage, ein Monat 30.“
     public static var qadaApplyFooter: String { text("qadaApplyFooter") }
     /// „Gebete noch offen“
-    public static var qadaOpen: String { text("qadaOpen") }
+    /// Mehrzahl nach `n` (`PLURAL` im Prototyp).
+    public static func qadaOpen(n: Int) -> String { text("qadaOpen", n) }
     /// „Nach Gebet“
     public static var qadaByPrayer: String { text("qadaByPrayer") }
     /// „{a} von {b} nachgeholt“
@@ -168,7 +173,8 @@ public enum L10n {
     /// „Ob und wie verpasste Gebete nachzuholen sind, beantworten Gelehrte unterschiedlich. Frag im Zweifel deinen Imam.“
     public static var qadaFooter: String { text("qadaFooter") }
     /// „{n} Gebete als offen übernommen“
-    public static func qadaApplied(n: String) -> String { text("qadaApplied", n) }
+    /// Mehrzahl nach `n` (`PLURAL` im Prototyp).
+    public static func qadaApplied(n: Int) -> String { text("qadaApplied", n) }
     /// „Witr“
     public static var p_witr: String { text("p_witr") }
     /// „{x} weniger“
@@ -358,19 +364,22 @@ public enum L10n {
     /// „saisonal“
     public static var seasonal: String { text("seasonal") }
     /// „{n} Min. nach Maghrib“
-    public static func minAfterMaghrib(n: String) -> String { text("minAfterMaghrib", n) }
+    /// Mehrzahl nach `n` (`PLURAL` im Prototyp).
+    public static func minAfterMaghrib(n: Int) -> String { text("minAfterMaghrib", n) }
     /// „Minutenkorrektur“
     public static var adjustments: String { text("adjustments") }
     /// „Keine“
     public static var adjNone: String { text("adjNone") }
     /// „{n} geändert“
-    public static func adjChanged(n: String) -> String { text("adjChanged", n) }
+    /// Mehrzahl nach `n` (`PLURAL` im Prototyp).
+    public static func adjChanged(n: Int) -> String { text("adjChanged", n) }
     /// „Passe einzelne Zeiten an deine Moschee an.“
     public static var adjFooter: String { text("adjFooter") }
     /// „Zurücksetzen“
     public static var adjReset: String { text("adjReset") }
     /// „{n} Min.“
-    public static func min(n: String) -> String { text("min", n) }
+    /// Mehrzahl nach `n` (`PLURAL` im Prototyp).
+    public static func min(n: Int) -> String { text("min", n) }
     /// „{p} eine Minute früher“
     public static func adjMinus(p: String) -> String { text("adjMinus", p) }
     /// „{p} eine Minute später“
@@ -386,7 +395,8 @@ public enum L10n {
     /// „Aus“
     public static var off: String { text("off") }
     /// „{n} Min. vorher“
-    public static func minBefore(n: String) -> String { text("minBefore", n) }
+    /// Mehrzahl nach `n` (`PLURAL` im Prototyp).
+    public static func minBefore(n: Int) -> String { text("minBefore", n) }
     /// „Klang“
     public static var sound: String { text("sound") }
     /// „Systemton“
@@ -508,7 +518,8 @@ public enum L10n {
     /// „Zeit für {p} in {city}.“
     public static func notifPrayerBody(p: String, city: String) -> String { text("notifPrayerBody", p, city) }
     /// „{p} in {n} Minuten“
-    public static func notifReminderTitle(p: String, n: String) -> String { text("notifReminderTitle", p, n) }
+    /// Mehrzahl nach `n` (`PLURAL` im Prototyp).
+    public static func notifReminderTitle(p: String, n: Int) -> String { text("notifReminderTitle", p, n) }
     /// „{p} beginnt um {time} Uhr.“
     public static func notifReminderBody(p: String, time: String) -> String { text("notifReminderBody", p, time) }
     /// „jetzt“
@@ -570,7 +581,8 @@ public enum L10n {
     /// „Gebet Schritt für Schritt“
     public static var wkStart: String { text("wkStart") }
     /// „Haltung für Haltung durch alle {n} Rakʿas von {p}.“
-    public static func wkStartSub(n: String, p: String) -> String { text("wkStartSub", n, p) }
+    /// Mehrzahl nach `n` (`PLURAL` im Prototyp).
+    public static func wkStartSub(n: Int, p: String) -> String { text("wkStartSub", n, p) }
     /// „Rakʿa {r} von {n}“
     public static func wkRak(r: String, n: String) -> String { text("wkRak", r, n) }
     /// „Schritt {i} von {k}“
@@ -584,7 +596,8 @@ public enum L10n {
     /// „Fertig“
     public static var wkDone: String { text("wkDone") }
     /// „{p} · {n} Rakʿas“
-    public static func wkIntroTitle(p: String, n: String) -> String { text("wkIntroTitle", p, n) }
+    /// Mehrzahl nach `n` (`PLURAL` im Prototyp).
+    public static func wkIntroTitle(p: String, n: Int) -> String { text("wkIntroTitle", p, n) }
     /// „Nimm die Gebetswaschung vor und stell dich in Richtung Qibla. Fasse im Herzen die Absicht für {p}. Dann geht es los.“
     public static func wkIntroBody(p: String) -> String { text("wkIntroBody", p) }
     /// „Lies al-Fātiha, danach eine weitere Sure.“
@@ -622,9 +635,11 @@ public enum L10n {
     /// „Ergebnis“
     public static var qcStep3: String { text("qcStep3") }
     /// „Gebete nachzuholen“
-    public static var qcResultUnit: String { text("qcResultUnit") }
+    /// Mehrzahl nach `n` (`PLURAL` im Prototyp).
+    public static func qcResultUnit(n: Int) -> String { text("qcResultUnit", n) }
     /// „{d} Tage × {k} Gebete“
-    public static func qcResultDetail(d: String, k: String) -> String { text("qcResultDetail", d, k) }
+    /// Mehrzahl nach `d`, `k` (`PLURAL` im Prototyp).
+    public static func qcResultDetail(d: Int, k: Int) -> String { text("qcResultDetail", d, k) }
     /// „Zurück zu heute“
     public static var backToToday: String { text("backToToday") }
     /// „Vorheriger Tag“

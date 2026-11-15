@@ -80,7 +80,7 @@ public struct QadaCalculatorCard: View {
     /// Ein Schritt mit seiner Nummer im getönten Kreis (`.qc-steps > li`, `.qc-n`).
     private func step(_ number: Int, @ViewBuilder content: () -> some View) -> some View {
         HStack(alignment: .top, spacing: QadaCalculatorMetrics.numberGap) {
-            Text(String(number))
+            Text(L10n.number(number))
                 .font(.system(size: QadaCalculatorMetrics.numberFontSize, weight: .bold, design: .rounded))
                 .foregroundStyle(Palette.accent)
                 .frame(width: QadaCalculatorMetrics.numberSize, height: QadaCalculatorMetrics.numberSize)
@@ -166,7 +166,7 @@ public struct QadaCalculatorCard: View {
     private var result: some View {
         let size = QadaCalculatorMetrics.resultSize * min(max(typeScale, 0), QadaCalculatorMetrics.valueMaxScale)
         let number = QadaSummary.number(ledger.periodPrayers)
-        let unit = Text(L10n.qcResultUnit)
+        let unit = Text(L10n.qcResultUnit(n: ledger.periodPrayers))
             .textStyle(.subheadline, lineHeight: QadaCalculatorMetrics.labelLineHeight)
             .foregroundStyle(Palette.textSecondary)
         let value = Text(number)
@@ -189,7 +189,7 @@ public struct QadaCalculatorCard: View {
                 }
             }
             .accessibilityElement(children: .combine)
-            Text(L10n.qcResultDetail(d: QadaSummary.number(ledger.periodDays), k: String(ledger.prayers.count)))
+            Text(L10n.qcResultDetail(d: ledger.periodDays, k: ledger.prayers.count))
                 .textStyle(.footnote, lineHeight: QadaCalculatorMetrics.labelLineHeight)
                 .monospacedDigit()
                 .foregroundStyle(Palette.textSecondary)

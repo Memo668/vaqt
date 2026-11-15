@@ -1,7 +1,7 @@
 // scripts/import-strings.swift
 //
-// Liest das Objekt `T` (alle App-Texte, DE/TR/EN/ES) und die Verse (`VERSES`, `SURAH`) aus
-// design/prayer-times-prototype.html und erzeugt daraus
+// Liest das Objekt `T` (alle App-Texte in 16 Sprachen, Spec § 9.10), die Mehrzahlformen (`PLURAL`) und die
+// Verse (`VERSES`, `SURAH`) aus design/prayer-times-prototype.html und erzeugt daraus
 //
 //   • Packages/DesignSystem/Sources/DesignSystem/Resources/Localizable.xcstrings
 //   • Packages/DesignSystem/Sources/DesignSystem/Generated/L10n.swift
@@ -24,6 +24,13 @@
 //   • Platzhalter `{name}` werden zu `%@`; hat ein Text mehrere, zu `%1$@`, `%2$@` …
 //     Die Reihenfolge der Argumente ist die des ersten Auftretens (DE, dann TR, EN, ES).
 //   • Listen (z. B. `dirs`) werden zu `dirs.0`, `dirs.1` …
+//   • Mehrzahl (seit Phase 15): Hat ein Text in `PLURAL` Formen für eine Zahl, wird diese Zahl im Katalog zu
+//     einer Plural-Variante (`%#@n@` mit `substitutions`, Format `lld`) und in `L10n` zu einem `Int`. Sprachen
+//     ohne Eintrag bekommen den Text aus `T` mit `%lld`; fehlt die Zahl dort ganz (z. B. `qcResultUnit`), eine
+//     Variante mit nur `other`.
+//   • Die zwölf Sprachen ab FR sind KI-Entwürfe (15.11.2026): Status `needs_review` („Needs Review“ in Xcode).
+//   • Übersetzungen der Verse und Namen der Suren gibt es nur in DE/TR/EN/ES. Die übrigen Sprachen bekommen den
+//     englischen Platzhalter, Arabisch keine Übersetzung – der Vers selbst steht darüber (Spec § 9.10).
 //   • Quellsprache des Katalogs ist Deutsch.
 //   • Die Info.plist braucht jeden ihrer Texte zusätzlich als Grundwert. Der steht in project.yml und
 //     muss dem deutschen Text entsprechen; das Skript prüft das, schreibt project.yml aber nicht um.
@@ -38,7 +45,28 @@ func fail(_ message: String) -> Never {
     exit(1)
 }
 
-let languages = ["de", "tr", "en", "es"]
+/// Die Sprachen der App in der Reihenfolge von `T` und `LANG_NAMES` im Prototyp (Spec § 9.10).
+let languages = ["de", "tr", "en", "es", "fr", "nl", "bs", "sq", "ar", "ur", "id", "ms", "bn", "fa", "ru", "it"]
+
+/// Die zwölf Sprachen vom 15.11.2026: KI-Entwürfe, vor dem App Store von Muttersprachlern zu prüfen. Ihre Texte
+/// stehen im Katalog mit dem Status `needs_review`.
+let draftLanguages: Set<String> = ["fr", "nl", "bs", "sq", "ar", "ur", "id", "ms", "bn", "fa", "ru", "it"]
+
+/// Status eines Textes im Katalog.
+func state(for language: String) -> String {
+    draftLanguages.contains(language) ? "needs_review" : "translated"
+}
+
+/// Die Kategorien der Mehrzahl je Sprache nach CLDR (ganze Zahlen). `other` ist immer dabei und Pflicht.
+let pluralCategories: [String: Set<String>] = [
+    "de": ["one", "other"], "tr": ["one", "other"], "en": ["one", "other"], "es": ["one", "many", "other"],
+    "fr": ["one", "many", "other"], "nl": ["one", "other"], "bs": ["one", "few", "other"], "sq": ["one", "other"],
+    "ar": ["zero", "one", "two", "few", "many", "other"], "ur": ["one", "other"], "id": ["other"], "ms": ["other"],
+    "bn": ["one", "other"], "fa": ["one", "other"], "ru": ["one", "few", "many", "other"],
+    "it": ["one", "many", "other"],
+]
+/// Reihenfolge der Kategorien, wie Xcode sie zeigt.
+let categoryOrder = ["zero", "one", "two", "few", "many", "other"]
 
 /// Ein Text als Zeichenkette in doppelten Anführungszeichen, wie Swift und YAML sie schreiben.
 func literalString(_ text: String) -> String {
@@ -155,36 +183,61 @@ func textPatches(in source: String) -> String {
 }
 let patches = textPatches(in: html)
 
-/// Sprachen, die der Prototyp schon hat, die App aber erst mit Phase 15 bekommt (Spec § 9.10). Ihre
-/// Texte übergeht der Import bis dahin.
-let laterLanguages = ["fr", "nl", "bs", "sq", "ar", "ur", "id", "ms", "bn", "fa", "ru", "it"]
-
 // MARK: - Auswerten (Reihenfolge der Schlüssel bleibt erhalten)
 
 let context = JSContext()!
 var scriptError: String?
 context.exceptionHandler = { _, exception in scriptError = exception?.toString() }
+// `PLURAL` steht in den Nachträgen (Phase 15); ohne ihn gibt es keine Mehrzahlformen.
 let script = """
 (function () {
   var T = \(literal);
   \(patches)
-  return JSON.stringify(Object.keys(T).map(function (lang) {
-    return [lang, Object.keys(T[lang]).map(function (key) { return [key, T[lang][key]]; })];
-  }));
+  return JSON.stringify({
+    texts: Object.keys(T).map(function (lang) {
+      return [lang, Object.keys(T[lang]).map(function (key) { return [key, T[lang][key]]; })];
+    }),
+    plural: typeof PLURAL === 'undefined' ? {} : PLURAL
+  });
 })()
 """
 guard let json = context.evaluateScript(script)?.toString(), scriptError == nil,
-      let evaluated = try? JSONSerialization.jsonObject(with: Data(json.utf8)) as? [[Any]]
+      let result = try? JSONSerialization.jsonObject(with: Data(json.utf8)) as? [String: Any],
+      let evaluated = result["texts"] as? [[Any]],
+      let pluralObject = result["plural"] as? [String: [String: [String: Any]]]
 else {
     fail("`T` ließ sich nicht auswerten: \(scriptError ?? "unbekannter Fehler")")
 }
 
 let foundLanguages = evaluated.compactMap { $0.first as? String }
-guard foundLanguages.filter({ !laterLanguages.contains($0) }) == languages else {
-    fail("Erwartete Sprachen \(languages) (dazu später \(laterLanguages)), gefunden \(foundLanguages)")
+guard foundLanguages == languages else {
+    fail("Erwartete Sprachen \(languages), gefunden \(foundLanguages)")
 }
-let skippedLanguages = foundLanguages.filter { laterLanguages.contains($0) }
-let parsed = evaluated.filter { block in (block.first as? String).map(languages.contains) ?? false }
+let parsed = evaluated
+
+/// Ein Eintrag aus `PLURAL`: der Text mit `{n}` für die Form und je Zahl ihre Formen (Kategorie → Text).
+struct PluralEntry {
+    let text: String
+    let forms: [String: [String: String]]
+}
+
+/// `PLURAL` als Schlüssel → Sprache → Eintrag.
+var plurals: [String: [String: PluralEntry]] = [:]
+for (language, keys) in pluralObject {
+    guard languages.contains(language) else { fail("PLURAL.\(language): unbekannte Sprache") }
+    for (key, value) in keys {
+        guard let text = value["text"] as? String else { fail("PLURAL.\(language).\(key): `text` fehlt") }
+        var forms: [String: [String: String]] = [:]
+        for (name, raw) in value where name != "text" {
+            guard let categories = raw as? [String: String] else {
+                fail("PLURAL.\(language).\(key).\(name): erwartet werden Formen je Kategorie")
+            }
+            forms[name] = categories
+        }
+        guard !forms.isEmpty else { fail("PLURAL.\(language).\(key): keine Formen") }
+        plurals[key, default: [:]][language] = PluralEntry(text: text, forms: forms)
+    }
+}
 
 /// Ein Eintrag aus `T`: entweder ein Text oder eine Liste von Texten.
 enum Value {
@@ -226,27 +279,58 @@ func placeholders(in text: String) -> [String] {
     }
 }
 
-/// `{name}` → `%@` bzw. `%1$@`; ein wörtliches `%` wird zu `%%`.
-func formatString(_ text: String, names: [String], positional: Bool) -> String {
+/// Wie eine Zahl oder ein Text im Format steht.
+enum Slot {
+    case text           // `%@`
+    case number         // `%lld` – eine Zahl, die eine Mehrzahl steuert
+    case variant        // `%#@name@` – die Plural-Variante dieser Zahl
+    case own            // `%arg` – die eigene Zahl in einer Form der Variante
+}
+
+/// `{name}` → `%@`, `%lld`, `%#@name@` oder `%arg`, je nach `slot`; mit `positional` als `%1$@` usw. Ein
+/// wörtliches `%` wird zu `%%`.
+func formatString(_ text: String, names: [String], positional: Bool, slot: (String) -> Slot = { _ in .text }) -> String {
     var result = text.replacingOccurrences(of: "%", with: "%%")
     for (index, name) in names.enumerated() {
-        result = result.replacingOccurrences(of: "{\(name)}", with: positional ? "%\(index + 1)$@" : "%@")
+        let position = positional ? "\(index + 1)$" : ""
+        let replacement: String
+        switch slot(name) {
+        case .text: replacement = "%" + position + "@"
+        case .number: replacement = "%" + position + "lld"
+        case .variant: replacement = "%#@" + name + "@"
+        case .own: replacement = "%arg"
+        }
+        result = result.replacingOccurrences(of: "{\(name)}", with: replacement)
     }
     return result
 }
 
 // MARK: - Einträge für Katalog und Swift-Datei
 
+/// Eine Plural-Variante im Katalog: die Zahl `name` an Stelle `argNum`, ihre Formen je Kategorie.
+struct Substitution {
+    let name: String
+    let argNum: Int
+    let forms: [(category: String, value: String)]
+}
+
+/// Der Text einer Sprache im Katalog, mit seinen Plural-Varianten.
+struct Localization {
+    let value: String
+    let substitutions: [Substitution]
+}
+
 struct CatalogEntry {
     let key: String
-    let names: [String]                 // Argumente in fester Reihenfolge
-    let texts: [String: String]         // Sprache → fertiger Text
-    let source: [String: String]        // Sprache → Text wie im Prototyp
-    let note: String?                   // Kommentar im Katalog, z. B. TODO(placeholder) bei den Versen
+    let names: [String]                     // Argumente in fester Reihenfolge
+    let counted: Set<String>                // davon Zahlen mit Mehrzahl (`Int` in L10n)
+    let localizations: [String: Localization]
+    let source: [String: String]            // Sprache → Text wie in `T`
+    let note: String?                       // Kommentar im Katalog, z. B. TODO(placeholder) bei den Versen
 }
 
 enum Accessor {
-    case text(key: String, names: [String], german: String)
+    case text(key: String, names: [String], counted: Set<String>, german: String)
     case list(key: String, count: Int, german: [String])
 }
 
@@ -283,7 +367,9 @@ func reviewNote(for key: String) -> String? {
     return nil
 }
 
-func makeEntry(key: String, perLanguage: [String: String], note: String? = nil) -> CatalogEntry {
+func makeEntry(
+    key: String, perLanguage: [String: String], plural: [String: PluralEntry] = [:], note: String? = nil
+) -> CatalogEntry {
     var names: [String] = []
     var repeated = false
     for language in languages {
@@ -298,12 +384,87 @@ func makeEntry(key: String, perLanguage: [String: String], note: String? = nil) 
             notable.append("\(language).\(key): \(text)")
         }
     }
-    let positional = names.count > 1 || repeated
-    var texts: [String: String] = [:]
-    for (language, text) in perLanguage {
-        texts[language] = names.isEmpty ? text : formatString(text, names: names, positional: positional)
+    // Zahlen mit Mehrzahl: alle, für die eine Sprache in `PLURAL` Formen hat. Fehlt eine in `T` (die Zahl
+    // steht dort nicht im Text, z. B. `qcResultUnit`), kommt sie als letztes Argument dazu.
+    var counted: [String] = []
+    for language in languages {
+        for name in (plural[language]?.forms.keys).map({ $0.sorted() }) ?? [] where !counted.contains(name) {
+            counted.append(name)
+        }
     }
-    return CatalogEntry(key: key, names: names, texts: texts, source: perLanguage, note: note)
+    for name in counted where !names.contains(name) { names.append(name) }
+    let positional = names.count > 1 || repeated
+
+    for (language, entry) in plural {
+        guard let source = perLanguage[language] else { fail("PLURAL.\(language).\(key): Text fehlt in `T`") }
+        let inText = placeholders(in: entry.text)
+        var used = Set(inText)
+        for (name, forms) in entry.forms {
+            guard inText.filter({ $0 == name }).count == 1 else {
+                fail("PLURAL.\(language).\(key): {\(name)} muss genau einmal in `text` stehen")
+            }
+            guard forms["other"] != nil else { fail("PLURAL.\(language).\(key).\(name): `other` fehlt") }
+            for (category, form) in forms {
+                guard pluralCategories[language]?.contains(category) == true else {
+                    fail("PLURAL.\(language).\(key).\(name): Kategorie `\(category)` gibt es in \(language) nicht")
+                }
+                used.formUnion(placeholders(in: form))
+            }
+        }
+        let unknown = used.subtracting(names)
+        guard unknown.isEmpty else { fail("PLURAL.\(language).\(key): unbekannte Platzhalter \(unknown.sorted())") }
+        let lost = Set(placeholders(in: source)).subtracting(used)
+        guard lost.isEmpty else { fail("PLURAL.\(language).\(key): Platzhalter aus `T` fehlen: \(lost.sorted())") }
+    }
+
+    var localizations: [String: Localization] = [:]
+    for (language, text) in perLanguage {
+        guard !names.isEmpty else {
+            localizations[language] = Localization(value: text, substitutions: [])
+            continue
+        }
+        if let entry = plural[language] {
+            // Mit Varianten stehen die übrigen Argumente immer mit Stelle, auch in den Formen.
+            let value = formatString(entry.text, names: names, positional: true) { name in
+                entry.forms[name] != nil ? .variant : (counted.contains(name) ? .number : .text)
+            }
+            let substitutions = names.enumerated().compactMap { index, name -> Substitution? in
+                guard let forms = entry.forms[name] else { return nil }
+                let ordered = categoryOrder.compactMap { category in
+                    forms[category].map { form in
+                        (category, formatString(form, names: names, positional: true) { other in
+                            other == name ? .own : (counted.contains(other) ? .number : .text)
+                        })
+                    }
+                }
+                return Substitution(name: name, argNum: index + 1, forms: ordered)
+            }
+            localizations[language] = Localization(value: value, substitutions: substitutions)
+        } else {
+            // Ohne Eintrag: die Zahl als `%lld`; steht sie nicht im Text, eine Variante nur mit `other`.
+            let inText = Set(placeholders(in: text))
+            let absent = counted.filter { !inText.contains($0) }
+            let needsVariant = !absent.isEmpty
+            let value: String
+            var substitutions: [Substitution] = []
+            if needsVariant {
+                guard absent.count == 1, counted.count == 1, names.count == 1 else {
+                    fail("\(language).\(key): Ohne Eintrag in `PLURAL` darf höchstens eine Zahl fehlen")
+                }
+                value = "%#@\(absent[0])@"
+                substitutions = [Substitution(name: absent[0], argNum: 1, forms: [("other", formatString(text, names: [], positional: false))])]
+            } else {
+                value = formatString(text, names: names, positional: positional) { counted.contains($0) ? .number : .text }
+            }
+            localizations[language] = Localization(value: value, substitutions: substitutions)
+        }
+    }
+    return CatalogEntry(key: key, names: names, counted: Set(counted), localizations: localizations,
+                        source: perLanguage, note: note)
+}
+
+for key in plurals.keys.sorted() where table[key] == nil {
+    fail("PLURAL.\(key): den Text gibt es in `T` nicht")
 }
 
 for key in walkReviewKeys.union(guideReviewKeys).sorted() where table[key] == nil {
@@ -321,11 +482,12 @@ for key in order {
         }
     }
     if listValues.isEmpty {
-        let entry = makeEntry(key: key, perLanguage: textValues, note: reviewNote(for: key))
+        let entry = makeEntry(key: key, perLanguage: textValues, plural: plurals[key] ?? [:], note: reviewNote(for: key))
         entries.append(entry)
-        accessors.append(.text(key: key, names: entry.names, german: textValues["de"] ?? ""))
+        accessors.append(.text(key: key, names: entry.names, counted: entry.counted, german: textValues["de"] ?? ""))
     } else {
         guard textValues.isEmpty else { fail("\(key): in einer Sprache Text, in einer anderen Liste") }
+        guard plurals[key] == nil else { fail("PLURAL.\(key): Listen haben keine Mehrzahl") }
         let counts = Set(listValues.values.map(\.count))
         guard counts.count == 1, let count = counts.first else { fail("\(key): Listen sind verschieden lang") }
         for index in 0..<count {
@@ -394,17 +556,30 @@ for (index, object) in verseObjects.enumerated() {
 }
 guard !verses.isEmpty else { fail("`VERSES` ist leer") }
 
+/// Namen der Suren und Übersetzungen der Verse gibt es nur in DE/TR/EN/ES. Die übrigen Sprachen bekommen wie
+/// `verseRef()`/`verseTr()` im Prototyp den englischen Text; Arabisch keine Übersetzung, der Vers steht ja da
+/// (Spec § 9.10, entschieden am 15.11.2026).
+func withEnglishFallback(_ texts: [String: String], arabic: String? = nil) -> [String: String] {
+    guard let english = texts["en"] else { fail("Englischer Text fehlt für den Rückfall: \(texts)") }
+    var result = texts
+    for language in languages where result[language] == nil {
+        result[language] = language == "ar" ? (arabic ?? english) : english
+    }
+    return result
+}
+let fallbackNote = "Die Sprachen ohne eigenen Text haben den englischen, Arabisch beim Vers keinen (Spec § 9.10)."
+
 for surah in surahNames {
     entries.append(makeEntry(
-        key: "surah_\(surah.number)", perLanguage: surah.names,
-        note: "Name der Sure \(surah.number) aus `SURAH` im Prototyp."
+        key: "surah_\(surah.number)", perLanguage: withEnglishFallback(surah.names),
+        note: "Name der Sure \(surah.number) aus `SURAH` im Prototyp. " + fallbackNote
     ))
 }
 for verse in verses {
     entries.append(makeEntry(
-        key: "verse_\(verse.surah)_\(verse.ayah)", perLanguage: verse.translations,
+        key: "verse_\(verse.surah)_\(verse.ayah)", perLanguage: withEnglishFallback(verse.translations, arabic: ""),
         note: "TODO(placeholder): Übersetzung von \(verse.surah):\(verse.ayah) aus `VERSES` im Prototyp – ein Platzhalter, "
-            + "die lizenzierte Übersetzung fehlt noch (Spec § 6.12)."
+            + "die lizenzierte Übersetzung fehlt noch (Spec § 6.12). " + fallbackNote
     ))
 }
 
@@ -413,14 +588,33 @@ for verse in verses {
 var strings: [String: Any] = [:]
 for entry in entries {
     var localizations: [String: Any] = [:]
-    for (language, text) in entry.texts {
-        localizations[language] = ["stringUnit": ["state": "translated", "value": text]]
+    for (language, localization) in entry.localizations {
+        let state = state(for: language)
+        var unit: [String: Any] = ["stringUnit": ["state": state, "value": localization.value]]
+        if !localization.substitutions.isEmpty {
+            var substitutions: [String: Any] = [:]
+            for substitution in localization.substitutions {
+                var plural: [String: Any] = [:]
+                for (category, value) in substitution.forms {
+                    plural[category] = ["stringUnit": ["state": state, "value": value]]
+                }
+                substitutions[substitution.name] = [
+                    "argNum": substitution.argNum, "formatSpecifier": "lld", "variations": ["plural": plural],
+                ]
+            }
+            unit["substitutions"] = substitutions
+        }
+        localizations[language] = unit
     }
     var item: [String: Any] = ["extractionState": "manual", "localizations": localizations]
     var notes: [String] = []
     if !entry.names.isEmpty {
         let list = entry.names.enumerated().map { "\($0.offset + 1) = \($0.element)" }.joined(separator: ", ")
-        notes.append("Argumente: \(list)")
+        notes.append("Argumente: \(list).")
+        let counted = entry.names.filter(entry.counted.contains)
+        if !counted.isEmpty {
+            notes.append("Mehrzahl nach \(counted.joined(separator: ", ")) aus `PLURAL` im Prototyp (Spec § 9.10).")
+        }
     }
     if let note = entry.note {
         notes.append(note)
@@ -452,7 +646,7 @@ for (plistKey, textKey) in infoPlistTexts {
     var localizations: [String: Any] = [:]
     for language in languages {
         guard let text = entry.source[language] else { fail("\(language).\(textKey) fehlt für die Info.plist") }
-        localizations[language] = ["stringUnit": ["state": "translated", "value": text]]
+        localizations[language] = ["stringUnit": ["state": state(for: language), "value": text]]
     }
     infoPlistStrings[plistKey] = [
         "comment": "Aus `T.\(textKey)` im Prototyp.",
@@ -514,14 +708,19 @@ public enum L10n {
 var seenIdentifiers: Set<String> = []
 for accessor in accessors {
     switch accessor {
-    case .text(let key, let names, let german):
+    case .text(let key, let names, let counted, let german):
         let name = identifier(key)
         guard seenIdentifiers.insert(name).inserted else { fail("Doppelter Swift-Name für Schlüssel \(key)") }
         swift += "    /// „\(comment(german))“\n"
+        let countedNames = names.filter(counted.contains)
+        if !countedNames.isEmpty {
+            swift += "    /// Mehrzahl nach `\(countedNames.joined(separator: "`, `"))` (`PLURAL` im Prototyp).\n"
+        }
         if names.isEmpty {
             swift += "    public static var \(name): String { text(\(literalString(key))) }\n"
         } else {
-            let parameters = names.map { "\(identifier($0)): String" }.joined(separator: ", ")
+            let parameters = names.map { "\(identifier($0)): \(counted.contains($0) ? "Int" : "String")" }
+                .joined(separator: ", ")
             let values = names.map(identifier).joined(separator: ", ")
             swift += "    public static func \(name)(\(parameters)) -> String { text(\(literalString(key)), \(values)) }\n"
         }
@@ -610,19 +809,19 @@ guard projectProblems.isEmpty else {
 // MARK: - Bericht
 
 let perLanguage = languages.map { language in
-    "\(language.uppercased()) \(entries.filter { $0.texts[language] != nil }.count)"
+    "\(language.uppercased()) \(entries.filter { $0.localizations[language] != nil }.count)"
 }.joined(separator: ", ")
+let withPlural = entries.filter { !$0.counted.isEmpty }
 let withArguments = entries.filter { !$0.names.isEmpty }
 let allNames = Set(withArguments.flatMap(\.names)).sorted().joined(separator: ", ")
 
 print(checkOnly ? "String Catalog ist aktuell." : "String Catalog geschrieben.")
 print("  Schlüssel im Prototyp: \(order.count)  →  Einträge im Katalog: \(entries.count)  (\(perLanguage))")
 print("  Texte mit Argumenten: \(withArguments.count)  (Namen: \(allNames))")
+print("  Mehrzahl: \(withPlural.count) Texte (\(withPlural.map(\.key).joined(separator: ", ")))")
+print("  Entwurf (needs_review): \(languages.filter(draftLanguages.contains).joined(separator: ", "))")
 print("  Info.plist: \(infoPlistTexts.map { pair in "\(pair.plistKey) ← \(pair.textKey)" }.joined(separator: ", "))")
 print("  Verse: \(verses.count) mit \(surahNames.count) Suren  →  \(verseListURL.lastPathComponent)")
-if !skippedLanguages.isEmpty {
-    print("  Übergangen bis Phase 15: \(skippedLanguages.joined(separator: ", "))")
-}
 if !missing.isEmpty {
     print("  FEHLEND (\(missing.count)): \(missing.joined(separator: ", "))")
 }

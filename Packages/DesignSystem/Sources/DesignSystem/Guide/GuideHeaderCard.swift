@@ -70,7 +70,7 @@ public struct GuideHeaderCard: View {
     private var walk: some View {
         VStack(spacing: 0) {
             PrimaryButton(L10n.wkStart, compactSymbol: GuideHeaderMetrics.walkSymbol, action: onWalk)
-            Text(L10n.wkStartSub(n: String(header.rakahs.count), p: header.prayer.localizedName))
+            Text(L10n.wkStartSub(n: header.rakahs.count, p: header.prayer.localizedName))
                 .textStyle(.footnote, lineHeight: GuideHeaderMetrics.walkSubLineHeight)
                 .foregroundStyle(Palette.textSecondary)
                 .multilineTextAlignment(.center)
@@ -88,7 +88,7 @@ public struct GuideHeaderCard: View {
             ? AnyLayout(VStackLayout(alignment: .leading, spacing: FactTile.spacing))
             : AnyLayout(HStackLayout(alignment: .top, spacing: FactTile.spacing))
         return layout {
-            FactTile(value: String(header.rakahs.count), caption: L10n.rakFard, isProminent: true)
+            FactTile(value: L10n.number(header.rakahs.count), caption: L10n.rakFard(n: header.rakahs.count), isProminent: true)
             FactTile(value: header.rakahs.recitation.localizedName, caption: L10n.recite)
             FactTile(value: header.prayer.localizedSunna, caption: L10n.sunna)
         }

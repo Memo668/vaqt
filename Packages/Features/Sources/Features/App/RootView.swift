@@ -52,6 +52,9 @@ public struct RootView: View {
             // Wo die senkrechte Leiste steht (iPhone Duo), für die obere Leiste und die Abstände der Seiten.
             .readsVerticalBarEdge()
             .environment(\.locale, L10n.locale)
+            // Arabisch, Urdu und Persisch von rechts nach links – auch wenn das Gerät eine andere Sprache spricht,
+            // und umgekehrt (Spec § 9.10).
+            .environment(\.layoutDirection, L10n.layoutDirection)
             .preferredColorScheme(settings.appearance.colorScheme)
     }
 }

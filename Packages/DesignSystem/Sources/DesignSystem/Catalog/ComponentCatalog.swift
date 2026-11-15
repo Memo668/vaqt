@@ -411,7 +411,7 @@ struct CatalogCards: View {
             Card {
                 VStack(alignment: .leading, spacing: Spacing.x4) {
                     HStack(alignment: .top, spacing: FactTile.spacing) {
-                        FactTile(value: "4", caption: L10n.rakFard, isProminent: true)
+                        FactTile(value: L10n.number(4), caption: L10n.rakFard(n: 4), isProminent: true)
                         FactTile(value: L10n.recSilent, caption: L10n.recite)
                         FactTile(value: L10n.sunna_asr, caption: L10n.sunna)
                     }

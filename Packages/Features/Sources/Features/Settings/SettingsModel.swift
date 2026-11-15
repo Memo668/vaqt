@@ -128,7 +128,7 @@ public final class SettingsModel {
         let isha: String
         switch method.isha {
         case .angle(let degrees): isha = number(degrees) + "°"
-        case .minutesAfterMaghrib(let minutes): isha = L10n.minAfterMaghrib(n: String(minutes))
+        case .minutesAfterMaghrib(let minutes): isha = L10n.minAfterMaghrib(n: minutes)
         }
         let text = "\(L10n.p_fajr) \(number(method.fajrAngle))° · \(L10n.p_isha) \(isha)"
         return method.isSeasonal ? text + " · " + L10n.seasonal : text
@@ -193,7 +193,7 @@ public final class SettingsModel {
     /// „Keine“ oder „2 geändert“.
     public var adjustmentsValue: String {
         let count = settings.calculation.adjustments.changedCount
-        return count == 0 ? L10n.adjNone : L10n.adjChanged(n: String(count))
+        return count == 0 ? L10n.adjNone : L10n.adjChanged(n: count)
     }
 
     public func adjustment(of prayer: Prayer) -> Int {
@@ -206,14 +206,14 @@ public final class SettingsModel {
     }
 
     static func adjustmentText(_ minutes: Int) -> String {
-        if minutes > 0 { return "+" + L10n.min(n: String(minutes)) }
-        if minutes < 0 { return "\u{2212}" + L10n.min(n: String(-minutes)) }
-        return L10n.min(n: "0")
+        if minutes > 0 { return "+" + L10n.min(n: minutes) }
+        if minutes < 0 { return "\u{2212}" + L10n.min(n: -minutes) }
+        return L10n.min(n: 0)
     }
 
     /// Die Uhrzeit des Ereignisses heute, mit Korrektur, z. B. „05:16“; ohne Zeiten leer.
     public func todayTime(of prayer: Prayer) -> String {
-        today.timeline?.today.clockTime(of: prayer).description ?? ""
+        today.timeline.map { L10n.time($0.today.clockTime(of: prayer)) } ?? ""
     }
 
     /// Rechnet die Zeiten, falls die Zeiten-Seite das noch nicht getan hat – etwa wenn die Einstellungen
@@ -261,7 +261,7 @@ public final class SettingsModel {
 
     /// „10 Min. vorher“ oder „Aus“.
     public static func leadText(_ minutes: Int) -> String {
-        minutes == 0 ? L10n.off : L10n.minBefore(n: String(minutes))
+        minutes == 0 ? L10n.off : L10n.minBefore(n: minutes)
     }
 
     public var reminderValue: String { Self.leadText(settings.notifications.reminderMinutes) }

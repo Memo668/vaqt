@@ -129,7 +129,7 @@ public struct Compass: View {
                     .font(.system(size: CompassMetrics.cardinalFontSize * CompassMetrics.scale, weight: .semibold))
                     .foregroundStyle(point == .north ? Palette.red : Palette.label)
             } else {
-                Text(String(label.degrees))
+                Text(L10n.number(label.degrees))
                     .font(.system(size: CompassMetrics.numberFontSize * CompassMetrics.scale, weight: .medium))
                     .foregroundStyle(Palette.textSecondary)
             }

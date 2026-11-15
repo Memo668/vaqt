@@ -51,8 +51,8 @@ public struct GuideHeader: Hashable, Sendable {
     /// „14:00–16:27“: Beginn und Ende in der Zeitzone des Ortes. Wortverbinder um den Strich halten die
     /// Spanne in einer Zeile.
     static func windowText(_ window: Guide.Window, timeZone: TimeZone) -> String {
-        ClockTime(window.start, in: timeZone).description + "\u{2060}–\u{2060}"
-            + ClockTime(window.end, in: timeZone).description
+        L10n.time(ClockTime(window.start, in: timeZone)) + "\u{2060}–\u{2060}"
+            + L10n.time(ClockTime(window.end, in: timeZone))
     }
 
     /// Die fünf Teile der Auswahl; das automatische Gebet trägt den Punkt.

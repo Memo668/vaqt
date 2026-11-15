@@ -62,8 +62,8 @@ struct SettingsModelTests {
         #expect(model.highLatitudeValue == L10n.hlAngle)
         #expect(model.adjustmentsValue == L10n.adjNone)
         #expect(model.perPrayerValue == L10n.ofN(n: "5"))
-        #expect(model.reminderValue == L10n.minBefore(n: "10"))
-        #expect(model.liveActivityValue == L10n.minBefore(n: "30"))
+        #expect(model.reminderValue == L10n.minBefore(n: 10))
+        #expect(model.liveActivityValue == L10n.minBefore(n: 30))
         #expect(model.soundValue == L10n.soundAdhan)
         #expect(model.appearanceValue == L10n.apSystem)
         #expect(model.showsKerahat)
@@ -80,7 +80,7 @@ struct SettingsModelTests {
         #expect(model.methodSubtitle(.mwl) == degrees("18", "17°"))
         #expect(model.methodSubtitle(.egyptian) == degrees("19,5", "17,5°"))
         #expect(model.methodSubtitle(.tehran) == degrees("17,7", "14°"))
-        #expect(model.methodSubtitle(.ummAlQura) == degrees("18,5", L10n.minAfterMaghrib(n: "90")))
+        #expect(model.methodSubtitle(.ummAlQura) == degrees("18,5", L10n.minAfterMaghrib(n: 90)))
         #expect(model.methodSubtitle(.moonsighting) == degrees("18", "18°") + " · " + L10n.seasonal)
     }
 
@@ -151,21 +151,21 @@ struct SettingsModelTests {
         model.stepAdjustment(of: .fajr, by: 1)
         model.stepAdjustment(of: .fajr, by: 1)
         #expect(model.adjustment(of: .fajr) == 2)
-        #expect(model.adjustmentText(of: .fajr) == "+" + L10n.min(n: "2"))
+        #expect(model.adjustmentText(of: .fajr) == "+" + L10n.min(n: 2))
         #expect(model.todayTime(of: .fajr) == "05:18")
-        #expect(model.adjustmentsValue == L10n.adjChanged(n: "1"))
+        #expect(model.adjustmentsValue == L10n.adjChanged(n: 1))
         #expect(model.hasAdjustments)
 
         for _ in 0..<40 {
             model.stepAdjustment(of: .isha, by: -1)
         }
         #expect(model.adjustment(of: .isha) == -30)
-        #expect(model.adjustmentText(of: .isha) == "\u{2212}" + L10n.min(n: "30"))
-        #expect(model.adjustmentsValue == L10n.adjChanged(n: "2"))
+        #expect(model.adjustmentText(of: .isha) == "\u{2212}" + L10n.min(n: 30))
+        #expect(model.adjustmentsValue == L10n.adjChanged(n: 2))
 
         model.resetAdjustments()
         #expect(!model.hasAdjustments)
-        #expect(model.adjustmentText(of: .fajr) == L10n.min(n: "0"))
+        #expect(model.adjustmentText(of: .fajr) == L10n.min(n: 0))
         #expect(model.todayTime(of: .fajr) == "05:16")
     }
 
@@ -206,11 +206,11 @@ struct SettingsModelTests {
     func notifications() {
         let model = fixture().model
         model.setReminder(5)
-        #expect(model.reminderValue == L10n.minBefore(n: "5"))
+        #expect(model.reminderValue == L10n.minBefore(n: 5))
         model.setReminder(0)
         #expect(model.reminderValue == L10n.off)
         model.setLiveActivity(60)
-        #expect(model.liveActivityValue == L10n.minBefore(n: "60"))
+        #expect(model.liveActivityValue == L10n.minBefore(n: 60))
         model.setSound(.system)
         #expect(model.soundValue == L10n.soundSystem)
         #expect(model.settings.notifications == NotificationPreferences(
@@ -281,14 +281,14 @@ struct SettingsModelTests {
     @Test("Vorlauf 0 heißt „Aus“, sonst „… Min. vorher“")
     func leadText() {
         #expect(SettingsModel.leadText(0) == L10n.off)
-        #expect(SettingsModel.leadText(15) == L10n.minBefore(n: "15"))
+        #expect(SettingsModel.leadText(15) == L10n.minBefore(n: 15))
     }
 
     @Test("die Korrektur schreibt + und das echte Minuszeichen wie adjText()", arguments: [
         (3, "+"), (-3, "\u{2212}"), (0, ""),
     ])
     func adjustmentText(minutes: Int, sign: String) {
-        #expect(SettingsModel.adjustmentText(minutes) == sign + L10n.min(n: String(abs(minutes))))
+        #expect(SettingsModel.adjustmentText(minutes) == sign + L10n.min(n: abs(minutes)))
     }
 }
 

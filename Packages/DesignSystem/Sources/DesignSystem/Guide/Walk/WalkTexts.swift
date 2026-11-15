@@ -55,7 +55,7 @@ extension GuideWalk {
 
     /// Titel der Startseite: „Dhuhr · 4 Rakʿas“ (`wkIntroTitle`).
     public var localizedIntroTitle: String {
-        L10n.wkIntroTitle(p: prayer.localizedName, n: String(rakahs.count))
+        L10n.wkIntroTitle(p: prayer.localizedName, n: rakahs.count)
     }
 
     /// Text der Startseite: Waschung, Qibla, Absicht (`wkIntroBody`).

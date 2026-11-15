@@ -240,7 +240,9 @@ struct SettingsStoreTests {
             let defaults = try #require(UserDefaults(suiteName: name))
             defaults.set("tr", forKey: SettingsStore.Key.language)
             #expect(SettingsStore(storage: .userDefaults(suiteName: name)).language == .tr)
-            defaults.set("fr", forKey: SettingsStore.Key.language)
+            defaults.set("fa", forKey: SettingsStore.Key.language)
+            #expect(SettingsStore(storage: .userDefaults(suiteName: name)).language == .fa)
+            defaults.set("ja", forKey: SettingsStore.Key.language)
             #expect(SettingsStore(storage: .userDefaults(suiteName: name)).language == nil)
         }
     }

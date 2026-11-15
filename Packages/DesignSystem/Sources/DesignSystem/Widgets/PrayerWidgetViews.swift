@@ -47,7 +47,7 @@ enum WidgetTexts {
 
     /// Uhrzeit eines Ereignisses am Ort, z. B. „16:27“ (`fmt()`).
     static func time(of event: DayPhase.Event, in snapshot: WidgetSnapshot) -> String {
-        ClockTime(event.date, in: snapshot.list.timeZone).description
+        L10n.time(ClockTime(event.date, in: snapshot.list.timeZone))
     }
 
     /// „Ischa 18:17“ – Name und Uhrzeit.
@@ -301,7 +301,7 @@ struct WidgetPrayerList: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
             Spacer(minLength: 0)
-            Text(snapshot.list.clockTime(of: prayer).description)
+            Text(L10n.time(snapshot.list.clockTime(of: prayer)))
         }
         .font(WidgetMetrics.listFont(scale, isNext: isNext))
         .tracking(WidgetMetrics.tracking)

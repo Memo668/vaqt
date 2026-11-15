@@ -4,12 +4,12 @@ import Testing
 @testable import DesignSystem
 
 /// Prüft den gebauten String Catalog: Die Texte müssen im Paket-Bundle liegen und in allen
-/// vier Sprachen vollständig sein. Ob der Katalog zum Prototyp passt, prüft
+/// 16 Sprachen vollständig sein (Spec § 9.10). Ob der Katalog zum Prototyp passt, prüft
 /// `scripts/import-strings --check`.
 @Suite("String Catalog")
 struct L10nTests {
 
-    static let languages = ["de", "tr", "en", "es"]
+    static let languages = AppLanguage.allCases.map(\.rawValue)
 
     /// Das Teil-Bundle einer Sprache – unabhängig von der Sprache des Simulators.
     private func bundle(for language: String) throws -> Bundle {
@@ -28,6 +28,10 @@ struct L10nTests {
         ("en", "en_US", "en_US"),
         ("en", "de_DE", "en_GB"),
         ("es", "it_IT", "es_ES"),
+        ("ar", "de_DE", "ar"),
+        ("ar", "ar_SA", "ar_SA"),
+        ("fa", "en_US", "fa_IR"),
+        ("bn", "de_DE", "bn_BD"),
         ("xx", "it_IT", "de_DE"),
     ])
     func locale(language: String, device: String, expected: String) {
@@ -35,20 +39,26 @@ struct L10nTests {
         #expect(locale.identifier == expected)
     }
 
-    @Test("die Sprache der Texte ist eine der vier der App")
+    @Test("die Sprache der Texte ist eine der 16 der App, jede mit ihrer Region aus `LOC`")
     func currentLocale() {
-        #expect(L10n.regions.keys.sorted() == ["de", "en", "es", "tr"])
-        #expect(["de", "tr", "en", "es"].contains(L10n.locale.language.languageCode?.identifier ?? ""))
+        #expect(L10n.regions.keys.sorted() == Self.languages.sorted())
+        #expect(Self.languages.contains(L10n.locale.language.languageCode?.identifier ?? ""))
     }
 
     @Test("die Sprachen der App heißen wie LANG_NAMES im Prototyp")
     func languageNames() {
-        #expect(AppLanguage.allCases.map(\.rawValue) == ["de", "tr", "en", "es"])
-        #expect(AppLanguage.allCases.map(\.name) == ["Deutsch", "Türkçe", "English", "Español"])
+        #expect(AppLanguage.allCases.map(\.rawValue) == [
+            "de", "tr", "en", "es", "fr", "nl", "bs", "sq", "ar", "ur", "id", "ms", "bn", "fa", "ru", "it",
+        ])
+        #expect(AppLanguage.allCases.map(\.name) == [
+            "Deutsch", "Türkçe", "English", "Español", "Français", "Nederlands", "Bosanski", "Shqip", "العربية",
+            "اردو", "Bahasa Indonesia", "Bahasa Melayu", "বাংলা", "فارسی", "Русский", "Italiano",
+        ])
     }
 
     @Test("eine in der App gewählte Sprache liest ihre Texte aus ihrem Teil-Bundle", arguments: [
-        (AppLanguage.de, "Fadschr"), (.tr, "İmsak"), (.en, "Fajr"), (.es, "Fajr"),
+        (AppLanguage.de, "Fadschr"), (.tr, "İmsak"), (.en, "Fajr"), (.es, "Fajr"), (.bs, "Sabah"), (.ar, "الفجر"),
+        (.id, "Subuh"), (.bn, "ফজর"), (.fa, "صبح"), (.ru, "Фаджр"),
     ])
     func chosenLanguageBundle(language: AppLanguage, fajr: String) {
         let bundle = L10n.textBundle(for: language)
@@ -89,6 +99,10 @@ struct L10nTests {
         ("tr", "Sabır ve namaz ile yardım dileyin.", "Bakara", "İnşirâh"),
         ("en", "Seek help through patience and prayer.", "Al-Baqarah", "Ash-Sharh"),
         ("es", "Buscad ayuda en la paciencia y en la oración.", "Al-Baqara", "Ash-Sharh"),
+        // Ohne eigene Übersetzung: Englisch; Arabisch ohne Übersetzung, der Vers steht ja da (Spec § 9.10).
+        ("fr", "Seek help through patience and prayer.", "Al-Baqarah", "Ash-Sharh"),
+        ("ru", "Seek help through patience and prayer.", "Al-Baqarah", "Ash-Sharh"),
+        ("ar", "", "Al-Baqarah", "Ash-Sharh"),
     ])
     func verseTexts(language: String, translation: String, surah2: String, surah94: String) throws {
         #expect(try text("verse_2_45", in: language) == translation)
@@ -125,13 +139,17 @@ struct L10nTests {
         ("tr", ["Namaz", "Ayetler", "Kaza"]),
         ("en", ["Prayers", "Verses", "Make Up"]),
         ("es", ["Oraciones", "Versículos", "Recuperar"]),
+        ("fr", ["Prières", "Versets", "Rattrapage"]),
+        ("ar", ["الصلوات", "الآيات", "القضاء"]),
+        ("bn", ["নামাজ", "আয়াত", "কাযা"]),
+        ("ru", ["Намазы", "Аяты", "Восполнение"]),
     ])
     func tabTitles(language: String, expected: [String]) throws {
         let actual = try ["navPrayers", "navVerses", "navQada"].map { try text($0, in: language) }
         #expect(actual == expected)
     }
 
-    @Test("der Hinweis für Geräte ohne Kompass steht in allen vier Sprachen", arguments: [
+    @Test("der Hinweis für Geräte ohne Kompass steht in DE/TR/EN/ES wie im Prototyp", arguments: [
         ("de", "Kein Kompass verfügbar"),
         ("tr", "Pusula kullanılamıyor"),
         ("en", "No compass available"),
@@ -176,5 +194,82 @@ struct L10nTests {
         let body = L10n.notifPrayerBody(p: "Asr", city: "Berlin")
         #expect(body.contains("Asr") && body.contains("Berlin"))
         #expect(!body.contains("%"))
+    }
+
+    // MARK: - Phase 15: Mehrzahl, Ziffern, Leserichtung, Kalender
+
+    /// Ein Text wie `L10n.text` in einer Sprache und Region – ohne die Wahl der App zu ändern.
+    private func formatted(_ key: String, _ language: AppLanguage, locale: String, _ arguments: any CVarArg...) -> String {
+        L10n.text(key, arguments: arguments, bundle: L10n.textBundle(for: language), locale: Locale(identifier: locale))
+            .replacingOccurrences(of: "\u{2068}", with: "").replacingOccurrences(of: "\u{2069}", with: "")
+    }
+
+    @Test("Mehrzahl im Rechner: „{d} Tage × {k} Gebete“ nach den Regeln der Sprache", arguments: [
+        (AppLanguage.de, "de_DE", 1, "1 Tag × 5 Gebete"), (.de, "de_DE", 2, "2 Tage × 5 Gebete"),
+        (.en, "en_GB", 1, "1 day × 5 prayers"), (.fr, "fr_FR", 1, "1 jour × 5 prières"),
+        (.ru, "ru_RU", 1, "1 день × 5 намазов"), (.ru, "ru_RU", 2, "2 дня × 5 намазов"),
+        (.ru, "ru_RU", 5, "5 дней × 5 намазов"), (.ru, "ru_RU", 11, "11 дней × 5 намазов"),
+        (.ru, "ru_RU", 21, "21 день × 5 намазов"), (.ru, "ru_RU", 22, "22 дня × 5 намазов"),
+        (.bs, "bs_BA", 1, "1 dan × 5 namaza"), (.bs, "bs_BA", 3, "3 dana × 5 namaza"),
+        (.bs, "bs_BA", 21, "21 dan × 5 namaza"),
+        (.ar, "ar", 1, "يوم واحد × 5 صلوات"), (.ar, "ar", 2, "يومان × 5 صلوات"), (.ar, "ar", 3, "3 أيام × 5 صلوات"),
+        (.ar, "ar", 11, "11 يومًا × 5 صلوات"), (.ar, "ar", 100, "100 يوم × 5 صلوات"),
+        (.tr, "tr_TR", 1, "1 gün × 5 namaz"), (.fa, "fa_IR", 2, "۲ روز × ۵ نماز"),
+    ])
+    func pluralCalculator(language: AppLanguage, locale: String, days: Int, expected: String) {
+        #expect(formatted("qcResultDetail", language, locale: locale, days, 5) == expected)
+    }
+
+    @Test("Mehrzahl ohne Zahl im Text: die Einheit unter der großen Zahl", arguments: [
+        (AppLanguage.de, "de_DE", 30, "Gebete nachzuholen"), (.ru, "ru_RU", 30, "намазов к восполнению"),
+        (.ru, "ru_RU", 24, "намаза к восполнению"), (.ar, "ar", 5, "صلوات للقضاء"), (.ar, "ar", 30, "صلاة للقضاء"),
+        (.tr, "tr_TR", 30, "kaza namazı"),
+    ])
+    func pluralUnit(language: AppLanguage, locale: String, count: Int, expected: String) {
+        #expect(formatted("qcResultUnit", language, locale: locale, count) == expected)
+    }
+
+    @Test("Arabisch: der Dual bei zwei Rakʿas", arguments: [
+        (2, "ركعتا فرض"), (3, "ركعات فرض"), (4, "ركعات فرض"),
+    ])
+    func arabicDual(rakahs: Int, expected: String) {
+        #expect(formatted("rakFard", .ar, locale: "ar", rakahs) == expected)
+        #expect(formatted("wkIntroTitle", .ar, locale: "ar", "الظهر", 2) == "الظهر · ركعتان")
+    }
+
+    @Test("Ziffern wie das System: Persisch ۰–۹, Arabisch nach Region, sonst 0–9", arguments: [
+        ("de_DE", "14:25"), ("fa_IR", "۱۴:۲۵"), ("fa_AF", "۱۴:۲۵"), ("ar_SA", "١٤:٢٥"), ("ar_EG", "١٤:٢٥"),
+        ("ar", "14:25"), ("ar_DE", "14:25"), ("ur_PK", "14:25"), ("bn_BD", "14:25"), ("ru_RU", "14:25"),
+    ])
+    func digits(locale: String, expected: String) {
+        #expect(LocalizedDigits.apply(to: "14:25", locale: Locale(identifier: locale)) == expected)
+    }
+
+    @Test("die Ziffern im Text folgen der Region, auch die festen wie „von 5“")
+    func digitsInText() {
+        #expect(formatted("ofN", .fa, locale: "fa_IR", "3") == "۳ از ۶")
+        #expect(formatted("ofN", .ar, locale: "ar_SA", "3") == "٣ من ٦")
+        #expect(formatted("ofN", .ar, locale: "ar", "3") == "3 من 6")
+        #expect(formatted("qcResultDetail", .ar, locale: "ar_SA", 21, 5) == "٢١ يومًا × ٥ صلوات")
+    }
+
+    @Test("Arabisch, Urdu und Persisch laufen von rechts nach links, die übrigen von links nach rechts")
+    func rightToLeft() {
+        #expect(AppLanguage.allCases.filter(\.isRightToLeft) == [.ar, .ur, .fa])
+    }
+
+    @Test("Kalender der Datumszeile: der der Region, ein islamischer bleibt gregorianisch", arguments: [
+        ("de_DE", Calendar.Identifier.gregorian), ("fa_IR", .persian), ("fa_AF", .persian), ("ar_SA", .gregorian),
+        ("ar_EG", .gregorian), ("ar", .gregorian), ("ur_PK", .gregorian),
+    ])
+    func displayCalendar(locale: String, expected: Calendar.Identifier) {
+        #expect(L10n.displayCalendar(for: Locale(identifier: locale)).identifier == expected)
+    }
+
+    @Test("Uhrzeiten und Zahlen der App in den Ziffern der Sprache – auf dem Simulator Deutsch, also 0–9")
+    func timeAndNumber() throws {
+        let time = try #require(ClockTime("05:16"))
+        #expect(L10n.time(time) == LocalizedDigits.apply(to: "05:16", locale: L10n.locale))
+        #expect(L10n.number(12) == LocalizedDigits.apply(to: "12", locale: L10n.locale))
     }
 }

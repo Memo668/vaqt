@@ -185,7 +185,7 @@ struct GuideComponentTests {
     @Test("die Absicht nennt das Gebet und die Zahl seiner Rakʿas")
     func intention() throws {
         let rakahs = try #require(Guide.rakahs(for: .asr))
-        #expect(GuidePreparation.niyya.localizedText(prayer: .asr, rakahs: rakahs) == L10n.b_niyyaD(p: L10n.p_asr, n: "4"))
+        #expect(GuidePreparation.niyya.localizedText(prayer: .asr, rakahs: rakahs) == L10n.b_niyyaD(p: L10n.p_asr, n: 4))
         #expect(GuidePreparation.wudu.localizedText(prayer: .asr, rakahs: rakahs) == L10n.b_wuduD)
     }
 

@@ -19,24 +19,31 @@ struct PrayerLiveActivity: Widget {
                 .activityBackgroundTint(Palette.LiveActivity.background)
                 .activitySystemActionForegroundColor(.white)
                 .environment(\.locale, L10n.locale)
+                .environment(\.layoutDirection, L10n.layoutDirection)
         } dynamicIsland: { context in
             let _ = Self.applyLanguage()
             return DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
                     LiveActivityExpandedLeading(content: context.state)
+                        .environment(\.layoutDirection, L10n.layoutDirection)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
                     LiveActivityExpandedTrailing(content: context.state)
+                        .environment(\.layoutDirection, L10n.layoutDirection)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     LiveActivityExpandedBottom(content: context.state, isStale: context.isStale)
+                        .environment(\.layoutDirection, L10n.layoutDirection)
                 }
             } compactLeading: {
                 LiveActivityCompactLeading(content: context.state)
+                    .environment(\.layoutDirection, L10n.layoutDirection)
             } compactTrailing: {
                 LiveActivityCompactTrailing(content: context.state, isStale: context.isStale)
+                    .environment(\.layoutDirection, L10n.layoutDirection)
             } minimal: {
                 LiveActivityMinimal(content: context.state)
+                    .environment(\.layoutDirection, L10n.layoutDirection)
             }
             .keylineTint(LiveActivityMetrics.islandAccent)
             .contentMargins(.horizontal, LiveActivityMetrics.expandedInset, for: .expanded)

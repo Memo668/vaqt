@@ -305,6 +305,13 @@ struct TodayModelTests {
         ("tr_TR", "10 Kasım Salı", "30 Cemaziyelevvel 1448"),
         ("en_GB", "Tuesday 10 November", "30 Jumada I 1448"),
         ("es_ES", "martes, 10 de noviembre", "30 de jumada I de 1448"),
+        // Phase 15: Persisch mit persischem Kalender und Ziffern; in Saudi-Arabien ist der Kalender der Region selbst
+        // Hijri, die erste Zeile bleibt deshalb gregorianisch (Spec § 9.10).
+        ("fa_IR", "سه‌شنبه ۱۹ آبان", "۳۰ جمادی‌الاول ۱۴۴۸"),
+        ("ar_SA", "الثلاثاء، ١٠ نوفمبر", "٣٠ جمادى الأولى، ١٤٤٨"),
+        ("ar", "الثلاثاء، 10 نوفمبر", "30 جمادى الأولى، 1448"),
+        ("ru_RU", "вторник, 10 ноября", "30 джумад-уль-авваль 1448\u{202F}г"),
+        ("bn_BD", "মঙ্গলবার, 10 নভেম্বর", "30 জমাদিউল আউয়াল, 1448"),
     ])
     func dates(locale: String, gregorian: String, hijri: String) async {
         let fixture = make(locale: Locale(identifier: locale))

@@ -136,7 +136,7 @@ public final class QiblaModel {
     }
 
     private static func turnText(_ turn: QiblaAlignment.Turn, degrees: Int) -> String {
-        "\(turn == .left ? L10n.turnLeft : L10n.turnRight) \(degrees)°"
+        L10n.digits("\(turn == .left ? L10n.turnLeft : L10n.turnRight) \(degrees)°")
     }
 
     /// Die Zeile unter dem Status: „Qibla 137° SO · 4.130 km bis zur Kaaba“, in Mekka der Hinweis

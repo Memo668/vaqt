@@ -207,7 +207,7 @@ private struct PlayButtonStyle: ButtonStyle {
 public enum AdhanTime {
     public static func text(_ seconds: TimeInterval) -> String {
         let whole = Int(max(0, seconds).rounded(.down))
-        return "\(whole / 60):" + String(format: "%02d", whole % 60)
+        return L10n.digits("\(whole / 60):" + String(format: "%02d", whole % 60))
     }
 }
 

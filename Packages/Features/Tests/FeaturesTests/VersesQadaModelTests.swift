@@ -220,7 +220,7 @@ struct QadaModelTests {
         model.perform(.applyPeriod)
         #expect(model.ledger.openCount == 2725)
         #expect(model.ledger.doneCount == 0)
-        #expect(toast.message?.text == L10n.qadaApplied(n: "2.725"))
+        #expect(toast.message?.text == L10n.qadaApplied(n: 2725))
         #expect(toast.message?.systemImage == "checkmark")
     }
 

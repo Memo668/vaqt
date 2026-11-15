@@ -5,6 +5,24 @@
       "comment" : "Aus `T.alLocBody` im Prototyp.",
       "extractionState" : "manual",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "يُستخدم موقعك على هذا الجهاز فقط لحساب مواقيت الصلاة."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "আপনার অবস্থান শুধু এই ডিভাইসে নামাজের সময় হিসাব করতে ব্যবহার করা হয়।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vaša lokacija koristi se samo na ovom uređaju za izračunavanje namaskih vakata."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -23,10 +41,64 @@
             "value" : "Tu ubicación solo se usa en este dispositivo para calcular los horarios."
           }
         },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "موقعیت شما فقط روی همین دستگاه برای محاسبه اوقات نماز استفاده می‌شود."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Votre position est utilisée uniquement sur cet appareil pour calculer les heures de prière."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Lokasi Anda hanya digunakan di perangkat ini untuk menghitung jadwal salat."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "La tua posizione viene usata solo su questo dispositivo per calcolare gli orari di preghiera."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Lokasi anda hanya digunakan pada peranti ini untuk mengira waktu solat."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Je locatie wordt alleen op dit apparaat gebruikt om de gebedstijden te berekenen."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ваша геопозиция используется только на этом устройстве для расчёта времени намаза."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vendndodhja juaj përdoret vetëm në këtë pajisje për të llogaritur vaktet e namazit."
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Konumun yalnızca bu cihazda namaz vakitlerini hesaplamak için kullanılır."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "آپ کا مقام صرف اسی آلے پر اوقاتِ نماز کا حساب لگانے کے لیے استعمال ہوتا ہے۔"
           }
         }
       }

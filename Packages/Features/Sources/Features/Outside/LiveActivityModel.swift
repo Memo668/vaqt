@@ -27,7 +27,7 @@ public struct L10nLiveActivityWording: LiveActivityWording {
     public init() {}
 
     public func alertTitle(_ prayer: Prayer, minutes: Int) -> String {
-        L10n.notifReminderTitle(p: prayer.localizedName, n: String(minutes))
+        L10n.notifReminderTitle(p: prayer.localizedName, n: minutes)
     }
 
     public func alertBody(_ prayer: Prayer, time: ClockTime) -> String {

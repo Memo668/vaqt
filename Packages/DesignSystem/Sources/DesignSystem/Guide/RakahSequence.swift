@@ -36,7 +36,7 @@ public struct RakahSequence: View {
     /// Eine Rakʿa (`.rak-unit`): Kreis mit Nummer, darunter laut oder leise.
     private func unit(number: Int, isAloud: Bool) -> some View {
         VStack(spacing: RakahMetrics.unitGap) {
-            Text(String(number))
+            Text(L10n.number(number))
                 .font(.system(size: RakahMetrics.numberSize, weight: .bold, design: .rounded))
                 .foregroundStyle(isAloud ? Palette.onAccent : Palette.accent)
                 .frame(width: RakahMetrics.dotSize, height: RakahMetrics.dotSize)

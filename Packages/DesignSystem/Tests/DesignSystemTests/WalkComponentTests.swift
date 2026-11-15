@@ -113,7 +113,7 @@ struct WalkComponentTests {
     @Test("Startseite und Name des Vollbilds nennen das Gebet")
     func introTexts() throws {
         let maghrib = try walk(.maghrib)
-        #expect(maghrib.localizedIntroTitle == L10n.wkIntroTitle(p: L10n.p_maghrib, n: "3"))
+        #expect(maghrib.localizedIntroTitle == L10n.wkIntroTitle(p: L10n.p_maghrib, n: 3))
         #expect(maghrib.localizedIntroBody == L10n.wkIntroBody(p: L10n.p_maghrib))
         #expect(maghrib.localizedDialogLabel == "\(L10n.wkStart): \(L10n.p_maghrib)")
     }

@@ -42,7 +42,7 @@ struct CatalogSettings: View {
             .padding(.bottom, InsetGroup<EmptyView>.spacingBelow)
             InsetGroup(footer: L10n.adjFooter) {
                 AdjustmentRow(
-                    L10n.p_fajr, time: "05:16", value: L10n.min(n: "0"), canDecrement: true, canIncrement: true,
+                    L10n.p_fajr, time: "05:16", value: L10n.min(n: 0), canDecrement: true, canIncrement: true,
                     decrementLabel: L10n.adjMinus(p: L10n.p_fajr), incrementLabel: L10n.adjPlus(p: L10n.p_fajr),
                     onDecrement: {}, onIncrement: {}
                 )

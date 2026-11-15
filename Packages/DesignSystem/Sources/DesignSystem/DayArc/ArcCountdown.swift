@@ -9,7 +9,7 @@ public enum CountdownFormat {
     public static func digital(_ remaining: TimeInterval) -> String {
         let total = max(0, Int(remaining.rounded(.down)))
         let hours = total / 3600, minutes = total % 3600 / 60, seconds = total % 60
-        return hours > 0 ? "\(hours):\(pad(minutes)):\(pad(seconds))" : "\(minutes):\(pad(seconds))"
+        return L10n.digits(hours > 0 ? "\(hours):\(pad(minutes)):\(pad(seconds))" : "\(minutes):\(pad(seconds))")
     }
 
     /// In Worten wie „2 Std. 2 Min.“ – auf volle Minuten aufgerundet, mindestens eine. So liest
@@ -24,7 +24,7 @@ public enum CountdownFormat {
         if minutes > 0 || hours == 0 {
             parts.append("\(minutes) \(L10n.mShort)")
         }
-        return parts.joined(separator: " ")
+        return L10n.digits(parts.joined(separator: " "))
     }
 
     private static func pad(_ value: Int) -> String {
