@@ -16,9 +16,25 @@ public struct AdhanTimesSource: PrayerTimesSource {
     public init() {}
 
     public func times(on day: CalendarDay, at place: Place, settings: CalculationSettings) -> DayTimes? {
+        guard settings.highLatitudeRule == .manual else {
+            return adhanTimes(on: day, at: place, settings: settings)
+        }
+        return manualTimes(on: day, at: place, settings: settings)
+    }
+
+    /// Die Zeiten aus Adhan Swift; mit `angles` statt der Winkel der Methode.
+    private func adhanTimes(
+        on day: CalendarDay, at place: Place, settings: CalculationSettings, angles: TwilightAngles? = nil
+    ) -> DayTimes? {
         let coordinates = Adhan.Coordinates(latitude: place.coordinates.latitude, longitude: place.coordinates.longitude)
         let date = DateComponents(year: day.year, month: day.month, day: day.day)
-        let parameters = Self.parameters(for: settings.effectiveMethod(for: place), settings: settings)
+        var parameters = Self.parameters(for: settings.effectiveMethod(for: place), settings: settings)
+        if let angles {
+            parameters.fajrAngle = Double(angles.fajr)
+            parameters.ishaAngle = Double(angles.isha)
+            // Ischa aus dem Winkel, nicht aus einem festen Abstand zu Maghrib (Umm al-Qura: 90 Minuten).
+            parameters.ishaInterval = 0
+        }
         guard let times = PrayerTimes(coordinates: coordinates, date: date, calculationParameters: parameters) else {
             return nil
         }
@@ -26,6 +42,33 @@ public struct AdhanTimesSource: PrayerTimesSource {
             day: day, timeZone: place.timeZone,
             fajr: times.fajr, sunrise: times.sunrise, dhuhr: times.dhuhr,
             asr: times.asr, maghrib: times.maghrib, isha: times.isha
+        )
+    }
+
+    /// Die Regel „Manuelle Winkel“ (Spec § 9.12; entschieden am 15.11.2026: „Nur in hellen Nächten“).
+    ///
+    /// Die Methode rechnet wie bei „Winkelbasiert“. Nur wenn diese Regel Fadschr oder Ischa des Tages
+    /// bestimmt – die Sonne erreicht den Winkel der Methode nicht, oder erst nach der Grenze der Regel –,
+    /// gilt für diese Zeit der eigene Winkel, wieder mit dem Nachtanteil Winkel ÷ 60 als sichere Grenze
+    /// (`.twilightAngle`). Ob die Regel greift, zeigt der Vergleich mit „Nachtmitte“, der weitesten
+    /// Grenze, wie in `usesHighLatitudeRule`. Im Winter ändert sich deshalb nichts. Moonsighting rechnet mit
+    /// eigenen Grenzen und übergeht auch diese Regel.
+    private func manualTimes(on day: CalendarDay, at place: Place, settings: CalculationSettings) -> DayTimes? {
+        var byMethod = settings
+        byMethod.highLatitudeRule = .angle
+        guard let base = adhanTimes(on: day, at: place, settings: byMethod) else { return nil }
+        guard settings.effectiveMethod(for: place) != .moonsighting else { return base }
+
+        var widest = byMethod
+        widest.highLatitudeRule = .middle
+        guard let reference = adhanTimes(on: day, at: place, settings: widest),
+              let manual = adhanTimes(on: day, at: place, settings: byMethod, angles: settings.manualAngles)
+        else { return base }
+        return DayTimes(
+            day: day, timeZone: place.timeZone,
+            fajr: base.fajr != reference.fajr ? manual.fajr : base.fajr,
+            sunrise: base.sunrise, dhuhr: base.dhuhr, asr: base.asr, maghrib: base.maghrib,
+            isha: base.isha != reference.isha ? manual.isha : base.isha
         )
     }
 
@@ -41,12 +84,17 @@ public struct AdhanTimesSource: PrayerTimesSource {
     ///   an der Nachtmitte zusammenfallen.
     ///
     /// Die Minutenkorrekturen bleiben außen vor: Sie verschieben die Zeiten, ändern aber nichts daran, ob
-    /// sie geschätzt sind. Moonsighting rechnet mit eigenen jahreszeitlichen Grenzen und übergeht die
+    /// sie geschätzt sind. Bei „Manuelle Winkel“ gilt die Probe für „Winkelbasiert“ – dann gelten die
+    /// eigenen Winkel. Moonsighting rechnet mit eigenen jahreszeitlichen Grenzen und übergeht die
     /// Regel (docs/OPEN-QUESTIONS.md).
     public func usesHighLatitudeRule(on day: CalendarDay, at place: Place, settings: CalculationSettings) -> Bool {
         guard settings.effectiveMethod(for: place) != .moonsighting else { return false }
         var chosen = settings
         chosen.adjustments = MinuteAdjustments()
+        // „Manuelle Winkel“ gelten genau dann, wenn „Winkelbasiert“ greift (`manualTimes`).
+        if chosen.highLatitudeRule == .manual {
+            chosen.highLatitudeRule = .angle
+        }
         guard let today = times(on: day, at: place, settings: chosen) else { return false }
 
         if chosen.highLatitudeRule == .middle {
@@ -68,7 +116,7 @@ public struct AdhanTimesSource: PrayerTimesSource {
         var parameters = preset(for: method)
         parameters.madhab = settings.asr == .hanafi ? .hanafi : .shafi
         parameters.highLatitudeRule = switch settings.highLatitudeRule {
-        case .angle: .twilightAngle
+        case .angle, .manual: .twilightAngle
         case .seventh: .seventhOfTheNight
         case .middle: .middleOfTheNight
         }

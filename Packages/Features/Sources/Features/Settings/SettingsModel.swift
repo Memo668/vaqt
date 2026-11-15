@@ -167,6 +167,20 @@ public final class SettingsModel {
         updateCalculation { $0.highLatitudeRule = rule }
     }
 
+    /// Der eigene Dämmerungswinkel für Fadschr oder Ischa als Text: „15°“.
+    public func manualAngleText(of prayer: Prayer) -> String {
+        "\(settings.calculation.manualAngles[prayer] ?? TwilightAngles.standard)°"
+    }
+
+    public func canStepManualAngle(of prayer: Prayer, by delta: Int) -> Bool {
+        settings.calculation.manualAngles.canStep(prayer, by: delta)
+    }
+
+    /// Ein Schritt der Stepper unter „Dämmerungswinkel“ (`hldeg`), 10 bis 20°.
+    public func stepManualAngle(of prayer: Prayer, by delta: Int) {
+        updateCalculation { $0.manualAngles.step(prayer, by: delta) }
+    }
+
     /// Fußzeile der Seite „Hohe Breitengrade“; bei Moonsighting mit dem Hinweis, dass die Regel nicht
     /// wirkt (entschieden mit dem Plan für Phase 7).
     public var highLatitudeFooter: String {
@@ -348,6 +362,7 @@ extension HighLatitudeRule {
         case .angle: L10n.hlAngleSub
         case .seventh: L10n.hlSeventhSub
         case .middle: L10n.hlMiddleSub
+        case .manual: L10n.hlManualSub
         }
     }
 }

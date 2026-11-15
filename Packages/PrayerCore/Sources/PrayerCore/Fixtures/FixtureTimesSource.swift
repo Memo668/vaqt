@@ -5,7 +5,7 @@ import Foundation
 /// Die Mock-Zeiten des Prototyps als Quelle – für `-debugFixtureTimes`.
 ///
 /// Entspricht `todayTimes()` im Prototyp: Die Zeiten hängen nur von der Stadt, der Asr-Regel, der Regel
-/// für hohe Breiten und den Minutenkorrekturen ab. Methode und Datum ändern nichts – jeder Tag zeigt
+/// für hohe Breiten (mit `-debugHighLatitude` auch den eigenen Winkeln) und den Minutenkorrekturen ab. Methode und Datum ändern nichts – jeder Tag zeigt
 /// dieselben Uhrzeiten, so wie der Prototyp seinen Zeitstrahl aus einem einzigen Tag baut.
 public struct FixtureTimesSource: PrayerTimesSource {
 
@@ -20,7 +20,7 @@ public struct FixtureTimesSource: PrayerTimesSource {
     /// Die Zeiten der Fixture-Stadt, die an den Koordinaten von `place` liegt. Für jeden anderen Ort
     /// gilt Berlin, die Stadt, in der der Prototyp startet. Die Uhrzeiten gelten in der Zeitzone des Ortes.
     public func times(on day: CalendarDay, at place: Place, settings: CalculationSettings) -> DayTimes? {
-        guard let raw = rawTimes(at: place, rule: settings.highLatitudeRule) else { return nil }
+        guard let raw = rawTimes(at: place, settings: settings) else { return nil }
         let zone = place.timeZone
 
         // Minuten seit Mitternacht samt Korrektur, wie in `todayTimes()`.
@@ -65,13 +65,25 @@ public struct FixtureTimesSource: PrayerTimesSource {
         return FixtureTimes.cities.first { $0.coordinates == place.coordinates } ?? FixtureTimes.cities[0]
     }
 
-    /// Die Uhrzeiten vor den Korrekturen – `d` in `todayTimes()`.
-    private func rawTimes(at place: Place, rule: HighLatitudeRule) -> FixtureTimes.Times? {
+    /// Die Uhrzeiten vor den Korrekturen – `raw` in `todayTimes()`. „Manuelle Winkel“ wirken wie im
+    /// Prototyp nur mit `-debugHighLatitude` (`manualHL()` mit dem Sonnenmodell des Prototyps).
+    private func rawTimes(at place: Place, settings: CalculationSettings) -> FixtureTimes.Times? {
         guard highLatitude else {
             return city(at: place).times
         }
         let summer = FixtureTimes.berlinSummer
-        guard let fajr = summer.fajr[rule], let isha = summer.isha[rule] else { return nil }
+        let rule = settings.highLatitudeRule
+        let fajr: ClockTime, isha: ClockTime
+        if rule == .manual {
+            let berlin = FixtureTimes.cities[0]
+            (fajr, isha) = FixtureSunModel.manual(
+                angles: settings.manualAngles, sunrise: summer.sunrise, maghrib: summer.maghrib,
+                on: summer.day, at: berlin.coordinates, in: berlin.place(named: berlin.id).timeZone
+            )
+        } else {
+            guard let ruleFajr = summer.fajr[rule], let ruleIsha = summer.isha[rule] else { return nil }
+            (fajr, isha) = (ruleFajr, ruleIsha)
+        }
         return FixtureTimes.Times(
             fajr: fajr, sunrise: summer.sunrise, dhuhr: summer.dhuhr, asr: summer.asr,
             asrHanafi: summer.asrHanafi, maghrib: summer.maghrib, isha: isha

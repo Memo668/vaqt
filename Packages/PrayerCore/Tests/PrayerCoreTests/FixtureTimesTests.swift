@@ -119,9 +119,9 @@ struct FixtureTimesTests {
         #expect(FixtureTimes.berlinSummer.isha[rule]?.description == isha)
     }
 
-    @Test("Berlin im Sommer: jede Regel hat Fadschr und Ischa")
+    @Test("Berlin im Sommer: jede Regel hat Fadschr und Ischa – „Manuelle Winkel“ rechnet das Sonnenmodell")
     func berlinSummerComplete() {
-        for rule in HighLatitudeRule.allCases {
+        for rule in HighLatitudeRule.allCases where rule != .manual {
             #expect(FixtureTimes.berlinSummer.fajr[rule] != nil)
             #expect(FixtureTimes.berlinSummer.isha[rule] != nil)
         }

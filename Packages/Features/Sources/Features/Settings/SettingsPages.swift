@@ -259,7 +259,8 @@ struct AsrPage: View {
 }
 
 /// Einstellungen › Hohe Breitengrade (`PAGES.hl`); bei Moonsighting mit dem Hinweis, dass die Regel nicht
-/// wirkt.
+/// wirkt. Mit „Manuelle Winkel“ darunter die Gruppe „Dämmerungswinkel“ mit je einem Stepper für Fadschr
+/// und Ischa, 10 bis 20° (Spec § 9.12).
 struct HighLatitudePage: View {
     @Environment(SettingsModel.self) private var model
 
@@ -277,6 +278,24 @@ struct HighLatitudePage: View {
                 }
             } footer: {
                 ListSectionFooter(model.highLatitudeFooter)
+            }
+            if model.settings.calculation.highLatitudeRule == .manual {
+                Section {
+                    ForEach([Prayer.fajr, .isha], id: \.self) { prayer in
+                        StepperRow(
+                            prayer.localizedName, value: model.manualAngleText(of: prayer),
+                            canDecrement: model.canStepManualAngle(of: prayer, by: -1),
+                            canIncrement: model.canStepManualAngle(of: prayer, by: 1),
+                            onDecrement: { model.stepManualAngle(of: prayer, by: -1) },
+                            onIncrement: { model.stepManualAngle(of: prayer, by: 1) }
+                        )
+                        .listRowMetrics()
+                    }
+                } header: {
+                    ListSectionHeader(L10n.hlDegHeader)
+                } footer: {
+                    ListSectionFooter(L10n.hlManualFooter)
+                }
             }
         }
     }
