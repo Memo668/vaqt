@@ -105,6 +105,7 @@ struct AppContent: View {
             location: location, connectivity: environment.connectivity,
             citySearch: environment.citySearch, toast: toast
         )
+        today.show(dayOffset: environment.initialDayOffset)
         _toast = State(initialValue: toast)
         _today = State(initialValue: today)
         _qibla = State(initialValue: QiblaModel(location: location, headingSource: environment.headingSource))

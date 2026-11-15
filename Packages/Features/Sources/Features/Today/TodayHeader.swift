@@ -1,8 +1,9 @@
 import DesignSystem
 import SwiftUI
 
-/// Kopf der Zeiten-Seite: die Stadt als Button, darunter das gregorianische und das Hijri-Datum und –
-/// ohne Netz – der Hinweis „Offline“. `.home-head` im Prototyp.
+/// Kopf der Zeiten-Seite: die Stadt als Button, darunter das gregorianische und das Hijri-Datum mit je
+/// einem Pfeil für den Tag davor und danach, an einem anderen Tag der Textlink „Zurück zu heute“, und –
+/// ohne Netz – der Hinweis „Offline“. `.home-head` und `.day-nav` im Prototyp.
 struct TodayHeader: View {
     let model: TodayModel
 
@@ -16,10 +17,37 @@ struct TodayHeader: View {
             .buttonStyle(CityButtonStyle())
             .accessibilityLabel(model.cityAccessibilityLabel)
 
-            Text(model.gregorianDateText + "\n" + model.hijriDateText)
-                .textStyle(.subheadline, lineHeight: TodayMetrics.dateLineHeight)
-                .foregroundStyle(Palette.textSecondary)
-                .multilineTextAlignment(.center)
+            HStack(spacing: TodayMetrics.dayNavGap) {
+                dayButton(
+                    systemImage: "chevron.backward", label: L10n.dayPrev,
+                    isEnabled: model.canShowPreviousDay, action: model.showPreviousDay
+                )
+                Text(model.gregorianDateText + "\n" + model.hijriDateText)
+                    .textStyle(.subheadline, lineHeight: TodayMetrics.dateLineHeight)
+                    .foregroundStyle(Palette.textSecondary)
+                    .multilineTextAlignment(.center)
+                dayButton(
+                    systemImage: "chevron.forward", label: L10n.dayNext,
+                    isEnabled: model.canShowNextDay, action: model.showNextDay
+                )
+            }
+            .padding(.top, TodayMetrics.dayNavTop)
+
+            if model.isShowingOtherDay {
+                Button(action: model.backToToday) {
+                    Text(L10n.backToToday)
+                        .textStyle(.caption1, weight: .medium, lineHeight: TodayMetrics.todayLinkLineHeight)
+                        .foregroundStyle(Palette.accent)
+                        // Die Tippfläche reicht über den Text hinaus (`.day-today::after`).
+                        .padding(.vertical, TodayMetrics.todayLinkHitInsetY)
+                        .padding(.horizontal, TodayMetrics.todayLinkHitInsetX)
+                        .contentShape(.rect)
+                }
+                .buttonStyle(.plain)
+                .padding(.vertical, -TodayMetrics.todayLinkHitInsetY)
+                .padding(.horizontal, -TodayMetrics.todayLinkHitInsetX)
+                .padding(.top, TodayMetrics.todayLinkTop)
+            }
 
             if model.isOffline {
                 HintPill(L10n.offline, systemImage: "wifi.slash")
@@ -29,6 +57,27 @@ struct TodayHeader: View {
         .frame(maxWidth: .infinity)
         .padding(.top, TodayMetrics.headerTop)
         .padding(.horizontal, Layout.inset)
+    }
+
+    /// Ein Pfeil neben dem Datum: schlicht und grau, ohne Fläche (`.day-btn`). Die Tippfläche ist 44 pt groß,
+    /// im Layout zählen nur die 28 pt des Pfeils. Bei RTL zeigen die Pfeile in die andere Richtung.
+    private func dayButton(
+        systemImage: String, label: String, isEnabled: Bool, action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            Image(systemName: systemImage)
+                .font(.system(size: TodayMetrics.daySymbolSize, weight: .medium))
+                .foregroundStyle(Palette.labelTertiary)
+                .frame(
+                    width: TodayMetrics.dayButtonSize + 2 * TodayMetrics.dayButtonHitInset,
+                    height: TodayMetrics.dayButtonSize + 2 * TodayMetrics.dayButtonHitInset
+                )
+                .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .disabled(!isEnabled)
+        .padding(-TodayMetrics.dayButtonHitInset)
+        .accessibilityLabel(label)
     }
 
     /// `location.fill` · Stadt · „manuell“.

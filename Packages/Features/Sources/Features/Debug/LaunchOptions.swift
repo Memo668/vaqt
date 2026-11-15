@@ -15,8 +15,9 @@ import PrayerCore
 /// -debugHighLatitude            Berlin, 21. Juni
 /// -debugLocationDenied  -debugOffline
 /// -debugTab today|qibla|guide|verses|qada|settings
-///           method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|adhan|city
-/// -debugOnboarding 1|2|3        Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
+///           method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|support|adhan|city
+/// -debugOnboarding 1|2|3|4      Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
+/// -debugDayOffset 1             Zeiten-Seite zeigt einen anderen Tag, −365 bis 365 (Spec § 9.4)
 /// -debugQiblaHeading 137
 /// -debugQiblaAccuracy 40        Genauigkeit des Kompasses in Grad; über 25 erscheint die Kalibrierungskarte
 /// -debugNotifications           echte Mitteilungen auch mit Mock-Zeiten; fragt beim Start nach der Erlaubnis
@@ -32,7 +33,7 @@ public struct LaunchOptions: Equatable, Sendable {
     /// Stadt-Sheet über der Zeiten-Seite.
     public enum Page: String, CaseIterable, Sendable {
         case today, qibla, guide, verses, qada, settings
-        case method, asr, hl, adjust, perPrayer, reminder, live, sound, appearance, language, privacy
+        case method, asr, hl, adjust, perPrayer, reminder, live, sound, appearance, language, privacy, support
         case adhan
         /// Das Stadt-Sheet über der Zeiten-Seite (`iphone/85`, `duo/closed-85`, `duo/open-85`).
         case city
@@ -48,8 +49,10 @@ public struct LaunchOptions: Equatable, Sendable {
     }
 
     public var skipOnboarding = false
-    /// Schritt des Onboardings, mit dem die App startet (`-debugOnboarding`), 1 bis 3.
+    /// Schritt des Onboardings, mit dem die App startet (`-debugOnboarding`), 1 bis 4.
     public var onboardingStep: Int?
+    /// Tage, die die Zeiten-Seite beim Start vor (+) oder zurück (−) zeigt (`-debugDayOffset`), −365 bis 365.
+    public var dayOffset = 0
     public var fixtureTimes = false
     public var date: CalendarDay?
     public var time: ClockTime?
@@ -109,9 +112,13 @@ public struct LaunchOptions: Equatable, Sendable {
                 let pages = Page.allCases.map(\.rawValue).joined(separator: ", ")
                 page = value(of: argument, from: &rest, expected: "eine der Seiten \(pages)") { Page(rawValue: $0) }
             case "-debugOnboarding":
-                onboardingStep = value(of: argument, from: &rest, expected: "ein Schritt von 1 bis 3") {
-                    Int($0).flatMap { (1...3).contains($0) ? $0 : nil }
+                onboardingStep = value(of: argument, from: &rest, expected: "ein Schritt von 1 bis 4") {
+                    Int($0).flatMap { (1...4).contains($0) ? $0 : nil }
                 }
+            case "-debugDayOffset":
+                dayOffset = value(of: argument, from: &rest, expected: "eine Zahl von Tagen von −365 bis 365") {
+                    Int($0).flatMap { (-365...365).contains($0) ? $0 : nil }
+                } ?? 0
             case "-debugQiblaHeading":
                 qiblaHeading = value(of: argument, from: &rest, expected: "ein Kurs von 0 bis unter 360 Grad") {
                     Double($0).flatMap { (0..<360).contains($0) ? $0 : nil }

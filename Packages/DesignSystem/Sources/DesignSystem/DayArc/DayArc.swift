@@ -37,7 +37,13 @@ public enum DayArcStyle: Hashable, Sendable {
 /// Der Bogen hat die feste Größe seiner Maße (358 × 180 pt). `content` steht unten mittig im Bogen –
 /// auf der Zeiten-Seite die Zeile „Maghrib in“ und der Countdown.
 public struct DayArc<Content: View>: View {
-    private let phase: DayPhase
+    /// Was der Bogen zeigt: die laufende Tagesphase oder einen anderen Tag (Spec § 9.4).
+    private enum Source {
+        case phase(DayPhase)
+        case day(DayTimes)
+    }
+
+    private let source: Source
     private let style: DayArcStyle
     private let showKerahat: Bool
     private let content: Content
@@ -53,17 +59,14 @@ public struct DayArc<Content: View>: View {
         phase: DayPhase, style: DayArcStyle = .home, showKerahat: Bool = true,
         @ViewBuilder content: () -> Content
     ) {
-        self.phase = phase
+        source = .phase(phase)
         self.style = style
         self.showKerahat = showKerahat
         self.content = content()
     }
 
     public var body: some View {
-        let layout = DayArcLayout(
-            phase: phase, metrics: style.metrics, showKerahat: showKerahat,
-            isRightToLeft: layoutDirection == .rightToLeft
-        )
+        let layout = layout
         ZStack(alignment: .bottom) {
             DayArcDrawing(layout: layout, colors: style.colors, typeScale: typeScale)
                 // Gespiegelt wird in der Rechnung. Die Zeichnung selbst bleibt von links nach rechts,
@@ -80,6 +83,28 @@ public struct DayArc<Content: View>: View {
 }
 
 extension DayArc {
+
+    /// Der Bogen eines anderen Tages: dessen Zeiten und Kerahat-Fenster, ohne Fortschritt und ohne Knopf
+    /// (Spec § 9.4). `content` steht unten im Bogen – auf der Zeiten-Seite der Tag statt des Countdowns.
+    public init(
+        times: DayTimes, style: DayArcStyle = .home, showKerahat: Bool = true,
+        @ViewBuilder content: () -> Content
+    ) {
+        source = .day(times)
+        self.style = style
+        self.showKerahat = showKerahat
+        self.content = content()
+    }
+
+    var layout: DayArcLayout {
+        let isRightToLeft = layoutDirection == .rightToLeft
+        switch source {
+        case .phase(let phase):
+            return DayArcLayout(phase: phase, metrics: style.metrics, showKerahat: showKerahat, isRightToLeft: isRightToLeft)
+        case .day(let times):
+            return DayArcLayout(times: times, metrics: style.metrics, showKerahat: showKerahat, isRightToLeft: isRightToLeft)
+        }
+    }
 
     /// „3 von 5 Gebetszeiten heute begonnen“; auf der Zeiten-Seite dazu die Kerahat-Zeiten, die im Bogen
     /// nur eingezeichnet sind (`kerahatArc`, Spec § 9.3).

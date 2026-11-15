@@ -5,8 +5,8 @@ import SwiftUI
 /// Die Zeiten-Seite: Stadt und Datum, Bogen mit Countdown, die sechs Gebetskarten und die Hinweise –
 /// `homePage()` im Prototyp.
 ///
-/// Die Seite scrollt senkrecht unter der oberen Leiste. Tippen auf die Stadt oder auf „Ändern“ im
-/// Banner öffnet das Stadt-Sheet; „Regel ändern“ im Hinweis zu hohen Breiten führt in die Einstellungen.
+/// Die Seite scrollt senkrecht unter der oberen Leiste. Die Pfeile neben dem Datum blättern bis zu ein
+/// Jahr vor und zurück (Spec § 9.4). Tippen auf die Stadt oder auf „Ändern“ im Banner öffnet das Stadt-Sheet; „Regel ändern“ im Hinweis zu hohen Breiten führt in die Einstellungen.
 /// Den Ort bestimmt der Tab (`PrayersTab`): Er gilt auch für die Qibla-Seite, und dort hängt das
 /// Stadt-Sheet.
 struct TodayPage: View {
@@ -42,7 +42,17 @@ struct TodayPage: View {
                 .padding(.horizontal, Layout.inset)
             }
 
-            if let timeline = model.timeline {
+            if model.isShowingOtherDay, let times = model.otherDayTimes {
+                // Ein anderer Tag (Spec § 9.4): sein Bogen ohne Fortschritt, statt des Countdowns der Tag.
+                DayArc(times: times, showKerahat: model.settings.showKerahat) {
+                    ArcDayLabel(
+                        relativeDay: model.relativeDayText, date: model.shortDateText,
+                        spokenDate: model.gregorianDateText
+                    )
+                }
+                .padding(.top, TodayMetrics.heroTop)
+                .padding(.bottom, arrangement.isSplit ? TodayMetrics.heroBottom : 0)
+            } else if !model.isShowingOtherDay, let timeline = model.timeline {
                 TodayHero(timeline: timeline, clock: model.clock, showKerahat: model.settings.showKerahat) {
                     model.refresh()
                 }
@@ -62,7 +72,7 @@ struct TodayPage: View {
     /// Spalte.
     @ViewBuilder
     private var details: some View {
-        if model.timeline != nil {
+        if !model.rows.isEmpty {
             VStack(spacing: 0) {
                 rows
                     .padding(.top, arrangement.isSplit ? TodayMetrics.rowsTopInColumns : TodayMetrics.rowsTop)
@@ -114,6 +124,19 @@ enum TodayMetrics {
     static let tagPaddingY: CGFloat = 4
     /// Datum (`.home-date`: `line-height: 1.38`).
     static let dateLineHeight: CGFloat = 1.38
+    /// Zeile mit Datum und Pfeilen (`.day-nav`: `gap: 2px; margin-top: 2px`).
+    static let dayNavGap: CGFloat = 2
+    static let dayNavTop: CGFloat = 2
+    /// Pfeile (`.day-btn`: 28 × 28 pt, `ic('chevronLeft', 16)` in `--label-3`, Tippfläche 8 pt größer).
+    static let dayButtonSize: CGFloat = 28
+    static let dayButtonHitInset: CGFloat = 8
+    static let daySymbolSize: CGFloat = 13
+    /// „Zurück zu heute“ (`.day-today`: `margin-top: 2px`, Caption 1 mittelstark, Zeilenhöhe 1,4;
+    /// Tippfläche 12 pt höher und 8 pt breiter).
+    static let todayLinkTop: CGFloat = 2
+    static let todayLinkLineHeight: CGFloat = 1.4
+    static let todayLinkHitInsetY: CGFloat = 12
+    static let todayLinkHitInsetX: CGFloat = 8
     /// Hinweis „Offline“ unter dem Datum (`.hint-pill`: `margin: 10px 0 0`).
     static let hintTop: CGFloat = 10
 

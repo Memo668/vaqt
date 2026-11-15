@@ -86,12 +86,38 @@ public struct PrayerRowModel: Hashable, Sendable, Identifiable {
         )
     }
 
+    /// Die Karte eines Ereignisses an einem anderen Tag (Spec § 9.4): dessen Uhrzeit und Kerahat-Fenster,
+    /// ohne „jetzt“ und ohne „vorbei“.
+    public init(prayer: Prayer, times: DayTimes, showKerahat: Bool = true, isHighLatitude: Bool = false) {
+        var caption: KerahatCaption?
+        if showKerahat, let window = Kerahat.windows(for: times).first(where: { $0.row == prayer }) {
+            caption = KerahatCaption(
+                start: ClockTime(window.start, in: times.timeZone),
+                end: ClockTime(window.end, in: times.timeZone),
+                isActive: false
+            )
+        }
+        self.init(
+            prayer: prayer, time: times.clockTime(of: prayer), status: .upcoming, kerahat: caption,
+            showsHighLatitudeMark: isHighLatitude && (prayer == .fajr || prayer == .isha)
+        )
+    }
+
     /// Die sechs Karten eines Tages in der Reihenfolge der Liste (`PRAYERS`).
     public static func rows(
         for phase: DayPhase, showKerahat: Bool = true, isHighLatitude: Bool = false
     ) -> [PrayerRowModel] {
         Prayer.allCases.map {
             PrayerRowModel(prayer: $0, phase: phase, showKerahat: showKerahat, isHighLatitude: isHighLatitude)
+        }
+    }
+
+    /// Die sechs Karten eines anderen Tages.
+    public static func rows(
+        for times: DayTimes, showKerahat: Bool = true, isHighLatitude: Bool = false
+    ) -> [PrayerRowModel] {
+        Prayer.allCases.map {
+            PrayerRowModel(prayer: $0, times: times, showKerahat: showKerahat, isHighLatitude: isHighLatitude)
         }
     }
 }

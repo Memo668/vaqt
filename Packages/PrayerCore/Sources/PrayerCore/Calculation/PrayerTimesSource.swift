@@ -20,6 +20,11 @@ public protocol PrayerTimesSource: Sendable {
     /// Die Methode, die für `place` gilt, solange keine gewählt ist – „Automatisch · Diyanet“ in den
     /// Einstellungen (`CITIES[…].auto` im Prototyp).
     func automaticMethod(for place: Place) -> CalculationMethod
+
+    /// Die Zeiten eines Tages, den die Zeiten-Seite statt `today` zeigt – bis zu ein Jahr vor oder zurück
+    /// (Spec § 9.4). Gerechnet wird wie für jeden Tag (`times(on:at:settings:)`); nur die Mock-Zeiten
+    /// verschieben die Zeiten von heute wie der Prototyp (`dayTimes()`).
+    func times(on day: CalendarDay, viewedFrom today: CalendarDay, at place: Place, settings: CalculationSettings) -> DayTimes?
 }
 
 extension PrayerTimesSource {
@@ -32,5 +37,12 @@ extension PrayerTimesSource {
     /// Ohne eigene Auskunft die Methode des Landes (`CalculationMethod.automatic(forCountryCode:)`).
     public func automaticMethod(for place: Place) -> CalculationMethod {
         .automatic(forCountryCode: place.countryCode)
+    }
+
+    /// Ohne eigene Auskunft die Zeiten des Tages selbst.
+    public func times(
+        on day: CalendarDay, viewedFrom today: CalendarDay, at place: Place, settings: CalculationSettings
+    ) -> DayTimes? {
+        times(on: day, at: place, settings: settings)
     }
 }

@@ -2,7 +2,8 @@ import CoreGraphics
 import Foundation
 import PrayerCore
 
-/// Was der Tagesbogen zu einer Tagesphase zeigt – der Rechenteil von `arcHTML()` im Prototyp.
+/// Was der Tagesbogen zu einer Tagesphase – oder zu einem anderen Tag – zeigt: der Rechenteil von
+/// `arcHTML()` im Prototyp.
 ///
 /// Reine Geometrie ohne Ansicht: wo die fünf Marker und ihre Zeiten sitzen, wie weit der Bogen gefüllt
 /// ist, wo der Knopf für „jetzt“ steht und welche Kerahat-Segmente es gibt. `DayArc` zeichnet das.
@@ -92,24 +93,53 @@ public struct DayArcLayout: Hashable, Sendable {
     public init(
         phase: DayPhase, metrics: DayArcMetrics = .home, showKerahat: Bool = true, isRightToLeft: Bool = false
     ) {
+        let dayProgress = phase.dayProgress
+        let active = phase.activeKerahat
+        self.init(
+            times: phase.times, metrics: metrics, showKerahat: showKerahat, isRightToLeft: isRightToLeft,
+            progress: dayProgress.fraction, showsKnob: dayProgress.isActive,
+            state: { prayer in
+                phase.highlighted == prayer ? .current : phase.hasPassed(prayer) ? .passed : .upcoming
+            },
+            kerahatState: { window in
+                // Vorbei ist ein Fenster, sobald „jetzt“ sein Ende erreicht hat (`nsMin >= w.b`).
+                active?.id == window.id ? .active : phase.now >= window.end ? .past : .upcoming
+            }
+        )
+    }
+
+    /// Der Bogen eines anderen Tages (Spec § 9.4): die Zeiten und Kerahat-Fenster dieses Tages, ohne
+    /// Fortschritt, ohne Knopf; nichts läuft und nichts ist vorbei (`ph.other` im Prototyp).
+    public init(
+        times: DayTimes, metrics: DayArcMetrics = .home, showKerahat: Bool = true, isRightToLeft: Bool = false
+    ) {
+        self.init(
+            times: times, metrics: metrics, showKerahat: showKerahat, isRightToLeft: isRightToLeft,
+            progress: 0, showsKnob: false, state: { _ in .upcoming }, kerahatState: { _ in .upcoming }
+        )
+    }
+
+    private init(
+        times: DayTimes, metrics: DayArcMetrics, showKerahat: Bool, isRightToLeft: Bool,
+        progress: Double, showsKnob: Bool,
+        state: (Prayer) -> MarkerState, kerahatState: (KerahatWindow) -> KerahatState
+    ) {
         self.metrics = metrics
         self.isRightToLeft = isRightToLeft
+        self.progress = progress
+        self.showsKnob = showsKnob
 
-        let times = phase.times
         let span = times.isha.timeIntervalSince(times.fajr)
         func fraction(of date: Date) -> Double {
             span > 0 ? date.timeIntervalSince(times.fajr) / span : 0
         }
 
-        let dayProgress = phase.dayProgress
-        progress = dayProgress.fraction
-        showsKnob = dayProgress.isActive
-
         var markers: [Marker] = []
         for prayer in Prayer.five {
             let fraction = fraction(of: times[prayer])
             let center = metrics.point(at: fraction, isRightToLeft: isRightToLeft)
-            let isCurrent = phase.highlighted == prayer
+            let markerState = state(prayer)
+            let isCurrent = markerState == .current
             let radius = isCurrent ? metrics.currentMarkerRadius : metrics.markerRadius
 
             var isTight = false
@@ -122,7 +152,7 @@ public struct DayArcLayout: Hashable, Sendable {
             markers.append(Marker(
                 prayer: prayer, fraction: fraction, center: center, radius: radius,
                 symbolSize: isCurrent ? metrics.currentSymbolSize : metrics.symbolSize,
-                state: isCurrent ? .current : phase.hasPassed(prayer) ? .passed : .upcoming,
+                state: markerState,
                 isTight: isTight,
                 time: times.clockTime(of: prayer),
                 timeCenter: metrics.timeCenter(
@@ -134,15 +164,12 @@ public struct DayArcLayout: Hashable, Sendable {
         self.markers = markers
 
         if showKerahat {
-            let active = phase.activeKerahat
             kerahat = Kerahat.windows(for: times).compactMap { window in
                 let start = min(1, max(0, fraction(of: window.start)))
                 let end = min(1, max(0, fraction(of: window.end)))
                 guard end - start >= Self.shortestSegment else { return nil }
-                // Vorbei ist ein Fenster, sobald „jetzt“ sein Ende erreicht hat (`nsMin >= w.b`).
-                let state: KerahatState = active?.id == window.id ? .active : phase.now >= window.end ? .past : .upcoming
                 return KerahatSegment(
-                    id: window.id, start: start, end: end, state: state,
+                    id: window.id, start: start, end: end, state: kerahatState(window),
                     startTime: ClockTime(window.start, in: times.timeZone), endTime: ClockTime(window.end, in: times.timeZone)
                 )
             }

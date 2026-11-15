@@ -179,8 +179,8 @@ struct TodayComponentTests {
     @Test("jede Regel für hohe Breiten hat ihren Namen aus dem String Catalog")
     func highLatitudeRuleNames() {
         let names = HighLatitudeRule.allCases.map(\.localizedName)
-        #expect(names == [L10n.hlAngle, L10n.hlSeventh, L10n.hlMiddle])
-        #expect(Set(names).count == 3)
+        #expect(names == [L10n.hlAngle, L10n.hlSeventh, L10n.hlMiddle, L10n.hlManual])
+        #expect(Set(names).count == 4)
         #expect(!names.contains { $0.isEmpty || $0.hasPrefix("hl") })
     }
 

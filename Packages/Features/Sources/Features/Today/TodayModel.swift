@@ -39,8 +39,14 @@ public final class TodayModel {
     public private(set) var timeline: PrayerTimeline?
     /// Die sechs Gebetskarten zur laufenden Tagesphase.
     public private(set) var rows: [PrayerRowModel] = []
-    /// Ob Fadschr und Ischa heute aus der Regel für hohe Breiten kommen.
+    /// Ob Fadschr und Ischa am gezeigten Tag aus der Regel für hohe Breiten kommen.
     public private(set) var isHighLatitude = false
+    /// Wie viele Tage die Seite vor (+) oder zurück (−) zeigt; 0 ist heute (Spec § 9.4, `S.dayOff`).
+    /// Der gewählte Tag wird nicht gespeichert: Beim Start zeigt die Seite heute.
+    public private(set) var dayOffset = 0
+    /// Die Zeiten des gezeigten Tages, wenn es nicht heute ist; `nil` heute, ohne Ort und dort, wo sich
+    /// für den Tag keine Zeiten bestimmen lassen.
+    public private(set) var otherDayTimes: DayTimes?
     /// Ob das Stadt-Sheet offen ist.
     public var isCitySheetPresented = false
     /// Wie oft im Stadt-Sheet ein Ort gewählt wurde – eine Stadt oder „Aktueller Standort“. Daran erkennt
@@ -147,21 +153,90 @@ public final class TodayModel {
         authorization == .denied
     }
 
-    /// Ob es für den Ort heute keine Zeiten gibt, weil die Sonne nicht auf- oder untergeht.
+    /// Ob es für den Ort am gezeigten Tag keine Zeiten gibt, weil die Sonne nicht auf- oder untergeht.
     public var hasNoTimes: Bool {
-        place != nil && timeline == nil
+        place != nil && (isShowingOtherDay ? otherDayTimes == nil : timeline == nil)
+    }
+
+    // MARK: - Tage vor und zurück
+
+    /// So weit reicht die Navigation: ein Jahr in jede Richtung (`day` im Prototyp).
+    public static let dayOffsetRange = -365...365
+
+    /// Ob die Seite einen anderen Tag als heute zeigt. Dann steht statt des Countdowns der Tag im Bogen,
+    /// und unter dem Datum der Textlink „Zurück zu heute“.
+    public var isShowingOtherDay: Bool {
+        dayOffset != 0
+    }
+
+    /// Der Tag, den die Seite zeigt.
+    public var shownDay: CalendarDay {
+        day.adding(days: dayOffset)
+    }
+
+    public var canShowPreviousDay: Bool {
+        dayOffset > Self.dayOffsetRange.lowerBound
+    }
+
+    public var canShowNextDay: Bool {
+        dayOffset < Self.dayOffsetRange.upperBound
+    }
+
+    /// Der Pfeil links: einen Tag zurück.
+    public func showPreviousDay() {
+        show(dayOffset: dayOffset - 1)
+    }
+
+    /// Der Pfeil rechts: einen Tag vor.
+    public func showNextDay() {
+        show(dayOffset: dayOffset + 1)
+    }
+
+    /// Der Textlink „Zurück zu heute“.
+    public func backToToday() {
+        show(dayOffset: 0)
+    }
+
+    /// Zeigt den Tag mit diesem Abstand zu heute, höchstens ein Jahr entfernt.
+    public func show(dayOffset offset: Int) {
+        let clamped = min(Self.dayOffsetRange.upperBound, max(Self.dayOffsetRange.lowerBound, offset))
+        guard clamped != dayOffset else { return }
+        dayOffset = clamped
+        refresh()
+    }
+
+    /// Der gezeigte Tag relativ zu heute, mit großem Anfangsbuchstaben: „Morgen“, „Übermorgen“,
+    /// „In 3 Tagen“, „Gestern“ (`relDayText()`, `Intl.RelativeTimeFormat` mit `numeric: 'auto'`).
+    public var relativeDayText: String {
+        Self.relativeDayText(offset: dayOffset, locale: locale)
+    }
+
+    /// Das kurze Datum im Bogen: „Mi., 11. Nov.“
+    public var shortDateText: String {
+        Self.dateText(for: shownDay, template: "EEEdMMM", locale: locale)
+    }
+
+    static func relativeDayText(offset: Int, locale: Locale) -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.locale = locale
+        formatter.dateTimeStyle = .named
+        formatter.unitsStyle = .full
+        let text = formatter.localizedString(from: DateComponents(day: offset))
+        guard let first = text.first else { return text }
+        return String(first).uppercased(with: locale) + text.dropFirst()
     }
 
     // MARK: - Datum und Hinweise
 
-    /// „Dienstag, 10. November“ – Wochentag, Tag und Monat in der Sprache der App (`gregDate()`).
+    /// „Dienstag, 10. November“ – Wochentag, Tag und Monat des gezeigten Tages in der Sprache der App
+    /// (`gregDate()`).
     public var gregorianDateText: String {
-        Self.gregorianDateText(for: day, locale: locale)
+        Self.gregorianDateText(for: shownDay, locale: locale)
     }
 
     /// „30. Dschumada I 1448“ (`hijriDate()`).
     public var hijriDateText: String {
-        HijriDate(day).formatted(locale: locale)
+        HijriDate(shownDay).formatted(locale: locale)
     }
 
     /// Der Hinweis zu hohen Breiten mit Stadt und Regel.
@@ -170,13 +245,17 @@ public final class TodayModel {
     }
 
     static func gregorianDateText(for day: CalendarDay, locale: Locale) -> String {
+        dateText(for: day, template: "EEEEdMMMM", locale: locale)
+    }
+
+    static func dateText(for day: CalendarDay, template: String, locale: Locale) -> String {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = .gmt
         let formatter = DateFormatter()
         formatter.calendar = calendar
         formatter.timeZone = .gmt
         formatter.locale = locale
-        formatter.setLocalizedDateFormatFromTemplate("EEEEdMMMM")
+        formatter.setLocalizedDateFormatFromTemplate(template)
         // Mittags in GMT liegt jeder Kalendertag eindeutig auf sich selbst.
         return formatter.string(from: day.date(at: ClockTime(minutesSinceMidnight: 12 * 60), in: .gmt))
     }
@@ -212,19 +291,40 @@ public final class TodayModel {
 
     /// Baut den Stand der Seite neu auf: Tag, Zeiten, Karten und der Hinweis zu hohen Breiten.
     ///
-    /// Wird gerufen, wenn sich etwas ändert – nicht im Sekundentakt.
+    /// Wird gerufen, wenn sich etwas ändert – nicht im Sekundentakt. Zeigt die Seite einen anderen Tag,
+    /// gelten Karten und Hinweis für ihn; der Zeitstrahl bleibt der von heute (Countdown, Anleitung).
     public func refresh() {
         let now = clock.now
         let place = place
         day = CalendarDay(now, in: place?.timeZone ?? deviceTimeZone)
-        guard let place, let timeline = timesSource.timeline(at: now, place: place, settings: settings.calculation) else {
+        let calculation = settings.calculation
+        guard let place else {
             timeline = nil
+            otherDayTimes = nil
             rows = []
             isHighLatitude = false
             return
         }
-        self.timeline = timeline
-        isHighLatitude = timesSource.usesHighLatitudeRule(on: day, at: place, settings: settings.calculation)
+        timeline = timesSource.timeline(at: now, place: place, settings: calculation)
+
+        if isShowingOtherDay {
+            let shown = shownDay
+            otherDayTimes = timesSource.times(on: shown, viewedFrom: day, at: place, settings: calculation)
+            isHighLatitude = otherDayTimes != nil
+                && timesSource.usesHighLatitudeRule(on: shown, at: place, settings: calculation)
+            rows = otherDayTimes.map {
+                PrayerRowModel.rows(for: $0, showKerahat: settings.showKerahat, isHighLatitude: isHighLatitude)
+            } ?? []
+            return
+        }
+
+        otherDayTimes = nil
+        guard let timeline else {
+            rows = []
+            isHighLatitude = false
+            return
+        }
+        isHighLatitude = timesSource.usesHighLatitudeRule(on: day, at: place, settings: calculation)
         rows = timeline.phase(at: now).map {
             PrayerRowModel.rows(for: $0, showKerahat: settings.showKerahat, isHighLatitude: isHighLatitude)
         } ?? []

@@ -20,28 +20,52 @@ public struct FixtureTimesSource: PrayerTimesSource {
     /// Die Zeiten der Fixture-Stadt, die an den Koordinaten von `place` liegt. Für jeden anderen Ort
     /// gilt Berlin, die Stadt, in der der Prototyp startet. Die Uhrzeiten gelten in der Zeitzone des Ortes.
     public func times(on day: CalendarDay, at place: Place, settings: CalculationSettings) -> DayTimes? {
+        guard let minutes = minutes(at: place, settings: settings) else { return nil }
+        return dayTimes(on: day, minutes: minutes, in: place.timeZone)
+    }
+
+    /// Ein anderer Tag wie `dayTimes()` im Prototyp (Spec § 9.4): die Mock-Zeiten von heute plus die
+    /// Verschiebung, die das Sonnenmodell des Prototyps zwischen `today` und `day` ergibt (Fadschr 18°,
+    /// Ischa 17°, Sommerzeit eingeschlossen). Mit `-debugHighLatitude` rechnet es für Berlin.
+    public func times(
+        on day: CalendarDay, viewedFrom today: CalendarDay, at place: Place, settings: CalculationSettings
+    ) -> DayTimes? {
+        guard day != today else { return times(on: day, at: place, settings: settings) }
+        guard var minutes = minutes(at: place, settings: settings) else { return nil }
+        let city = city(at: place)
+        let shift = FixtureSunModel.shift(
+            from: today, to: day, at: city.coordinates, in: city.place(named: city.id).timeZone,
+            asrFactor: settings.asr == .hanafi ? 2 : 1
+        )
+        for prayer in Prayer.allCases {
+            minutes[prayer, default: 0] += shift[prayer] ?? 0
+        }
+        return dayTimes(on: day, minutes: minutes, in: place.timeZone)
+    }
+
+    /// Minuten seit Mitternacht samt Korrektur, wie `todayTimes()`. Ischa darf nach Mitternacht liegen
+    /// (hohe Breiten, „Nachtmitte“): Dann zählt es über 1440 hinaus und gehört zum Folgetag.
+    private func minutes(at place: Place, settings: CalculationSettings) -> [Prayer: Int]? {
         guard let raw = rawTimes(at: place, settings: settings) else { return nil }
-        let zone = place.timeZone
-
-        // Minuten seit Mitternacht samt Korrektur, wie in `todayTimes()`.
-        func minutes(_ prayer: Prayer) -> Int {
+        var result: [Prayer: Int] = [:]
+        for prayer in Prayer.allCases {
             let time = prayer == .asr && settings.asr == .hanafi ? raw.asrHanafi : raw[prayer]
-            return time.minutesSinceMidnight + settings.adjustments[prayer]
+            result[prayer] = time.minutesSinceMidnight + settings.adjustments[prayer]
         }
-        let maghrib = minutes(.maghrib)
-        var isha = minutes(.isha)
-        // Ischa darf nach Mitternacht liegen (hohe Breiten, „Nachtmitte“): Dann gehört es zum Folgetag.
-        if isha < maghrib {
-            isha += Self.minutesPerDay
+        if let isha = result[.isha], let maghrib = result[.maghrib], isha < maghrib {
+            result[.isha] = isha + Self.minutesPerDay
         }
+        return result
+    }
 
-        func instant(_ minutes: Int) -> Date {
-            Self.instant(minutes: minutes, after: day, in: zone)
+    private func dayTimes(on day: CalendarDay, minutes: [Prayer: Int], in zone: TimeZone) -> DayTimes {
+        func instant(_ prayer: Prayer) -> Date {
+            Self.instant(minutes: minutes[prayer] ?? 0, after: day, in: zone)
         }
         return DayTimes(
             day: day, timeZone: zone,
-            fajr: instant(minutes(.fajr)), sunrise: instant(minutes(.sunrise)), dhuhr: instant(minutes(.dhuhr)),
-            asr: instant(minutes(.asr)), maghrib: instant(maghrib), isha: instant(isha)
+            fajr: instant(.fajr), sunrise: instant(.sunrise), dhuhr: instant(.dhuhr),
+            asr: instant(.asr), maghrib: instant(.maghrib), isha: instant(.isha)
         )
     }
 

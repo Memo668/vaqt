@@ -422,6 +422,106 @@ struct TodayModelTests {
         #expect(fixture.model.rows.filter(\.showsHighLatitudeMark).map(\.prayer) == [.fajr, .isha])
     }
 
+    // MARK: - Tage vor und zurück (Spec § 9.4)
+
+    @Test("Morgen (iphone/23): die Zeiten des Tages wie im Prototyp, keine Karte läuft oder ist vorbei")
+    func nextDay() async {
+        let fixture = make()
+        await fixture.model.activate()
+        let model = fixture.model
+        #expect(!model.isShowingOtherDay)
+
+        model.showNextDay()
+        #expect(model.dayOffset == 1)
+        #expect(model.isShowingOtherDay)
+        #expect(model.shownDay == day("2026-11-11"))
+        #expect(model.gregorianDateText == "Mittwoch, 11. November")
+        #expect(model.hijriDateText == "1. Dschumada II 1448")
+        #expect(model.relativeDayText == "Morgen")
+        #expect(model.otherDayTimes != nil)
+        #expect(times(model) == ["05:18", "07:16", "11:52", "13:59", "16:25", "18:16"])
+        #expect(model.rows.allSatisfy { $0.status == .upcoming })
+        #expect(model.rows.compactMap(\.kerahat).allSatisfy { !$0.isActive })
+        #expect(model.rows.compactMap(\.kerahat).map(\.range) == ["07:16\u{2060}–\u{2060}08:01", "11:42\u{2060}–\u{2060}11:52", "15:40\u{2060}–\u{2060}16:25"])
+        // Der Zeitstrahl bleibt der von heute – für Countdown und Anleitung.
+        #expect(model.timeline?.today.day == day("2026-11-10"))
+
+        model.backToToday()
+        #expect(model.dayOffset == 0)
+        #expect(model.otherDayTimes == nil)
+        #expect(times(model) == ["05:16", "07:14", "11:52", "14:00", "16:27", "18:17"])
+        #expect(model.rows.map(\.status) == [.passed, .passed, .passed, .current, .upcoming, .upcoming])
+    }
+
+    @Test("Der Tag relativ zu heute, mit großem Anfangsbuchstaben", arguments: [
+        (1, "Morgen"), (2, "Übermorgen"), (3, "In 3 Tagen"), (-1, "Gestern"), (-2, "Vorgestern"), (-10, "Vor 10 Tagen"),
+    ])
+    func relativeDay(offset: Int, expected: String) {
+        #expect(TodayModel.relativeDayText(offset: offset, locale: german) == expected)
+    }
+
+    @Test("Die Navigation reicht ein Jahr in jede Richtung")
+    func range() async {
+        let fixture = make()
+        await fixture.model.activate()
+        let model = fixture.model
+        model.show(dayOffset: 400)
+        #expect(model.dayOffset == 365)
+        #expect(!model.canShowNextDay)
+        model.showNextDay()
+        #expect(model.dayOffset == 365)
+        #expect(model.shownDay == day("2027-11-10"))
+        #expect(model.canShowPreviousDay)
+
+        model.show(dayOffset: -365)
+        #expect(!model.canShowPreviousDay)
+        model.showPreviousDay()
+        #expect(model.dayOffset == -365)
+        #expect(model.shownDay == day("2025-11-10"))
+        #expect(!model.rows.isEmpty)
+    }
+
+    @Test("Der gewählte Tag bleibt relativ zu heute: nach Mitternacht rückt er mit")
+    func dayOffsetAcrossMidnight() async {
+        let fixture = make(now: instant("2026-11-10", "23:59"))
+        await fixture.model.activate()
+        fixture.model.show(dayOffset: 2)
+        #expect(fixture.model.shownDay == day("2026-11-12"))
+        fixture.clock.now = instant("2026-11-11", "00:01")
+        fixture.model.refresh()
+        #expect(fixture.model.shownDay == day("2026-11-13"))
+    }
+
+    @Test("Echt gerechnet: ein Tag in Tromsø ohne Sonnenuntergang zeigt den Hinweis statt der Karten")
+    func otherDayWithoutTimes() async {
+        let tromso = Place(
+            name: "Tromsø", countryCode: "NO",
+            coordinates: Coordinates(latitude: 69.6492, longitude: 18.9553), timeZoneIdentifier: "Europe/Oslo"
+        )
+        let fixture = make(
+            now: instant("2027-05-01", "12:00"), times: AdhanTimesSource(),
+            location: FixedLocationSource(place: tromso, status: .authorized)
+        )
+        await fixture.model.activate()
+        let model = fixture.model
+        #expect(!model.hasNoTimes)
+        model.show(dayOffset: 51)   // 21.06.2027
+        #expect(model.otherDayTimes == nil)
+        #expect(model.hasNoTimes)
+        #expect(model.rows.isEmpty)
+        model.backToToday()
+        #expect(!model.hasNoTimes)
+    }
+
+    @Test("Hohe Breiten an einem anderen Tag: Info-Marken wie heute")
+    func otherDayHighLatitude() async {
+        let fixture = make(now: instant("2027-06-21", "23:47"), times: FixtureTimesSource(highLatitude: true))
+        await fixture.model.activate()
+        fixture.model.showNextDay()
+        #expect(fixture.model.isHighLatitude)
+        #expect(fixture.model.rows.filter(\.showsHighLatitudeMark).map(\.prayer) == [.fajr, .isha])
+    }
+
     // MARK: - Glocke
 
     @Test("Tippen auf die Glocke wechselt den Stand und nennt ihn im Toast")

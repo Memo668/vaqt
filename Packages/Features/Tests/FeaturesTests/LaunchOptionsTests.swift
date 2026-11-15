@@ -159,7 +159,10 @@ struct LaunchOptionsTests {
         ["-debugQiblaAccuracy", "inf"],
         ["-debugTab", "hohe"],
         ["-debugOnboarding", "0"],
-        ["-debugOnboarding", "4"],
+        ["-debugOnboarding", "5"],
+        ["-debugDayOffset", "366"],
+        ["-debugDayOffset", "-400"],
+        ["-debugDayOffset", "morgen"],
         ["-debugOnboarding", "zwei"],
     ])
     func invalidValue(arguments: [String]) {
@@ -172,11 +175,19 @@ struct LaunchOptionsTests {
         #expect(options.problems.first?.contains(arguments[1]) == true)
     }
 
-    @Test("-debugOnboarding nimmt die Schritte 1 bis 3", arguments: [1, 2, 3])
+    @Test("-debugOnboarding nimmt die Schritte 1 bis 4", arguments: [1, 2, 3, 4])
     func onboardingStep(step: Int) {
         let options = LaunchOptions(arguments: ["-debugOnboarding", String(step)])
         #expect(options.onboardingStep == step)
         #expect(options.problems.isEmpty)
+    }
+
+    @Test("-debugDayOffset nimmt −365 bis 365 Tage", arguments: [-365, -1, 0, 1, 7, 365])
+    func dayOffset(offset: Int) {
+        let options = LaunchOptions(arguments: ["-debugDayOffset", String(offset)])
+        #expect(options.dayOffset == offset)
+        #expect(options.problems.isEmpty)
+        #expect(AppEnvironment(options: options).initialDayOffset == offset)
     }
 
     @Test("-debugOnboarding zusammen mit -debugSkipOnboarding wird gemeldet")

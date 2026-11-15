@@ -58,6 +58,8 @@ public struct AppEnvironment: Sendable {
     public var opensCitySheet: Bool
     /// Ob das Onboarding beim Start übergangen wird (`-debugSkipOnboarding`).
     public var skipsOnboarding: Bool
+    /// Tage, die die Zeiten-Seite beim Start vor oder zurück zeigt (`-debugDayOffset`); sonst heute.
+    public var initialDayOffset = 0
     /// Schritt, mit dem das Onboarding beim Start erscheint, auch wenn es schon durchlaufen ist
     /// (`-debugOnboarding`).
     public var onboardingStep: OnboardingStep?
@@ -240,6 +242,7 @@ extension AppEnvironment {
         opensCitySheet = options.page == .city
         skipsOnboarding = options.skipOnboarding && options.onboardingStep == nil
         onboardingStep = options.onboardingStep.flatMap { OnboardingStep(rawValue: $0 - 1) }
+        initialDayOffset = options.dayOffset
         launchOptions = options
     }
 }
