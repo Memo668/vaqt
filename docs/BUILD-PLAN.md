@@ -234,3 +234,42 @@ Gebaut am 13.11.2026 in acht Schritten:
 Entscheidungen, Annahmen und was abweicht stehen in `docs/OPEN-QUESTIONS.md` („Entschieden mit dem Plan für Phase 11“, „Annahmen in Phase 11“).
 
 **Danach:** erste Beta über TestFlight (entschieden am 12.11.2026). Ohne Konto vorbereitet am 14.11.2026: Release-Archiv mit Prüfung (`make archive`, `scripts/check-archive`), nur iPhone, Exportkontrolle, Bundle-ID nur in `project.yml`, Datenschutzerklärung (`docs/DATENSCHUTZ.md`, `docs/PRIVACY.md`) und Texte für TestFlight (`docs/APP-STORE.md`). Was dann noch fehlt – Konto, Kennungen festlegen und registrieren, App Store Connect, signiertes Archiv und Upload –, steht in `docs/OPEN-QUESTIONS.md` unter „Für die erste Beta“.
+
+## Änderungen vor der Beta (Phasen 12–15)
+
+Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgenommen („Passt, umsetzen“). Beschreibung: Spec § 9. Referenz: `design/prayer-times-prototype.html` (Panel › „Änderungen vom 15.11.2026“ springt zu jeder Änderung). Für die geänderten Bildschirme gibt es noch keine Referenzbilder in `design/screenshots/`: Jede Phase nimmt sie aus dem Prototyp neu auf (gleiche Simulation, iPhone 17 hell und dunkel) und gleicht dagegen ab. Die erste Beta kommt nach Phase 15.
+
+## Phase 12 – Änderungen am Bestand
+
+- **App-Symbol** statt Mondsichel: Onboarding, Zeile am Ende der Einstellungen (Spec § 9.1); Bildsatz mit hell/dunkel.
+- **Obere Leiste mittig**, Einstellungskreis rechts, Zusammenklappen wie bisher; Duo-Leiste unverändert (§ 9.2).
+- **Kerahat auf der Spur** des Bogens, Uhrzeiten weiter in den Zeilen (§ 9.3).
+- **Tage vor und zurück** auf der Zeiten-Seite, ±365 Tage, Textlink „Zurück zu heute“; ein anderer Tag ohne Countdown, mit relativem Tag und Datum (§ 9.4). PrayerCore rechnet dafür die Zeiten für ein beliebiges Datum (Tests: Sommerzeitwechsel, hohe Breiten).
+- **Qibla-Toleranz** ±40° als Keil, Status „Im Toleranzbereich“ (§ 9.5).
+- **Nachholen:** Rechner als eigene Karte ganz unten (§ 9.8).
+- **Onboarding Seite 4** „Kostenlos. Ohne Werbung.“ und **Seite „Unterstützen“** in den Einstellungen, ohne Zahlung (§ 9.9).
+- **Hohe Breiten:** vierte Regel „Manuelle Winkel“ mit Steppern 10–20° (§ 9.12); PrayerCore mit eigenen Winkeln und `.twilightAngle` als Grenze, Tests.
+- Neue Texte zunächst in DE/TR/EN/ES (die übrigen Sprachen bringt Phase 15).
+- Debug: `-debugDayOffset N` für einen anderen Tag; `-debugTab` kennt `support`.
+
+## Phase 13 – Gebet Schritt für Schritt und arabische Schrift
+
+- Vollbild-Durchlauf durch das ganze Gebet aus der Anleitung (Spec § 9.6): Ablauf aus `RAKAH` und den Schritten berechnen (PrayerCore, Tests: Fadschr 2, Maghrib 3, Dhuhr 4 Rakʿas → 15/22/28 Schritte, dazu Start und Ende), Fortschritt, Zurück/Weiter, Reduce Motion, VoiceOver.
+- Amiri Quran für Verse, Amiri für Formeln einbetten, Lizenz (OFL) im Lizenzhinweis (§ 9.7).
+- Die neuen Texte der Anleitung als ungeprüft kennzeichnen (wie § 6.14).
+
+## Phase 14 – Live-Aktivität und Widgets
+
+- Live-Aktivität: Kerahat auf der Spur (Spec § 9.11).
+- Sperrbildschirm-Widget (rechteckig) mit Mini-Bogen, einfarbig, Kerahat gestrichelt.
+- Neues mittleres Home-Widget „Live“ im Stil der Live-Aktivität; die bisherigen Widgets bleiben.
+- Debug-Katalog um die neuen Widgets erweitern (`-debugCatalog widgets|live`).
+
+## Phase 15 – Sechzehn Sprachen
+
+- String Catalog um FR, NL, BS, SQ, AR, UR, ID, MS, BN, FA, RU, IT aus `T` erweitern, mit Plural-Varianten, wo Zahlen vorkommen (Spec § 9.10).
+- Rechts nach links für AR, UR, FA prüfen: Bogen, Pfeile, Spalten, Kompass, Durchlauf; Datumsformate je Sprache.
+- Textlängen in allen Sprachen prüfen (`make capture`).
+- Die Übersetzungen sind KI-Entwürfe: vor dem App Store von Muttersprachlern prüfen lassen (`docs/OPEN-QUESTIONS.md`).
+
+**Danach:** erste Beta über TestFlight, Ablauf in `docs/APP-STORE.md` („Mit dem Konto“); Konto, Team und Kennungen sind seit dem 15.11.2026 eingetragen.

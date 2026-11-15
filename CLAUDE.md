@@ -4,11 +4,11 @@ Gemeinnützige Gebetszeiten-App: werbefrei, ohne Tracking, ohne Konto. Wir bauen
 
 ## Quellen der Wahrheit
 
-1. `design/prayer-times-design-spec.md` – Design Spec v0.7: Tokens, Komponenten, Verhalten, Zustände, iPhone Duo (§ 8), offene Fragen (§ 6), Varianten (§ 7).
+1. `design/prayer-times-design-spec.md` – Design Spec v0.8: Tokens, Komponenten, Verhalten, Zustände, iPhone Duo (§ 8), offene Fragen (§ 6), Varianten (§ 7), Änderungen vor der Beta (§ 9).
 2. `design/screenshots/` – Referenzbilder je Bildschirm und Zustand. Übersicht: `design/screenshots/INDEX.md`.
 3. `design/prayer-times-prototype.html` – Quelltext des Prototyps (~2 400 Zeilen, nicht komplett einlesen, gezielt suchen):
    - Tokens: `:root`-CSS am Anfang (Farben hell/dunkel, Abstände, Radien, Schriftgrößen)
-   - alle Texte DE/TR/EN/ES: JS-Objekt `T`
+   - alle Texte, 16 Sprachen (Spec § 9.10): JS-Objekt `T`
    - Logik: `todayTimes()`, `phase()`, `phaseKey()`, `kerahatWins()`, `activeKerahat()`, `guideState()`, `dayProgress()`, `ARCS` + `arcHTML()`, `qadaPage()`
    - Daten: `METHODS`, `RAKAH`, `GUIDE_STEPS`, `FORMULA`, `VERSES`, `KERAHAT_MIN`
    - Seiten: `homePage()`, `prayerRow()`, `topBarHTML()`, `qiblaPage()`, `guidePage()`, `versesPage()`, `qadaPage()`, `PAGES` (Einstellungen), `laBanner()`/`diExpanded()` (Live-Aktivität)
@@ -31,7 +31,7 @@ Werte und Formeln von dort übernehmen, nicht schätzen. Bei Widerspruch gilt: S
   - `Features` – Bildschirme: Today, Qibla, Guide, Verses, Qada, Settings, Onboarding.
 - Einzige Fremdabhängigkeit: **Adhan Swift** (MIT) für die Gebetszeiten. Keine Analytics, keine Crash-Reporter von Dritten, kein eigener Server. Netzwerk nur über Apple-Dienste (Ortssuche, Geocoding).
 - Daten bleiben auf dem Gerät (`@AppStorage`/UserDefaults, auch für das Nachholen – entschieden am 12.11.2026 statt SwiftData). App Group für Widgets und Live Activity.
-- Texte: String Catalog `Localizable.xcstrings` mit DE, TR, EN, ES, erzeugt aus `T` – dazu die Platzhalter der Verse aus `VERSES` und `SURAH`. Keine fest verdrahteten Texte.
+- Texte: String Catalog `Localizable.xcstrings` mit 16 Sprachen (DE, TR, EN, ES, FR, NL, BS, SQ, AR, UR, ID, MS, BN, FA, RU, IT; Spec § 9.10), erzeugt aus `T` – dazu die Platzhalter der Verse aus `VERSES` und `SURAH`. Keine fest verdrahteten Texte.
 - Systemkomponenten bevorzugen: `TabView`, `NavigationStack`, `.glassEffect`, `GlassEffectContainer`, `.buttonStyle(.glass)`, `.searchable`, `.sheet`, `Text(timerInterval:)`, `Calendar(identifier: .islamicUmmAlQura)`. Eigene Leisten nur dort, wo die Spec sie verlangt (Chips oben im Gebete-Tab).
 - Barrierefreiheit wie in der Spec: Dynamic Type bis AX, VoiceOver-Labels, 44-pt-Tippziele, Reduce Motion, Farbe nie als einziges Signal.
 

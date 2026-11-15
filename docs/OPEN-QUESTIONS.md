@@ -6,7 +6,7 @@ Stand: 15.11.2026, Entwicklerkonto da, Kennungen eingetragen.
 
 ## Für die erste Beta
 
-Die erste Beta über TestFlight kommt nach Phase 11 und enthält alles, auch Mitteilungen, Widgets, Live-Aktivität und Duo (entschieden am 12.11.2026). Was ohne Konto geht, ist vorbereitet (14.11.2026, unten). Seit dem 15.11.2026 gibt es das Konto; was noch fehlt, beschreibt `docs/APP-STORE.md` unter „Mit dem Konto“:
+Die erste Beta über TestFlight kommt nach Phase 11 – seit dem 15.11.2026 nach den Phasen 12–15 mit den Änderungen vor der Beta (unten, Spec § 9) – und enthält alles, auch Mitteilungen, Widgets, Live-Aktivität und Duo (entschieden am 12.11.2026). Was ohne Konto geht, ist vorbereitet (14.11.2026, unten). Seit dem 15.11.2026 gibt es das Konto; was noch fehlt, beschreibt `docs/APP-STORE.md` unter „Mit dem Konto“:
 
 - **Konto und Team (erledigt am 15.11.2026):** Apple Developer Program als Einzelperson (Auswahl „Als Person“ statt Verein), Team `V7652FBKMY` – das bisherige persönliche Team, von Apple hochgestuft. Im App Store steht damit der volle Name des Inhabers als Anbieter; in der Datenschutzerklärung ist er der Verantwortliche. Ein späterer Wechsel zu einem eigenen Studio (juristische Person, etwa UG oder GmbH) geht über Apples Support oder eine Übertragung der App.
 - **Kennungen (festgelegt am 15.11.2026, „Mit deinem Namen“):** App `de.mehmetyilmaz.gebetszeiten`, Extension `de.mehmetyilmaz.gebetszeiten.widgets`, App Group `group.de.mehmetyilmaz.gebetszeiten`, eingetragen in `project.yml`. Registriert werden sie beim ersten signierten Build. Die Bundle-ID ist nach dem ersten Upload fest.
@@ -14,6 +14,30 @@ Die erste Beta über TestFlight kommt nach Phase 11 und enthält alles, auch Mit
 - **Signiertes Archiv und Upload:** signiert archivieren, mit `scripts/check-archive` prüfen (dann auch die App Group in den Entitlements), hochladen; zuerst intern testen, dann extern.
 
 Erledigt ohne Konto am 14.11.2026: `make archive` baut das Release-Archiv ohne Signatur, und `scripts/check-archive` findet es in Ordnung – nur iPhone (vorher iPhone und iPad, unten unter „Annahmen in der Beta-Vorbereitung“), Exportkontrolle `ITSAppUsesNonExemptEncryption = NO`, beide Manifeste, Icon, alle Texte in vier Sprachen, kein Debug-Code. Dazu die Datenschutzerklärung (`docs/DATENSCHUTZ.md`, `docs/PRIVACY.md`) und die Texte für TestFlight (`docs/APP-STORE.md`). Mit Phase 11 kamen das Platzhalter-Icon und die Datenschutz-Manifeste. Die Platzhalter – Übersetzungen der Verse, Adhan-Aufnahmen, Texte der Anleitung, Icon, Link „Quellcode“ – dürfen in der Beta bleiben; „Was testen“ nennt sie.
+
+## Änderungen vor der Beta, entschieden am 15.11.2026
+
+Der Nutzer hat zwölf Änderungen gewünscht, im Prototyp angesehen, korrigiert und mit „Passt, umsetzen“ abgenommen. Beschreibung in Spec § 9, Bau in den Phasen 12–15 (`docs/BUILD-PLAN.md`).
+
+- **Qibla-Toleranz:** ±40°, zusammen 80° (Auswahl „±40°, zusammen 80°“; die Empfehlung war ±20°).
+- **Spenden:** „Erst nur der Hinweis“ – Onboarding-Seite und Seite „Unterstützen“ ohne Zahlung. Eine spätere Spende geht nach Apples Regeln über In-App-Kauf; dafür braucht es den Vertrag für kostenpflichtige Apps (Bank- und Steuerdaten), und mit Einnahmen gilt man in der EU eher als Händler (Anschrift und Telefon im Store). Links auf eigene Zahlungsseiten lehnt Apple außerhalb der USA in der Regel ab.
+- **Spenden auch in den Einstellungen:** ja („Auch in den Einstellungen“).
+- **Schritt für Schritt:** das ganze Gebet mit allen Rakʿas („Das ganze Gebet“).
+- **Kerahat:** nur im Bogen eingezeichnet, die Uhrzeiten bleiben in den Zeilen (Korrektur nach dem ersten Entwurf mit Uhrzeiten im Bogen).
+- **Obere Leiste:** mittig, Einstellungskreis rechts (Korrektur).
+- **Nachhol-Rechner:** ganz unten (Korrektur nach dem ersten Entwurf oben).
+- **Sprachen:** alle zwölf vorgeschlagenen zusätzlich – FR, NL, BS, SQ, AR, ID, UR, MS, BN, FA, RU, IT.
+- **Tage vor und zurück:** dezent (Korrektur nach dem ersten Entwurf mit Kreis-Knöpfen und Pille).
+- **Widgets:** derselbe Bogen in der Live-Aktivität; Halbkreis im rechteckigen Sperrbildschirm-Widget; neues mittleres Home-Widget im Stil der Live-Aktivität.
+- **Hohe Breiten:** zusätzlich „Manuelle Winkel“.
+
+Offen bzw. Annahmen:
+
+- **Welches Widget bekommt den Halbkreis?** Gesagt: „Homescreen-Widget, also das große Sperrbildschirm-Widget“. Angenommen: das rechteckige Sperrbildschirm-Widget. Meinte der Nutzer das mittlere Home-Widget mit der Zeitenliste, bekommt dieses den Bogen.
+- **Übersetzungen der zwölf neuen Sprachen** sind KI-Entwürfe (Hilfsagenten, 15.11.2026): vor dem App Store von Muttersprachlern prüfen lassen, besonders die religiösen Begriffe. Mehrzahlformen sind in einigen Entwürfen fest (z. B. Bosnisch „{n} rekata“, Arabisch) – Plural-Varianten im String Catalog.
+- **Vers-Übersetzungen** gibt es nur für DE/TR/EN/ES (Platzhalter); die übrigen Sprachen fallen auf Englisch zurück, Arabisch zeigt keine Übersetzung. Lizenzierte Übersetzungen je Sprache gehören zur Frage „Übersetzungen der Verse“ unten.
+- **Neue Texte der Anleitung** (kurzes Sitzen, zweite Niederwerfung, erstes/letztes Sitzen) sind wie die übrige Anleitung fachlich ungeprüft.
+- **Duo:** Der Prototyp zeigt die neuen Elemente nur auf dem iPhone ausführlich; auf dem Duo gelten die Regeln aus Spec § 8 (Durchlauf als Vollbild, Tage-Navigation in der linken Spalte).
 
 ## Vor dem App Store
 

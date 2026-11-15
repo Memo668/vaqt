@@ -1,6 +1,6 @@
-# Prayer Times (iOS) – Design Spec v0.7
+# Prayer Times (iOS) – Design Spec v0.8
 
-Handoff for building the native SwiftUI app. The visual reference is `prayer-times-prototype.html` (single file, open it in a browser). Design tokens are in its `:root` CSS, every string is in the JS object `T` (DE/TR/EN/ES), mock data is in `CITIES` / `BERLIN_SUMMER` / `METHODS`, and the app state model is `S`.
+Handoff for building the native SwiftUI app. The visual reference is `prayer-times-prototype.html` (single file, open it in a browser). Design tokens are in its `:root` CSS, every string is in the JS object `T` (16 languages since v0.8, § 9.10), mock data is in `CITIES` / `BERLIN_SUMMER` / `METHODS`, and the app state model is `S`.
 
 Product guardrails: non-profit, no ads, no tracking, no accounts, no social features. All calculation happens on device. Since v0.3 there is a small "Verses" area (verse of the day, last 7 days); it is deliberately not a Quran reader.
 
@@ -214,7 +214,61 @@ SwiftUI: keep `TabView` and `NavigationStack` (the system lays the bars out vert
 
 ---
 
+## 9. Changes before the first beta (v0.8, approved 15.11.2026)
+
+Requested by the product owner after Phase 11 and approved in the prototype ("Passt, umsetzen", 15.11.2026). The prototype panel lists each change under "Änderungen vom 15.11.2026" and jumps to it. Where this section and older sections disagree, this section wins.
+
+### 9.1 App icon everywhere
+The real app icon (light and dark variant of `AppIcon`) replaces the crescent glyph wherever the brand mark appears: Onboarding step 1 (120 pt, corner radius 22.4 %, soft shadow), the tagline at the end of Settings (34 pt), Live Activity header (16 pt, radius 4), the new Live-style widget header (16 pt). Notifications and the Home Screen show the system icon anyway. SwiftUI cannot load `AppIcon` as an image: add an image set with the same artwork.
+
+### 9.2 Top bar centred
+On iPhone and the Duo when not in rail mode the chips sit centred; the Settings circle moves to the **trailing** edge; a leading spacer of the circle's width keeps the chips centred. The collapse rule is unchanged (unselected chips shrink to circles when the labels don't fit). Duo rail: the circle stays at the top of the column. RTL mirrors (circle leading).
+
+### 9.3 Kerahat drawn on the arc
+The three kerahat windows are drawn **on the track itself**: full track width (12 pt Home, 7 pt Live Activity and Live widget, 4 pt dashed on the Lock Screen widget), butt caps, colour `kerahat` (light `#C7862A`, dark `#D9A04E`; on the accent background of Live Activity/widget `#F3C979`); opacity 0.92, windows already over 0.42, the active one 1.0. No times in the arc – the times stay on the Sunrise/Dhuhr/Asr rows exactly as in v0.6 ("Kerahat 07:14–07:59", "Kerahat bis 07:59"). Settings footer: "Im Bogen eingezeichnet, die Uhrzeiten stehen bei den Zeiten …".
+
+### 9.4 Previous and next day
+- Under the city: the date block (Gregorian + Hijri) with a chevron button on each side – 16 pt glyph, `label-3`, no background, 44 pt hit area. Range ±365 days. RTL mirrors.
+- On another day a small text link "Zurück zu heute" (caption 1, accent) appears under the date.
+- Another day: the arc shows that day's times and kerahat windows without progress and without the "now" knob; instead of the countdown the hero shows the relative day (system `RelativeDateTimeFormatter`, numeric auto, first letter capitalised: "Morgen", "Übermorgen", "In 3 Tagen") and the short date ("Di., 17. Nov.", 40 pt light). The rows show that day's times and kerahat; no "now" or passed state.
+- Notifications, widgets, Live Activity and the countdown always stay on today.
+
+### 9.5 Qibla tolerance
+A wedge of **±40° (80° in total)** centred on the Qibla bearing, from radius 22 to 144 (dial `viewBox` −150…150): fill accent 11 % (22 % while the heading is inside), dashed edges accent 50 %. Status: |difference| ≤ 3° → "Du blickst Richtung Qibla" (unchanged); ≤ 40° → "Im Toleranzbereich" with check mark, below it small "Nach rechts drehen 25°"; otherwise the turn hint. Under the bearing line a legend: swatch + "Der markierte Bereich reicht 40° zu jeder Seite der Qibla."
+
+### 9.6 Prayer step by step
+- Entry: primary button "Gebet Schritt für Schritt" (play symbol) in the guide's header card, under it "Haltung für Haltung durch alle {n} Rakʿas von {p}." Opens a full-screen cover for the selected prayer.
+- Sequence (whole prayer): intro (prayer icon, "{p} · {n} Rakʿas", wudu/Qibla/niyya text, rakʿa dots) → takbīr (1st rakʿa only) → per rakʿa: qiyām (badge "Rezitation: laut/leise"; rakʿa 1–2 "Fātiḥa, danach eine weitere Sure", from rakʿa 3 "nur al-Fātiḥa"), rukūʿ, iʿtidāl, sujūd ("Sprich dreimal"), short sitting (jalsa), second sujūd → after rakʿa 2 of a 3- or 4-rakʿa prayer the first sitting (tashahhud) → at the end the last sitting, salām and "Gebet beendet – Möge Allah dein Gebet annehmen." Dhuhr: 28 steps plus intro and end.
+- Layout: close button, title = prayer, subtitle "Rakʿa 2 von 4 · Schritt 9 von 28", progress bar 4 pt; pose tile 172 pt (radius 44, accent tint) with the pictogram at 126 pt; title 1 bold; body text max ≈ 30 characters per line; formula card (Arabic 27 pt Amiri, transliteration italic); buttons "Zurück" (tinted) and "Weiter" (primary) at 1 : 1.6, last step "Fertig". Steps slide 22 pt in reading direction; Reduce Motion: cross-fade only. VoiceOver announces the step line.
+- New texts for jalsa, second sujūd, first/last sitting are drafts and need the same expert review as the rest of the guide (§ 6.14).
+
+### 9.7 Arabic typeface
+Verses: **Amiri Quran** 31 pt, line height 2.15. Formulas: **Amiri** 23 pt (guide), 27 pt (step by step). Both SIL Open Font License 1.1: bundle the font files, register them, and list the licence on the licences page.
+
+### 9.8 Qada calculator
+Own card at the **very bottom** of the page (after the counters per prayer, before the footnote): accent tile with the qada symbol, title "Nachholgebete berechnen", lead "Wie lange hast du nicht regelmäßig gebetet? Ein ungefährer Zeitraum reicht."; three numbered steps – 1 Zeitraum (tiles Jahre/Monate/Tage, each with a stepper), 2 Witr switch, 3 Ergebnis (number 40 pt rounded accent + "Gebete nachzuholen", detail "545 Tage × 5 Gebete"); primary button "Als offen übernehmen" (disabled at 0 days) and the existing footnote. Card outline: inset 1.5 pt accent 30 %. Page order: title, intro, progress card, daily plan, counters, calculator, footnote.
+
+### 9.9 Free, no ads – and support
+- Onboarding gets a 4th page "Kostenlos. Ohne Werbung." (heart badge, text, chips "Keine Werbung / Kein Tracking / Kein Konto", button "Los geht's"). "Überspringen", "Später" and the answer to the notification prompt lead to this page; 4 dots.
+- Settings: own group with the row "{App} unterstützen" (red heart, subline "Kostenlos und werbefrei, dank Spenden") → page "Unterstützen": hero, "Wofür Spenden gedacht sind" (Apple developer account 99 € a year, maintenance, content), card "Spenden sind bald möglich" with "App weiterempfehlen" (share sheet), footnote "Spenden sind freiwillig …".
+- **No payment in v1** (decided 15.11.2026, "Erst nur der Hinweis"). A later donation needs In-App Purchase (Apple's rule for supporting developers) and the paid-apps agreement.
+
+### 9.10 Sixteen languages
+DE, TR, EN, ES plus **FR, NL, BS, SQ, AR, UR, ID, MS, BN, FA, RU, IT** (decided 15.11.2026). Arabic, Urdu and Persian are right-to-left: the layout mirrors (arc from right to left, chevrons, columns). All strings live in `T` (prototype) / the String Catalog; the twelve new languages are AI drafts and need a native-speaker review before the App Store. Counts need plural variants in the catalog (several drafts use a fixed plural). Verse translations exist only for DE/TR/EN/ES (placeholders); other languages fall back to English, Arabic shows no translation under the verse. Dates use the system calendar of the locale (fa-IR shows the Persian calendar).
+
+### 9.11 Live Activity and widgets with the same arc
+- Live Activity: kerahat on the track as in § 9.3.
+- Lock Screen rectangular widget: a mini arc on top (148 × 32 pt; dots 3.6/4.6 pt, track 4 pt, knob 3.4 pt, kerahat dashed – the Lock Screen is monochrome), below it the next prayer with time and the countdown.
+- New **medium Home Screen widget "Live"** in the Live Activity look: accent gradient, header (icon + app name, city), arc 314 × 116 pt with times, "{p} · {time}", countdown 30 pt rounded bold. The existing widgets stay.
+- Assumption: "das große Sperrbildschirm-Widget" = the rectangular Lock Screen widget. If the medium list widget was meant, it gets the arc instead.
+
+### 9.12 High latitudes: manual angles
+Fourth rule "Manuelle Winkel" (subline "Eigene Dämmerungswinkel für Fadschr und Ischa"). When selected, a group "Dämmerungswinkel" with steppers for Fadschr and Ischa, 10–20°, default 15°. Calculation: the chosen angles; the night portion angle ÷ 60 is the safe bound (Adhan: custom `fajrAngle`/`ishaAngle` with `.twilightAngle`). Footer: "Erreicht die Sonne den eingestellten Winkel nicht, gilt der entsprechende Anteil der Nacht (Winkel ÷ 60)."
+
+---
+
 ## Changelog
+- **v0.8 (15.11.2026):** Changes before the first beta (§ 9): app icon everywhere, top bar centred with Settings on the trailing side, kerahat drawn on the arc (times stay on the rows), previous/next day, Qibla tolerance ±40°, prayer step by step, Amiri typefaces, qada calculator card at the bottom, onboarding page "Kostenlos. Ohne Werbung." and support page, 16 languages with RTL, same arc in Live Activity and widgets plus a Live-style medium widget, manual twilight angles for high latitudes.
 
 - **v0.7 (09.11.2026):** iPhone Duo: outer display with the bars in a vertical column on the right (vertical Dynamic Island, circular status), inner display with two columns that meet at the fold. Panel: Device switch.
 - **v0.6 (09.11.2026):** Qada summary shows the share made up in percent as the largest figure (open count small). Kerahat times subtly marked on the arc (thin inner segments) and on the Sunrise/Dhuhr/Asr rows, with a toggle in Settings. New Live Activity: Lock Screen with the day arc, Dynamic Island compact and expanded; setting "Live Activity" (Off/30/60 min before). Prototype panel: view "Live Activity".
