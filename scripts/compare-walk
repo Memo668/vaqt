@@ -1,0 +1,102 @@
+#!/bin/bash
+# Abgleich des Durchlaufs „Gebet Schritt für Schritt“ mit den Referenzbildern design/screenshots/iphone/43–49
+# (Phase 13, Spec § 9.6).
+#
+# Startet die App je Zustand mit -debugWalk und -debugWalkStep (wie `S.walk` in
+# scripts/capture-prototype.mjs), nimmt den Bildschirm auf und legt Ausschnitte mit scripts/compare-shot
+# neben die Referenz: Kreis zum Schließen, Titel mit Schrittzeile, Fortschritt, die Seite in der Mitte und
+# die Knöpfe links und rechts. Die App muss gebaut und installiert sein:
+#
+#   make run
+#   scripts/compare-walk              alle Zustände
+#   scripts/compare-walk 47 49-dark   nur diese (Präfix des Dateinamens nach der Nummer)
+#
+# Ergebnis in screenshots-out/phase-13/: walk-<Zustand>.png (Aufnahmen) und compare-<Ausschnitt>-<Zustand>.png
+# (oben Referenz, Mitte Aufnahme, unten Unterschied).
+#
+# Der Simulator (iPhone 18 Pro, 402 × 874 pt) ist 12 pt breiter und 30 pt höher als die Referenzbilder
+# (390 × 844 pt). Verglichen werden deshalb Ausschnitte:
+#   - Oben beginnt der Durchlauf am sicheren Bereich (62 pt), im Prototyp bei 54 pt (`.walk`:
+#     `padding-top: 54px`): Kopf und Fortschritt sitzen 8 pt tiefer als das CSS sie setzt. Im Referenzbild
+#     liegt alles 1 pt unter der Stelle aus dem CSS (gemessen am Fortschritt: 113 statt 112 pt) – die
+#     Ausschnitte der Aufnahme liegen deshalb 7 pt tiefer.
+#   - Unten stehen die Knöpfe 12 pt über dem Home-Indikator: in der App ab 778 pt, im Referenzbild ab
+#     749 pt (Bereich der Knöpfe ab 764 bzw. 735 pt).
+#   - Die Seite dazwischen ist in der App 22 pt höher und steht mittig darin: 8 + 11 − 1 = 18 pt tiefer,
+#     und 6 pt weiter rechts, weil die App 12 pt breiter ist.
+#   - Die Knöpfe teilen die Breite 1 : 1,6; ihre linke und rechte Hälfte werden getrennt verglichen,
+#     jede an ihrem Rand ausgerichtet.
+#
+# Der Simulator lässt sich mit SIM='…' wählen, wie im Makefile.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SIM="${SIM:-iPhone 18 Pro}"
+BUNDLE_ID="${BUNDLE_ID:-$("$ROOT/scripts/bundle-id")}"
+REF="$ROOT/design/screenshots/iphone"
+OUT="${OUT:-$ROOT/screenshots-out/phase-13}"
+ZOOM="${ZOOM:-3}"
+WAIT="${WAIT:-3}"
+
+# Ausschnitte in pt (x,y,Breite,Höhe), erst im Referenzbild, dann in der Aufnahme.
+CLOSE_REF=0,54,120,66;      CLOSE_SHOT=0,61,120,66
+HEAD_REF=60,54,270,66;      HEAD_SHOT=66,61,270,66
+BAR_REF=0,108,200,12;       BAR_SHOT=0,115,200,12
+PAGE_REF=25,116,340,618;    PAGE_SHOT=31,134,340,618
+ACT_L_REF=0,734,200,64;     ACT_L_SHOT=0,763,200,64
+ACT_R_REF=190,734,200,64;   ACT_R_SHOT=202,763,200,64
+
+# Zustand: Datei (ohne iphone/ und .png), Gebet, Seite – wie in scripts/capture-prototype.mjs.
+STATES=(
+  "43-walk-intro dhuhr 0"
+  "43-walk-intro-dark dhuhr 0"
+  "44-walk-takbir dhuhr 1"
+  "45-walk-qiyam-silent dhuhr 2"
+  "46-walk-qiyam-loud maghrib 2"
+  "47-walk-sujud dhuhr 5"
+  "47-walk-sujud-dark dhuhr 5"
+  "48-walk-tash-first dhuhr 14"
+  "49-walk-done dhuhr 29"
+  "49-walk-done-dark dhuhr 29"
+)
+
+# compare Name Referenzbild Referenz-Ausschnitt Aufnahme Aufnahme-Ausschnitt
+compare() {
+  printf '  %-26s ' "$1"
+  "$ROOT/scripts/compare-shot" --ref "$REF/$2.png" --ref-rect "$3" --shot "$4" --shot-rect "$5" \
+    --out "$OUT/compare-$1.png" --zoom "$ZOOM" | head -1
+}
+
+mkdir -p "$OUT"
+xcrun simctl bootstatus "$SIM" -b >/dev/null
+xcrun simctl ui "$SIM" content_size large
+# Der erste Start nach einer Pause dauert länger als die Wartezeit vor der Aufnahme. Deshalb einmal vorab.
+xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" -debugSkipOnboarding -debugFixtureTimes >/dev/null
+sleep 3
+
+BASE=(-debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25)
+
+for entry in "${STATES[@]}"; do
+  read -r file prayer step <<<"$entry"
+  if [ $# -gt 0 ]; then
+    match=0
+    for prefix in "$@"; do [[ "$file" == "$prefix"* ]] && match=1; done
+    [ "$match" = 1 ] || continue
+  fi
+  if [[ "$file" == *-dark ]]; then xcrun simctl ui "$SIM" appearance dark; else xcrun simctl ui "$SIM" appearance light; fi
+  shot="$OUT/walk-${file}.png"
+  xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" \
+    -AppleLanguages '(de)' -AppleLocale de_DE "${BASE[@]}" -debugWalk "$prayer" -debugWalkStep "$step" >/dev/null
+  # Das Vollbild gleitet nach dem Start herein; erst danach aufnehmen.
+  sleep "$WAIT"
+  xcrun simctl io "$SIM" screenshot "$shot" >/dev/null 2>&1
+  echo "iphone/$file:"
+  compare "close-$file" "$file" "$CLOSE_REF" "$shot" "$CLOSE_SHOT"
+  compare "head-$file" "$file" "$HEAD_REF" "$shot" "$HEAD_SHOT"
+  compare "bar-$file" "$file" "$BAR_REF" "$shot" "$BAR_SHOT"
+  compare "page-$file" "$file" "$PAGE_REF" "$shot" "$PAGE_SHOT"
+  compare "act-l-$file" "$file" "$ACT_L_REF" "$shot" "$ACT_L_SHOT"
+  compare "act-r-$file" "$file" "$ACT_R_REF" "$shot" "$ACT_R_SHOT"
+done
+xcrun simctl ui "$SIM" appearance light
+
+echo "Ergebnis in $OUT"

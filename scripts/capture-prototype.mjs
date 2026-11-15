@@ -70,6 +70,18 @@ const STATES = [
   { file: 'iphone/41-guide-steps', at: hm(14, 25), s: { ...home, tab: 'guide', guidePick: null }, scroll: { guide: 640 } },
   { file: 'iphone/42-guide-manual-pick', at: hm(14, 25), s: { ...home, tab: 'guide', guidePick: 'maghrib' } },
 
+  // Gebet Schritt für Schritt – Phase 13, Änderung 5 (`walk` im Prototyp: {p, i, dir}; i wie -debugWalkStep)
+  { file: 'iphone/43-walk-intro', at: hm(14, 25), s: { ...home, tab: 'guide', walk: { p: 'dhuhr', i: 0, dir: 1 } } },
+  { file: 'iphone/43-walk-intro-dark', dark: true, at: hm(14, 25), s: { ...home, tab: 'guide', walk: { p: 'dhuhr', i: 0, dir: 1 } } },
+  { file: 'iphone/44-walk-takbir', at: hm(14, 25), s: { ...home, tab: 'guide', walk: { p: 'dhuhr', i: 1, dir: 1 } } },
+  { file: 'iphone/45-walk-qiyam-silent', at: hm(14, 25), s: { ...home, tab: 'guide', walk: { p: 'dhuhr', i: 2, dir: 1 } } },
+  { file: 'iphone/46-walk-qiyam-loud', at: hm(14, 25), s: { ...home, tab: 'guide', walk: { p: 'maghrib', i: 2, dir: 1 } } },
+  { file: 'iphone/47-walk-sujud', at: hm(14, 25), s: { ...home, tab: 'guide', walk: { p: 'dhuhr', i: 5, dir: 1 } } },
+  { file: 'iphone/47-walk-sujud-dark', dark: true, at: hm(14, 25), s: { ...home, tab: 'guide', walk: { p: 'dhuhr', i: 5, dir: 1 } } },
+  { file: 'iphone/48-walk-tash-first', at: hm(14, 25), s: { ...home, tab: 'guide', walk: { p: 'dhuhr', i: 14, dir: 1 } } },
+  { file: 'iphone/49-walk-done', at: hm(14, 25), s: { ...home, tab: 'guide', walk: { p: 'dhuhr', i: 29, dir: 1 } } },
+  { file: 'iphone/49-walk-done-dark', dark: true, at: hm(14, 25), s: { ...home, tab: 'guide', walk: { p: 'dhuhr', i: 29, dir: 1 } } },
+
   // Verse – Phase 6
   { file: 'iphone/50-verses', at: hm(14, 25), s: { ...home, section: 'verses' } },
   { file: 'iphone/51-verses-dark', dark: true, at: hm(14, 25), s: { ...home, section: 'verses' } },
