@@ -33,12 +33,15 @@ public struct DayArcMetrics: Hashable, Sendable {
     public var timeGap: CGFloat
     /// Abstand zwischen Marker und Zeit unter den beiden Endmarkern (`below`).
     public var timeBelow: CGFloat
-    /// Um so viel liegen die Kerahat-Segmente innerhalb des Bogens (`k`).
+    /// Um so viel liegen die Kerahat-Segmente innerhalb des Bogens (`k`); 0, wenn sie auf der Spur liegen.
     public var kerahatInset: CGFloat
     /// Strichstärke des Bogens (`.arc-track`, `.arc-done`).
     public var trackWidth: CGFloat
-    /// Strichstärke der Kerahat-Segmente (`.arc-k`).
+    /// Strichstärke der Kerahat-Segmente (`.arc-k`); auf der Spur so breit wie sie.
     public var kerahatWidth: CGFloat
+    /// Ob die Kerahat-Segmente als Abschnitte auf der Spur liegen, mit eckigen Enden (Spec § 9.3,
+    /// `.arc-k.on-track`) – sonst als dünne, runde Striche knapp innerhalb (bis v0.7).
+    public var kerahatOnTrack: Bool
     /// Sichtbare Breite des Rings um einen Marker, der eng an seinem Vorgänger liegt. Der Prototyp
     /// zeichnet eine 3 pt breite Kontur, deren innere Hälfte unter der Füllung liegt (`paint-order`).
     public var ringWidth: CGFloat
@@ -52,24 +55,25 @@ public struct DayArcMetrics: Hashable, Sendable {
     /// Abstand des Inhalts im Bogen zur Unterkante (`.hero-text`, `.la-text`).
     public var contentBottomInset: CGFloat
 
-    /// `ARCS.home`: der Bogen der Zeiten-Seite, 358 × 180 pt.
+    /// `ARCS.home`: der Bogen der Zeiten-Seite, 358 × 180 pt. Kerahat liegt seit v0.8 auf der Spur.
     public static let home = DayArcMetrics(
         size: CGSize(width: 358, height: 180), center: CGPoint(x: 179, y: 206), radius: 162, endAngle: 0.45,
         markerRadius: 15, currentMarkerRadius: 17, symbolSize: 16, currentSymbolSize: 18,
         glowRadius: 25, knobRadius: 7,
-        timeBox: CGSize(width: 34, height: 13), timeGap: 5, timeBelow: 12, kerahatInset: 19,
-        trackWidth: 12, kerahatWidth: 3, ringWidth: 1.5,
+        timeBox: CGSize(width: 34, height: 13), timeGap: 5, timeBelow: 12, kerahatInset: 0,
+        trackWidth: 12, kerahatWidth: 12, kerahatOnTrack: true, ringWidth: 1.5,
         timeFontSize: 12, timeScales: true, tabularTimes: true, contentBottomInset: 2
     )
 
     /// `ARCS.la`: dieselbe Zeichnung kleiner und flacher, für die Live-Aktivität auf dem
-    /// Sperrbildschirm, 330 × 122 pt.
+    /// Sperrbildschirm, 330 × 122 pt. Kerahat noch als dünne Striche innerhalb; auf die Spur kommt es in
+    /// Phase 14 (Spec § 9.11).
     public static let liveActivity = DayArcMetrics(
         size: CGSize(width: 330, height: 122), center: CGPoint(x: 165, y: 190), radius: 166, endAngle: 0.6,
         markerRadius: 10.5, currentMarkerRadius: 12, symbolSize: 12, currentSymbolSize: 13,
         glowRadius: 17, knobRadius: 4.5,
         timeBox: CGSize(width: 28, height: 11), timeGap: 3, timeBelow: 9, kerahatInset: 13.5,
-        trackWidth: 7, kerahatWidth: 2, ringWidth: 1.5,
+        trackWidth: 7, kerahatWidth: 2, kerahatOnTrack: false, ringWidth: 1.5,
         timeFontSize: 10.5, timeScales: false, tabularTimes: false, contentBottomInset: 6
     )
 

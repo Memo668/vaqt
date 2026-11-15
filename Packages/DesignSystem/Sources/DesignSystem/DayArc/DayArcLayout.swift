@@ -39,15 +39,30 @@ public struct DayArcLayout: Hashable, Sendable {
         public var id: Prayer { prayer }
     }
 
-    /// Ein Kerahat-Fenster als Stück eines Bogens knapp innerhalb der Spur.
+    /// Zustand eines Kerahat-Fensters auf dem Bogen.
+    public enum KerahatState: Hashable, Sendable {
+        /// Das Fenster kommt noch.
+        case upcoming
+        /// Das Fenster ist heute schon vorbei; das Segment ist blasser (`is-past`).
+        case past
+        /// Das Fenster läuft; das Segment ist am kräftigsten (`is-now`).
+        case active
+    }
+
+    /// Ein Kerahat-Fenster als Stück des Bogens – auf der Spur (Spec § 9.3) oder knapp innerhalb.
     public struct KerahatSegment: Hashable, Sendable, Identifiable {
         public let id: KerahatWindow.Kind
         /// Beginn als Anteil des Gebetstages, auf 0 bis 1 begrenzt (`f0`).
         public let start: Double
         /// Ende als Anteil des Gebetstages (`f1`).
         public let end: Double
-        /// Ob das Fenster gerade läuft; dann ist das Segment kräftiger (`is-now`).
-        public let isActive: Bool
+        public let state: KerahatState
+        /// Beginn und Ende als Uhrzeit am Ort – für VoiceOver (`kerahatArc`); im Bogen stehen keine Zeiten.
+        public let startTime: ClockTime
+        public let endTime: ClockTime
+
+        /// Ob das Fenster gerade läuft.
+        public var isActive: Bool { state == .active }
     }
 
     /// Zwei Marker gelten als eng, wenn zwischen ihren Rändern weniger als 6 pt liegen.
@@ -124,7 +139,12 @@ public struct DayArcLayout: Hashable, Sendable {
                 let start = min(1, max(0, fraction(of: window.start)))
                 let end = min(1, max(0, fraction(of: window.end)))
                 guard end - start >= Self.shortestSegment else { return nil }
-                return KerahatSegment(id: window.id, start: start, end: end, isActive: active?.id == window.id)
+                // Vorbei ist ein Fenster, sobald „jetzt“ sein Ende erreicht hat (`nsMin >= w.b`).
+                let state: KerahatState = active?.id == window.id ? .active : phase.now >= window.end ? .past : .upcoming
+                return KerahatSegment(
+                    id: window.id, start: start, end: end, state: state,
+                    startTime: ClockTime(window.start, in: times.timeZone), endTime: ClockTime(window.end, in: times.timeZone)
+                )
             }
         } else {
             kerahat = []
@@ -136,12 +156,17 @@ public struct DayArcLayout: Hashable, Sendable {
         metrics.point(at: progress, isRightToLeft: isRightToLeft)
     }
 
+    /// Die Kerahat-Fenster für VoiceOver: „07:14–07:59, 11:42–11:52, 15:42–16:27“ (`kerahatArc`).
+    public var kerahatList: String {
+        kerahat.map { "\($0.startTime)–\($0.endTime)" }.joined(separator: ", ")
+    }
+
     /// Wie viele der fünf Gebetszeiten heute begonnen haben – für den VoiceOver-Text `arcPrayers`.
     public var begunCount: Int {
         markers.count { $0.state != .upcoming }
     }
 
-    /// Radius, auf dem die Kerahat-Segmente liegen.
+    /// Radius, auf dem die Kerahat-Segmente liegen – auf der Spur der des Bogens.
     public var kerahatRadius: CGFloat {
         metrics.radius - metrics.kerahatInset
     }

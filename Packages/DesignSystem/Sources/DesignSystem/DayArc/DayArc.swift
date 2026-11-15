@@ -28,7 +28,8 @@ public enum DayArcStyle: Hashable, Sendable {
 /// Die fünf Gebete sitzen als runde Marker mit Symbol auf dem Bogen, nach ihrer Uhrzeit. Kommende sind
 /// getönt, begonnene gefüllt, das laufende ist größer und hat einen Schein. Der Teil bis „jetzt“ ist in
 /// Akzent gefüllt, ein weißer Knopf markiert „jetzt“. Die Zeiten stehen außen am Bogen, bei den beiden
-/// Endmarkern darunter. Kerahat-Fenster sind dünne Segmente knapp innerhalb des Bogens.
+/// Endmarkern darunter. Kerahat-Fenster liegen als goldene Abschnitte auf der Spur, ohne Uhrzeiten – die
+/// stehen in den Gebetskarten (Spec § 9.3); in der Live-Aktivität bis Phase 14 als dünne Segmente innerhalb.
 ///
 /// Bei RTL beginnt Fadschr rechts; Zahlen und Symbole werden nicht gespiegelt. Der Sonnenaufgang ist kein
 /// Marker, weil er kein Gebet ist. Design Spec § 3 („DayArc“), `ARCS` und `arcHTML()` im Prototyp.
@@ -69,12 +70,23 @@ public struct DayArc<Content: View>: View {
                 // damit SwiftUI Zahlen und Symbole nicht noch einmal spiegelt.
                 .environment(\.layoutDirection, .leftToRight)
                 .accessibilityElement(children: .ignore)
-                .accessibilityLabel(L10n.arcPrayers(n: String(layout.begunCount)))
+                .accessibilityLabel(accessibilityLabel(for: layout))
                 .accessibilityAddTraits(.isImage)
             content
                 .padding(.bottom, layout.metrics.contentBottomInset)
         }
         .frame(width: layout.metrics.size.width, height: layout.metrics.size.height)
+    }
+}
+
+extension DayArc {
+
+    /// „3 von 5 Gebetszeiten heute begonnen“; auf der Zeiten-Seite dazu die Kerahat-Zeiten, die im Bogen
+    /// nur eingezeichnet sind (`kerahatArc`, Spec § 9.3).
+    func accessibilityLabel(for layout: DayArcLayout) -> String {
+        let prayers = L10n.arcPrayers(n: String(layout.begunCount))
+        guard style == .home, !layout.kerahat.isEmpty else { return prayers }
+        return prayers + " " + L10n.kerahatArc(list: layout.kerahatList)
     }
 }
 
@@ -102,6 +114,7 @@ struct DayArcColors {
     let timeCurrent: Color
     let kerahat: Color
     let kerahatOpacity: Double
+    let kerahatPastOpacity: Double
     let kerahatActiveOpacity: Double
     let knob: Color
     let knobStroke: Color
@@ -116,7 +129,8 @@ struct DayArcColors {
         markerBegun: Palette.accent, symbolBegun: Palette.onAccent,
         glow: Palette.accent.opacity(0.16), ring: Palette.backgroundGrouped,
         time: Palette.textSecondary, timeCurrent: Palette.accent,
-        kerahat: Palette.kerahat, kerahatOpacity: 0.5, kerahatActiveOpacity: 0.95,
+        // `.arc-k.on-track`: 0,92, vorbei 0,42, laufend 1 (Spec § 9.3).
+        kerahat: Palette.kerahat, kerahatOpacity: 0.92, kerahatPastOpacity: 0.42, kerahatActiveOpacity: 1,
         knob: .white, knobStroke: .black.opacity(0.06), knobStrokeWidth: 0.5, knobShadow: .knob,
         symbolWeight: .bold
     )
@@ -127,7 +141,7 @@ struct DayArcColors {
         markerBegun: Palette.LiveActivity.foreground, symbolBegun: Palette.LiveActivity.background,
         glow: Palette.LiveActivity.foreground.opacity(0.22), ring: Palette.LiveActivity.background,
         time: Palette.LiveActivity.time, timeCurrent: Palette.LiveActivity.foreground,
-        kerahat: Palette.LiveActivity.kerahat, kerahatOpacity: 0.75, kerahatActiveOpacity: 1,
+        kerahat: Palette.LiveActivity.kerahat, kerahatOpacity: 0.75, kerahatPastOpacity: 0.75, kerahatActiveOpacity: 1,
         knob: Palette.LiveActivity.background, knobStroke: Palette.LiveActivity.foreground, knobStrokeWidth: 2,
         knobShadow: nil,
         // Die Symbole sind hier nur gut 8 pt groß; erst mit dieser Stärke ist der Strich so kräftig
@@ -161,8 +175,10 @@ struct DayArcDrawing: View {
 
             ForEach(layout.kerahat) { window in
                 segment(from: window.start, to: window.end, radius: layout.kerahatRadius)
-                    .stroke(colors.kerahat, style: StrokeStyle(lineWidth: metrics.kerahatWidth, lineCap: .round))
-                    .opacity(window.isActive ? colors.kerahatActiveOpacity : colors.kerahatOpacity)
+                    .stroke(colors.kerahat, style: StrokeStyle(
+                        lineWidth: metrics.kerahatWidth, lineCap: metrics.kerahatOnTrack ? .butt : .round
+                    ))
+                    .opacity(opacity(of: window))
             }
 
             // Der Knopf liegt unter den Markern: Beginnt ein Gebet, verschwindet er unter dessen Marker.
@@ -187,6 +203,14 @@ struct DayArcDrawing: View {
             }
         }
         .frame(width: metrics.size.width, height: metrics.size.height)
+    }
+
+    private func opacity(of window: DayArcLayout.KerahatSegment) -> Double {
+        switch window.state {
+        case .upcoming: colors.kerahatOpacity
+        case .past: colors.kerahatPastOpacity
+        case .active: colors.kerahatActiveOpacity
+        }
     }
 
     private func segment(from start: Double, to end: Double, radius: CGFloat? = nil) -> ArcSegment {

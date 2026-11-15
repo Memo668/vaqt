@@ -62,8 +62,10 @@ struct DayArcLayoutTests {
         #expect(metrics.timeBox == CGSize(width: 34, height: 13))
         #expect(metrics.timeGap == 5)
         #expect(metrics.timeBelow == 12)
-        #expect(metrics.kerahatInset == 19)
-        #expect(metrics.kerahatWidth == 3)
+        // Kerahat auf der Spur (Spec § 9.3): so breit wie sie, ohne Abstand nach innen.
+        #expect(metrics.kerahatInset == 0)
+        #expect(metrics.kerahatWidth == 12)
+        #expect(metrics.kerahatOnTrack)
         #expect(metrics.timeFontSize == 12)
         #expect(metrics.timeScales)
         #expect(metrics.tabularTimes)
@@ -86,8 +88,10 @@ struct DayArcLayoutTests {
         #expect(metrics.timeBox == CGSize(width: 28, height: 11))
         #expect(metrics.timeGap == 3)
         #expect(metrics.timeBelow == 9)
+        // Bis Phase 14 noch dünn innerhalb (Spec § 9.11 folgt).
         #expect(metrics.kerahatInset == 13.5)
         #expect(metrics.kerahatWidth == 2)
+        #expect(!metrics.kerahatOnTrack)
         #expect(metrics.timeFontSize == 10.5)
         #expect(!metrics.timeScales)
         #expect(!metrics.tabularTimes)
@@ -221,10 +225,10 @@ struct DayArcLayoutTests {
 
     // MARK: - Kerahat
 
-    @Test("Kerahat-Segmente liegen 19 pt innerhalb des Bogens, an den Anteilen der Fenster")
+    @Test("Kerahat-Segmente liegen auf der Spur, an den Anteilen der Fenster")
     func kerahatSegments() {
         let layout = layout("berlin", "14:25")
-        #expect(layout.kerahatRadius == 143)
+        #expect(layout.kerahatRadius == 162)
         #expect(layout.kerahat.map(\.id) == [.sunrise, .zenith, .sunset])
         let expected: [(Double, Double)] = [(0.151, 0.209), (0.494, 0.507), (0.802, 0.859)]
         for (segment, (start, end)) in zip(layout.kerahat, expected) {
@@ -237,6 +241,21 @@ struct DayArcLayoutTests {
         #expect(close(metrics.point(at: layout.kerahat[2].start, radius: 143), 268.463, 94.441))
         #expect(close(metrics.point(at: layout.kerahat[2].end, radius: 143), 282.087, 106.893))
         #expect(layout.kerahat.allSatisfy { !$0.isActive })
+        // 14:25: Die Fenster nach Sonnenaufgang und vor Dhuhr sind vorbei, das vor Maghrib kommt noch.
+        #expect(layout.kerahat.map(\.state) == [.past, .past, .upcoming])
+        #expect(layout.kerahatList == "07:14–07:59, 11:42–11:52, 15:42–16:27")
+    }
+
+    @Test("Zustände der Kerahat-Abschnitte über den Tag (is-now, is-past)", arguments: [
+        ("05:30", [DayArcLayout.KerahatState.upcoming, .upcoming, .upcoming]),
+        ("07:30", [.active, .upcoming, .upcoming]),
+        ("07:59", [.past, .upcoming, .upcoming]),
+        ("11:45", [.past, .active, .upcoming]),
+        ("16:05", [.past, .past, .active]),
+        ("17:00", [.past, .past, .past]),
+    ])
+    func kerahatStates(time: String, expected: [DayArcLayout.KerahatState]) {
+        #expect(layout("berlin", time).kerahat.map(\.state) == expected)
     }
 
     @Test("ohne den Schalter „Kerahat-Zeiten zeigen“ gibt es keine Segmente")
