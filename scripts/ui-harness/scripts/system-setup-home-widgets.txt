@@ -1,8 +1,16 @@
-# Einrichtung für system/91: das mittlere und das kleine Widget auf Seite 2 des Home-Bildschirms (dort startet
-# das Hilfsprojekt). Nur nötig, wenn sie fehlen. Entfernt zuerst Widgets von „Vaqt“ aus Probeläufen –
-# sbdeletewidget bestätigt nur, wenn der Dialog die App nennt; Widgets anderer Apps bleiben. Die Texte der
-# Galerie („Edit“, „Add Widget“, „Done“) sind die eines englischen Systems.
-sbpress 300 715 1.6
+# Einrichtung für system/91: das Widget „Live“, das mittlere und das kleine Widget auf der Seite des Home-Bildschirms,
+# auf der das Hilfsprojekt startet. Nur nötig, wenn sie fehlen. Entfernt zuerst Widgets von „Vaqt“ aus Probeläufen –
+# sbdeletewidget bestätigt nur, wenn der Dialog die App nennt; Widgets anderer Apps bleiben. Die Texte der Galerie
+# („Edit“, „Add Widget“, „Search Widgets“) sind die eines englischen Systems.
+#
+# Ein neues Widget landet oben auf der Seite und schiebt die übrigen nach unten: erst das kleine (Seite 1 der Galerie),
+# dann das mittlere (Seite 2), zuletzt „Live“ (Seite 3, seit Phase 14). Ein Tipp rechts auf die Seitenpunkte
+# blättert eine Seite weiter. In der Liste der Galerie steht „Vaqt“ weit unten; die Suche findet es.
+home
+wait 2
+sbpress 300 1300 1.6
+wait 1.5
+sbdeletewidget Vaqt
 wait 1.5
 sbdeletewidget Vaqt
 wait 1.5
@@ -12,6 +20,10 @@ sbtaplabel Edit
 wait 1.5
 sbtaplabel Add Widget
 wait 2.5
+sbtaplabel Search Widgets
+wait 1
+sbtype Vaqt
+wait 2
 sbtapcell Vaqt
 wait 2.5
 sbpoint 201 791
@@ -20,9 +32,29 @@ sbtaplabel Edit
 wait 1.5
 sbtaplabel Add Widget
 wait 2.5
+sbtaplabel Search Widgets
+wait 1
+sbtype Vaqt
+wait 2
 sbtapcell Vaqt
 wait 2.5
-sbpoint 210 748
+sbpoint 201 748
+wait 1.5
+sbpoint 201 791
+wait 2.5
+sbtaplabel Edit
+wait 1.5
+sbtaplabel Add Widget
+wait 2.5
+sbtaplabel Search Widgets
+wait 1
+sbtype Vaqt
+wait 2
+sbtapcell Vaqt
+wait 2.5
+sbpoint 219 748
+wait 1.5
+sbpoint 219 748
 wait 1.5
 sbpoint 201 791
 wait 2.5

@@ -1,6 +1,6 @@
 # Gebetszeiten – iOS-App (SwiftUI)
 
-Gemeinnützige Gebetszeiten-App: werbefrei, ohne Tracking, ohne Konto. Wir bauen den Designprototyp aus `design/` **eins zu eins** als native SwiftUI-App nach – gleiche Bildschirme, gleiche Abstände, Farben, Texte und gleiches Verhalten.
+Gemeinnützige Gebetszeiten-App: werbefrei, ohne Tracking, ohne Konto. Name unter dem Symbol und in der App: **„Vaqt“** (Arbeitsname seit 15.11.2026, Spec § 9.13); Bundle-ID, Targets und Typen heißen weiter „Gebetszeiten“. Wir bauen den Designprototyp aus `design/` **eins zu eins** als native SwiftUI-App nach – gleiche Bildschirme, gleiche Abstände, Farben, Texte und gleiches Verhalten.
 
 ## Quellen der Wahrheit
 

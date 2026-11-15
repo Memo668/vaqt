@@ -1,6 +1,8 @@
-# Gebetszeiten
+# Vaqt
 
 Gemeinnützige Gebetszeiten-App für iOS: werbefrei, ohne Tracking, ohne Konto. Die App wird nativ in SwiftUI gebaut, eins zu eins nach dem Prototyp in `design/`.
+
+Unter dem Symbol und in der App heißt sie seit dem 15.11.2026 **„Vaqt“** (Arbeitsname, in allen Sprachen gleich; im App Store „Vaqt – Prayer Time“, Spec § 9.13). Bundle-ID, App Group, Targets, Schema, Ordner und Typen heißen weiter „Gebetszeiten“ – Nutzer sehen sie nicht.
 
 Die Regeln für die Arbeit stehen in `CLAUDE.md`, der Bauplan in `docs/BUILD-PLAN.md`, offene Punkte in `docs/OPEN-QUESTIONS.md`.
 

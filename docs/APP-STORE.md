@@ -74,7 +74,7 @@ Einzutragen in App Store Connect › TestFlight › Testinformationen, auf Deuts
 Deutsch:
 
 ```text
-Gebetszeiten ist eine gemeinnützige App für die fünf täglichen Gebete – werbefrei, ohne Tracking und ohne Konto. Sie rechnet die Zeiten auf dem iPhone, für deinen Standort oder eine gewählte Stadt, und zeigt sie als Tagesbogen mit Countdown. Dazu kommen die Qibla-Richtung mit Kompass, eine Anleitung zu jedem Gebet, ein Vers des Tages und eine Übersicht zum Nachholen. Mitteilungen mit Adhan, Widgets für Home- und Sperrbildschirm und eine Live-Aktivität zum nächsten Gebet sind dabei; auf dem iPhone Duo nutzt die App beide Hälften. Sprachen: Deutsch, Türkisch, Englisch und Spanisch.
+Vaqt ist eine gemeinnützige App für die fünf täglichen Gebete – werbefrei, ohne Tracking und ohne Konto. Sie rechnet die Zeiten auf dem iPhone, für deinen Standort oder eine gewählte Stadt, und zeigt sie als Tagesbogen mit Countdown. Dazu kommen die Qibla-Richtung mit Kompass, eine Anleitung zu jedem Gebet, ein Vers des Tages und eine Übersicht zum Nachholen. Mitteilungen mit Adhan, Widgets für Home- und Sperrbildschirm und eine Live-Aktivität zum nächsten Gebet sind dabei; auf dem iPhone Duo nutzt die App beide Hälften. Sprachen: Deutsch, Türkisch, Englisch und Spanisch.
 
 Dies ist die erste Beta. Einige Inhalte sind noch Platzhalter: die Übersetzungen der Verse, die Adhan-Aufnahmen und das App-Symbol. Die Texte der Anleitung hat noch niemand fachlich geprüft.
 ```
@@ -82,7 +82,7 @@ Dies ist die erste Beta. Einige Inhalte sind noch Platzhalter: die Übersetzunge
 Englisch:
 
 ```text
-Gebetszeiten (Prayer Times) is a non-profit app for the five daily prayers – no ads, no tracking, no account. It calculates the times on your iPhone, for your location or a city you choose, and shows them as a day arc with a countdown. It also has the Qibla direction with a compass, a guide to each prayer, a verse of the day and an overview for making up missed prayers. Notifications with the adhan, widgets for the Home Screen and Lock Screen and a Live Activity for the next prayer are included; on iPhone Duo the app uses both halves. Languages: German, Turkish, English and Spanish.
+Vaqt is a non-profit app for the five daily prayers – no ads, no tracking, no account. It calculates the times on your iPhone, for your location or a city you choose, and shows them as a day arc with a countdown. It also has the Qibla direction with a compass, a guide to each prayer, a verse of the day and an overview for making up missed prayers. Notifications with the adhan, widgets for the Home Screen and Lock Screen and a Live Activity for the next prayer are included; on iPhone Duo the app uses both halves. Languages: German, Turkish, English and Spanish.
 
 This is the first beta. Some content is still a placeholder: the verse translations, the adhan recordings and the app icon. Nobody has reviewed the guide texts for religious accuracy yet.
 ```
@@ -129,7 +129,7 @@ Was ohne Konto nicht geht, in der Reihenfolge, in der es dran ist. Noch nicht au
 
 1. **Konto und Team (erledigt am 15.11.2026):** Apple Developer Program als Einzelperson, Team `V7652FBKMY` in `DEVELOPMENT_TEAM` (`project.yml`).
 2. **Kennungen (eingetragen am 15.11.2026):** `de.mehmetyilmaz.gebetszeiten`, `.widgets` und `group.de.mehmetyilmaz.gebetszeiten` in `project.yml` (`APP_BUNDLE_ID`, `APP_GROUP_ID`), danach `make project`. Registriert werden die App-ID, die der Extension (`<Bundle-ID>.widgets`) und die App Group beim ersten signierten Build mit automatischer Signatur oder von Hand unter Certificates, Identifiers & Profiles. Als Fähigkeit brauchen beide nur App Groups; Mitteilungen und Live-Aktivität kommen ohne Push aus.
-3. **App Store Connect:** die App anlegen – iOS, Name „Gebetszeiten – Namaz Vakti“ (entschieden am 15.11.2026; „Gebetszeiten“ allein ist vergeben, auf dem Home-Bildschirm bleibt `CFBundleDisplayName`), Primärsprache Deutsch, Bundle-ID, SKU. Dann App-Datenschutz „Keine Daten erfasst“, die Adressen der Datenschutzerklärung und die Testinformationen von oben.
+3. **App Store Connect:** die App anlegen – iOS, Name „Vaqt – Prayer Time“ (Arbeitsname, entschieden am 15.11.2026, Spec § 9.13; „Vaqt“ allein ist vergeben, auf dem Home-Bildschirm steht `CFBundleDisplayName` „Vaqt“; den endgültigen Namen vorher noch einmal festlegen, `docs/OPEN-QUESTIONS.md`), Primärsprache Deutsch, Bundle-ID, SKU. Dann App-Datenschutz „Keine Daten erfasst“, die Adressen der Datenschutzerklärung und die Testinformationen von oben.
 4. **Signiertes Archiv** und Prüfung, auch der App Group in den Entitlements:
 
    ```bash

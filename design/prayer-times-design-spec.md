@@ -265,9 +265,16 @@ DE, TR, EN, ES plus **FR, NL, BS, SQ, AR, UR, ID, MS, BN, FA, RU, IT** (decided 
 ### 9.12 High latitudes: manual angles
 Fourth rule "Manuelle Winkel" (subline "Eigene Dämmerungswinkel für Fadschr und Ischa"). When selected, a group "Dämmerungswinkel" with steppers for Fadschr and Ischa, 10–20°, default 15°. Calculation: the chosen angles; the night portion angle ÷ 60 is the safe bound (Adhan: custom `fajrAngle`/`ishaAngle` with `.twilightAngle`). Footer: "Erreicht die Sonne den eingestellten Winkel nicht, gilt der entsprechende Anteil der Nacht (Winkel ÷ 60)."
 
+### 9.13 Name (working name)
+Decided by the product owner on 15.11.2026 ("Vaqt als Arbeitsname"): the app is called **Vaqt** – under the icon (`CFBundleDisplayName` of the app and the widget extension), in the app, the Live Activity, the widget gallery and the system alerts. The name is the same in every language and is not translated (`T.appName` = "Vaqt" in all 16 languages; `alLocTitle`/`alNotTitle` quote it). Only the name changes, not the word: where "Gebetszeiten" / "Namaz vakitleri" / "Prayer times" / "horarios de oración" means prayer times ("Gebetszeiten. Ruhig und genau.", the disclaimer, `noTimes`), it stays.
+- App Store name: **"Vaqt – Prayer Time"**, because "Vaqt" alone is taken.
+- Unchanged, because nobody sees them: bundle ID `de.mehmetyilmaz.gebetszeiten`, App Group, target, scheme, folder and type names.
+- Open before the App Store: there already are "Vaqt" (Lifestyle) and "Vaqt: Prayer Times & Qibla" (a prayer times app; German store "Vaqt: Gebetszeiten & Qibla"). The final name is decided before the App Store release.
+
 ---
 
 ## Changelog
+- **v0.8, addendum (15.11.2026):** working name "Vaqt" under the icon and in the app, App Store name "Vaqt – Prayer Time" (§ 9.13).
 - **v0.8 (15.11.2026):** Changes before the first beta (§ 9): app icon everywhere, top bar centred with Settings on the trailing side, kerahat drawn on the arc (times stay on the rows), previous/next day, Qibla tolerance ±40°, prayer step by step, Amiri typefaces, qada calculator card at the bottom, onboarding page "Kostenlos. Ohne Werbung." and support page, 16 languages with RTL, same arc in Live Activity and widgets plus a Live-style medium widget, manual twilight angles for high latitudes.
 
 - **v0.7 (09.11.2026):** iPhone Duo: outer display with the bars in a vertical column on the right (vertical Dynamic Island, circular status), inner display with two columns that meet at the fold. Panel: Device switch.

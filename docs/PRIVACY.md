@@ -1,13 +1,14 @@
 <!--
-  Privacy policy of the app, version for the first beta (14 Nov 2026). English counterpart of
+  Privacy policy of the app, version for the first beta (14 Nov 2026; working name “Vaqt” since 15 Nov 2026,
+  spec § 9.13). English counterpart of
   docs/DATENSCHUTZ.md; the German text is the reference.
   Address: this file on GitHub once the repo is public (decided 14 Nov 2026, „GitHub, beim Quellcode“).
   Before publishing: fill in the placeholders and have the text reviewed.
 -->
 
-# Privacy Policy for the App “Gebetszeiten” (Prayer Times)
+# Privacy Policy for the App “Vaqt”
 
-Last updated: 14 November 2026
+Last updated: 15 November 2026
 
 **In short:** The app collects no data. There is no account, no advertising, no analytics and no server of our own. What you set up stays on your iPhone. The app only goes online for two things, and only to Apple’s map service: to get the name of your location and to show suggestions in the city search.
 

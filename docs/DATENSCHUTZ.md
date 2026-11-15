@@ -1,14 +1,15 @@
 <!--
-  Datenschutzerklärung der App, Fassung für die erste Beta (14.11.2026). Englisch: docs/PRIVACY.md.
+  Datenschutzerklärung der App, Fassung für die erste Beta (14.11.2026; seit 15.11.2026 mit dem Arbeitsnamen
+  „Vaqt“, Spec § 9.13). Englisch: docs/PRIVACY.md.
   Grundlage: die Seite „Datenschutz“ der App (PAGES.privacy im Prototyp, privacyBody1–3 im String Catalog)
   und docs/APP-STORE.md, genauer gefasst nach dem Code.
   Adresse: diese Datei auf GitHub, sobald das Repo öffentlich ist (entschieden am 14.11.2026, „GitHub, beim
   Quellcode“). Vor dem Veröffentlichen: die Platzhalter ausfüllen und den Text prüfen lassen.
 -->
 
-# Datenschutzerklärung für die App „Gebetszeiten“
+# Datenschutzerklärung für die App „Vaqt“
 
-Stand: 14. November 2026
+Stand: 15. November 2026
 
 **Kurz gesagt:** Die App erhebt keine Daten. Es gibt kein Konto, keine Werbung, keine Analyse-Werkzeuge und keinen eigenen Server. Was du einstellst, bleibt auf deinem iPhone. Ins Netz geht die App nur für zwei Dinge, und zwar zum Kartendienst von Apple: für den Namen deines Ortes und für Vorschläge in der Ortssuche.
 
