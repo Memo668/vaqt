@@ -134,7 +134,7 @@ Versteht die App ein Debug-Argument nicht, schreibt sie das beim Start in die Ko
 
 ```
 App/                    App-Target: Einstieg, AccentColor, Info.plist, Entitlements, Sounds (Adhan-Ausschnitte)
-Widgets/                Widget-Extension: das Widget in fünf Größen, seine Zeitleiste und die Live-Aktivität
+Widgets/                Widget-Extension: das Widget in fünf Größen, das Widget „Live“, die Zeitleiste und die Live-Aktivität
 Packages/PrayerCore     reine Logik ohne UI, mit Adhan Swift als einziger Fremdabhängigkeit
 Packages/DesignSystem   Tokens und Bausteine (ab Phase 2) und der String Catalog
 Packages/Features       Bildschirme, AppEnvironment, Debug-Startargumente
@@ -219,7 +219,7 @@ Die Referenzwerte für die Berechnung liegen unter `Packages/PrayerCore/Tests/Pr
 | `QadaSummary`, `QadaSummaryCard`, `QadaPrayerRow`, `QadaOverview`, `QadaDetails`, `QadaAction` | Texte der Zusammenfassung und des Plans (`num()`, Monat und Jahr), die Prozentkarte mit Balken, die Zeile je Gebet, die beiden Teile der Seite „Nachholen“, die Aktionen der Seite |
 | `RowTitle`, `ValueRowLabel`, `CheckRow`, `ListSwitchRow`, `ListLinkRow`, `ExternalLinkRow`, `ListSectionHeader`, `ListSectionFooter`, `groupedListMetrics()` | Zeilen für die Liste des Systems wie `group()` im Prototyp: Titel mit Zusatz, Wert (höchstens 52 %), Häkchen, Schalter, Link in Akzent oder Rot, Link nach außen mit ↗, Kopf und Fuß, Abstände der Gruppen |
 | `PrayerNotificationRow`, `AdjustmentRow`, `PrivacyNote` | Zeile „Pro Gebet“ mit den Glocken, Zeile der Minutenkorrektur mit Uhrzeit und Stepper, die Seite „Datenschutz“ |
-| `AppMark`, `AppGlyph`, `IconBadge`, `Tagline` | Zeichen der App (Platzhalter des Prototyps), Symbol auf getöntem Kreis, Zeichen über „Gemeinnützig · Werbefrei · Ohne Tracking“ |
+| `AppMark`, `IconBadge`, `Tagline` | das App-Symbol (120, 34, 24 und 16 pt; seit Phase 14 auch in Live-Aktivität und Widgets statt der Mondsichel), Symbol auf getöntem Kreis, Zeichen über „Gemeinnützig · Werbefrei · Ohne Tracking“ |
 | `OnboardingPage`, `PageDots` | Seite des Onboardings mit Zeichen, Titel und Text; die Punkte darunter |
 | `AdhanPlayerCard`, `AdhanWaveform`, `PlayPauseButton`, `AdhanTime` | Karte des Adhan-Players: Wellenform mit 44 Balken (gespielter Teil in Akzent), Schieberegler, Zeiten wie `fmtDur()`, Play/Pause 72 pt |
 | `WidgetState` | was die App für Widgets und Live-Aktivität in die App Group schreibt: Ort, Name, Berechnung, Kerahat, Sprache, in DEBUG Mock-Zeiten und Debug-Uhr |
@@ -401,23 +401,24 @@ Töne sind im Simulator auf diesem Mac nicht zu hören (kein Ausgabegerät); sie
 
 ## Widgets und Live-Aktivität
 
-Die Widget-Extension (`Widgets/`) bietet ein Widget in fünf Größen und die Live-Aktivität. Beide rechnen mit PrayerCore aus dem, was die App in die App Group schreibt (`WidgetState`): Ort, Name des Ortes, Berechnung samt Minutenkorrektur, Kerahat-Schalter und die Sprache der App, auch bei der eigenen Wahl. Die App schreibt den Stand beim Start, wenn sie nach vorn kommt, nach jeder Änderung und bei der Hintergrundaktualisierung; hat er sich geändert, laden die Widgets neu. Den Ort entscheidet die App; die Extension fragt nie nach dem Standort.
+Die Widget-Extension (`Widgets/`) bietet ein Widget in fünf Größen, seit Phase 14 das mittlere Widget „Live“ im Stil der Live-Aktivität (Spec § 9.11) und die Live-Aktivität. Beide rechnen mit PrayerCore aus dem, was die App in die App Group schreibt (`WidgetState`): Ort, Name des Ortes, Berechnung samt Minutenkorrektur, Kerahat-Schalter und die Sprache der App, auch bei der eigenen Wahl. Die App schreibt den Stand beim Start, wenn sie nach vorn kommt, nach jeder Änderung und bei der Hintergrundaktualisierung; hat er sich geändert, laden die Widgets neu. Den Ort entscheidet die App; die Extension fragt nie nach dem Standort.
 
 | Größe | zeigt |
 |---|---|
 | klein (systemSmall) | Stadt, Symbol des nächsten Ereignisses, Name, Uhrzeit, „in 2:01:29“ |
 | mittel (systemMedium) | dazu „NÄCHSTES“ und die sechs Zeiten des Tages, das nächste Ereignis hervorgehoben, Vergangenes abgeblendet |
+| „Live“, mittel (eigenes Widget `PrayerLive`) | Akzentverlauf, Kopf mit App-Symbol, „Vaqt“ und Stadt, Tagesbogen mit Zeiten und Kerahat, „Maghrib · 16:27“ und Countdown |
 | rund (accessoryCircular) | Ring vom vorigen bis zum nächsten Ereignis, innen Symbol und Uhrzeit |
-| Rechteck (accessoryRectangular) | Symbol und Name, „16:27 · in 2:01:30“, das Ereignis danach |
+| Rechteck (accessoryRectangular) | Mini-Bogen mit Punkten, Jetzt-Punkt und gestricheltem Kerahat, darunter Symbol und „Maghrib 16:27“, „in 2:01:59“ |
 | Zeile (accessoryInline) | Symbol und „Maghrib 16:27“ |
 
-Wie die Zeiten-Seite nennen die Widgets das nächste Ereignis, auch den Sonnenaufgang. Die Zeitleiste hat einen Eintrag für jetzt und einen zu jedem Ereignis der nächsten 24 Stunden; Countdown und Ring laufen dazwischen von selbst (`Text(timerInterval:)`, `ProgressView(timerInterval:)`). Ohne Ort zeigen die Widgets „Stadt wählen“, ohne Zeiten den Hinweis der Zeiten-Seite (`noTimes`).
+Wie die Zeiten-Seite nennen die Widgets das nächste Ereignis, auch den Sonnenaufgang. Die Zeitleiste hat einen Eintrag für jetzt und einen zu jedem Ereignis der nächsten 24 Stunden, für den Bogen dazu zwischen Fadschr und Ischa alle 5 Minuten und an den Grenzen der Kerahat-Fenster (seit Phase 14); Countdown und Ring laufen dazwischen von selbst (`Text(timerInterval:)`, `ProgressView(timerInterval:)`). Ohne Ort zeigen die Widgets „Stadt wählen“, ohne Zeiten den Hinweis der Zeiten-Seite (`noTimes`).
 
 Die Live-Aktivität läuft je Pflichtgebet, ohne Sonnenaufgang, standardmäßig ab 30 Minuten vorher (Einstellungen › Live-Aktivität: Aus, 10, 15, 20, 30, 45, 60, 90 oder 120 Minuten). iOS startet sie selbst (`Activity.request(…, start:)`), auch wenn die App nicht läuft. Ab Gebetsbeginn ist sie `stale` und zeigt „Jetzt“ statt des Countdowns, der Bogen das Gebet als laufend. 15 Minuten nach Beginn endet sie. Ein geplantes Ende kennt ActivityKit nicht; die App beendet die Aktivität, sobald sie läuft – zum Gebetsbeginn, wenn sie vorn ist, sonst beim Start, wenn sie nach vorn kommt, oder bei der Hintergrundaktualisierung – und lässt sie bis 15 Minuten nach Beginn auf dem Sperrbildschirm stehen. Läuft die App nicht, bleibt „Jetzt“ stehen; iOS beendet eine Aktivität nach spätestens 8 Stunden. iOS nimmt höchstens fünf Aktivitäten je App an, geplante mitgezählt; die App plant die nächsten fünf.
 
 ### Abgleich von `system/90`, `91` und `93`–`96`
 
-`make compare-system` nimmt den Katalog (`-debugCatalog widgets`, `live`) in den Maßen des Prototyps auf und legt jeden Baustein neben die Referenz. Im System selbst – Widgets auf Home- und Sperrbildschirm, Live-Aktivität auf dem Sperrbildschirm und in der Dynamic Island – stellt das UI-Hilfsprojekt die Referenzbilder nach; die Schritte und Argumente stehen in `docs/PROMPTS.md`, was abweicht in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 9“).
+`make compare-system` nimmt den Katalog (`-debugCatalog widgets`, `live`) in den Maßen des Prototyps auf und legt jeden Baustein neben die Referenz. Im System selbst – Widgets auf Home- und Sperrbildschirm, Live-Aktivität auf dem Sperrbildschirm und in der Dynamic Island – stellt das UI-Hilfsprojekt die Referenzbilder nach; die Schritte und Argumente stehen in `docs/PROMPTS.md`, was abweicht in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 9“ und „Annahmen in Phase 14“). Die Widgets von „Vaqt“ liegen im Simulator auf der Seite links neben der des Hilfsprojekts; eingerichtet werden sie mit `system-setup-home-widgets.txt` und `system-setup-lock-widgets.txt`.
 
 Das Protokoll der App nennt in DEBUG, welche Aktivitäten es gibt und was die App anmeldet, auffrischt und beendet:
 

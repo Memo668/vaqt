@@ -266,10 +266,16 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 
 ## Phase 14 – Live-Aktivität und Widgets
 
+*Gebaut am 15.11.2026 auf dem Zweig `claude/phase-14-306a00` (ab `81492cf`, Phase 13 abgenommen), geprüft gegen die Referenzbilder aus dem Prototyp v0.8 (`system/90`, `91`, `93`–`96` neu) im Katalog und im System; Annahmen in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 14“.*
+
 - Live-Aktivität: Kerahat auf der Spur (Spec § 9.11).
-- Sperrbildschirm-Widget (rechteckig) mit Mini-Bogen, einfarbig, Kerahat gestrichelt.
-- Neues mittleres Home-Widget „Live“ im Stil der Live-Aktivität; die bisherigen Widgets bleiben.
+- Sperrbildschirm-Widget (rechteckig) mit Mini-Bogen, einfarbig, Kerahat gestrichelt (entschieden mit dem Plan: das rechteckige).
+- Neues mittleres Home-Widget „Live“ im Stil der Live-Aktivität; die bisherigen Widgets bleiben. In der Galerie heißt es wie die anderen „Vaqt“.
+- Jetzt-Punkt der Widgets: Einträge alle 5 Minuten zwischen Fadschr und Ischa und an den Grenzen der Kerahat-Fenster (PrayerCore `WidgetTimeline.arcStep`).
+- App-Symbol statt Mondsichel in Live-Aktivität und Widgets (Spec § 9.1).
 - Debug-Katalog um die neuen Widgets erweitern (`-debugCatalog widgets|live`).
+- Referenzbilder `system/90`–`96` aus dem Prototyp (`scripts/capture-prototype`), `make compare-system`, Aufnahmen im System mit dem UI-Hilfsprojekt.
+- Name „Vaqt“ (Arbeitsname, Spec § 9.13): `CFBundleDisplayName` von App und Erweiterung, `T.appName` in allen 16 Sprachen, Name in den Dialogtexten; Store-Name „Vaqt – Prayer Time“. Bundle-ID, App Group, Targets und Typen bleiben.
 
 ## Phase 15 – Sechzehn Sprachen
 

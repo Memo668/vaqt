@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 15.11.2026, nach der Abnahme von Phase 13.
+Stand: 15.11.2026, nach dem Bau von Phase 14 (noch nicht abgenommen).
 
 ## Für die erste Beta
 
@@ -10,7 +10,7 @@ Die erste Beta über TestFlight kommt nach Phase 11 – seit dem 15.11.2026 nach
 
 - **Konto und Team (erledigt am 15.11.2026):** Apple Developer Program als Einzelperson (Auswahl „Als Person“ statt Verein), Team `V7652FBKMY` – das bisherige persönliche Team, von Apple hochgestuft. Im App Store steht damit der volle Name des Inhabers als Anbieter; in der Datenschutzerklärung ist er der Verantwortliche. Ein späterer Wechsel zu einem eigenen Studio (juristische Person, etwa UG oder GmbH) geht über Apples Support oder eine Übertragung der App.
 - **Kennungen (festgelegt am 15.11.2026, „Mit deinem Namen“):** App `de.mehmetyilmaz.gebetszeiten`, Extension `de.mehmetyilmaz.gebetszeiten.widgets`, App Group `group.de.mehmetyilmaz.gebetszeiten`, eingetragen in `project.yml`. Registriert werden sie beim ersten signierten Build. Die Bundle-ID ist nach dem ersten Upload fest.
-- **App Store Connect:** die App anlegen unter dem Namen „Gebetszeiten – Namaz Vakti“ (entschieden am 15.11.2026; „Gebetszeiten“ allein ist vergeben, auf dem Home-Bildschirm bleibt „Gebetszeiten“; bis zur Freigabe änderbar), App-Datenschutz „Keine Daten erfasst“, die Datenschutzerklärung als Adresse und die Testinformationen. Alles vorbereitet in `docs/APP-STORE.md`; einzutragen sind noch Feedback-E-Mail und Kontakt. Die Adresse der Datenschutzerklärung entsteht, sobald das Repo öffentlich auf GitHub liegt (entschieden am 14.11.2026); vorher Verantwortlichen und Aufbewahrung im Text ausfüllen. Mit dem öffentlichen Repo bekommt auch „Quellcode“ (`SOURCE_CODE_URL`) seine Adresse.
+- **App Store Connect:** die App anlegen unter dem Namen „Vaqt – Prayer Time“ (Arbeitsname, entschieden am 15.11.2026 abends, Spec § 9.13; „Vaqt“ allein ist vergeben, auf dem Home-Bildschirm steht „Vaqt“; bis zur Freigabe änderbar, den endgültigen Namen siehe „Vor dem App Store“; der frühere Name „Gebetszeiten – Namaz Vakti“ ist überholt), App-Datenschutz „Keine Daten erfasst“, die Datenschutzerklärung als Adresse und die Testinformationen. Alles vorbereitet in `docs/APP-STORE.md`; einzutragen sind noch Feedback-E-Mail und Kontakt. Die Adresse der Datenschutzerklärung entsteht, sobald das Repo öffentlich auf GitHub liegt (entschieden am 14.11.2026); vorher Verantwortlichen und Aufbewahrung im Text ausfüllen. Mit dem öffentlichen Repo bekommt auch „Quellcode“ (`SOURCE_CODE_URL`) seine Adresse.
 - **Signiertes Archiv und Upload:** signiert archivieren, mit `scripts/check-archive` prüfen (dann auch die App Group in den Entitlements), hochladen; zuerst intern testen, dann extern.
 
 Erledigt ohne Konto am 14.11.2026: `make archive` baut das Release-Archiv ohne Signatur, und `scripts/check-archive` findet es in Ordnung – nur iPhone (vorher iPhone und iPad, unten unter „Annahmen in der Beta-Vorbereitung“), Exportkontrolle `ITSAppUsesNonExemptEncryption = NO`, beide Manifeste, Icon, alle Texte in vier Sprachen, kein Debug-Code. Dazu die Datenschutzerklärung (`docs/DATENSCHUTZ.md`, `docs/PRIVACY.md`) und die Texte für TestFlight (`docs/APP-STORE.md`). Mit Phase 11 kamen das Platzhalter-Icon und die Datenschutz-Manifeste. Die Platzhalter – Übersetzungen der Verse, Adhan-Aufnahmen, Texte der Anleitung, Icon, Link „Quellcode“ – dürfen in der Beta bleiben; „Was testen“ nennt sie.
@@ -33,7 +33,7 @@ Der Nutzer hat zwölf Änderungen gewünscht, im Prototyp angesehen, korrigiert 
 
 Offen bzw. Annahmen:
 
-- **Welches Widget bekommt den Halbkreis?** Gesagt: „Homescreen-Widget, also das große Sperrbildschirm-Widget“. Angenommen: das rechteckige Sperrbildschirm-Widget. Meinte der Nutzer das mittlere Home-Widget mit der Zeitenliste, bekommt dieses den Bogen.
+- **Welches Widget bekommt den Halbkreis?** Gesagt: „Homescreen-Widget, also das große Sperrbildschirm-Widget“. Entschieden mit dem Plan für Phase 14: das rechteckige Sperrbildschirm-Widget („Das rechteckige (Empfohlen)“).
 - **Übersetzungen der zwölf neuen Sprachen** sind KI-Entwürfe (Hilfsagenten, 15.11.2026): vor dem App Store von Muttersprachlern prüfen lassen, besonders die religiösen Begriffe. Mehrzahlformen sind in einigen Entwürfen fest (z. B. Bosnisch „{n} rekata“, Arabisch) – Plural-Varianten im String Catalog.
 - **Vers-Übersetzungen** gibt es nur für DE/TR/EN/ES (Platzhalter); die übrigen Sprachen fallen auf Englisch zurück, Arabisch zeigt keine Übersetzung. Lizenzierte Übersetzungen je Sprache gehören zur Frage „Übersetzungen der Verse“ unten.
 - **Neue Texte der Anleitung** (kurzes Sitzen, zweite Niederwerfung, erstes/letztes Sitzen) sind wie die übrige Anleitung fachlich ungeprüft. Seit Phase 13 tragen sie und alle übrigen Texte der Anleitung im String Catalog den Kommentar `TODO(review)` (unten unter „Texte der Anleitung“).
@@ -46,7 +46,12 @@ Offen bzw. Annahmen:
 - **Übersetzungen der Verse** (Phase 6, Spec § 6.12): Platzhalter mit `TODO(placeholder)` im String Catalog. Offen sind Übersetzungen mit Lizenz, die Quelle des arabischen Textes und die Auswahl der Verse.
 - **Adhan-Aufnahmen** (Phase 7, Spec § 6.5): Stimme 1 und 2 sind freie Aufnahmen von Wikimedia Commons; die Lizenzangaben (CC0 1.0, gemeinfrei) stammen von den Hochladenden. Herkunft und Rechte prüfen oder durch die endgültigen Aufnahmen ersetzen; Stimme 3 und die Fadschr-Variante fehlen.
 - **Texte der Anleitung** (Phase 5, Spec § 6.14): Niemand hat sie fachlich geprüft (Imam oder Gelehrter je Sprache). Offen sind auch eine neutrale Fassung oder Varianten je Rechtsschule und für Frauen, echte Illustrationen und Audio für die Formeln. Seit Phase 13 gehören die Texte von „Gebet Schritt für Schritt“ dazu (Spec § 9.6: Start, Stehen in Rakʿa 1–2, „Sprich dreimal“, kurzes Sitzen, zweite Niederwerfung, erstes und letztes Sitzen, Schluss). Im String Catalog tragen alle 43 Texte den Kommentar `TODO(review)`; `scripts/import-strings` setzt ihn (`walkReviewKeys`, `guideReviewKeys`).
-- **Icon und Name** (Spec § 6.9): Das Icon ist ein Platzhalter (Phase 11). Seit Phase 12 zeigen Onboarding und Tagline das App-Symbol selbst (Spec § 9.1, Bildsatz `AppMark` im DesignSystem); ändert sich das Icon, den Bildsatz neu erzeugen (Kommentar in `AppMark.swift`). Live-Aktivität und Widgets zeigen bis Phase 14 noch die Mondsichel.
+- **Icon** (Spec § 6.9): Das Icon ist ein Platzhalter (Phase 11). Seit Phase 12 zeigen Onboarding und Tagline das App-Symbol selbst, seit Phase 14 auch Live-Aktivität und Widgets (Spec § 9.1, Bildsatz `AppMark` im DesignSystem); ändert sich das Icon, den Bildsatz neu erzeugen (Kommentar in `AppMark.swift`).
+- **Name** (Spec § 9.13): „Vaqt“ ist ein Arbeitsname (entschieden am 15.11.2026, „Vaqt als Arbeitsname (Empfohlen)“); den endgültigen Namen vor dem App Store festlegen. Im App Store gibt es schon:
+  - „Vaqt“ (Huriye DIVARCI, Kategorie Lifestyle, seit 09/2026) – deshalb heißt der Store-Eintrag „Vaqt – Prayer Time“;
+  - „Vaqt: Prayer Times & Qibla“ (Shokhabbos Makhmudov, eine Gebetszeiten-App, seit 05/2026, im deutschen Store „Vaqt: Gebetszeiten & Qibla“, letzte Version am 10.11.2026). Verwechslung und eine Ablehnung wegen Ähnlichkeit sind möglich.
+  - Domains (geprüft am 15.11.2026, nichts gekauft): vergeben sind vaqt.com, vaqt.app, vaqt.co und vaqt-app.com; laut Registry frei sind unter anderem vaqt.de, vaqt.eu, vaqt.org, vaqt.net, vaqt.io und getvaqt.com.
+  - In der App steht der Name in `T.appName` (alle 16 Sprachen) und in `CFBundleDisplayName` (`project.yml`, App und Erweiterung); Bundle-ID, App Group und Targets heißen weiter „gebetszeiten“.
 - **App-Store-Link** (Phase 12): „App weiterempfehlen“ auf der Seite „Unterstützen“ teilt `APP_STORE_URL` aus `project.yml` – bis zum Anlegen der App in App Store Connect ein Platzhalter (`id0000000000`). Die Kennung dort eintragen, sobald es sie gibt; vor der Freigabe zeigt der Link „nicht verfügbar“.
 - **Datenschutzerklärung:** Der Text liegt auf Deutsch und Englisch in `docs/DATENSCHUTZ.md` und `docs/PRIVACY.md` (Beta-Vorbereitung). Vor dem App Store: auf Türkisch und Spanisch übersetzen und den Text prüfen lassen.
 - **Seite „Datenschutz“ in der App:** Sie sagt wie im Prototyp, der Standort werde „nur auf diesem Gerät zur Berechnung verwendet und verlässt es nie“ (`privacyBody2`); ähnlich die Begründung der Standortabfrage (`alLocBody`). Für den Stadtnamen gehen die Koordinaten aber an Apple (MapKit), ebenso der Suchtext der Ortssuche. Die Datenschutzerklärung sagt das genau. Offen: den Text im Prototyp in allen vier Sprachen anpassen oder so lassen.
@@ -75,6 +80,18 @@ Zurzeit nichts. Die Punkte 1 bis 6, die bis Phase 10 offen waren, sind entschied
 ## Entschieden
 
 Die Entscheidungen stehen in der Reihenfolge, in der sie fielen, die neuesten zuerst; die Antwort des Nutzers steht jeweils wörtlich in Anführungszeichen.
+
+### Entschieden mit dem Plan für Phase 14 am 15.11.2026
+
+Der Plan für Phase 14 wurde am 15.11.2026 freigegeben („Freigeben, bauen (Empfohlen)“), über die Auswahl-Fragen:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Welches Widget bekommt den Halbkreis? | „Das rechteckige (Empfohlen)“ | Das rechteckige Sperrbildschirm-Widget zeigt oben den Mini-Bogen (ARCS `acc`), darunter Gebet und Countdown (Spec § 9.11). Das mittlere Listen-Widget bleibt wie bisher. |
+| Name des Widgets „Live“ in der Galerie | „„Vaqt“ wie die anderen (Empfohlen)“ | Kein neuer Text: In der Widget-Galerie heißen alle Widgets der App „Vaqt“. Die Alternative war ein eigener Name „Tagesbogen“ in vier Sprachen. |
+| Wie oft rückt der Jetzt-Punkt in den Widgets? | „Alle 5 Minuten (Empfohlen)“ | Die Zeitleiste hat zwischen Fadschr und Ischa alle 5 Minuten einen Eintrag (auf volle 5 Minuten der Uhr), dazu einen an Beginn und Ende jedes Kerahat-Fensters (`WidgetTimeline.arcStep`). Das kostet kein Budget von WidgetKit; ein Tag hat rund 170 Einträge. |
+
+**Name „Vaqt“**, entschieden vom Nutzer am 15.11.2026 abends („Vaqt als Arbeitsname (Empfohlen)“, nach dem Hinweis auf die beiden vorhandenen „Vaqt“-Apps): Unter dem Icon und in der App steht „Vaqt“, in allen Sprachen gleich; der Store-Eintrag heißt „Vaqt – Prayer Time“. Nur der Name ist ersetzt, nicht das Wort („Gebetszeiten. Ruhig und genau.“, `disclaimer` und `noTimes` bleiben). Umgesetzt in Phase 14 (Spec § 9.13). Der endgültige Name ist offen, siehe „Vor dem App Store“.
 
 ### Entschieden mit dem Plan für Phase 13 am 15.11.2026
 
@@ -368,12 +385,40 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 |---|---|---|
 | Regel für hohe Breiten | „Winkelbasiert“ | wie im Prototyp (`hlRule:'angle'`) und im Vorschlag der Spec § 6.2. Adhan Swift würde oberhalb von 48° das Siebtel der Nacht empfehlen. |
 | Hijri-Datum | „Um Mitternacht“ | Das Datum wechselt zusammen mit dem gregorianischen, nicht bei Maghrib. Zur Korrektur um ±1 Tag siehe Spec § 6.7. |
-| Name der App | „Überall ‚Gebetszeiten‘“ | Unter dem App-Symbol steht in jeder Sprache „Gebetszeiten“, auch wenn `T` vier Namen enthält (Spec § 6.9). |
+| Name der App | „Überall ‚Gebetszeiten‘“ | Unter dem App-Symbol steht in jeder Sprache „Gebetszeiten“, auch wenn `T` vier Namen enthält (Spec § 6.9). **Überholt am 15.11.2026:** „Vaqt“ in allen Sprachen (Spec § 9.13, oben unter „Entschieden mit dem Plan für Phase 14“). |
 | Tableiste | „Systemverhalten“ | Die System-`TabView` bleibt. Sie weicht von den Referenzbildern ab: 274 pt breit und mittig statt 346 pt, gefüllte Symbole statt Umrissen, 21 pt statt 22 pt Abstand zum unteren Rand (gemessen auf dem iPhone 17, iOS 27.2). Die Höhe stimmt mit 62 pt. |
 | Entfernung zur Kaaba | „Ja, so lassen“ | Die Anzeige rundet auf 10 km, wie die Werte des Prototyps (4130, 2410, 4600, 7920 km). `PrayerCore` liefert die Entfernung ungerundet, für Berlin 4130,2 km. |
 | Ausrichtung | „Ja, so lassen“ | nur Hochformat. Phase 10: Die Info.plist bleibt so; auf dem inneren Display des iPhone Duo zeigt iOS die App trotzdem quer und hoch (siehe „Annahmen in Phase 10“). |
 | Nachholen | „Ja, so lassen“ | Die App startet leer: kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr. `iphone/60` und `61` zeigen die Beispielzahlen des Prototyps; die gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Annahme für Phase 6: Mit `-debugFixtureTimes` zeigt die Seite sie. |
 | JAKIM und Kemenag | „Ja, so lassen“ | reine Winkel 20°/18°. Vor der Veröffentlichung gegen offizielle Tabellen zu prüfen, siehe oben. |
+
+## Annahmen in Phase 14
+
+Geprüft am 15.11.2026 auf dem iPhone 18 Pro mit iOS 27.2 gegen die Referenzbilder aus dem Prototyp v0.8: `system/90`, `91`, `93`–`96` im Katalog (`make compare-system`) und im System (UI-Hilfsprojekt). `make test`: 1006 Tests grün (PrayerCore 455, DesignSystem 223, Features 328). Die Übersicht steht in `docs/REFERENCE-CHECK.md` unter „Phase 14“.
+
+### Was mit den Referenzbildern übereinstimmt
+
+- Live-Aktivität hell und dunkel (`93`, `96`): Kerahat golden (`#F3C979`) auf der Spur, 7 pt, eckige Enden; vorbei blasser; App-Symbol 16 pt mit Radius 4 vor „Vaqt“.
+- Widget „Live“ (`91`): Akzentverlauf, Kopf wie in der Live-Aktivität, Bogen 314 × 116 (ARCS `wla`) mit Zeiten, „Maghrib · 16:27“ und Countdown 30 pt; die Punkte liegen auf 0,5 pt wie im Prototyp.
+- Rechteck (`90`): Mini-Bogen 148 × 32 (ARCS `acc`) mit Punkten 3,6/4,6 pt, Spur 4 pt, Knopf 3,4 pt mit dunklem Rand, Kerahat gestrichelt (1,6/1,4); darunter „Maghrib 16:27“ (14 pt fett) und „in 2:01:59“ (12 pt, 75 %).
+
+### Was abweicht und bleibt
+
+- **Mini-Bogen an der Ecke:** Im Prototyp liegt das SVG des Bogens an der linken oberen Ecke des Rechtecks, nicht im Innenabstand – es ist absolut gesetzt, und `backdrop-filter` macht `.acc` zu seinem Bezug. Die App zeichnet es wie im Referenzbild an der Ecke. Die Zeilen enden 7 pt über dem unteren Rand: Bogen und Zeilen passen nicht in 72 pt, und Flexbox lässt den leeren Platzhalter des Bogens schrumpfen. Zentriert sähe es ruhiger aus; dann rückt der Bogen 11 pt nach rechts und 6 pt nach unten.
+- **App-Symbol im Kopf immer hell:** Spec § 9.1 nennt hell und dunkel. iOS zeichnet die Live-Aktivität auf dem Sperrbildschirm aber auch im hellen System dunkel, und die dunkle Fassung von `AppIcon` ist durchsichtig – auf dem Akzentverlauf, der in beiden Erscheinungsbildern gleich ist, blieb nur ein blasser Bogen. Live-Aktivität und Widget „Live“ zeigen deshalb immer die helle Fassung mit Kachel. `96` zeigt im Prototyp die dunkle.
+- **Laufendes Kerahat in der Live-Aktivität:** Deckkraft 1 wie in Spec § 9.3; im CSS gewinnt durch die Reihenfolge der Regeln 0,95 (`.arc-la .arc-k.on-track`). Im Mini-Bogen haben alle Fenster 0,95 wie im CSS; auf dem schon gefüllten Teil sind sie wie im Prototyp nicht zu sehen (Weiß auf Weiß).
+- **Sperrbildschirm im System:** iOS 27 stellt Ring und Rechteck unten auf den Sperrbildschirm und das Rechteck vor den Ring; der Prototyp zeigt sie unter der Uhr, den Ring zuerst. Hintergrund, Uhr und Insel zeichnet iOS.
+- **Countdown der Widgets mit Debug-Uhr:** Nach einem Start mit `-debugTime` zeigen Widgets einige Sekunden lang die Debug-Uhr des vorigen Laufs, bis WidgetKit neu geladen hat. Die Skripte des UI-Hilfsprojekts warten deshalb länger (12 bzw. 27 s). Ohne Debug-Uhr betrifft das nichts.
+
+### Annahmen in der Umsetzung
+
+- **Widget „Live“:** ein eigenes Widget (`PrayerLiveWidget`, Kennung `PrayerLive`) nur in der Größe mittel, weil es von jeder Größe nur eine Ansicht je Widget gibt; dieselbe Zeitleiste wie die übrigen. Auf dem Gerät ist es größer als 338 × 158 (iPhone 18 Pro); Kopf oben über die ganze Breite, der Bogen behält seine feste Größe und steht mittig darunter, der Rest bleibt unten frei. Die Schrift wächst wie in der Live-Aktivität nicht mit Dynamic Type, weil der Text im Bogen steht.
+- **Ohne Ort oder Zeiten** (der Prototyp zeigt es nicht): Das Widget „Live“ zeigt den Kopf und mittig „Stadt wählen“ bzw. den Hinweis `noTimes`; das Rechteck wie bisher Name der App und Hinweis; der Ring das App-Symbol (24 pt, Radius 22,4 %) statt der Mondsichel – iOS zeigt es auf dem Sperrbildschirm einfarbig. `AppGlyph` gibt es nicht mehr.
+- **Rechteck ohne dritte Zeile:** „Ischa 18:17“ (das Gebet danach) entfällt wie im Prototyp.
+- **Jetzt-Punkt:** In den Widgets rückt er alle 5 Minuten (entschieden mit dem Plan). In der Live-Aktivität steht der Bogen wie seit Phase 9 bis zum Gebetsbeginn im Stand beim Start; iOS zeichnet sie nicht von selbst neu.
+- **Mitteilungen:** Die App ändert nichts; iOS zeigt in Mitteilungen das App-Symbol selbst (Spec § 9.1). `system/92` ist nur als Referenz neu.
+- **Name im System:** `CFBundleDisplayName` ist „Vaqt“ in allen Sprachen, ohne Übersetzung in `InfoPlist.xcstrings`. Die Dialoge zu Standort und Mitteilungen zeichnet iOS mit diesem Namen; `alLocTitle`/`alNotTitle` stehen nur im nachgebauten Dialog des Prototyps. Nach der Umbenennung fragte iOS im Simulator noch einmal „Allow Live Activities from Vaqt?“ und später „Always Allow“.
+- **Simulator:** Der alte Platzhalter-Build `com.example.gebetszeiten` („Gebetszeiten“) ist noch installiert; seine Widgets sind von Home- und Sperrbildschirm entfernt. Die Widgets von „Vaqt“ liegen auf der Seite links neben der des Hilfsprojekts.
 
 ## Annahmen in Phase 13
 

@@ -1,5 +1,10 @@
 # Einrichtung für system/90: Ring und Rechteck unten auf dem Sperrbildschirm (iOS 27), die Zeile über der Uhr.
 # Nur nötig, wenn sie fehlen. Kennungen und Texte wie in einem englischen System.
+#
+# Seit Phase 14 (App „Vaqt“): Die beiden Minus-Knöpfe entfernen die Widgets, die dort stehen (auch die eines
+# anderen Builds); ist der Platz voll, lehnt iOS neue mit „You must remove a widget …“ ab. In der Liste der Galerie
+# steht „Vaqt“ weit unten – zweimal hochwischen. Gespeichert wird erst mit „Done“ (editing-done); wer den Editor
+# anders verlässt, verwirft die Änderung. iOS stellt das Rechteck vor den Ring.
 lock
 wait 2
 home
@@ -10,6 +15,16 @@ sbtaplabel posterboard-customize-button
 wait 6
 sbtaplabel grouped-widgets-reticle-view
 wait 3
+sbpoint 300 262
+wait 1.5
+sbpoint 31 262
+wait 1.5
+sbpoint 300 262
+wait 1.5
+sbdrag 201 820 201 480
+wait 1.5
+sbdrag 201 820 201 480
+wait 1.5
 sbtapcell Vaqt
 wait 3
 sbpoint 113 633
@@ -17,7 +32,19 @@ wait 2
 sbpoint 245 633
 wait 2
 sbtaplabel close
+wait 2
+sbdrag 201 400 201 860
+wait 2
+sbtaplabel inline-widget-reticle-view
 wait 3
-sbtaplabel Calendar, Date, Top Widget
+sbdrag 201 820 201 480
+wait 1.5
+sbdrag 201 820 201 480
+wait 1.5
+sbtapcell Vaqt
+wait 3
+sbdrag 201 395 201 860
+wait 2
+sbtaplabel editing-done
 wait 3
 shot {OUT}/setup-lock-widgets.png

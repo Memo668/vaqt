@@ -5,7 +5,9 @@ iPhone: 390 × 844 pt · iPhone Duo zu: 466 × 678 pt · iPhone Duo auf: 951 × 
 Uhrzeiten/Zahlen stammen aus den Mock-Daten des Prototyps (Berlin, 10.11.2026). Mit `-debugFixtureTimes` zeigt die App dieselben Werte.
 Wenn nichts anderes steht: Deutsch, hell, Berlin, 14:25 (Asr aktiv).
 
-**Stand v0.8 (Phase 12, 15.11.2026):** Die Bilder unter `iphone/` hat `scripts/capture-prototype` aus dem Prototyp v0.8 neu aufgenommen (Spec § 9) – alle Zustände stehen in `scripts/capture-prototype.mjs`. Neu sind die dunklen Fassungen der geänderten Bildschirme (`-dark`) und `05`, `23`, `33`, `34`, `82`, `83`. Noch von v0.7 sind `04`, `73`, `74`, `76`–`81`, `85`, `86` (unverändert bis auf die Punkte des Onboardings hinter dem Dialog in `04`), alle `system/*` (Phase 14) und alle `duo/*`.
+**Stand v0.8 (Phase 12, 15.11.2026):** Die Bilder unter `iphone/` hat `scripts/capture-prototype` aus dem Prototyp v0.8 neu aufgenommen (Spec § 9) – alle Zustände stehen in `scripts/capture-prototype.mjs`. Neu sind die dunklen Fassungen der geänderten Bildschirme (`-dark`) und `05`, `23`, `33`, `34`, `82`, `83`. Noch von v0.7 sind `73`, `74`, `76`–`81`, `85`, `86` und alle `duo/*`.
+
+**Phase 14 (15.11.2026):** `system/90`–`96` aus dem Prototyp v0.8 neu (Ansichten `widgets`, `live` und die der Mitteilungen; `screen` in `capture-prototype.mjs` wählt den Bildschirm): Rechteck mit Mini-Bogen, Widget „Live“ über dem mittleren, Kerahat auf der Spur der Live-Aktivität, App-Symbol im Kopf und in den Mitteilungen. Wegen des Namens „Vaqt“ (Spec § 9.13) neu: `04` (Dialog des Systems, jetzt auch aus dem Prototyp), `05`, `71`, `72`, `83` (Texte mit `{app}`).
 
 **Phase 13 (15.11.2026):** neu `43`–`49` (Durchlauf „Gebet Schritt für Schritt“, Zustände von `S.walk`, drei davon dunkel); `42` neu aufgenommen – es stand seit Phase 12 noch so weit gescrollt wie `41`, weil `capture-prototype` den Bildlauf nicht zurücksetzte. Knopf und Amiri-Schrift in `40`–`42`, `50`, `51` hat die App seit Phase 13.
 
@@ -129,12 +131,12 @@ Vollbild über der Anleitung; `-debugWalk dhuhr -debugWalkStep N` mit `N` wie `S
 | `iphone/85-sheet-city.png` | City sheet (.large, searchable) |
 | `iphone/86-sheet-adhan.png` | Adhan player sheet |
 
-## Widgets, Mitteilungen, Live-Aktivität – Phase 8 + 9
+## Widgets, Mitteilungen, Live-Aktivität – Phase 8 + 9, v0.8 in Phase 14
 
 | Datei | Zeigt |
 |---|---|
-| `system/90-lockscreen-widgets.png` | Lock Screen: accessoryCircular + accessoryRectangular + inline |
-| `system/91-homescreen-widgets.png` | Home Screen: systemMedium + systemSmall |
+| `system/90-lockscreen-widgets.png` | Lock Screen: accessoryCircular + accessoryRectangular (mini arc, since v0.8) + inline |
+| `system/91-homescreen-widgets.png` | Home Screen: systemMedium „Live“ (since v0.8) + systemMedium + systemSmall |
 | `system/92-notifications.png` | Notifications: prayer + reminder |
 | `system/93-live-activity-lockscreen.png` | Live Activity on the Lock Screen (day arc on accent) |
 | `system/94-live-activity-island-compact.png` | Live Activity – Dynamic Island compact |

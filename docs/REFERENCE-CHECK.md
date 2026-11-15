@@ -1,5 +1,21 @@
 # Schlussabgleich der Referenzbilder
 
+## Phase 14 (15.11.2026, Prototyp v0.8)
+
+Neu aus dem Prototyp sind `system/90`–`96` (`scripts/capture-prototype`, Ansichten `widgets`/`live` und die der Mitteilungen), dazu wegen des Namens „Vaqt“ `iphone/04`, `05`, `71`, `72`, `83`. Abgeglichen in zwei Schritten: im Katalog (`make compare-system`, Ausschnitte gegen die Referenz) und im System mit dem UI-Hilfsprojekt (Aufnahmen in `screenshots-out/phase-14/system-*.png`, nicht in Git). Die Zahlen sind der Anteil der Pixel, die um mehr als 24 von 255 abweichen. Was abweicht und bleibt, steht in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 14“.
+
+| Bild | Befehl | Ergebnis |
+|---|---|---|
+| `system/91` | `make compare-system STATES=91` | stimmt – Widget „Live“ 6,5 % (Kopf mit App-Symbol, Bogen 314 × 116 mit Kerahat golden auf der Spur, „Maghrib · 16:27“, Countdown; die Punkte liegen auf 0,5 pt), mittleres 8,3 %, kleines 7,9 % |
+| `system/90` | `make compare-system STATES=90` | stimmt im Inhalt – Rechteck mit Mini-Bogen (Punkte, Jetzt-Punkt, Kerahat gestrichelt), Ring und Zeile liegen auf 1–2 pt; die Zahl (95 %) kommt vom Hintergrund: der Katalog zeichnet die Sperrbildschirm-Widgets unter denen des Home-Bildschirms auf dunklerem Verlauf |
+| `system/93`, `96` | `make compare-system STATES='93 96'` | stimmt – 6,6 % und 7,3 %; Kerahat auf der Spur (vorbei blasser), App-Symbol im Kopf; dunkel mit der hellen Fassung des Symbols (siehe Annahmen) |
+| `system/94`, `95` | `make compare-system STATES='94 95'` | stimmt – 7,0 % und 8,9 %, unverändert seit Phase 9 |
+| `system/90`, `91`, `93`–`96` **T** | UI-Hilfsprojekt `system-setup-*.txt`, `system-90-91.txt`, `system-93-95.txt`, `system-96.txt` | stimmt im Inhalt – Widgets von „Vaqt“ auf Home- und Sperrbildschirm, Live-Aktivität, Insel kompakt und erweitert, dunkel; Abweichungen kommen von iOS (Sperrbildschirm von iOS 27 mit den Widgets unten, Hintergrund, Insel) |
+| `system/92` | – | nur die Referenz neu: Der Prototyp zeigt jetzt das App-Symbol in den Mitteilungen. Die App ändert dort nichts; iOS zeigt sein App-Symbol selbst (Spec § 9.1). Nicht neu im System aufgenommen (elf Minuten Wartezeit) |
+| `iphone/04`, `05`, `71`, `72`, `83` | – | nur die Referenz neu: „Vaqt“ statt „Gebetszeiten“ in `{app}` und im Dialog; die App nimmt den Namen aus dem String Catalog. Der Dialog in `04` ist der des Systems und zeigt `CFBundleDisplayName` |
+
+Nicht neu abgeglichen: `duo/*` (Duo-Simulator aus).
+
 ## Phase 13 (15.11.2026, Prototyp v0.8)
 
 Neu sind die Bilder `iphone/43`–`49` des Durchlaufs „Gebet Schritt für Schritt“ (`scripts/capture-prototype`, Zustände von `S.walk`); `42` ist neu aufgenommen, weil es seit Phase 12 noch so weit gescrollt stand wie `41`. Die Zahlen sind der Anteil der Pixel, die um mehr als 24 von 255 abweichen. Was abweicht und bleibt, steht in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 13“.
@@ -15,7 +31,7 @@ Neu sind die Bilder `iphone/43`–`49` des Durchlaufs „Gebet Schritt für Schr
 
 Dazu ohne Referenzbild: der Ablauf mit Tippen (UI-Hilfsprojekt `iphone-43-49-walk-flow.txt`: Knopf öffnet Asr, nach der Wahl Maghrib „Maghrib · 3 Rakʿas“, Beginnen/Weiter/Zurück/Schließen, Baum der Bedienungshilfen), RTL (gespiegelt: Kreis rechts, Fortschritt von rechts, „Zurück“ rechts), xxL/xxxL/AX5, die Seite „Lizenzen“.
 
-Nicht neu abgeglichen: `system/*` (Phase 14) und `duo/*` (Duo-Simulator aus).
+Nicht neu abgeglichen: `system/*` (seit Phase 14 abgeglichen, oben) und `duo/*` (Duo-Simulator aus).
 
 ## Phase 12 (15.11.2026, Prototyp v0.8)
 
