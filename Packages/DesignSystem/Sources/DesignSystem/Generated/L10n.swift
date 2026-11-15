@@ -185,7 +185,7 @@ public enum L10n {
     public static func kerahatNow(b: String) -> String { text("kerahatNow", b) }
     /// „Kerahat-Zeiten zeigen“
     public static var showKerahat: String { text("showKerahat") }
-    /// „Dezent markiert im Bogen und bei den Zeiten: etwa 45 Min. nach Sonnenaufgang, 10 Min. vor Dhuhr und 45 Min. vor Maghrib. Nach hanafitischer Lehre wird dann nicht gebetet (das Asr des Tages ausgenommen).“
+    /// „Im Bogen eingezeichnet, die Uhrzeiten stehen bei den Zeiten: etwa 45 Min. nach Sonnenaufgang, 10 Min. vor Dhuhr und 45 Min. vor Maghrib. Nach hanafitischer Lehre wird dann nicht gebetet (das Asr des Tages ausgenommen).“
     public static var kerahatFooter: String { text("kerahatFooter") }
     /// „Live-Aktivität“
     public static var liveAct: String { text("liveAct") }
@@ -519,6 +519,126 @@ public enum L10n {
     public static var hShort: String { text("hShort") }
     /// „Min.“
     public static var mShort: String { text("mShort") }
+    /// „Kostenlos. Ohne Werbung.“
+    public static var ob4Title: String { text("ob4Title") }
+    /// „{app} ist kostenlos und bleibt es. Damit wir die App pflegen und weiterentwickeln können, kannst du uns bald mit einer Spende unterstützen. Freiwillig: Die App bleibt für alle vollständig.“
+    public static func ob4Body(app: String) -> String { text("ob4Body", app) }
+    /// „Keine Werbung“
+    public static var ob4P1: String { text("ob4P1") }
+    /// „Kein Tracking“
+    public static var ob4P2: String { text("ob4P2") }
+    /// „Kein Konto“
+    public static var ob4P3: String { text("ob4P3") }
+    /// „Los geht’s“
+    public static var ob4Start: String { text("ob4Start") }
+    /// „{app} unterstützen“
+    public static func supportRow(app: String) -> String { text("supportRow", app) }
+    /// „Kostenlos und werbefrei, dank Spenden“
+    public static var supportRowSub: String { text("supportRowSub") }
+    /// „Unterstützen“
+    public static var supportTitle: String { text("supportTitle") }
+    /// „{app} ist kostenlos, ohne Werbung und ohne Tracking. Damit das so bleibt, tragen Spenden die laufenden Kosten.“
+    public static func supportLead(app: String) -> String { text("supportLead", app) }
+    /// „Wofür Spenden gedacht sind“
+    public static var supportWhat: String { text("supportWhat") }
+    /// „Apple-Entwicklerkonto“
+    public static var supAcc: String { text("supAcc") }
+    /// „99 € im Jahr, damit die App im App Store bleibt“
+    public static var supAccSub: String { text("supAccSub") }
+    /// „Pflege“
+    public static var supCare: String { text("supCare") }
+    /// „Anpassungen an neue iOS-Versionen und Fehlerbehebungen“
+    public static var supCareSub: String { text("supCareSub") }
+    /// „Inhalte“
+    public static var supContent: String { text("supContent") }
+    /// „Übersetzungen, Adhan-Aufnahmen und die fachliche Prüfung der Anleitung“
+    public static var supContentSub: String { text("supContentSub") }
+    /// „Spenden sind bald möglich“
+    public static var supportSoon: String { text("supportSoon") }
+    /// „Die Möglichkeit zu spenden kommt mit einem der nächsten Updates. Bis dahin hilft es schon, wenn du die App weiterempfiehlst.“
+    public static var supportSoonBody: String { text("supportSoonBody") }
+    /// „App weiterempfehlen“
+    public static var supportShare: String { text("supportShare") }
+    /// „Spenden sind freiwillig. Alle Funktionen bleiben für alle kostenlos.“
+    public static var supportFoot: String { text("supportFoot") }
+    /// „Kerahat-Zeiten: {list}“
+    public static func kerahatArc(list: String) -> String { text("kerahatArc", list) }
+    /// „Im Toleranzbereich“
+    public static var inTol: String { text("inTol") }
+    /// „Der markierte Bereich reicht 40° zu jeder Seite der Qibla.“
+    public static var tolLegend: String { text("tolLegend") }
+    /// „Gebet Schritt für Schritt“
+    public static var wkStart: String { text("wkStart") }
+    /// „Haltung für Haltung durch alle {n} Rakʿas von {p}.“
+    public static func wkStartSub(n: String, p: String) -> String { text("wkStartSub", n, p) }
+    /// „Rakʿa {r} von {n}“
+    public static func wkRak(r: String, n: String) -> String { text("wkRak", r, n) }
+    /// „Schritt {i} von {k}“
+    public static func wkStep(i: String, k: String) -> String { text("wkStep", i, k) }
+    /// „Weiter“
+    public static var wkNext: String { text("wkNext") }
+    /// „Zurück“
+    public static var wkPrev: String { text("wkPrev") }
+    /// „Beginnen“
+    public static var wkBegin: String { text("wkBegin") }
+    /// „Fertig“
+    public static var wkDone: String { text("wkDone") }
+    /// „{p} · {n} Rakʿas“
+    public static func wkIntroTitle(p: String, n: String) -> String { text("wkIntroTitle", p, n) }
+    /// „Nimm die Gebetswaschung vor und stell dich in Richtung Qibla. Fasse im Herzen die Absicht für {p}. Dann geht es los.“
+    public static func wkIntroBody(p: String) -> String { text("wkIntroBody", p) }
+    /// „Lies al-Fātiha, danach eine weitere Sure.“
+    public static var wkQiyam12: String { text("wkQiyam12") }
+    /// „Stirn, Nase, Hände, Knie und Zehen auf dem Boden. Sprich dreimal:“
+    public static var wkSujudD: String { text("wkSujudD") }
+    /// „Kurz sitzen“
+    public static var wkJalsa: String { text("wkJalsa") }
+    /// „Richte dich zum Sitzen auf und komm kurz zur Ruhe.“
+    public static var wkJalsaD: String { text("wkJalsaD") }
+    /// „Zweite Niederwerfung“
+    public static var wkSujud2: String { text("wkSujud2") }
+    /// „Wirf dich ein zweites Mal nieder und sprich wieder dreimal:“
+    public static var wkSujud2D: String { text("wkSujud2D") }
+    /// „Erstes Sitzen“
+    public static var wkTashFirst: String { text("wkTashFirst") }
+    /// „Lies at-Tahiyyāt, dann steh zur 3. Rakʿa auf.“
+    public static var wkTashFirstD: String { text("wkTashFirstD") }
+    /// „Letztes Sitzen“
+    public static var wkTashLast: String { text("wkTashLast") }
+    /// „Lies at-Tahiyyāt, danach das Segensgebet und ein Bittgebet.“
+    public static var wkTashLastD: String { text("wkTashLastD") }
+    /// „Gebet beendet“
+    public static var wkDoneTitle: String { text("wkDoneTitle") }
+    /// „Möge Allah dein Gebet annehmen.“
+    public static var wkDoneBody: String { text("wkDoneBody") }
+    /// „Nachholgebete berechnen“
+    public static var qcTitle: String { text("qcTitle") }
+    /// „Wie lange hast du nicht regelmäßig gebetet? Ein ungefährer Zeitraum reicht.“
+    public static var qcLead: String { text("qcLead") }
+    /// „Zeitraum“
+    public static var qcStep1: String { text("qcStep1") }
+    /// „Witr“
+    public static var qcStep2: String { text("qcStep2") }
+    /// „Ergebnis“
+    public static var qcStep3: String { text("qcStep3") }
+    /// „Gebete nachzuholen“
+    public static var qcResultUnit: String { text("qcResultUnit") }
+    /// „{d} Tage × {k} Gebete“
+    public static func qcResultDetail(d: String, k: String) -> String { text("qcResultDetail", d, k) }
+    /// „Zurück zu heute“
+    public static var backToToday: String { text("backToToday") }
+    /// „Vorheriger Tag“
+    public static var dayPrev: String { text("dayPrev") }
+    /// „Nächster Tag“
+    public static var dayNext: String { text("dayNext") }
+    /// „Manuelle Winkel“
+    public static var hlManual: String { text("hlManual") }
+    /// „Eigene Dämmerungswinkel für Fadschr und Ischa“
+    public static var hlManualSub: String { text("hlManualSub") }
+    /// „Dämmerungswinkel“
+    public static var hlDegHeader: String { text("hlDegHeader") }
+    /// „Erreicht die Sonne den eingestellten Winkel nicht, gilt der entsprechende Anteil der Nacht (Winkel ÷ 60).“
+    public static var hlManualFooter: String { text("hlManualFooter") }
 
     /// Name einer Sure aus `SURAH` im Prototyp, z. B. „Al-Baqara“ für 2.
     public static func surahName(_ surah: Int) -> String { text("surah_\(surah)") }
@@ -791,6 +911,66 @@ public enum L10n {
         "notifAgo",
         "hShort",
         "mShort",
+        "ob4Title",
+        "ob4Body",
+        "ob4P1",
+        "ob4P2",
+        "ob4P3",
+        "ob4Start",
+        "supportRow",
+        "supportRowSub",
+        "supportTitle",
+        "supportLead",
+        "supportWhat",
+        "supAcc",
+        "supAccSub",
+        "supCare",
+        "supCareSub",
+        "supContent",
+        "supContentSub",
+        "supportSoon",
+        "supportSoonBody",
+        "supportShare",
+        "supportFoot",
+        "kerahatArc",
+        "inTol",
+        "tolLegend",
+        "wkStart",
+        "wkStartSub",
+        "wkRak",
+        "wkStep",
+        "wkNext",
+        "wkPrev",
+        "wkBegin",
+        "wkDone",
+        "wkIntroTitle",
+        "wkIntroBody",
+        "wkQiyam12",
+        "wkSujudD",
+        "wkJalsa",
+        "wkJalsaD",
+        "wkSujud2",
+        "wkSujud2D",
+        "wkTashFirst",
+        "wkTashFirstD",
+        "wkTashLast",
+        "wkTashLastD",
+        "wkDoneTitle",
+        "wkDoneBody",
+        "qcTitle",
+        "qcLead",
+        "qcStep1",
+        "qcStep2",
+        "qcStep3",
+        "qcResultUnit",
+        "qcResultDetail",
+        "backToToday",
+        "dayPrev",
+        "dayNext",
+        "hlManual",
+        "hlManualSub",
+        "hlDegHeader",
+        "hlManualFooter",
         "surah_2",
         "surah_13",
         "surah_20",

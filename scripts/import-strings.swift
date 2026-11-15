@@ -134,6 +134,31 @@ guard let html = try? String(contentsOf: prototypeURL, encoding: .utf8) else {
 }
 let literal = objectLiteral(named: "T", in: html)
 
+/// Die Nachträge zu `T` vom 15.11.2026 (Spec § 9): neue und geänderte Texte, die der Prototyp hinter
+/// `T` mit `Object.assign(T…)` und `[…].forEach(…)` einträgt – vom Kommentar `patchMarker` bis vor
+/// `const SURAH`. Damit kein Nachtrag unbemerkt fehlt, muss jedes `Object.assign(T` des Prototyps in
+/// diesem Abschnitt stehen.
+let patchMarker = "/* ===== Änderungen vom 15.11.2026: neue und geänderte Texte"
+func textPatches(in source: String) -> String {
+    guard let start = source.range(of: patchMarker),
+          let end = source.range(of: "const SURAH = ", range: start.upperBound..<source.endIndex)
+    else {
+        fail("Nachträge zu `T` nicht gefunden (`\(patchMarker)` … `const SURAH`)")
+    }
+    let block = String(source[start.lowerBound..<end.lowerBound])
+    let inBlock = block.components(separatedBy: "Object.assign(T").count
+    let inFile = source.components(separatedBy: "Object.assign(T").count
+    guard inBlock == inFile else {
+        fail("`Object.assign(T` steht auch außerhalb der Nachträge vom 15.11.2026 – Abschnitt prüfen")
+    }
+    return block
+}
+let patches = textPatches(in: html)
+
+/// Sprachen, die der Prototyp schon hat, die App aber erst mit Phase 15 bekommt (Spec § 9.10). Ihre
+/// Texte übergeht der Import bis dahin.
+let laterLanguages = ["fr", "nl", "bs", "sq", "ar", "ur", "id", "ms", "bn", "fa", "ru", "it"]
+
 // MARK: - Auswerten (Reihenfolge der Schlüssel bleibt erhalten)
 
 let context = JSContext()!
@@ -142,21 +167,24 @@ context.exceptionHandler = { _, exception in scriptError = exception?.toString()
 let script = """
 (function () {
   var T = \(literal);
+  \(patches)
   return JSON.stringify(Object.keys(T).map(function (lang) {
     return [lang, Object.keys(T[lang]).map(function (key) { return [key, T[lang][key]]; })];
   }));
 })()
 """
 guard let json = context.evaluateScript(script)?.toString(), scriptError == nil,
-      let parsed = try? JSONSerialization.jsonObject(with: Data(json.utf8)) as? [[Any]]
+      let evaluated = try? JSONSerialization.jsonObject(with: Data(json.utf8)) as? [[Any]]
 else {
     fail("`T` ließ sich nicht auswerten: \(scriptError ?? "unbekannter Fehler")")
 }
 
-let foundLanguages = parsed.compactMap { $0.first as? String }
-guard foundLanguages == languages else {
-    fail("Erwartete Sprachen \(languages), gefunden \(foundLanguages)")
+let foundLanguages = evaluated.compactMap { $0.first as? String }
+guard foundLanguages.filter({ !laterLanguages.contains($0) }) == languages else {
+    fail("Erwartete Sprachen \(languages) (dazu später \(laterLanguages)), gefunden \(foundLanguages)")
 }
+let skippedLanguages = foundLanguages.filter { laterLanguages.contains($0) }
+let parsed = evaluated.filter { block in (block.first as? String).map(languages.contains) ?? false }
 
 /// Ein Eintrag aus `T`: entweder ein Text oder eine Liste von Texten.
 enum Value {
@@ -560,6 +588,9 @@ print("  Schlüssel im Prototyp: \(order.count)  →  Einträge im Katalog: \(en
 print("  Texte mit Argumenten: \(withArguments.count)  (Namen: \(allNames))")
 print("  Info.plist: \(infoPlistTexts.map { pair in "\(pair.plistKey) ← \(pair.textKey)" }.joined(separator: ", "))")
 print("  Verse: \(verses.count) mit \(surahNames.count) Suren  →  \(verseListURL.lastPathComponent)")
+if !skippedLanguages.isEmpty {
+    print("  Übergangen bis Phase 15: \(skippedLanguages.joined(separator: ", "))")
+}
 if !missing.isEmpty {
     print("  FEHLEND (\(missing.count)): \(missing.joined(separator: ", "))")
 }

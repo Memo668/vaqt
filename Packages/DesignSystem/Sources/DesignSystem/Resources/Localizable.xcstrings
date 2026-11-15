@@ -1196,6 +1196,35 @@
         }
       }
     },
+    "backToToday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zurück zu heute"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back to Today"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volver a hoy"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugüne dön"
+          }
+        }
+      }
+    },
     "beforeTitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1832,6 +1861,64 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mevcut konum"
+          }
+        }
+      }
+    },
+    "dayNext" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nächster Tag"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next Day"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Día siguiente"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonraki gün"
+          }
+        }
+      }
+    },
+    "dayPrev" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorheriger Tag"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous Day"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Día anterior"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Önceki gün"
           }
         }
       }
@@ -2563,6 +2650,35 @@
         }
       }
     },
+    "hlDegHeader" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dämmerungswinkel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Twilight Angle"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ángulo de crepúsculo"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şafak açısı"
+          }
+        }
+      }
+    },
     "hlFooter" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2588,6 +2704,93 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yazın yaklaşık 48° enlemden itibaren geçerlidir, ör. Almanya."
+          }
+        }
+      }
+    },
+    "hlManual" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manuelle Winkel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manual Angles"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ángulos manuales"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manuel açı"
+          }
+        }
+      }
+    },
+    "hlManualFooter" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreicht die Sonne den eingestellten Winkel nicht, gilt der entsprechende Anteil der Nacht (Winkel ÷ 60)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If the sun does not reach the set angle, the matching portion of the night is used (angle ÷ 60)."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si el sol no alcanza el ángulo fijado, se usa la parte correspondiente de la noche (ángulo ÷ 60)."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güneş ayarlanan açıya ulaşmazsa gecenin buna karşılık gelen payı kullanılır (açı ÷ 60)."
+          }
+        }
+      }
+    },
+    "hlManualSub" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eigene Dämmerungswinkel für Fadschr und Ischa"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your own twilight angles for Fajr and Isha"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus propios ángulos de crepúsculo para Fajr e Isha"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İmsak ve yatsı için kendi şafak açıların"
           }
         }
       }
@@ -2795,31 +2998,90 @@
         }
       }
     },
+    "inTol" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Im Toleranzbereich"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Within tolerance"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dentro de la tolerancia"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tolerans aralığında"
+          }
+        }
+      }
+    },
+    "kerahatArc" : {
+      "comment" : "Argumente: 1 = list",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kerahat-Zeiten: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Makruh times: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempos makruh: %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kerahat vakitleri: %@"
+          }
+        }
+      }
+    },
     "kerahatFooter" : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dezent markiert im Bogen und bei den Zeiten: etwa 45 Min. nach Sonnenaufgang, 10 Min. vor Dhuhr und 45 Min. vor Maghrib. Nach hanafitischer Lehre wird dann nicht gebetet (das Asr des Tages ausgenommen)."
+            "value" : "Im Bogen eingezeichnet, die Uhrzeiten stehen bei den Zeiten: etwa 45 Min. nach Sonnenaufgang, 10 Min. vor Dhuhr und 45 Min. vor Maghrib. Nach hanafitischer Lehre wird dann nicht gebetet (das Asr des Tages ausgenommen)."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Subtly marked on the arc and in the times: about 45 min after sunrise, 10 min before Dhuhr and 45 min before Maghrib. In the Hanafi school no prayer is performed then (except that day’s Asr)."
+            "value" : "Marked on the arc, with their times next to the prayer times: about 45 min after sunrise, 10 min before Dhuhr and 45 min before Maghrib. In the Hanafi school no prayer is performed then (except that day’s Asr)."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Marcados de forma discreta en el arco y en los horarios: unos 45 min tras la salida del sol, 10 min antes de Dhuhr y 45 min antes de Magrib. En la escuela hanafí no se reza en ellos (salvo el Asr de ese día)."
+            "value" : "Marcados en el arco, con su hora junto a los horarios: unos 45 min tras la salida del sol, 10 min antes de Dhuhr y 45 min antes de Magrib. En la escuela hanafí no se reza en ellos (salvo el Asr de ese día)."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kemerde ve vakitlerde hafifçe işaretlenir: güneş doğduktan sonra yaklaşık 45 dk, öğleden önce 10 dk ve akşamdan önce 45 dk. Hanefî mezhebine göre bu vakitlerde namaz kılınmaz (o günün ikindisi hariç)."
+            "value" : "Kemerde işaretlenir, saatleri vakitlerin yanında yazar: güneş doğduktan sonra yaklaşık 45 dk, öğleden önce 10 dk ve akşamdan önce 45 dk. Hanefî mezhebine göre bu vakitlerde namaz kılınmaz (o günün ikindisi hariç)."
           }
         }
       }
@@ -4112,6 +4374,181 @@
         }
       }
     },
+    "ob4Body" : {
+      "comment" : "Argumente: 1 = app",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ ist kostenlos und bleibt es. Damit wir die App pflegen und weiterentwickeln können, kannst du uns bald mit einer Spende unterstützen. Freiwillig: Die App bleibt für alle vollständig."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ is free and will stay that way. Soon you’ll be able to support us with a donation so we can maintain the app and keep improving it. It’s voluntary: the app stays complete for everyone."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ es gratis y lo seguirá siendo. Pronto podrás apoyarnos con un donativo para que podamos mantener la app y seguir mejorándola. Es voluntario: la app sigue completa para todos."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ ücretsizdir ve öyle kalacak. Uygulamanın bakımını yapıp geliştirmeye devam edebilmemiz için yakında bağışla destek olabileceksin. Tamamen gönüllü: Uygulama herkes için eksiksiz kalır."
+          }
+        }
+      }
+    },
+    "ob4P1" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Werbung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No ads"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin anuncios"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reklam yok"
+          }
+        }
+      }
+    },
+    "ob4P2" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Tracking"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tracking"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin rastreo"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takip yok"
+          }
+        }
+      }
+    },
+    "ob4P3" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Konto"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No account"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin cuenta"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesap yok"
+          }
+        }
+      }
+    },
+    "ob4Start" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los geht’s"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get Started"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empezar"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başlayalım"
+          }
+        }
+      }
+    },
+    "ob4Title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kostenlos. Ohne Werbung."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free. No ads."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gratis. Sin anuncios."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ücretsiz. Reklamsız."
+          }
+        }
+      }
+    },
     "obContinue" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5392,6 +5829,210 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@ gün · %2$@ namaz"
+          }
+        }
+      }
+    },
+    "qcLead" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wie lange hast du nicht regelmäßig gebetet? Ein ungefährer Zeitraum reicht."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How long did you not pray regularly? A rough period is enough."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cuánto tiempo no rezaste con regularidad? Basta un periodo aproximado."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ne kadar süre düzenli namaz kılmadın? Yaklaşık bir süre yeterli."
+          }
+        }
+      }
+    },
+    "qcResultDetail" : {
+      "comment" : "Argumente: 1 = d, 2 = k",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ Tage × %2$@ Gebete"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ days × %2$@ prayers"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ días × %2$@ oraciones"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ gün × %2$@ namaz"
+          }
+        }
+      }
+    },
+    "qcResultUnit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gebete nachzuholen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "prayers to make up"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "oraciones por recuperar"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kaza namazı"
+          }
+        }
+      }
+    },
+    "qcStep1" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeitraum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Period"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Periodo"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Süre"
+          }
+        }
+      }
+    },
+    "qcStep2" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Witr"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Witr"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Witr"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vitir"
+          }
+        }
+      }
+    },
+    "qcStep3" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ergebnis"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Result"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resultado"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonuç"
+          }
+        }
+      }
+    },
+    "qcTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nachholgebete berechnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calculate Missed Prayers"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calcular oraciones pendientes"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaza namazlarını hesapla"
           }
         }
       }
@@ -6994,6 +7635,443 @@
         }
       }
     },
+    "supAcc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple-Entwicklerkonto"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple developer account"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuenta de desarrollador de Apple"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple geliştirici hesabı"
+          }
+        }
+      }
+    },
+    "supAccSub" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "99 € im Jahr, damit die App im App Store bleibt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "€99 a year to keep the app on the App Store"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "99 € al año para que la app siga en la App Store"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulamanın App Store’da kalması için yılda 99 €"
+          }
+        }
+      }
+    },
+    "supCare" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pflege"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maintenance"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantenimiento"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bakım"
+          }
+        }
+      }
+    },
+    "supCareSub" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anpassungen an neue iOS-Versionen und Fehlerbehebungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Updates for new iOS versions and bug fixes"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adaptación a nuevas versiones de iOS y corrección de errores"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni iOS sürümlerine uyum ve hata düzeltmeleri"
+          }
+        }
+      }
+    },
+    "supContent" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inhalte"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Content"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contenido"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İçerik"
+          }
+        }
+      }
+    },
+    "supContentSub" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Übersetzungen, Adhan-Aufnahmen und die fachliche Prüfung der Anleitung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Translations, adhan recordings and an expert review of the guide"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traducciones, grabaciones del adhan y revisión experta de la guía"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çeviriler, ezan kayıtları ve rehberin uzman kontrolü"
+          }
+        }
+      }
+    },
+    "supportFoot" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spenden sind freiwillig. Alle Funktionen bleiben für alle kostenlos."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Donations are voluntary. Every feature stays free for everyone."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los donativos son voluntarios. Todas las funciones siguen gratis para todos."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bağışlar gönüllüdür. Tüm özellikler herkes için ücretsiz kalır."
+          }
+        }
+      }
+    },
+    "supportLead" : {
+      "comment" : "Argumente: 1 = app",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ ist kostenlos, ohne Werbung und ohne Tracking. Damit das so bleibt, tragen Spenden die laufenden Kosten."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ is free, with no ads and no tracking. Donations cover the running costs so it can stay that way."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ es gratis, sin anuncios y sin rastreo. Los donativos cubren los gastos para que siga así."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ ücretsizdir, reklam ve takip içermez. Böyle kalması için bağışlar düzenli giderleri karşılar."
+          }
+        }
+      }
+    },
+    "supportRow" : {
+      "comment" : "Argumente: 1 = app",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ unterstützen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apoyar %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulamayı destekle"
+          }
+        }
+      }
+    },
+    "supportRowSub" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kostenlos und werbefrei, dank Spenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free and ad-free, thanks to donations"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gratis y sin anuncios gracias a los donativos"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bağışlar sayesinde ücretsiz ve reklamsız"
+          }
+        }
+      }
+    },
+    "supportShare" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App weiterempfehlen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recommend the App"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recomendar la app"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulamayı tavsiye et"
+          }
+        }
+      }
+    },
+    "supportSoon" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spenden sind bald möglich"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Donations coming soon"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Donativos muy pronto"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bağış yakında mümkün"
+          }
+        }
+      }
+    },
+    "supportSoonBody" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Möglichkeit zu spenden kommt mit einem der nächsten Updates. Bis dahin hilft es schon, wenn du die App weiterempfiehlst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The option to donate arrives with one of the next updates. Until then, recommending the app already helps."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La opción de donar llegará con una de las próximas actualizaciones. Mientras tanto, recomendar la app ya ayuda."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bağış seçeneği sonraki güncellemelerden biriyle gelecek. O zamana kadar uygulamayı tavsiye etmen de çok yardımcı olur."
+          }
+        }
+      }
+    },
+    "supportTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unterstützen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apoyar"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Destekle"
+          }
+        }
+      }
+    },
+    "supportWhat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wofür Spenden gedacht sind"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What Donations Are For"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para qué son los donativos"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bağışlar ne için"
+          }
+        }
+      }
+    },
     "surah_2" : {
       "comment" : "Name der Sure 2 aus `SURAH` im Prototyp.",
       "extractionState" : "manual",
@@ -7313,6 +8391,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bugün"
+          }
+        }
+      }
+    },
+    "tolLegend" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der markierte Bereich reicht 40° zu jeder Seite der Qibla."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The marked area extends 40° either side of the Qibla."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La zona marcada abarca 40° a cada lado de la Qibla."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İşaretli alan kıblenin her iki yanına 40° uzanır."
           }
         }
       }
@@ -7872,6 +8979,649 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hanefî mezhebine göre vacip"
+          }
+        }
+      }
+    },
+    "wkBegin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beginnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Begin"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empezar"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başla"
+          }
+        }
+      }
+    },
+    "wkDone" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fertig"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listo"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitti"
+          }
+        }
+      }
+    },
+    "wkDoneBody" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Möge Allah dein Gebet annehmen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "May Allah accept your prayer."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Que Allah acepte tu oración."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allah kabul etsin."
+          }
+        }
+      }
+    },
+    "wkDoneTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gebet beendet"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prayer complete"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oración completada"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Namaz tamamlandı"
+          }
+        }
+      }
+    },
+    "wkIntroBody" : {
+      "comment" : "Argumente: 1 = p",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nimm die Gebetswaschung vor und stell dich in Richtung Qibla. Fasse im Herzen die Absicht für %@. Dann geht es los."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Make wudu and face the Qibla. Make the intention for %@ in your heart. Then begin."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haz el wudu y ponte hacia la Qibla. Haz en tu corazón la intención de %@. Después, empieza."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abdest al ve kıbleye yönel. Kalbinden %@ namazına niyet et. Sonra başla."
+          }
+        }
+      }
+    },
+    "wkIntroTitle" : {
+      "comment" : "Argumente: 1 = p, 2 = n",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ Rakʿas"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ rakʿahs"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ rakʿas"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ rekât"
+          }
+        }
+      }
+    },
+    "wkJalsa" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurz sitzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sit briefly"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sentarse un momento"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kısa oturuş"
+          }
+        }
+      }
+    },
+    "wkJalsaD" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Richte dich zum Sitzen auf und komm kurz zur Ruhe."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rise to sitting and pause for a moment."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incorpórate hasta quedar sentado y haz una breve pausa."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doğrulup otur ve kısa bir an dur."
+          }
+        }
+      }
+    },
+    "wkNext" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weiter"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siguiente"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İleri"
+          }
+        }
+      }
+    },
+    "wkPrev" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zurück"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atrás"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geri"
+          }
+        }
+      }
+    },
+    "wkQiyam12" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lies al-Fātiha, danach eine weitere Sure."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recite al-Fātiḥa, then another sūrah."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recita al-Fātiḥa y después otra sura."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fâtiha’yı, ardından bir sure daha oku."
+          }
+        }
+      }
+    },
+    "wkRak" : {
+      "comment" : "Argumente: 1 = r, 2 = n",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rakʿa %1$@ von %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rakʿah %1$@ of %2$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rakʿa %1$@ de %2$@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@. rekât / %2$@"
+          }
+        }
+      }
+    },
+    "wkStart" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gebet Schritt für Schritt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pray Step by Step"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezar paso a paso"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adım adım namaz"
+          }
+        }
+      }
+    },
+    "wkStartSub" : {
+      "comment" : "Argumente: 1 = n, 2 = p",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haltung für Haltung durch alle %1$@ Rakʿas von %2$@."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posture by posture through all %1$@ rakʿahs of %2$@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Postura a postura, las %1$@ rakʿas de %2$@."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@ namazının %1$@ rekâtı, duruş duruş."
+          }
+        }
+      }
+    },
+    "wkStep" : {
+      "comment" : "Argumente: 1 = i, 2 = k",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schritt %1$@ von %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Step %1$@ of %2$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paso %1$@ de %2$@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adım %1$@ / %2$@"
+          }
+        }
+      }
+    },
+    "wkSujud2" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zweite Niederwerfung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Second prostration"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segunda postración"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İkinci secde"
+          }
+        }
+      }
+    },
+    "wkSujud2D" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wirf dich ein zweites Mal nieder und sprich wieder dreimal:"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prostrate a second time and again say three times:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Postrate por segunda vez y di de nuevo tres veces:"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İkinci kez secdeye var ve yine üç kez söyle:"
+          }
+        }
+      }
+    },
+    "wkSujudD" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stirn, Nase, Hände, Knie und Zehen auf dem Boden. Sprich dreimal:"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forehead, nose, hands, knees and toes on the ground. Say three times:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frente, nariz, manos, rodillas y dedos de los pies en el suelo. Di tres veces:"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alın, burun, eller, dizler ve ayak parmakları yerde. Üç kez söyle:"
+          }
+        }
+      }
+    },
+    "wkTashFirst" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstes Sitzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "First sitting"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primera sentada"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İlk oturuş"
+          }
+        }
+      }
+    },
+    "wkTashFirstD" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lies at-Tahiyyāt, dann steh zur 3. Rakʿa auf."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recite at-Taḥiyyāt, then stand up for the 3rd rakʿah."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recita at-Taḥiyyāt y luego levántate para la 3.ª rakʿa."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ettehiyyatü’yü oku, sonra 3. rekâta kalk."
+          }
+        }
+      }
+    },
+    "wkTashLast" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letztes Sitzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Final sitting"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última sentada"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Son oturuş"
+          }
+        }
+      }
+    },
+    "wkTashLastD" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lies at-Tahiyyāt, danach das Segensgebet und ein Bittgebet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recite at-Taḥiyyāt, then the blessings on the Prophet and a supplication."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recita at-Taḥiyyāt, luego las bendiciones sobre el Profeta y una súplica."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ettehiyyatü’yü, ardından salavatları ve duayı oku."
           }
         }
       }
