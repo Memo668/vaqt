@@ -168,6 +168,67 @@ struct WidgetTimelineTests {
         #expect(result.entries[1].date.timeIntervalSince(saturday.at("18:17", in: .berlin)) == minutes(12 * 60 - 1))
     }
 
+    // MARK: - Bogen (Phase 14)
+
+    @Test("der Stand trägt die Tagesphase für den Bogen: um 14:25 läuft Asr, der Knopf steht zwischen Fadschr und Ischa")
+    func snapshotPhase() throws {
+        let snapshot = try snapshot(at: "14:25")
+        #expect(snapshot.phase.highlighted == .asr)
+        #expect(snapshot.phase.times.day == day)
+        #expect(snapshot.phase.dayProgress.isActive)
+        #expect(snapshot.now == day.at("14:25", in: .berlin))
+    }
+
+    @Test("mit arcStep: zwischen 14:25 und Maghrib alle 5 Minuten ein Eintrag, dazu der Beginn von Kerahat um 15:42")
+    func arcSteps() {
+        let result = WidgetTimeline.entries(
+            from: day.at("14:25", in: .berlin), source: FixtureTimesSource(), place: berlin,
+            settings: CalculationSettings(), arcStep: WidgetTimeline.arcStep
+        )
+        let untilMaghrib = result.entries.prefix { $0.date < day.at("16:27", in: .berlin) }
+        let times = untilMaghrib.map { ClockTime($0.date, in: .berlin).description }
+        #expect(times.first == "14:25")
+        #expect(times[1] == "14:30")
+        #expect(times.contains("15:40") && times.contains("15:42") && times.contains("15:45"))
+        #expect(times.last == "16:25")
+        // 14:25, 24 Schritte von 14:30 bis 16:25, der Beginn von Kerahat.
+        #expect(times.count == 26)
+        // Die Zeitleiste holt das Widget wie ohne Schritte beim letzten Ereignis.
+        #expect(result.reloadDate == day.adding(days: 1).at("14:00", in: .berlin))
+    }
+
+    @Test("mit arcStep: der Knopf rückt in jedem Eintrag weiter, Kerahat läuft ab 15:42")
+    func arcStepsAdvance() {
+        let result = WidgetTimeline.entries(
+            from: day.at("14:25", in: .berlin), source: FixtureTimesSource(), place: berlin,
+            settings: CalculationSettings(), arcStep: WidgetTimeline.arcStep
+        )
+        let phases = result.entries.prefix(26).compactMap { entry -> DayPhase? in
+            guard case .times(let snapshot) = entry.content else { return nil }
+            return snapshot.phase
+        }
+        #expect(phases.count == 26)
+        let fractions = phases.map(\.dayProgress.fraction)
+        #expect(zip(fractions, fractions.dropFirst()).allSatisfy { $0 < $1 })
+        let kerahat = phases.map { ClockTime($0.now, in: .berlin).description + ($0.activeKerahat == nil ? "" : " K") }
+        #expect(kerahat.contains("15:40") && kerahat.contains("15:42 K") && kerahat.contains("16:25 K"))
+    }
+
+    @Test("mit arcStep: zwischen Ischa und Fadschr keine Schritte – der Bogen steht dann ohne Knopf")
+    func noArcStepsAtNight() {
+        let result = WidgetTimeline.entries(
+            from: day.at("18:20", in: .berlin), source: FixtureTimesSource(), place: berlin,
+            settings: CalculationSettings(), arcStep: WidgetTimeline.arcStep
+        )
+        let night = result.entries.prefix { $0.date <= day.adding(days: 1).at("05:16", in: .berlin) }
+        #expect(night.map { ClockTime($0.date, in: .berlin).description } == ["18:20", "05:16"])
+        // Am nächsten Morgen: Schritte ab 05:20, Kerahat nach Sonnenaufgang beginnt und endet als eigener Eintrag.
+        let morning = result.entries.map { ClockTime($0.date, in: .berlin).description }
+        #expect(morning.contains("05:20") && morning.contains("07:14") && morning.contains("07:59"))
+        // Einen ganzen Tag: gut 13 Stunden zu je 12 Schritten plus Ereignisse und Kerahat – nicht mehr als 200.
+        #expect(result.entries.count > 140 && result.entries.count < 200)
+    }
+
     // MARK: - Ohne Zeiten
 
     @Test("in einer Gegend ohne Zeiten: ein Eintrag mit dem Hinweis, neu gerechnet um Mitternacht")

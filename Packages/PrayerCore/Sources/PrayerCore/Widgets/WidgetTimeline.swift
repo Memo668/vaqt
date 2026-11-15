@@ -8,27 +8,28 @@ import Foundation
 /// von morgen, nichts abgeblendet; nach Mitternacht vor einem späten Ischa noch die von gestern. So steht
 /// in der Liste dieselbe Uhrzeit wie links groß.
 public struct WidgetSnapshot: Hashable, Sendable {
-    /// Der Zeitpunkt, für den der Stand gilt (App-Uhr).
-    public let now: Date
-    /// Das letzte Ereignis, das schon begonnen hat (`ph.prev`) – Beginn des Rings.
-    public let previous: DayPhase.Event
-    /// Das nächste Ereignis (`ph.next`).
-    public let next: DayPhase.Event
-    /// Das Ereignis danach (`ph.next2`) – dritte Zeile des rechteckigen Widgets.
-    public let following: DayPhase.Event
+    /// Die Tagesphase zu diesem Zeitpunkt – für den Bogen im rechteckigen Widget und im Widget „Live“
+    /// (`arcHTML(ph, 'acc')`, `arcHTML(ph, 'wla', 'la')`; Spec § 9.11).
+    public let phase: DayPhase
     /// Die sechs Zeiten der Liste im mittleren Widget.
     public let list: DayTimes
     /// Zeilen der Liste, die vorbei sind und abgeblendet stehen (`passed`). Das nächste Ereignis zählt nie
     /// dazu.
     public let passed: Set<Prayer>
 
+    /// Der Zeitpunkt, für den der Stand gilt (App-Uhr).
+    public var now: Date { phase.now }
+    /// Das letzte Ereignis, das schon begonnen hat (`ph.prev`) – Beginn des Rings.
+    public var previous: DayPhase.Event { phase.previous }
+    /// Das nächste Ereignis (`ph.next`).
+    public var next: DayPhase.Event { phase.next }
+    /// Das Ereignis danach (`ph.next2`).
+    public var following: DayPhase.Event { phase.following }
+
     /// Der Stand zum Zeitpunkt `now`; `nil`, wenn der Zeitstrahl `now` nicht einschließt.
     public init?(timeline: PrayerTimeline, at now: Date) {
         guard let phase = timeline.phase(at: now) else { return nil }
-        self.now = now
-        previous = phase.previous
-        next = phase.next
-        following = phase.following
+        self.phase = phase
         let list = timeline.times(dayOffset: phase.next.dayOffset)
         self.list = list
         passed = Set(Prayer.allCases.filter { $0 != phase.next.prayer && list[$0] <= now })
@@ -51,10 +52,18 @@ public struct WidgetSnapshot: Hashable, Sendable {
 /// WidgetKit zeigt jeden Eintrag ab seinem Zeitpunkt; dazwischen laufen nur Countdown und Ring weiter
 /// (`Text(timerInterval:)`, `ProgressView(timerInterval:)`). Nach dem letzten Eintrag holt das Widget eine
 /// neue Zeitleiste. Gerechnet wird mit den Einstellungen der App, Minutenkorrekturen eingerechnet (Spec § 4).
+///
+/// Den Tagesbogen (Spec § 9.11) zeichnet iOS nicht von selbst weiter. Damit Knopf und gefüllter Teil
+/// mitlaufen, kommen zwischen Fadschr und Ischa Einträge alle fünf Minuten dazu, und zu Beginn und Ende
+/// jedes Kerahat-Fensters (`arcStep`; entschieden mit dem Plan für Phase 14: „Alle 5 Minuten“).
 public enum WidgetTimeline {
 
     /// So weit reicht eine Zeitleiste.
     public static let horizon: TimeInterval = 24 * 60 * 60
+
+    /// Abstand der Einträge für den Bogen: fünf Minuten, auf volle fünf Minuten der Uhr. Im Widget „Live“
+    /// rückt der Knopf damit um gut 2 pt weiter, im rechteckigen um 1 pt.
+    public static let arcStep: TimeInterval = 5 * 60
 
     /// Was ein Eintrag zeigt.
     public enum Content: Hashable, Sendable {
@@ -87,7 +96,22 @@ public enum WidgetTimeline {
     ///   - source: woher die Zeiten kommen.
     ///   - place: der Ort, der in der App gilt.
     ///   - settings: Methode, Asr, Regel für hohe Breiten, Minutenkorrekturen.
+    ///   - arcStep: Abstand der Einträge für den Bogen (`WidgetTimeline.arcStep`); ohne Angabe nur ein
+    ///     Eintrag je Ereignis.
     public static func entries(
+        from now: Date, source: any PrayerTimesSource, place: Place, settings: CalculationSettings,
+        arcStep: TimeInterval? = nil
+    ) -> Result {
+        let result = eventEntries(from: now, source: source, place: place, settings: settings)
+        guard let arcStep, arcStep > 0 else { return result }
+        return Result(
+            entries: addingArcSteps(to: result.entries, step: arcStep, source: source, place: place, settings: settings),
+            reloadDate: result.reloadDate
+        )
+    }
+
+    /// Ein Eintrag für jetzt und einer zu jedem Ereignis.
+    static func eventEntries(
         from now: Date, source: any PrayerTimesSource, place: Place, settings: CalculationSettings
     ) -> Result {
         guard let first = snapshot(at: now, source: source, place: place, settings: settings) else {
@@ -110,6 +134,42 @@ public enum WidgetTimeline {
         }
         let reloadDate = entries.count > 1 ? entries[entries.count - 1].date : first.next.date
         return Result(entries: entries, reloadDate: reloadDate)
+    }
+
+    /// Die Einträge mit den Zwischenschritten für den Bogen: Zwischen zwei Einträgen kommt alle `step`
+    /// Sekunden einer dazu – aber nur, solange der Bogen „jetzt“ zeigt, also zwischen Fadschr und Ischa –,
+    /// dazu einer zu Beginn und Ende jedes Kerahat-Fensters, damit der Abschnitt auf der Spur pünktlich
+    /// kräftiger und wieder blasser wird.
+    static func addingArcSteps(
+        to entries: [Entry], step: TimeInterval, source: any PrayerTimesSource, place: Place, settings: CalculationSettings
+    ) -> [Entry] {
+        var result: [Entry] = []
+        for (index, entry) in entries.enumerated() {
+            result.append(entry)
+            guard index + 1 < entries.count, case .times(let snapshot) = entry.content else { continue }
+            let end = entries[index + 1].date
+            let times = snapshot.phase.times
+            var dates = Set<Date>()
+            let from = max(entry.date, times.fajr)
+            let to = min(end, times.isha)
+            if from < to {
+                var next = ((from.timeIntervalSinceReferenceDate / step).rounded(.down) + 1) * step
+                while next < to.timeIntervalSinceReferenceDate {
+                    dates.insert(Date(timeIntervalSinceReferenceDate: next))
+                    next += step
+                }
+            }
+            for window in Kerahat.windows(for: times) {
+                for date in [window.start, window.end] where date > entry.date && date < end {
+                    dates.insert(date)
+                }
+            }
+            for date in dates.sorted() {
+                guard let snapshot = Self.snapshot(at: date, source: source, place: place, settings: settings) else { continue }
+                result.append(Entry(date: date, content: .times(snapshot)))
+            }
+        }
+        return result
     }
 
     /// Der Stand zu einem Zeitpunkt, mit dem Zeitstrahl um den Tag, auf den er am Ort fällt.
