@@ -51,17 +51,14 @@ public struct VerseCard: View {
         .accessibilityLabel(day.cardTitle)
     }
 
-    /// Der Vers auf Arabisch: von rechts nach links und rechtsbündig, in der Systemschrift (für arabische
-    /// Schrift SF Arabic). Wächst mit Dynamic Type ohne Grenze und ist für VoiceOver als Arabisch markiert
-    /// (`lang="ar"`).
+    /// Der Vers auf Arabisch: von rechts nach links und rechtsbündig, in Amiri Quran (Spec § 9.7). Wächst
+    /// mit Dynamic Type ohne Grenze und ist für VoiceOver als Arabisch markiert (`lang="ar"`).
     private func arabic(_ verse: Verse) -> some View {
         let size = VerseCardMetrics.arabicSize * max(typeScale, 0)
         var text = AttributedString(verse.arabic)
         text.languageIdentifier = VerseCardMetrics.arabicLanguage
         return Text(text)
-            .typesettingLanguage(VerseCardMetrics.arabicTypesetting)
-            .font(.system(size: size))
-            .lineHeight(VerseCardMetrics.arabicLineHeight, fontSize: size)
+            .arabicFont(.amiriQuran, size: size, lineHeight: VerseCardMetrics.arabicLineHeight)
             .foregroundStyle(Palette.label)
             .multilineTextAlignment(.leading)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -117,13 +114,13 @@ public struct VerseListItem: View {
 
 /// Maße der Karte (`.card-eyebrow`, `.verse-ar`, `.verse-tr`, `.verse-ref`, `.card-actions`).
 enum VerseCardMetrics {
-    /// `.verse-ar`: `margin: 14px 0 12px; font: 400 calc(29px*var(--ts))/1.85`.
+    /// `.verse-ar`: `margin: 14px 0 12px`; seit v0.8 `font: 400 calc(31px*var(--ts))/2.15 "Amiri Quran"`
+    /// (Spec § 9.7).
     static let arabicTop: CGFloat = 14
     static let arabicBottom: CGFloat = 12
-    static let arabicSize: CGFloat = 29
-    static let arabicLineHeight: CGFloat = 1.85
+    static let arabicSize: CGFloat = 31
+    static let arabicLineHeight: CGFloat = 2.15
     static let arabicLanguage = "ar"
-    static let arabicTypesetting = Locale.Language(identifier: arabicLanguage)
     /// `.verse-tr`: `line-height: 1.45`.
     static let translationLineHeight: CGFloat = 1.45
     /// `.verse-ref`: `margin-top: 10px; font: 600 …/1.3`.

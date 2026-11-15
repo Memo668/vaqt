@@ -4,9 +4,8 @@ import SwiftUI
 /// Die Formel eines Schritts: arabisch, von rechts nach links und rechtsbündig, darunter die Umschrift
 /// kursiv, von links nach rechts. `.formula` im Prototyp.
 ///
-/// Das Arabische steht in der Systemschrift; für arabische Schrift ist das SF Arabic (`"SF Arabic"` als
-/// erste Wahl im CSS). Es wächst mit Dynamic Type und ist für VoiceOver als Arabisch markiert, damit es
-/// mit arabischer Stimme gelesen wird (`lang="ar"`).
+/// Das Arabische steht seit v0.8 in Amiri (Spec § 9.7). Es wächst mit Dynamic Type und ist für VoiceOver
+/// als Arabisch markiert, damit es mit arabischer Stimme gelesen wird (`lang="ar"`).
 public struct FormulaBox: View {
     private let formula: GuideStep.Formula
 
@@ -20,9 +19,7 @@ public struct FormulaBox: View {
         let arabicSize = FormulaMetrics.arabicSize * max(typeScale, 0)
         VStack(alignment: .leading, spacing: 0) {
             Text(arabic)
-                .typesettingLanguage(FormulaMetrics.arabicTypesetting)
-                .font(.system(size: arabicSize))
-                .lineHeight(FormulaMetrics.arabicLineHeight, fontSize: arabicSize)
+                .arabicFont(.amiri, size: arabicSize, lineHeight: FormulaMetrics.arabicLineHeight)
                 .foregroundStyle(Palette.label)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -47,17 +44,16 @@ public struct FormulaBox: View {
     }
 }
 
-/// Maße der Formel (`.formula`: `padding: 8px 11px; border-radius: 12px`; `.ar`: `font: 400
-/// calc(21px*var(--ts))/1.6`; `.lat`: Subheadline, Zeilenhöhe 1,3 von `.screen`).
+/// Maße der Formel (`.formula`: `padding: 8px 11px; border-radius: 12px`; `.ar` seit v0.8: `font: 400
+/// calc(23px*var(--ts))/1.85 "Amiri"`; `.lat`: Subheadline, Zeilenhöhe 1,3 von `.screen`).
 enum FormulaMetrics {
     static let paddingX: CGFloat = 11
     static let paddingY: CGFloat = 8
     static let radius: CGFloat = 12
     /// Abstand zur Anweisung darüber (`margin-top: 9px`).
     static let top: CGFloat = 9
-    static let arabicSize: CGFloat = 21
-    static let arabicLineHeight: CGFloat = 1.6
+    static let arabicSize: CGFloat = 23
+    static let arabicLineHeight: CGFloat = 1.85
     static let transliterationLineHeight: CGFloat = 1.3
     static let arabicLanguage = "ar"
-    static let arabicTypesetting = Locale.Language(identifier: arabicLanguage)
 }
