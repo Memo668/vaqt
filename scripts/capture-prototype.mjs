@@ -36,6 +36,8 @@ const STATES = [
   { file: 'iphone/01-onboarding-1-welcome-dark', dark: true, at: hm(14, 25), s: { onboarded: false, obStep: 0 } },
   { file: 'iphone/02-onboarding-2-location', at: hm(14, 25), s: { onboarded: false, obStep: 1 } },
   { file: 'iphone/03-onboarding-3-notifications', at: hm(14, 25), s: { onboarded: false, obStep: 2 } },
+  // Der Dialog des Systems über Schritt 2 – nur Ablauf, iOS zeichnet ihn selbst (seit Phase 14 mit „Vaqt“).
+  { file: 'iphone/04-alert-location', at: hm(14, 25), s: { onboarded: false, obStep: 1, alert: 'loc' } },
   { file: 'iphone/05-onboarding-4-free', at: hm(14, 25), s: { onboarded: false, obStep: 3 } },
   { file: 'iphone/05-onboarding-4-free-dark', dark: true, at: hm(14, 25), s: { onboarded: false, obStep: 3 } },
 
