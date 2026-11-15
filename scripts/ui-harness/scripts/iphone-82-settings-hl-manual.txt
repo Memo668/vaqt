@@ -1,0 +1,8 @@
+# iphone/82: Einstellungen › Hohe Breitengrade mit „Manuelle Winkel“ gewählt (Phase 12, Spec § 9.12) – für
+# scripts/compare-settings (OUT gleich setzen). Die Mock-Einstellungen gelten nur für diesen Lauf.
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25 -debugTab hl
+wait 3
+taplabel Manuelle Winkel
+wait 1.5
+shot {OUT}/settings-82.png
+dump {OUT}/settings-82-tree.txt

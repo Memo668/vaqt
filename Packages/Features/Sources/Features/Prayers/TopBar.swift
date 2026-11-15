@@ -3,41 +3,34 @@ import SwiftUI
 
 /// Die obere Leiste des Gebete-Tabs: die Chips Zeiten, Qibla und Anleitung in der Mitte, der
 /// Einstellungskreis rechts – vier einzelne Glass-Elemente, keine gemeinsame Kapsel. `topBarHTML()` im
-/// Prototyp. Links hält ein leerer Platz so breit wie der Kreis die Chips in der Mitte (Spec § 9.2); bei
-/// RTL steht der Kreis links.
+/// Prototyp (Spec § 9.2); bei RTL steht der Kreis links.
 ///
-/// Passen die Titel aller Chips nicht nebeneinander (Deutsch, große Schrift), behält nur der gewählte
-/// Chip seinen Titel; die anderen werden zu Kreisen (Design Spec § 3, „TopBar“). Passt auch das nicht
-/// (größte Schrift), fällt der leere Platz links weg und die Chips rücken an den Rand – im Prototyp
-/// überdecken sie dann den Kreis.
+/// Die Chips stehen mittig auf der Leiste. Passen ihre Titel nicht zwischen den Kreis und einen gleich
+/// breiten Platz auf der anderen Seite (Deutsch, große Schrift), behält nur der gewählte Chip seinen
+/// Titel; die anderen werden zu Kreisen (Design Spec § 3, „TopBar“). Reicht auch das nicht ganz – etwa
+/// „Anleitung“ gewählt –, rücken die Chips nur so weit von der Mitte weg, dass sie den Kreis nicht
+/// berühren. Im Prototyp laufen sie dann ein Stück unter den Kreis.
 struct TopBar: View {
     @Binding var selection: PrayersPage
     let onSettings: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    @ScaledMetric(relativeTo: .body) private var typeScale: CGFloat = 1
-
     var body: some View {
         ViewThatFits(in: .horizontal) {
-            bar(collapsed: false, centred: true)
-            bar(collapsed: true, centred: true)
-            bar(collapsed: true, centred: false)
+            bar(collapsed: false)
+            bar(collapsed: true)
         }
     }
 
-    private func bar(collapsed: Bool, centred: Bool) -> some View {
+    private func bar(collapsed: Bool) -> some View {
         FloatingBar {
-            if centred {
-                // Der leere Platz links, so breit wie der Kreis rechts (`grid-template-columns`).
-                Color.clear
-                    .frame(width: GlassCircleButton.diameter(typeScale: typeScale), height: 1)
-                    .accessibilityHidden(true)
+            // Mit Titeln nur, wenn auf der anderen Seite ein Platz so breit wie der Kreis frei bleibt
+            // (`grid-template-columns: var(--bar-h) 1fr var(--bar-h)`).
+            TopBarLayout(spacing: Layout.chipGap, reservesLeadingSpace: !collapsed) {
+                chips(collapsed: collapsed)
+                GlassCircleButton(systemImage: "gearshape", label: L10n.tabSettings, action: onSettings)
             }
-            Spacer(minLength: 0)
-            chips(collapsed: collapsed)
-            Spacer(minLength: 0)
-            GlassCircleButton(systemImage: "gearshape", label: L10n.tabSettings, action: onSettings)
         }
     }
 
@@ -68,6 +61,43 @@ struct TopBar: View {
                 selection = page
             }
         }
+    }
+}
+
+/// Anordnung der oberen Leiste: der Kreis am Ende, die Chips mittig auf der ganzen Leiste – höchstens so
+/// weit rechts, dass zwischen ihnen und dem Kreis der Abstand der Leiste bleibt.
+///
+/// Die ideale Breite entscheidet, ob eine Form der Leiste passt (`ViewThatFits`): mit Titeln zählt ein
+/// zweiter Platz in der Breite des Kreises dazu, zusammengeklappt nur Chips, Abstand und Kreis.
+private struct TopBarLayout: SwiftUI.Layout {
+    let spacing: CGFloat
+    let reservesLeadingSpace: Bool
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: LayoutSubviews, cache: inout ()) -> CGSize {
+        guard subviews.count == 2 else { return .zero }
+        let chips = subviews[0].sizeThatFits(.unspecified)
+        let gear = subviews[1].sizeThatFits(.unspecified)
+        let ideal = chips.width + spacing + gear.width + (reservesLeadingSpace ? gear.width + spacing : 0)
+        return CGSize(width: proposal.width ?? ideal, height: max(chips.height, gear.height))
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: LayoutSubviews, cache: inout ()) {
+        guard subviews.count == 2 else { return }
+        let gear = subviews[1].sizeThatFits(.unspecified)
+        let gearX = bounds.maxX - gear.width
+        subviews[1].place(
+            at: CGPoint(x: gearX, y: bounds.midY), anchor: .leading, proposal: ProposedViewSize(gear)
+        )
+        // Was links vom Kreis frei ist; reicht es nicht, wird der gewählte Chip schmaler.
+        let available = max(0, gearX - spacing - bounds.minX)
+        let chips = subviews[0].sizeThatFits(ProposedViewSize(width: available, height: nil))
+        let width = min(chips.width, available)
+        let centred = bounds.midX - width / 2
+        let x = max(bounds.minX, min(centred, gearX - spacing - width))
+        subviews[0].place(
+            at: CGPoint(x: x, y: bounds.midY), anchor: .leading,
+            proposal: ProposedViewSize(width: width, height: chips.height)
+        )
     }
 }
 

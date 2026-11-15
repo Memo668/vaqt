@@ -1,5 +1,6 @@
 #!/bin/bash
-# Abgleich der Zeiten-Seite mit den Referenzbildern design/screenshots/iphone/10–22 (Phase 3).
+# Abgleich der Zeiten-Seite mit den Referenzbildern design/screenshots/iphone/10–23 (Phase 3, seit Phase 12
+# gegen die Bilder des Prototyps v0.8: Leiste mittig, Pfeile am Datum, Kerahat auf der Spur, anderer Tag).
 #
 # Startet die App im Simulator in jedem Zustand der Referenzbilder – mit den Debug-Argumenten aus
 # docs/PROMPTS.md –, nimmt den Bildschirm auf und legt Ausschnitte mit scripts/compare-shot neben die
@@ -40,6 +41,7 @@ WAIT="${WAIT:-2}"
 #
 # „Versatz“ ist, wie viel tiefer Bogen und Karten liegen als in iphone/10:
 #   17  Hinweis-Pille (10 + 26,25) und Banner (14 + 52) schieben beides 102,25 pt nach unten.
+#   23  Der Textlink „Zurück zu heute“ unter dem Datum schiebt beides 22,1 pt nach unten.
 #   19  Große Schrift: Leiste und Datum sind höher. Der Prototyp vergrößert einheitlich auf das
 #       1,35-Fache (Leiste +7,8 pt, Datum +14,5 pt), die App folgt den Größen des Systems je Textstil
 #       (Leiste +7,8 pt, Datum +16,5 pt) – daher zwei Werte.
@@ -49,6 +51,7 @@ STATES='
 12|12-home-before-fajr|light|ltr|de|large|0|0|-debugTime 05:14
 13|13-home-after-sunrise|light|ltr|de|large|0|0|-debugTime 08:04
 14|14-home-kerahat-active|light|ltr|de|large|0|0|-debugTime 07:30
+14d|14-home-kerahat-active-dark|dark|ltr|de|large|0|0|-debugTime 07:30
 15|15-home-kerahat-before-maghrib|light|ltr|de|large|0|0|-debugTime 16:05
 16|16-home-after-isha-dark|dark|ltr|de|large|0|0|-debugTime 23:30
 17|17-home-location-denied-offline|light|ltr|de|large|102.25|102.25|-debugTime 14:25 -debugLocationDenied -debugOffline
@@ -57,6 +60,8 @@ STATES='
 20|20-home-rtl|light|rtl|de|large|0|0|-debugTime 14:25
 21|21-home-turkish-istanbul|light|ltr|tr|large|0|0|-debugCity istanbul -debugTime 16:01
 22|22-home-jakarta-close-markers|light|ltr|de|large|0|0|-debugCity jakarta -debugTime 17:57
+23|23-home-next-day|light|ltr|de|large|22.1|22.1|-debugTime 14:25 -debugDayOffset 1
+23d|23-home-next-day-dark|dark|ltr|de|large|22.1|22.1|-debugTime 14:25 -debugDayOffset 1
 '
 
 # Sprache und Region wie `LOC` im Prototyp und im Makefile.
@@ -107,25 +112,32 @@ echo "$STATES" | while IFS='|' read -r number file appearance direction language
   xcrun simctl io "$SIM" screenshot "$OUT/today-$number.png" >/dev/null 2>&1
   echo "iphone/$number:"
 
-  # Obere Leiste: links ausgerichtet, bei RTL rechts. Bei großer Schrift ist sie 59,8 statt 52 pt hoch.
-  bar_x=0
-  [ "$direction" = rtl ] && bar_x=12
-  compare bar "$number" "$file" "$(rect 0 50 390 76)" "$(rect "$bar_x" 54 390 76)"
+  # Obere Leiste (seit v0.8): die Chips mittig, der Einstellungskreis rechts, bei RTL links. Bei großer
+  # Schrift ist sie 59,8 statt 52 pt hoch.
+  compare chips "$number" "$file" "$(rect 60 50 270 76)" "$(rect 66 54 270 76)"
+  if [ "$direction" = rtl ]; then
+    compare gear "$number" "$file" "$(rect 0 50 76 76)" "$(rect 0 54 76 76)"
+  else
+    compare gear "$number" "$file" "$(rect 314 50 76 76)" "$(rect 326 54 76 76)"
+  fi
 
-  # Kopf: Stadt, Datum und – bei iphone/17 – die Hinweis-Pille. Mittig.
-  compare head "$number" "$file" "$(rect 0 118 390 142)" "$(rect 6 122 390 142)"
+  # Kopf: Stadt, Datum mit den Pfeilen und – bei iphone/17 – die Hinweis-Pille, bei iphone/23 der Textlink.
+  # Mittig.
+  head_h=144
+  case "$number" in 23*) head_h=168 ;; esac
+  compare head "$number" "$file" "$(rect 0 118 390 "$head_h")" "$(rect 6 122 390 "$head_h")"
 
   if [ "$number" = 17 ]; then
     compare banner-l "$number" "$file" "$(rect 0 256 230 68)" "$(rect 0 260 230 68)"
     compare banner-r "$number" "$file" "$(rect 160 256 230 68)" "$(rect 172 260 230 68)"
   fi
 
-  # Bogen mit Countdown: mittig, 358 × 180 pt.
-  compare hero "$number" "$file" "$(rect 16 223.4 358 180 "$ref_shift")" "$(rect 22 227.4 358 180 "$shot_shift")"
+  # Bogen mit Countdown bzw. dem Tag: mittig, 358 × 180 pt; seit v0.8 2 pt tiefer (`.day-nav`).
+  compare hero "$number" "$file" "$(rect 16 225.4 358 180 "$ref_shift")" "$(rect 22 229.4 358 180 "$shot_shift")"
 
   # Gebetskarten: linke und rechte Hälfte, jede an ihrem Rand.
-  compare rows-l "$number" "$file" "$(rect 0 404 230 372 "$ref_shift")" "$(rect 0 408 230 372 "$shot_shift")"
-  compare rows-r "$number" "$file" "$(rect 160 404 230 372 "$ref_shift")" "$(rect 172 408 230 372 "$shot_shift")"
+  compare rows-l "$number" "$file" "$(rect 0 406 230 372 "$ref_shift")" "$(rect 0 410 230 372 "$shot_shift")"
+  compare rows-r "$number" "$file" "$(rect 160 406 230 372 "$ref_shift")" "$(rect 172 410 230 372 "$shot_shift")"
 done
 
 xcrun simctl ui "$SIM" appearance light

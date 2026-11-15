@@ -36,7 +36,8 @@ WAIT="${WAIT:-2.5}"
 #   Karte      175 bis 425 pt (App 179 bis 429), linke und rechte Hälfte.
 #   Fußnote    Fußnote und „Letzte Tage“, 431 bis 526 pt.
 #   Liste      die Einträge ab 530 pt bis über die Tableiste, linke und rechte Hälfte.
-BAR_REF=0,50,390,76;          BAR_SHOT=0,54,390,76
+# Leiste (seit v0.8): nur der Einstellungskreis, rechts.
+BAR_REF=314,50,76,76;         BAR_SHOT=326,54,76,76
 TITLE_REF=0,110,260,60;       TITLE_SHOT=0,114,260,60
 CARD_L_REF=0,169,230,262;     CARD_L_SHOT=0,173,230,262
 CARD_R_REF=160,169,230,262;   CARD_R_SHOT=172,173,230,262

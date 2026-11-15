@@ -44,7 +44,8 @@ WAIT="${WAIT:-2.5}"
 #   Vorher     Überschrift und die beiden ersten Karten ab 495 pt (App 3,67 pt tiefer, weil die Karte
 #              0,67 pt höher ist).
 #   Ablauf     iphone/41: Schritte 1 bis 3 ab 129 pt (App 133).
-BAR_REF=0,50,390,76;          BAR_SHOT=0,54,390,76
+# Leiste (seit v0.8): Chips mittig, Einstellungskreis rechts.
+BAR_REF=60,50,270,76;         BAR_SHOT=66,54,270,76
 SEG_L_REF=0,117,200,46;       SEG_L_SHOT=0,120,200,46
 SEG_R_REF=190,117,200,46;     SEG_R_SHOT=202,120,200,46
 CARD_L_REF=0,165,230,315;     CARD_L_SHOT=0,168,230,315

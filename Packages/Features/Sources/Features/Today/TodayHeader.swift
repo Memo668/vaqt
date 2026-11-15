@@ -47,6 +47,7 @@ struct TodayHeader: View {
                 .padding(.vertical, -TodayMetrics.todayLinkHitInsetY)
                 .padding(.horizontal, -TodayMetrics.todayLinkHitInsetX)
                 .padding(.top, TodayMetrics.todayLinkTop)
+                .padding(.bottom, TodayMetrics.todayLinkBottom)
             }
 
             if model.isOffline {

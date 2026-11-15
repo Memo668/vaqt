@@ -132,8 +132,11 @@ enum TodayMetrics {
     static let dayButtonHitInset: CGFloat = 8
     static let daySymbolSize: CGFloat = 13
     /// „Zurück zu heute“ (`.day-today`: `margin-top: 2px`, Caption 1 mittelstark, Zeilenhöhe 1,4;
-    /// Tippfläche 12 pt höher und 8 pt breiter).
-    static let todayLinkTop: CGFloat = 2
+    /// Tippfläche 12 pt höher und 8 pt breiter). Der Knopf steht im Prototyp auf einer Textzeile des Kopfes:
+    /// Mit ihr liegt er 5 pt unter dem Datum, und darunter bleiben 0,3 pt – im Browser gemessen, zusammen
+    /// 22,1 pt, um die der Bogen tiefer rückt.
+    static let todayLinkTop: CGFloat = 5
+    static let todayLinkBottom: CGFloat = 0.3
     static let todayLinkLineHeight: CGFloat = 1.4
     static let todayLinkHitInsetY: CGFloat = 12
     static let todayLinkHitInsetX: CGFloat = 8

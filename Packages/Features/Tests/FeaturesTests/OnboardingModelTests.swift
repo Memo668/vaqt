@@ -63,7 +63,7 @@ struct OnboardingModelTests {
         await fixture.model.allowLocation()
         #expect(await fixture.location.requests == 1)
         #expect(fixture.model.step == .notifications)
-        #expect(!fixture.model.showsSkip)
+        #expect(fixture.model.showsSkip)
         #expect(fixture.settings.autoLocation)
         #expect(fixture.settings.devicePlace == .berlin)
         #expect(fixture.today.timeline != nil)
@@ -157,8 +157,8 @@ struct OnboardingModelTests {
         #expect(fixture.settings.onboardingCompleted)
     }
 
-    @Test("„Überspringen“ auf Schritt 1 und 2 führt zu „Kostenlos“, ohne nach etwas zu fragen", arguments: [
-        OnboardingStep.welcome, .location,
+    @Test("„Überspringen“ auf Schritt 1 bis 3 führt zu „Kostenlos“, ohne nach etwas zu fragen", arguments: [
+        OnboardingStep.welcome, .location, .notifications,
     ])
     func skip(step: OnboardingStep) async {
         let fixture = fixture(step: step)

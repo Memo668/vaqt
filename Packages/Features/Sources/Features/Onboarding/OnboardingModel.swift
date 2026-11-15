@@ -37,10 +37,9 @@ final class OnboardingModel {
         navigation.onboardingStep ?? .welcome
     }
 
-    /// „Überspringen“ gibt es auf Schritt 1 und 2 (`s < N - 1` mit dem Knopf auf Schritt 3 fällt dort
-    /// weg, weil „Später“ dasselbe tut).
+    /// „Überspringen“ gibt es auf Schritt 1 bis 3, nicht auf der letzten Seite (`s < N - 1`).
     var showsSkip: Bool {
-        step == .welcome || step == .location
+        step != .free
     }
 
     private var location: PlaceModel { today.location }

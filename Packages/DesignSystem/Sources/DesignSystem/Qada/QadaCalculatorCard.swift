@@ -122,7 +122,7 @@ public struct QadaCalculatorCard: View {
         let size = QadaCalculatorMetrics.fieldValueSize * min(max(typeScale, 0), QadaCalculatorMetrics.valueMaxScale)
         return VStack(spacing: QadaCalculatorMetrics.fieldInnerGap) {
             Text(title)
-                .font(TypeScale.caption1.font())
+                .textStyle(.caption1, lineHeight: QadaCalculatorMetrics.labelLineHeight)
                 .foregroundStyle(Palette.textSecondary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)

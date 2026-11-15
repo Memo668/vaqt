@@ -1,6 +1,6 @@
 #!/bin/bash
 # Abgleich der Einstellungen, des Onboardings und des Adhan-Sheets mit den Referenzbildern
-# design/screenshots/iphone/01–03, 70, 73–81 und 86 (Phase 7).
+# design/screenshots/iphone/01–03, 05, 70, 73–83 und 86 (Phase 7; 05, 82, 83 seit Phase 12).
 #
 # Startet die App in jedem Zustand mit den Debug-Argumenten (-debugTab settings|method|…|privacy|adhan,
 # -debugOnboarding 1|2|3), nimmt den Bildschirm auf und legt Ausschnitte mit scripts/compare-shot neben
@@ -121,6 +121,13 @@ subpage 77 perPrayer 77-settings-perprayer 380
 subpage 78 reminder 78-settings-reminder 270
 subpage 79 live 79-settings-live 200
 subpage 80 sound 80-settings-sound 260
+subpage 83 support 83-settings-support 560
+
+if [ -f "$OUT/settings-82.png" ] && wanted 82; then
+  echo "iphone/82 (Aufnahme des UI-Hilfsprojekts):"
+  # Hohe Breitengrade mit „Manuelle Winkel“: Regeln und die Gruppe „Dämmerungswinkel“ (Spec § 9.12).
+  halves hl-82 82-settings-hl-manual "$OUT/settings-82.png" 105 122 420
+fi
 
 if wanted 81; then
   launch "$OUT/settings-81.png" "${STATE[@]}" -debugTab privacy
@@ -147,5 +154,13 @@ onboarding() {
 onboarding 1 01-onboarding-1-welcome 218.6
 onboarding 2 02-onboarding-2-location 218
 onboarding 3 03-onboarding-3-notifications 218
+
+# Seite 4 „Kostenlos. Ohne Werbung.“ (Spec § 9.9).
+if wanted 05; then
+  launch "$OUT/onboarding-05.png" -debugFixtureTimes -debugDate 2026-11-10 -debugTime 09:10 -debugOnboarding 4
+  echo "iphone/05 (Onboarding, Schritt 4):"
+  compare "page-05" 05-onboarding-4-free "0,140,390,360" "$OUT/onboarding-05.png" "6,158,390,360"
+  compare "actions-05" 05-onboarding-4-free "0,700,390,144" "$OUT/onboarding-05.png" "6,729,390,144"
+fi
 
 echo "Ergebnis in $OUT"

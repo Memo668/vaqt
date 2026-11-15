@@ -38,13 +38,17 @@ ZOOM="${ZOOM:-3}"
 WAIT="${WAIT:-2.5}"
 
 # Ausschnitte in pt (x,y,Breite,Höhe), erst im Referenzbild, dann in der Aufnahme.
-#   Leiste     wie bei der Zeiten-Seite, links ausgerichtet.
+#   Leiste     nur der Einstellungskreis, seit v0.8 rechts.
 #   Kopf       Titel „Nachholen“ und Einleitung, 120 bis 211 pt.
 #   Karte      Zusammenfassung 229 bis 402 pt (App 233 bis 406,7), linke und rechte Hälfte.
 #   Plan       Kopf, Zeile und Fußzeile 412 bis 520 pt (App 4,7 pt tiefer).
 #   Gebete     „Nach Gebet“ und die Zeilen ab 545 pt (App 5 pt tiefer), bis über die Tableiste.
-#   61         Ischa ab 168 pt, Rechner 269 bis 494 pt, Übernehmen und Fußnote bis 724 pt (App 32 pt tiefer).
-BAR_REF=0,50,390,76;           BAR_SHOT=0,54,390,76
+#   61         seit v0.8 die Karte des Rechners (Spec § 9.8), im Prototyp gemessen: Karte ab 98,9 pt, Schritte
+#              ab etwa 225 pt, „Als offen übernehmen“ ab 548,3 pt, Fußnote bis 724 pt. Die App steht ganz
+#              unten 32 pt tiefer; weil die Einleitung der Karte in der breiteren App eine Zeile kürzer ist,
+#              steht der Kopf der Karte 53,5 pt tiefer.
+# Leiste (seit v0.8): nur der Einstellungskreis, rechts.
+BAR_REF=314,50,76,76;         BAR_SHOT=326,54,76,76
 TOP_REF=0,110,390,108;         TOP_SHOT=0,114,390,108
 SUM_L_REF=0,223,230,185;       SUM_L_SHOT=0,227,230,185
 SUM_R_REF=160,223,230,185;     SUM_R_SHOT=172,227,230,185
@@ -52,8 +56,9 @@ PLAN_L_REF=0,408,230,116;      PLAN_L_SHOT=0,412.67,230,116
 PLAN_R_REF=160,408,230,116;    PLAN_R_SHOT=172,412.67,230,116
 BYP_L_REF=0,540,230,216;       BYP_L_SHOT=0,545,230,216
 BYP_R_REF=160,540,230,216;     BYP_R_SHOT=172,545,230,216
-CALC_L_REF=0,160,230,345;      CALC_L_SHOT=0,192,230,345
-CALC_R_REF=160,160,230,345;    CALC_R_SHOT=172,192,230,345
+HEAD61_REF=0,91,390,120;       HEAD61_SHOT=6,144.5,390,120
+CALC_L_REF=0,215,230,325;      CALC_L_SHOT=0,247,230,325
+CALC_R_REF=160,215,230,325;    CALC_R_SHOT=172,247,230,325
 APPLY_L_REF=0,540,230,190;     APPLY_L_SHOT=0,572.33,230,190
 APPLY_R_REF=160,540,230,190;   APPLY_R_SHOT=172,572.33,230,190
 # Katalog: in Referenzbreite, 6 pt vom Rand, 22 pt tiefer.
@@ -99,6 +104,7 @@ compare byp-r-60 60-qada "$BYP_R_REF" "$OUT/qada-60.png" "$BYP_R_SHOT"
 
 if [ -f "$OUT/qada-61.png" ]; then
   echo "iphone/61 (Aufnahme des UI-Hilfsprojekts):"
+  compare head-61 61-qada-calculator "$HEAD61_REF" "$OUT/qada-61.png" "$HEAD61_SHOT"
   compare calc-l-61 61-qada-calculator "$CALC_L_REF" "$OUT/qada-61.png" "$CALC_L_SHOT"
   compare calc-r-61 61-qada-calculator "$CALC_R_REF" "$OUT/qada-61.png" "$CALC_R_SHOT"
   compare apply-l-61 61-qada-calculator "$APPLY_L_REF" "$OUT/qada-61.png" "$APPLY_L_SHOT"

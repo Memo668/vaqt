@@ -1,5 +1,6 @@
 #!/bin/bash
-# Abgleich der Qibla-Seite mit den Referenzbildern design/screenshots/iphone/30–32 (Phase 4).
+# Abgleich der Qibla-Seite mit den Referenzbildern design/screenshots/iphone/30–34 (Phase 4; seit Phase 12
+# gegen die Bilder des Prototyps v0.8 mit dem Toleranzbereich ±40°, Spec § 9.5).
 #
 # Startet die App im Simulator in jedem Zustand der Referenzbilder, nimmt den Bildschirm auf und legt
 # Ausschnitte mit scripts/compare-shot neben die Referenz: obere Leiste, Kopf (Titelzeile und
@@ -43,24 +44,29 @@ STATES='
 30|30-qibla|-debugTime 14:25 -debugQiblaHeading 98
 31|31-qibla-aligned|-debugTime 14:25 -debugQiblaHeading 137
 32|32-qibla-mecca|-debugCity mecca -debugTime 15:42 -debugQiblaHeading 138
+33|33-qibla-tolerance|-debugTime 14:25 -debugQiblaHeading 112
+33d|33-qibla-tolerance-dark|-debugTime 14:25 -debugQiblaHeading 112
+34|34-qibla-outside|-debugTime 14:25 -debugQiblaHeading 60
 '
 
 # Ausschnitte in pt (x,y,Breite,Höhe), erst im Referenzbild, dann in der Aufnahme.
-#   Leiste     wie bei der Zeiten-Seite, links ausgerichtet.
+#   Leiste     wie bei der Zeiten-Seite: Chips mittig, Einstellungskreis rechts.
 #   Kopf       Titelzeile (ab 124 pt) und Kursanzeige (bis 209,5 pt).
 #   Kompass    280 × 280 pt ab 249,5 pt, mittig; dazu oben die Peilmarke (18 pt) und rundum die
 #              Kaaba-Marke, die bis zu 20 pt über den Rand hinausragt.
-#   Zeilen     Statuszeile (549,5 bis 575,5 pt) und Info-Zeile (581,5 bis 601 pt).
-#   Karte      ab 625 pt, 86,6 pt hoch; linke und rechte Hälfte.
-BAR_REF=0,50,390,76;          BAR_SHOT=0,54,390,76
+#   Zeilen     Statuszeile (549,5 bis 597,5 pt, seit v0.8 48 pt hoch), Info-Zeile (603,5 bis 623 pt) und
+#              die Legende zum Keil (633 bis 650,6 pt) – im Prototyp gemessen.
+#   Karte      ab 670,6 pt, 86,6 pt hoch; linke und rechte Hälfte.
+CHIPS_REF=60,50,270,76;       CHIPS_SHOT=66,54,270,76
+GEAR_REF=314,50,76,76;        GEAR_SHOT=326,54,76,76
 HEAD_REF=0,118,390,96;        HEAD_SHOT=6,122,390,96
 COMPASS_REF=35,223.5,320,326; COMPASS_SHOT=41,227.5,320,326
-LINES_REF=0,545.5,390,62;     LINES_SHOT=6,549.5,390,62
-CARD_L_REF=0,617,230,104;     CARD_L_SHOT=0,621,230,104
-CARD_R_REF=160,617,230,104;   CARD_R_SHOT=172,621,230,104
+LINES_REF=0,545.5,390,110;    LINES_SHOT=6,549.5,390,110
+CARD_L_REF=0,662.5,230,104;   CARD_L_SHOT=0,666.5,230,104
+CARD_R_REF=160,662.5,230,104; CARD_R_SHOT=172,666.5,230,104
 # Im Katalog steht der Kompass 140 pt unter der Oberkante, die Karte 40 pt unter ihm, in einem 390 pt
 # breiten Feld, das 6 pt vom Rand sitzt.
-CARD_REF=8,617,374,104;       CARD_CATALOG=14,452,374,104
+CARD_REF=8,662.5,374,104;     CARD_CATALOG=14,452,374,104
 
 # compare Name Nummer Datei Referenz-Ausschnitt Aufnahme-Ausschnitt [Aufnahme]
 compare() {
@@ -82,6 +88,7 @@ echo "$STATES" | while IFS='|' read -r number file arguments; do
   [ -n "$number" ] || continue
   if [ $# -gt 0 ] && ! printf '%s\n' "$@" | grep -qx "$number"; then continue; fi
 
+  case "$file" in *-dark) xcrun simctl ui "$SIM" appearance dark ;; *) xcrun simctl ui "$SIM" appearance light ;; esac
   # shellcheck disable=SC2086
   xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" \
     -AppleLanguages '(de)' -AppleLocale de_DE \
@@ -91,13 +98,16 @@ echo "$STATES" | while IFS='|' read -r number file arguments; do
   xcrun simctl io "$SIM" screenshot "$OUT/qibla-$number.png" >/dev/null 2>&1
   echo "iphone/$number:"
 
-  compare bar "$number" "$file" "$BAR_REF" "$BAR_SHOT"
+  compare chips "$number" "$file" "$CHIPS_REF" "$CHIPS_SHOT"
+  compare gear "$number" "$file" "$GEAR_REF" "$GEAR_SHOT"
   compare head "$number" "$file" "$HEAD_REF" "$HEAD_SHOT"
   compare compass "$number" "$file" "$COMPASS_REF" "$COMPASS_SHOT"
   compare lines "$number" "$file" "$LINES_REF" "$LINES_SHOT"
   compare card-l "$number" "$file" "$CARD_L_REF" "$CARD_L_SHOT"
   compare card-r "$number" "$file" "$CARD_R_REF" "$CARD_R_SHOT"
 done
+
+xcrun simctl ui "$SIM" appearance light
 
 # Die Kalibrierungskarte in Referenzbreite, aus dem Katalog.
 if [ $# -eq 0 ]; then
