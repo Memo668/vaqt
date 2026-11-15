@@ -203,7 +203,11 @@ struct LiveHeader: View {
     var body: some View {
         HStack(spacing: 0) {
             HStack(spacing: LiveActivityMetrics.iconGap) {
+                // Immer die helle Fassung mit Kachel: Der Akzentverlauf dahinter ist in beiden
+                // Erscheinungsbildern derselbe, und iOS zeichnet die Live-Aktivität auf dem Sperrbildschirm auch
+                // im hellen System dunkel. Die dunkle Fassung ist durchsichtig und verschwände fast (Phase 14).
                 AppMark(size: .header)
+                    .environment(\.colorScheme, .light)
                 Text(L10n.appName)
             }
             Spacer(minLength: 8)

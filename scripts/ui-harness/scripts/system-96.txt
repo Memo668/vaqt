@@ -1,11 +1,14 @@
 # system/96: dunkles System, 16:35 – Maghrib läuft, die Aktivität zählt auf Ischa.
 # Vorher: xcrun simctl ui 'iPhone 18 Pro' appearance dark, make statusbar TIME=16:35; danach zurück (light, 14:25).
+# Die Widgets des Sperrbildschirms lädt WidgetKit erst einige Sekunden nach dem Start neu (Phase 14: 12 + 15 s).
 launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugLiveActivity -debugTime 16:35
-wait 5
+wait 12
+home
+wait 15
 lock
 wait 2
 home
-wait 2
+wait 4
 sbtaplabelif Always Allow
 wait 2
 shot {OUT}/system-96.png
