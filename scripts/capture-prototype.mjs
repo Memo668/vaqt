@@ -101,6 +101,16 @@ const STATES = [
   { file: 'iphone/82-settings-hl-manual-dark', dark: true, at: hm(14, 25), s: { ...home, hlRule: 'manual', stack: { settings: ['settings', 'hl'] } } },
   { file: 'iphone/83-settings-support', at: hm(14, 25), s: { ...home, stack: { settings: ['settings', 'support'] } } },
   { file: 'iphone/83-settings-support-dark', dark: true, at: hm(14, 25), s: { ...home, stack: { settings: ['settings', 'support'] } } },
+
+  // Außerhalb der App – Phase 9, Änderungen 1 und 11 (Phase 14). Die Ansichten `widgets`, `live` und
+  // `notifs` zeigen mehrere Bildschirme nebeneinander; `screen` wählt einen davon (0 = der erste).
+  { file: 'system/90-lockscreen-widgets', at: hm(14, 25, 1), s: { ...home, view: 'widgets' }, screen: 0 },
+  { file: 'system/91-homescreen-widgets', at: hm(14, 25, 1), s: { ...home, view: 'widgets' }, screen: 1 },
+  { file: 'system/92-notifications', at: hm(11, 52), s: { ...home, view: 'notifs' }, screen: 0 },
+  { file: 'system/93-live-activity-lockscreen', at: hm(14, 25, 1), s: { ...home, view: 'live' }, screen: 0 },
+  { file: 'system/94-live-activity-island-compact', at: hm(14, 25, 1), s: { ...home, view: 'live' }, screen: 1 },
+  { file: 'system/95-live-activity-island-expanded', at: hm(14, 25, 1), s: { ...home, view: 'live' }, screen: 2 },
+  { file: 'system/96-live-activity-lockscreen-dark', dark: true, at: hm(16, 35), s: { ...home, view: 'live' }, screen: 0 },
 ];
 
 const only = process.argv.slice(2);
@@ -125,6 +135,8 @@ try {
     await page.goto(PROTOTYPE);
     await page.evaluate(() => document.fonts.ready);
     for (const st of batch) {
+      // Drei Bildschirme nebeneinander (`live`) passen erst in 2400 px ohne Verkleinerung (`layout()`).
+      await page.setViewportSize({ width: st.s.view === 'live' ? 2400 : 1600, height: 1100 });
       await page.evaluate(({ st, dark }) => {
         // Jeder Zustand beginnt beim Ausgangszustand des Prototyps – auch der Bildlauf: `render()` übernimmt
         // die Lage der Bereiche aus dem DOM, sonst stünde etwa iphone/42 noch so weit unten wie 41 (bis
@@ -151,7 +163,7 @@ try {
       await page.waitForTimeout(700);   // Übergänge und Animationen des Prototyps abwarten
       const target = join(OUT, `${st.file}.png`);
       mkdirSync(dirname(target), { recursive: true });
-      await page.locator('#stage .screen').first().screenshot({ path: target, animations: 'disabled' });
+      await page.locator('#stage .screen').nth(st.screen || 0).screenshot({ path: target, animations: 'disabled' });
       console.log(`  ${st.file}.png`);
     }
     await context.close();

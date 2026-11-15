@@ -7,7 +7,7 @@
 import Foundation
 
 public enum L10n {
-    /// „Gebetszeiten“
+    /// „Vaqt“
     public static var appName: String { text("appName") }
     /// „Zurück“
     public static var back: String { text("back") }
@@ -215,7 +215,7 @@ public enum L10n {
     public static var ob3Allow: String { text("ob3Allow") }
     /// „Später“
     public static var ob3Later: String { text("ob3Later") }
-    /// „„Gebetszeiten“ erlauben, deinen Standort zu verwenden?“
+    /// „„Vaqt“ erlauben, deinen Standort zu verwenden?“
     public static var alLocTitle: String { text("alLocTitle") }
     /// „Dein Standort wird nur auf diesem Gerät zur Berechnung der Gebetszeiten verwendet.“
     public static var alLocBody: String { text("alLocBody") }
@@ -225,7 +225,7 @@ public enum L10n {
     public static var alLocWhile: String { text("alLocWhile") }
     /// „Nicht erlauben“
     public static var alLocDeny: String { text("alLocDeny") }
-    /// „„Gebetszeiten“ möchte dir Mitteilungen senden“
+    /// „„Vaqt“ möchte dir Mitteilungen senden“
     public static var alNotTitle: String { text("alNotTitle") }
     /// „Mitteilungen können Hinweise, Töne und Kennzeichen enthalten.“
     public static var alNotBody: String { text("alNotBody") }

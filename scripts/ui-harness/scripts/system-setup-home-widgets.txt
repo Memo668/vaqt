@@ -1,18 +1,18 @@
 # Einrichtung für system/91: das mittlere und das kleine Widget auf Seite 2 des Home-Bildschirms (dort startet
-# das Hilfsprojekt). Nur nötig, wenn sie fehlen. Entfernt zuerst Widgets von „Gebetszeiten“ aus Probeläufen –
+# das Hilfsprojekt). Nur nötig, wenn sie fehlen. Entfernt zuerst Widgets von „Vaqt“ aus Probeläufen –
 # sbdeletewidget bestätigt nur, wenn der Dialog die App nennt; Widgets anderer Apps bleiben. Die Texte der
 # Galerie („Edit“, „Add Widget“, „Done“) sind die eines englischen Systems.
 sbpress 300 715 1.6
 wait 1.5
-sbdeletewidget Gebetszeiten
+sbdeletewidget Vaqt
 wait 1.5
-sbdeletewidget Gebetszeiten
+sbdeletewidget Vaqt
 wait 1.5
 sbtaplabel Edit
 wait 1.5
 sbtaplabel Add Widget
 wait 2.5
-sbtapcell Gebetszeiten
+sbtapcell Vaqt
 wait 2.5
 sbpoint 201 791
 wait 2.5
@@ -20,7 +20,7 @@ sbtaplabel Edit
 wait 1.5
 sbtaplabel Add Widget
 wait 2.5
-sbtapcell Gebetszeiten
+sbtapcell Vaqt
 wait 2.5
 sbpoint 210 748
 wait 1.5

@@ -10,7 +10,7 @@ sbtaplabel posterboard-customize-button
 wait 6
 sbtaplabel grouped-widgets-reticle-view
 wait 3
-sbtapcell Gebetszeiten
+sbtapcell Vaqt
 wait 3
 sbpoint 113 633
 wait 2

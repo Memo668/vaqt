@@ -65,7 +65,9 @@ targets:
     info:
       path: App/Info.plist
       properties:
-        CFBundleDisplayName: Gebetszeiten
+        # Name unter dem Symbol, in allen Sprachen gleich: der Arbeitsname „Vaqt“ (entschieden am 15.11.2026,
+        # Spec § 9.13). Bundle-ID, App Group, Target- und Typnamen bleiben „Gebetszeiten“ – Nutzer sehen sie nicht.
+        CFBundleDisplayName: Vaqt
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         # Die Texte liegen im Paket DesignSystem. Ohne diese Liste würde iOS die App
@@ -116,7 +118,8 @@ targets:
     info:
       path: Widgets/Info.plist
       properties:
-        CFBundleDisplayName: Gebetszeiten
+        # Wie die App (Spec § 9.13).
+        CFBundleDisplayName: Vaqt
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundleLocalizations: [de, tr, en, es]

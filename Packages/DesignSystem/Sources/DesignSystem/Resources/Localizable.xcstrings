@@ -358,25 +358,25 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "„Gebetszeiten“ erlauben, deinen Standort zu verwenden?"
+            "value" : "„Vaqt“ erlauben, deinen Standort zu verwenden?"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Allow “Prayer Times” to use your location?"
+            "value" : "Allow “Vaqt” to use your location?"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Permitir que “Horarios de oración” use tu ubicación?"
+            "value" : "¿Permitir que “Vaqt” use tu ubicación?"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "“Namaz Vakitleri” konumunu kullansın mı?"
+            "value" : "“Vaqt” konumunu kullansın mı?"
           }
         }
       }
@@ -503,25 +503,25 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "„Gebetszeiten“ möchte dir Mitteilungen senden"
+            "value" : "„Vaqt“ möchte dir Mitteilungen senden"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "“Prayer Times” Would Like to Send You Notifications"
+            "value" : "“Vaqt” Would Like to Send You Notifications"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "“Horarios de oración” quiere enviarte notificaciones"
+            "value" : "“Vaqt” quiere enviarte notificaciones"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "“Namaz Vakitleri” sana bildirim göndermek istiyor"
+            "value" : "“Vaqt” sana bildirim göndermek istiyor"
           }
         }
       }
@@ -619,25 +619,25 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gebetszeiten"
+            "value" : "Vaqt"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Prayer Times"
+            "value" : "Vaqt"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Horarios de oración"
+            "value" : "Vaqt"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Namaz Vakitleri"
+            "value" : "Vaqt"
           }
         }
       }
