@@ -7,8 +7,9 @@ Wenn nichts anderes steht: Deutsch, hell, Berlin, 14:25 (Asr aktiv).
 
 **Stand v0.8 (Phase 12, 15.11.2026):** Die Bilder unter `iphone/` hat `scripts/capture-prototype` aus dem Prototyp v0.8 neu aufgenommen (Spec § 9) – alle Zustände stehen in `scripts/capture-prototype.mjs`. Neu sind die dunklen Fassungen der geänderten Bildschirme (`-dark`) und `05`, `23`, `33`, `34`, `82`, `83`. Noch von v0.7 sind `04`, `73`, `74`, `76`–`81`, `85`, `86` (unverändert bis auf die Punkte des Onboardings hinter dem Dialog in `04`), alle `system/*` (Phase 14) und alle `duo/*`.
 
+**Phase 13 (15.11.2026):** neu `43`–`49` (Durchlauf „Gebet Schritt für Schritt“, Zustände von `S.walk`, drei davon dunkel); `42` neu aufgenommen – es stand seit Phase 12 noch so weit gescrollt wie `41`, weil `capture-prototype` den Bildlauf nicht zurücksetzte. Knopf und Amiri-Schrift in `40`–`42`, `50`, `51` hat die App seit Phase 13.
+
 Was der Prototyp v0.8 schon zeigt, die App aber erst später bekommt:
-- **Phase 13:** Knopf „Gebet Schritt für Schritt“ in der Anleitung (`40`–`42`), Amiri Quran in den Versen (`50`, `51`).
 - **Phase 15:** weitere Sprachen.
 
 Abweichungen des Prototyps, denen die App nicht folgt (Spec > Screenshot > HTML):
@@ -66,6 +67,23 @@ Abweichungen des Prototyps, denen die App nicht folgt (Spec > Screenshot > HTML)
 | `iphone/40-guide-asr.png` | Anleitung opens on the current prayer (Asr) |
 | `iphone/41-guide-steps.png` | Anleitung scrolled: steps with pictograms and formulas |
 | `iphone/42-guide-manual-pick.png` | Manual pick (Maghrib): "Back to current prayer" button |
+
+## Gebet Schritt für Schritt – Phase 13 (§ 9.6)
+
+Vollbild über der Anleitung; `-debugWalk dhuhr -debugWalkStep N` mit `N` wie `S.walk.i` im Prototyp.
+
+| Datei | Zeigt |
+|---|---|
+| `iphone/43-walk-intro.png` | Dhuhr, start page: prayer badge, „Dhuhr · 4 Rakʿas“, wudu/Qibla/niyya text, rakʿa dots, „Beginnen“ (`i = 0`) |
+| `iphone/43-walk-intro-dark.png` | Same in dark mode |
+| `iphone/44-walk-takbir.png` | Takbīr, „Rakʿa 1 von 4 · Schritt 1 von 28“, formula in Amiri 27 pt (`i = 1`) |
+| `iphone/45-walk-qiyam-silent.png` | Standing, tag „Rezitation: leise“ (`i = 2`) |
+| `iphone/46-walk-qiyam-loud.png` | Maghrib, standing, tag „Rezitation: laut“ (`-debugWalk maghrib`, `i = 2`) |
+| `iphone/47-walk-sujud.png` | Prostration, „Sprich dreimal:“ with formula (`i = 5`) |
+| `iphone/47-walk-sujud-dark.png` | Same in dark mode |
+| `iphone/48-walk-tash-first.png` | First sitting after rakʿa 2, at-Tahiyyāt (`i = 14`) |
+| `iphone/49-walk-done.png` | „Gebet beendet“, check in accent circle, „Fertig“ (`i = 29`) |
+| `iphone/49-walk-done-dark.png` | Same in dark mode |
 
 ## Verse – Phase 6
 

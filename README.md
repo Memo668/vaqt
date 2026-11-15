@@ -43,6 +43,7 @@ open Gebetszeiten.xcodeproj
 | `make compare-today` | Zeiten-Seite in den Zuständen der Referenzbilder `iphone/10` bis `23` aufnehmen und neben die Referenz legen |
 | `make compare-qibla` | Qibla-Seite in den Zuständen der Referenzbilder `iphone/30` bis `34` aufnehmen und neben die Referenz legen |
 | `make compare-guide` | Anleitung im Zustand von `iphone/40` aufnehmen und neben die Referenz legen, dazu `41` und `42`, wenn aufgenommen |
+| `make compare-walk` | „Gebet Schritt für Schritt“ in den Zuständen von `iphone/43`–`49` aufnehmen und neben die Referenz legen (`STATES='47 49-dark'` für einzelne) |
 | `make compare-verses` | Verse in den Zuständen von `iphone/50` (hell) und `51` (dunkel) aufnehmen und neben die Referenz legen |
 | `make compare-qada` | Nachholen im Zustand von `iphone/60` aufnehmen und neben die Referenz legen, dazu `61`, wenn aufgenommen |
 | `make compare-settings` | Einstellungen, Onboarding und Adhan-Sheet in den Zuständen von `iphone/01`–`03`, `05`, `70`, `73`–`81`, `83` und `86` aufnehmen und neben die Referenz legen, dazu `71`, `72` und `82`, wenn aufgenommen |
@@ -92,9 +93,11 @@ Nur in DEBUG-Builds. Damit lässt sich jeder Referenz-Screenshot nachstellen:
 -debugHighLatitude            Berlin, 21. Juni 2027
 -debugLocationDenied  -debugOffline
 -debugTab today|qibla|guide|verses|qada|settings
-          method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|support|adhan|city
+          method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|licenses|support|adhan|city
 -debugOnboarding 1|2|3|4      Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
 -debugDayOffset 1             Zeiten-Seite zeigt einen anderen Tag, −365 bis 365
+-debugWalk dhuhr              „Gebet Schritt für Schritt“ für dieses Gebet offen, über der Anleitung
+-debugWalkStep 9              Seite des Durchlaufs wie S.walk.i im Prototyp: 0 = Start, die letzte = „Gebet beendet“
 -debugQiblaHeading 137
 -debugQiblaAccuracy 40        Genauigkeit des Kompasses in Grad; über 25 erscheint die Kalibrierungskarte
 -debugNotifications           echte Mitteilungen auch mit Mock-Zeiten; fragt beim Start nach der Erlaubnis
@@ -115,9 +118,10 @@ Versteht die App ein Debug-Argument nicht, schreibt sie das beim Start in die Ko
 | `-debugCity`, `-debugHighLatitude` | feste Standortquelle mit dieser Stadt, Standort erlaubt |
 | `-debugLocationDenied` | Standort verweigert: Banner auf der Zeiten-Seite, „Aktueller Standort“ im Stadt-Sheet gesperrt |
 | `-debugOffline` | fest „kein Netz“: Hinweis unter dem Datum, im Stadt-Sheet nur gespeicherte Städte |
-| `-debugTab` | `verses` und `qada` wählen den Tab; `qibla` und `guide` die Seite im Tab „Gebete“; `settings` öffnet dort die Einstellungen, die Kennungen aus `PAGES` im Prototyp (`method`, `asr`, `hl`, `adjust`, `perPrayer`, `reminder`, `live`, `sound`, `appearance`, `language`, `privacy`, `support`) eine ihrer Seiten darüber; `adhan` öffnet das Adhan-Sheet über den Einstellungen, `city` das Stadt-Sheet über der Zeiten-Seite |
+| `-debugTab` | `verses` und `qada` wählen den Tab; `qibla` und `guide` die Seite im Tab „Gebete“; `settings` öffnet dort die Einstellungen, die Kennungen aus `PAGES` im Prototyp (`method`, `asr`, `hl`, `adjust`, `perPrayer`, `reminder`, `live`, `sound`, `appearance`, `language`, `privacy`, `support`) und `licenses` (nur in der App, Spec § 9.7) eine ihrer Seiten darüber; `adhan` öffnet das Adhan-Sheet über den Einstellungen, `city` das Stadt-Sheet über der Zeiten-Seite |
 | `-debugOnboarding` | zeigt das Onboarding ab Schritt 1, 2, 3 oder 4, auch wenn es schon durchlaufen ist; geht vor `-debugSkipOnboarding` |
 | `-debugDayOffset` | die Zeiten-Seite zeigt beim Start den Tag mit diesem Abstand zu heute, −365 bis 365 (Spec § 9.4); Mitteilungen, Widgets und Countdown bleiben bei heute. Mit `-debugFixtureTimes` verschiebt das Sonnenmodell des Prototyps die Mock-Zeiten wie `dayTimes()` |
+| `-debugWalk`, `-debugWalkStep` | öffnet beim Start den Durchlauf „Gebet Schritt für Schritt“ (Spec § 9.6) für `fajr`, `dhuhr`, `asr`, `maghrib` oder `isha` auf dieser Seite (0 = Start; zu große Werte zeigen „Gebet beendet“), über der Anleitung – ohne `-debugTab` ist sie die Seite darunter. Die Zustände von `iphone/43`–`49` |
 | `-debugQiblaHeading` | fester Kompasskurs statt des Kompasses des Geräts. Mit `-debugFixtureTimes` gilt ohne Angabe 99°, der Startwert des Prototyps (`S.qibla.heading`) |
 | `-debugQiblaAccuracy` | Genauigkeit dieses Kurses in Grad, wie `CLHeading.headingAccuracy` (negativ heißt ungültig). Über 25° erscheint die Karte „Kompass kalibrieren“ – die Referenzbilder zeigen sie immer, die App nur bei ungenauem Kompass |
 | `-debugCatalog` | Katalog der Bausteine statt der App |
@@ -320,10 +324,16 @@ make compare-today STATES='17 22'
 make compare-qibla
 ```
 
-`make compare-guide` stellt `iphone/40` nach (Anleitung, 14:25, Asr läuft) und schreibt die Aufnahme (`guide-40.png`) und Ausschnitte von Leiste, Auswahl, Kopfkarte und „Vorher“ nach `screenshots-out/phase-5/`, dazu die Bausteine aus dem Katalog (`-debugCatalog guide` und `steps`) in der Breite der Referenzbilder. `iphone/41` (gescrollt) und `42` (Maghrib angetippt) brauchen Wischen und Tippen; liegen ihre Aufnahmen `guide-41.png` und `guide-42.png` dort, vergleicht das Skript sie mit. Aufgenommen werden sie mit dem UI-Hilfsprojekt: `make harness SCRIPTS=scripts/ui-harness/scripts/iphone-41-42-guide.txt` mit `OUT=screenshots-out/phase-5`.
+`make compare-guide` stellt `iphone/40` nach (Anleitung, 14:25, Asr läuft) und schreibt die Aufnahme (`guide-40.png`) und Ausschnitte von Leiste, Auswahl, Kopfkarte, Knopf „Gebet Schritt für Schritt“ und „Vorher“ nach `screenshots-out/phase-5/`, dazu die Bausteine aus dem Katalog (`-debugCatalog guide` und `steps`) in der Breite der Referenzbilder. Seit Phase 13 gelten die Ausschnitte für v0.8 (Kopfkarte mit Knopf); die Lagen stehen im Kopf des Skripts. `iphone/41` (gescrollt) und `42` (Maghrib angetippt) brauchen Wischen und Tippen; liegen ihre Aufnahmen `guide-41.png` und `guide-42.png` dort, vergleicht das Skript sie mit. Aufgenommen werden sie mit dem UI-Hilfsprojekt: `make harness SCRIPTS=scripts/ui-harness/scripts/iphone-41-42-guide.txt` mit `OUT=screenshots-out/phase-5`.
 
 ```bash
 make compare-guide
+```
+
+`make compare-walk` (seit Phase 13) startet die App je Zustand mit `-debugWalk` und `-debugWalkStep` wie die Referenzbilder `iphone/43`–`49` (Start, Takbīr, Stehen leise und laut, Niederwerfung, erstes Sitzen, Ende; `43`, `47`, `49` auch dunkel) und legt Kreis, Kopf, Fortschritt, Seite und Knöpfe neben die Referenz, Ergebnis in `screenshots-out/phase-13/`. Den Ablauf mit Tippen – Knopf in der Anleitung, Beginnen, Weiter, Zurück, Schließen, dann mit Maghrib – spielt `scripts/ui-harness/scripts/iphone-43-49-walk-flow.txt` durch.
+
+```bash
+make compare-walk
 ```
 
 `make compare-verses` stellt `iphone/50` (Verse, hell) und `51` (dunkel) nach und schreibt die Aufnahmen (`verses-50.png`, `verses-51.png`) und Ausschnitte von Leiste, Titel, Karte, Fußnote und Liste nach `screenshots-out/phase-6/`, dazu die Seite aus dem Katalog (`-debugCatalog verses`) in der Breite der Referenzbilder.

@@ -256,9 +256,13 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 
 ## Phase 13 – Gebet Schritt für Schritt und arabische Schrift
 
-- Vollbild-Durchlauf durch das ganze Gebet aus der Anleitung (Spec § 9.6): Ablauf aus `RAKAH` und den Schritten berechnen (PrayerCore, Tests: Fadschr 2, Maghrib 3, Dhuhr 4 Rakʿas → 15/22/28 Schritte, dazu Start und Ende), Fortschritt, Zurück/Weiter, Reduce Motion, VoiceOver.
-- Amiri Quran für Verse, Amiri für Formeln einbetten, Lizenz (OFL) im Lizenzhinweis (§ 9.7).
-- Die neuen Texte der Anleitung als ungeprüft kennzeichnen (wie § 6.14).
+*Gebaut am 15.11.2026 auf dem Zweig `claude/phase-13-cce599` (ab `7558f5e`, Phase 12 abgenommen), geprüft gegen die Referenzbilder aus dem Prototyp v0.8 (`iphone/40`–`51`, neu `43`–`49`); Annahmen in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 13“.*
+
+- Vollbild-Durchlauf durch das ganze Gebet aus der Anleitung (Spec § 9.6): Ablauf aus `RAKAH` und den Schritten berechnen (PrayerCore `GuideWalk`, Tests: Fadschr 2, Maghrib 3, Dhuhr 4 Rakʿas → 15/22/28 Schritte, dazu Start und Ende), Fortschritt, Zurück/Weiter, Reduce Motion, VoiceOver. Knopf „Gebet Schritt für Schritt“ in der Kopfkarte; Vollbild über `fullScreenCover`; Dynamic Type bis AX (Kopf bis AX1, Knöpfe untereinander, wenn sie nicht passen).
+- Amiri Quran für Verse, Amiri für Formeln einbetten (Release 1.003 von aliftype/amiri, `docs/THIRD-PARTY.md`), Lizenz (OFL) im Lizenzhinweis (§ 9.7): neue Seite Einstellungen › Über › Lizenzen mit Amiri und Adhan Swift (entschieden mit dem Plan).
+- Die neuen Texte der Anleitung als ungeprüft kennzeichnen (wie § 6.14): Kommentar `TODO(review)` im String Catalog für alle Texte der Anleitung, die neuen mit Verweis auf § 9.6.
+- Referenzbilder `43`–`49` (Durchlauf, drei davon dunkel) aus dem Prototyp, `make compare-walk`; `42` neu aufgenommen (stand seit Phase 12 gescrollt).
+- Debug: `-debugWalk <Gebet>`, `-debugWalkStep N`; `-debugTab` kennt `licenses`.
 
 ## Phase 14 – Live-Aktivität und Widgets
 

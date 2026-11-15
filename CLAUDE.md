@@ -29,7 +29,7 @@ Werte und Formeln von dort übernehmen, nicht schätzen. Bei Widerspruch gilt: S
   - `PrayerCore` – reine Logik ohne UI: Berechnung, Tagesphase, Kerahat, Qibla, Hijri, Nachholen, Daten der Anleitung. Unit-Tests sind Pflicht.
   - `DesignSystem` – Tokens (Palette, Layout, Typography), Glass-Bausteine, `DayArc`, Karten.
   - `Features` – Bildschirme: Today, Qibla, Guide, Verses, Qada, Settings, Onboarding.
-- Einzige Fremdabhängigkeit: **Adhan Swift** (MIT) für die Gebetszeiten. Keine Analytics, keine Crash-Reporter von Dritten, kein eigener Server. Netzwerk nur über Apple-Dienste (Ortssuche, Geocoding).
+- Einzige Fremdabhängigkeit: **Adhan Swift** (MIT) für die Gebetszeiten. Dazu eingebettet die Schriften **Amiri** und **Amiri Quran** (SIL OFL 1.1, seit Phase 13); Herkunft, Versionen und Prüfsummen in `docs/THIRD-PARTY.md`, Lizenzen in der App unter Einstellungen › Über › Lizenzen. Keine Analytics, keine Crash-Reporter von Dritten, kein eigener Server. Netzwerk nur über Apple-Dienste (Ortssuche, Geocoding).
 - Daten bleiben auf dem Gerät (`@AppStorage`/UserDefaults, auch für das Nachholen – entschieden am 12.11.2026 statt SwiftData). App Group für Widgets und Live Activity.
 - Texte: String Catalog `Localizable.xcstrings` mit 16 Sprachen (DE, TR, EN, ES, FR, NL, BS, SQ, AR, UR, ID, MS, BN, FA, RU, IT; Spec § 9.10), erzeugt aus `T` – dazu die Platzhalter der Verse aus `VERSES` und `SURAH`. Keine fest verdrahteten Texte.
 - Systemkomponenten bevorzugen: `TabView`, `NavigationStack`, `.glassEffect`, `GlassEffectContainer`, `.buttonStyle(.glass)`, `.searchable`, `.sheet`, `Text(timerInterval:)`, `Calendar(identifier: .islamicUmmAlQura)`. Eigene Leisten nur dort, wo die Spec sie verlangt (Chips oben im Gebete-Tab).
@@ -48,9 +48,11 @@ Nur in DEBUG: Startargumente, mit denen sich jeder Referenz-Screenshot nachstell
 -debugHighLatitude            # Berlin, 21. Juni
 -debugLocationDenied  -debugOffline
 -debugTab today|qibla|guide|verses|qada|settings
-          method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|support|adhan|city   # Seiten der Einstellungen (PAGES), adhan = Adhan-Sheet, city = Stadt-Sheet
+          method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|licenses|support|adhan|city   # Seiten der Einstellungen (PAGES; licenses nur in der App), adhan = Adhan-Sheet, city = Stadt-Sheet
 -debugOnboarding 1|2|3|4      # Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
 -debugDayOffset 1             # Zeiten-Seite zeigt einen anderen Tag, −365 bis 365 (iphone/23)
+-debugWalk dhuhr              # „Gebet Schritt für Schritt“ für dieses Gebet offen, über der Anleitung (iphone/43–49)
+-debugWalkStep 9              # Seite des Durchlaufs wie S.walk.i: 0 = Start, die letzte = „Gebet beendet“
 -debugQiblaHeading 137
 -debugQiblaAccuracy 40        # Genauigkeit des Kompasses; über 25° erscheint die Kalibrierungskarte (iphone/30–32)
 -debugNotifications           # echte Mitteilungen auch mit Mock-Zeiten, fragt beim Start nach der Erlaubnis (system/92)

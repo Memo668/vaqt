@@ -1,5 +1,22 @@
 # Schlussabgleich der Referenzbilder
 
+## Phase 13 (15.11.2026, Prototyp v0.8)
+
+Neu sind die Bilder `iphone/43`–`49` des Durchlaufs „Gebet Schritt für Schritt“ (`scripts/capture-prototype`, Zustände von `S.walk`); `42` ist neu aufgenommen, weil es seit Phase 12 noch so weit gescrollt stand wie `41`. Die Zahlen sind der Anteil der Pixel, die um mehr als 24 von 255 abweichen. Was abweicht und bleibt, steht in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 13“.
+
+| Bild | Befehl | Ergebnis |
+|---|---|---|
+| `iphone/43`–`49`, `43`/`47`/`49-…-dark` | `make compare-walk` | stimmt – Seite 1,7–3,9 % (`48`: 6,8 %, eine Zeile mehr, siehe unten), Kreis 0,8–1,9 % (dunkel 4,7–5,6 %, echtes Glas), Fortschritt 0–1 %, Knöpfe 1,8–7,1 %, Kopf 5,5–7,2 % (Laufweite der Schrittzeile) |
+| `iphone/40` | `make compare-guide` | stimmt – Kopfkarte bis zur Rakʿa-Folge 3,2–3,5 %; Knopf „Gebet Schritt für Schritt“ mit Zeile darunter gleich groß und gleich gesetzt (11 % durch die Laufweite der Titel); in Referenzbreite (Katalog `guide`) 5,5 % |
+| `iphone/41` **T** | UI-Hilfsprojekt `iphone-41-42-guide.txt`, dann `make compare-guide` | stimmt – Ablauf mit Formeln in Amiri 4,6–5,7 %, Grundlinie der Formel auf etwa 1 pt; Katalog `steps` 4,4 % |
+| `iphone/42` **T** | wie `41` | stimmt – Maghrib gewählt, Knopf und „Zum aktuellen Gebet“ 6,2–6,7 % |
+| `iphone/50`, `51` | `make compare-verses` | stimmt – Vers in Amiri Quran, Grundlinie auf 0,1 pt; Karte rechts 3,8 %, links 6,7 % (Laufweite der Übersetzung); Katalog 5,3 % |
+| `iphone/72` **T** | UI-Hilfsprojekt `iphone-71-72-settings.txt`, dann `make compare-settings STATES=72` | weicht ab wie gewollt – Zeile „Lizenzen“ unter „Über“ (Spec § 9.7), der Prototyp hat sie nicht |
+
+Dazu ohne Referenzbild: der Ablauf mit Tippen (UI-Hilfsprojekt `iphone-43-49-walk-flow.txt`: Knopf öffnet Asr, nach der Wahl Maghrib „Maghrib · 3 Rakʿas“, Beginnen/Weiter/Zurück/Schließen, Baum der Bedienungshilfen), RTL (gespiegelt: Kreis rechts, Fortschritt von rechts, „Zurück“ rechts), xxL/xxxL/AX5, die Seite „Lizenzen“.
+
+Nicht neu abgeglichen: `system/*` (Phase 14) und `duo/*` (Duo-Simulator aus).
+
 ## Phase 12 (15.11.2026, Prototyp v0.8)
 
 Seit Phase 12 stammen die Bilder unter `iphone/` aus dem Prototyp v0.8 (`scripts/capture-prototype`). Abgeglichen ist, was sich mit Spec § 9 geändert hat; die Zahlen sind die mittlere Abweichung der Ausschnitte (Anteil der Pixel über 24 von 255). Was abweicht und bleibt, steht in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 12“.
@@ -14,8 +31,8 @@ Seit Phase 12 stammen die Bilder unter `iphone/` aus dem Prototyp v0.8 (`scripts
 | `iphone/19` | `make compare-today STATES=19` | stimmt bis auf die Leiste: Chips mittig mit Abstand zum Kreis statt darunter (Annahmen in Phase 12) |
 | `iphone/23`, `23-…-dark` | `make compare-today STATES='23 23d'` | stimmt – anderer Tag, „Zurück zu heute“, Tag statt Countdown (Bogen 5,5 %); Kerahat-Abschnitte ohne „vorbei“, kurzes Datum im Format von iOS |
 | `iphone/30`–`34`, `33-…-dark` | `make compare-qibla` | stimmt – Keil ±40°, „Im Toleranzbereich“ mit Drehhinweis, Legende; Kompass 1,0–1,5 % |
-| `iphone/40`–`42` **T** | `make compare-guide` (41, 42 mit dem UI-Hilfsprojekt) | Leiste stimmt; Kopfkarte und Ablauf erst mit Phase 13 (Knopf „Gebet Schritt für Schritt“) |
-| `iphone/50`, `51` | `make compare-verses` | Kreis rechts stimmt; Vers erst mit Phase 13 (Amiri Quran) |
+| `iphone/40`–`42` **T** | `make compare-guide` (41, 42 mit dem UI-Hilfsprojekt) | Leiste stimmt; Kopfkarte und Ablauf erst mit Phase 13 (Knopf „Gebet Schritt für Schritt“) – abgeglichen unter „Phase 13“ |
+| `iphone/50`, `51` | `make compare-verses` | Kreis rechts stimmt; Vers erst mit Phase 13 (Amiri Quran) – abgeglichen unter „Phase 13“ |
 | `iphone/60` | `make compare-qada` | stimmt – Kreis rechts |
 | `iphone/61`, `61-…-dark` **T** | `make harness SCRIPTS=scripts/ui-harness/scripts/iphone-61-qada.txt`, dann `make compare-qada` | stimmt – Rechner als Karte ganz unten (rechts 4,7 %); die Einleitung ist in der breiteren App eine Zeile kürzer |
 | `iphone/70`–`81`, `86` | `make compare-settings` | wie bisher; `71` mit dem neuen Text unter „Kerahat-Zeiten zeigen“ |

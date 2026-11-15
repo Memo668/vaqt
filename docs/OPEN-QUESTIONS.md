@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 15.11.2026, nach der Abnahme von Phase 12.
+Stand: 15.11.2026, Phase 13 gebaut (Abnahme steht aus).
 
 ## Für die erste Beta
 
@@ -36,7 +36,7 @@ Offen bzw. Annahmen:
 - **Welches Widget bekommt den Halbkreis?** Gesagt: „Homescreen-Widget, also das große Sperrbildschirm-Widget“. Angenommen: das rechteckige Sperrbildschirm-Widget. Meinte der Nutzer das mittlere Home-Widget mit der Zeitenliste, bekommt dieses den Bogen.
 - **Übersetzungen der zwölf neuen Sprachen** sind KI-Entwürfe (Hilfsagenten, 15.11.2026): vor dem App Store von Muttersprachlern prüfen lassen, besonders die religiösen Begriffe. Mehrzahlformen sind in einigen Entwürfen fest (z. B. Bosnisch „{n} rekata“, Arabisch) – Plural-Varianten im String Catalog.
 - **Vers-Übersetzungen** gibt es nur für DE/TR/EN/ES (Platzhalter); die übrigen Sprachen fallen auf Englisch zurück, Arabisch zeigt keine Übersetzung. Lizenzierte Übersetzungen je Sprache gehören zur Frage „Übersetzungen der Verse“ unten.
-- **Neue Texte der Anleitung** (kurzes Sitzen, zweite Niederwerfung, erstes/letztes Sitzen) sind wie die übrige Anleitung fachlich ungeprüft.
+- **Neue Texte der Anleitung** (kurzes Sitzen, zweite Niederwerfung, erstes/letztes Sitzen) sind wie die übrige Anleitung fachlich ungeprüft. Seit Phase 13 tragen sie und alle übrigen Texte der Anleitung im String Catalog den Kommentar `TODO(review)` (unten unter „Texte der Anleitung“).
 - **Duo:** Der Prototyp zeigt die neuen Elemente nur auf dem iPhone ausführlich; auf dem Duo gelten die Regeln aus Spec § 8 (Durchlauf als Vollbild, Tage-Navigation in der linken Spalte).
 
 ## Vor dem App Store
@@ -45,12 +45,12 @@ Offen bzw. Annahmen:
 
 - **Übersetzungen der Verse** (Phase 6, Spec § 6.12): Platzhalter mit `TODO(placeholder)` im String Catalog. Offen sind Übersetzungen mit Lizenz, die Quelle des arabischen Textes und die Auswahl der Verse.
 - **Adhan-Aufnahmen** (Phase 7, Spec § 6.5): Stimme 1 und 2 sind freie Aufnahmen von Wikimedia Commons; die Lizenzangaben (CC0 1.0, gemeinfrei) stammen von den Hochladenden. Herkunft und Rechte prüfen oder durch die endgültigen Aufnahmen ersetzen; Stimme 3 und die Fadschr-Variante fehlen.
-- **Texte der Anleitung** (Phase 5, Spec § 6.14): Niemand hat sie fachlich geprüft (Imam oder Gelehrter je Sprache). Offen sind auch eine neutrale Fassung oder Varianten je Rechtsschule und für Frauen, echte Illustrationen und Audio für die Formeln.
+- **Texte der Anleitung** (Phase 5, Spec § 6.14): Niemand hat sie fachlich geprüft (Imam oder Gelehrter je Sprache). Offen sind auch eine neutrale Fassung oder Varianten je Rechtsschule und für Frauen, echte Illustrationen und Audio für die Formeln. Seit Phase 13 gehören die Texte von „Gebet Schritt für Schritt“ dazu (Spec § 9.6: Start, Stehen in Rakʿa 1–2, „Sprich dreimal“, kurzes Sitzen, zweite Niederwerfung, erstes und letztes Sitzen, Schluss). Im String Catalog tragen alle 43 Texte den Kommentar `TODO(review)`; `scripts/import-strings` setzt ihn (`walkReviewKeys`, `guideReviewKeys`).
 - **Icon und Name** (Spec § 6.9): Das Icon ist ein Platzhalter (Phase 11). Seit Phase 12 zeigen Onboarding und Tagline das App-Symbol selbst (Spec § 9.1, Bildsatz `AppMark` im DesignSystem); ändert sich das Icon, den Bildsatz neu erzeugen (Kommentar in `AppMark.swift`). Live-Aktivität und Widgets zeigen bis Phase 14 noch die Mondsichel.
 - **App-Store-Link** (Phase 12): „App weiterempfehlen“ auf der Seite „Unterstützen“ teilt `APP_STORE_URL` aus `project.yml` – bis zum Anlegen der App in App Store Connect ein Platzhalter (`id0000000000`). Die Kennung dort eintragen, sobald es sie gibt; vor der Freigabe zeigt der Link „nicht verfügbar“.
 - **Datenschutzerklärung:** Der Text liegt auf Deutsch und Englisch in `docs/DATENSCHUTZ.md` und `docs/PRIVACY.md` (Beta-Vorbereitung). Vor dem App Store: auf Türkisch und Spanisch übersetzen und den Text prüfen lassen.
 - **Seite „Datenschutz“ in der App:** Sie sagt wie im Prototyp, der Standort werde „nur auf diesem Gerät zur Berechnung verwendet und verlässt es nie“ (`privacyBody2`); ähnlich die Begründung der Standortabfrage (`alLocBody`). Für den Stadtnamen gehen die Koordinaten aber an Apple (MapKit), ebenso der Suchtext der Ortssuche. Die Datenschutzerklärung sagt das genau. Offen: den Text im Prototyp in allen vier Sprachen anpassen oder so lassen.
-- **Lizenzhinweis für Adhan Swift** (MIT): Die Lizenz verlangt, Copyright und Lizenztext mit jeder Kopie weiterzugeben. Eine Seite dafür haben weder Spec noch App; offen ist, wo der Hinweis stehen soll, etwa unter „Über“.
+- **Lizenzen** (erledigt in Phase 13): Einstellungen › Über › Lizenzen nennt Amiri/Amiri Quran (SIL OFL 1.1) und Adhan Swift (MIT) mit Lizenztext; Herkunft und Prüfsummen in `docs/THIRD-PARTY.md`. Kommt ein weiterer fremder Teil dazu, gehört er auf diese Seite (`SoftwareLicense`).
 - **Quellcode und Version** (Phase 7): Die Adresse hinter „Quellcode“ ist ein Platzhalter (`SOURCE_CODE_URL`), bis das Repo öffentlich auf GitHub liegt; die Version steht auf 0.1.0.
 - **Türkische Texte:** Die Endung der Vorab-Erinnerung rechnet die App seit Phase 11 („12:53’te“). Jemand mit Türkisch als Muttersprache sollte die Texte einmal lesen.
 
@@ -75,6 +75,16 @@ Zurzeit nichts. Die Punkte 1 bis 6, die bis Phase 10 offen waren, sind entschied
 ## Entschieden
 
 Die Entscheidungen stehen in der Reihenfolge, in der sie fielen, die neuesten zuerst; die Antwort des Nutzers steht jeweils wörtlich in Anführungszeichen.
+
+### Entschieden mit dem Plan für Phase 13 am 15.11.2026
+
+Der Plan für Phase 13 wurde am 15.11.2026 freigegeben („Freigeben, bauen (Empfohlen)“), über die Auswahl-Fragen:
+
+| Punkt | Entscheidung | Was das heißt |
+|---|---|---|
+| Wo steht der Lizenzhinweis? | „Seite unter „Über“ (Empfohlen)“ | Neue Zeile „Lizenzen“ in Einstellungen › Über, darunter Amiri/Amiri Quran (SIL OFL 1.1) und Adhan Swift (MIT) mit Lizenztext im englischen Original. Die vier neuen Texte stehen in `T` des Prototyps; der Prototyp selbst zeigt die Seite nicht. Die Alternativen waren die iOS-Einstellungen (Settings.bundle) und nur die Lizenzdateien im Paket. |
+
+Mit dem Plan freigegeben sind auch: Amiri 1.003 aus der Release von aliftype/amiri (Google Fonts liefert dieselbe Fassung), der Kommentar `TODO(review)` auch für die älteren Texte der Anleitung und die Referenzbilder `43`–`49`. Die Annahmen stehen unten unter „Annahmen in Phase 13“.
 
 ### Entschieden mit dem Plan für Phase 12 am 15.11.2026
 
@@ -363,6 +373,40 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 | Ausrichtung | „Ja, so lassen“ | nur Hochformat. Phase 10: Die Info.plist bleibt so; auf dem inneren Display des iPhone Duo zeigt iOS die App trotzdem quer und hoch (siehe „Annahmen in Phase 10“). |
 | Nachholen | „Ja, so lassen“ | Die App startet leer: kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr. `iphone/60` und `61` zeigen die Beispielzahlen des Prototyps; die gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Annahme für Phase 6: Mit `-debugFixtureTimes` zeigt die Seite sie. |
 | JAKIM und Kemenag | „Ja, so lassen“ | reine Winkel 20°/18°. Vor der Veröffentlichung gegen offizielle Tabellen zu prüfen, siehe oben. |
+
+## Annahmen in Phase 13
+
+Geprüft am 15.11.2026 auf dem iPhone 18 Pro mit iOS 27.2 gegen die Referenzbilder aus dem Prototyp v0.8: neu `iphone/43`–`49` (Durchlauf, `make compare-walk`), dazu `40`–`42` (`make compare-guide`, 41/42 mit dem UI-Hilfsprojekt), `50`/`51` (`make compare-verses`) und `72`. Ohne Referenzbild: der Ablauf mit Tippen (`iphone-43-49-walk-flow.txt`), RTL, xxL bis AX5, die Seite „Lizenzen“. `make test`: 996 Tests grün (PrayerCore 451, DesignSystem 217, Features 328). Die Übersicht steht in `docs/REFERENCE-CHECK.md` unter „Phase 13“.
+
+### Was mit den Referenzbildern übereinstimmt
+
+- Durchlauf hell und dunkel (`43`–`49`): Kopf mit Kreis, Gebet und Schrittzeile, Fortschritt 4 pt, Kachel 172 pt mit Haltung 126 pt, Marke „Rezitation: laut/leise“, Titel, Anweisung, Formelkarte mit Amiri 27 pt, Rakʿa-Punkte auf der Startseite, Haken am Ende, Knöpfe 1 : 1,6, auf der Startseite „Beginnen“, am Ende „Fertig“.
+- Knopf „Gebet Schritt für Schritt“ mit Zeile darunter (`40`–`42`), Formeln in Amiri 23 pt (`41`), Verse in Amiri Quran 31 pt (`50`, `51`). Die Grundlinie des Arabischen liegt auf 0,1–1 pt wie im Prototyp.
+
+### Was abweicht und bleibt
+
+- **Lage im Bildschirm:** Der Durchlauf beginnt am sicheren Bereich (62 pt), im Prototyp bei 54 pt; die Knöpfe stehen 12 pt über dem Home-Indikator. Die Seite dazwischen ist in der App 22 pt höher und steht mittig darin.
+- **Breite der Texte:** wie bisher die Laufweite des Systems (entschieden in Phase 11). Schrittzeile, Anweisungen und die Titel der Knöpfe laufen etwas breiter; in `47` bricht „Stirn, Nase, …“ ein Wort früher um, in `48` hat „Lies at-Tahiyyāt …“ eine Zeile mehr (die Seite steht dort 12 pt höher).
+- **Knöpfe:** 1 : 1,6 der 12 pt breiteren App, 132 und 212 pt statt 128 und 204 pt.
+- **Kreis zum Schließen:** echtes Liquid Glass (`.buttonStyle(.glass)`) statt der Nachbildung im CSS; dunkel heller als im Prototyp.
+- **Symbole:** SF Symbols statt der Zeichnungen des Prototyps – Symbol des Gebets auf der Startseite, Haken am Ende (`checkmark` ist höher als `check`), Pfeile und Abspielen in den Knöpfen (in Größe und Abstand angeglichen).
+- **Kopfkarte bei 402 pt** (`40`): „Sitzen · Salām“ passt noch in die erste Zeile der Rakʿa-Folge; im Prototyp (390 pt) bricht es um. Alles darunter steht in der App 35,7 pt höher. In Referenzbreite (Katalog `guide`) stimmt es.
+- **Umbrochene Verse:** Amiri Quran ist höher (2,449-fach) als die Zeile im CSS (2,15-fach). Eine Zeile steht genau wie im Prototyp; bricht ein Vers um – nur bei großer Schrift, alle sechs Verse passen bei Standardgröße in eine Zeile –, haben seine Zeilen den Abstand der Schrift, 14 % mehr als im CSS. `lineHeight(.exact)` (iOS 26) träfe den Abstand, setzt die Grundlinie aber fast 20 pt zu hoch (gemessen).
+- **Einblenden:** Das Vollbild erscheint wie jedes `fullScreenCover` des Systems von unten, nicht mit `walkUp` des Prototyps (30 pt, 0,4 s).
+- **Reduce Motion:** Spec § 9.6 sagt „nur überblenden“, der Prototyp schaltet dann alle Animationen ab. Die App folgt der Spec (Spec > HTML).
+- **`72`:** zusätzlich die Zeile „Lizenzen“ unter „Über“ (Spec § 9.7); der Prototyp hat sie nicht.
+
+### Annahmen in der Umsetzung
+
+- **Welches Gebet:** das, das die Anleitung gerade zeigt (`guideState().p`: die Wahl, sonst das aktuelle); ohne Zeiten Fadschr. Wechselt währenddessen das aktuelle Gebet, bleibt der Durchlauf bei seinem.
+- **Zustand:** wird nicht gespeichert; Schließen verwirft ihn, wie `S.walk` im Prototyp. Im Hintergrund bleibt er erhalten, solange iOS die App nicht beendet.
+- **VoiceOver:** Die Schrittzeile wird bei jedem Schritt angesagt (Ansage mit hoher Priorität, `aria-live`). Der Fokus bleibt auf „Weiter“, nach „Zurück“ auf „Zurück“, auf der Startseite auf „Beginnen“ (`focusNext`). Das Vollbild heißt „Gebet Schritt für Schritt: Dhuhr“, der Titel ist Überschrift, der Fortschritt eine Fortschrittsanzeige des Systems; Haltung, Symbole und Rakʿa-Punkte sind ausgeblendet, die Formel ist ein Element (Arabisch als Arabisch markiert). Zwei-Finger-Z und Esc auf der Tastatur schließen. Geprüft ist der Baum der Bedienungshilfen, nicht VoiceOver von Hand; dass der Fokus nach dem Schließen auf den Knopf zurückkehrt, übernimmt das System.
+- **Große Schrift:** Der Kopf wächst bis AX1 wie die obere Leiste; die Seite scrollt, wenn sie nicht passt. Die Knöpfe stehen nebeneinander, solange beide Titel in eine Zeile passen (bei Standardgröße), sonst untereinander mit „Weiter“ oben (ab xxL). Kachel, Figur und Formelkarte haben feste Größen wie im CSS; die Schrift darin wächst.
+- **Duo:** Knöpfe innen höchstens 420 pt breit (`.walk-actions` im Prototyp), die Seite mittig. Duo-Simulator aus, ungeprüft.
+- **Schrift:** Amiri und Amiri Quran 1.003, unverändert aus der Release von aliftype/amiri (Prüfsumme des Archivs wie auf GitHub; `docs/THIRD-PARTY.md`). Google Fonts – damit zeichnet der Prototyp – liefert dieselbe Fassung. Nur der Schnitt Regular; registriert beim ersten Gebrauch für den Prozess, ohne Eintrag in der Info.plist. Widgets und Live-Aktivität brauchen sie nicht.
+- **Lizenzseite:** je fremdem Teil eine Gruppe mit Name, Lizenz und Zweck; der Lizenztext klappt auf, im englischen Original und für VoiceOver als Englisch markiert. Die vier neuen Texte stehen in `T` in allen 16 Sprachen; importiert sind DE/TR/EN/ES, die zwölf übrigen sind KI-Entwürfe wie die anderen und kommen mit Phase 15.
+- **Ungeprüfte Texte:** Kennzeichnung im String Catalog (`TODO(review)`), in der App selbst kein Hinweis – wie im Prototyp.
+- **Referenzbild `42`:** neu aufgenommen. `capture-prototype` setzte den Bildlauf zwischen den Zuständen nicht zurück, und `42` stand seit Phase 12 so weit unten wie `41`.
 
 ## Annahmen in Phase 12
 

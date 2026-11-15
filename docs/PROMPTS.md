@@ -84,8 +84,10 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 | `iphone/33` | … `-debugTime 14:25 -debugTab qibla -debugQiblaHeading 112 -debugQiblaAccuracy 40` (seit Phase 12; `33-…-dark` dunkel) |
 | `iphone/34` | … `-debugTime 14:25 -debugTab qibla -debugQiblaHeading 60 -debugQiblaAccuracy 40` (seit Phase 12) |
 | `iphone/40` | … `-debugTab guide` |
-| `iphone/41` | wie `40`, dann nach unten scrollen, bis die erste Karte des Ablaufs 133 pt unter der Oberkante steht (UI-Hilfsprojekt, `scripts/ui-harness/scripts/iphone-41-42-guide.txt`) |
+| `iphone/41` | wie `40`, dann nach unten scrollen, bis die erste Karte des Ablaufs 526 pt unter der Oberkante steht (seit v0.8; UI-Hilfsprojekt, `scripts/ui-harness/scripts/iphone-41-42-guide.txt`) |
 | `iphone/42` | wie `40`, dann „Maghrib“ in der Auswahl antippen (UI-Hilfsprojekt, `scripts/ui-harness/scripts/iphone-41-42-guide.txt`) |
+| `iphone/43` | … `-debugTime 14:25 -debugWalk dhuhr -debugWalkStep 0` (seit Phase 13; `43-…-dark` dunkel) |
+| `iphone/44`–`49` | wie `43` mit `-debugWalkStep 1` (Takbīr), `2` (Stehen leise), `5` (Niederwerfung; `47-…-dark` dunkel), `14` (erstes Sitzen), `29` (Ende; `49-…-dark` dunkel); `46` mit `-debugWalk maghrib -debugWalkStep 2` (Stehen laut) |
 | `iphone/50` | … `-debugTime 14:25 -debugTab verses` |
 | `iphone/51` | wie `50` (Dark Mode) |
 | `iphone/60` | … `-debugTime 14:25 -debugTab qada` – mit `-debugFixtureTimes` die Zahlen des Prototyps |
