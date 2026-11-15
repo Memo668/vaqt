@@ -512,12 +512,10 @@ struct LicensesPage: View {
             ForEach(SoftwareLicense.allCases) { license in
                 Section {
                     DisclosureGroup {
-                        Text(license.text)
+                        Text(englishText(license.text))
                             .font(.footnote)
                             .foregroundStyle(Palette.textSecondary)
                             .textSelection(.enabled)
-                            // Lizenztexte sind englisch: VoiceOver liest sie mit englischer Stimme.
-                            .environment(\.locale, Locale(identifier: "en"))
                             .listRowMetrics()
                     } label: {
                         RowTitle(license.licenseName, detail: license.localizedPurpose)
@@ -532,6 +530,13 @@ struct LicensesPage: View {
                 }
             }
         }
+    }
+
+    /// Lizenztexte sind englisch: als Englisch markiert, damit VoiceOver sie mit englischer Stimme liest.
+    private func englishText(_ text: String) -> AttributedString {
+        var attributed = AttributedString(text)
+        attributed.languageIdentifier = "en"
+        return attributed
     }
 }
 
