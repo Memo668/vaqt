@@ -1,7 +1,7 @@
 import DesignSystem
 import SwiftUI
 
-/// Das Onboarding beim ersten Start: drei Seiten mit Punkten darunter und den Knöpfen des Schritts –
+/// Das Onboarding beim ersten Start: vier Seiten mit Punkten darunter und den Knöpfen des Schritts –
 /// `onboardingHTML()` im Prototyp.
 ///
 /// Die Seiten wechseln nur über die Knöpfe, wie im Prototyp: So lässt sich der Vorab-Bildschirm für den
@@ -58,7 +58,7 @@ struct OnboardingView: View {
         HStack {
             Spacer()
             if model.showsSkip {
-                Button(L10n.obSkip, action: model.finish)
+                Button(L10n.obSkip, action: model.showFree)
                     .buttonStyle(.borderless)
                     .font(TypeScale.body.font())
                     .padding(.horizontal, OnboardingMetrics.skipPaddingX)
@@ -86,6 +86,12 @@ struct OnboardingView: View {
             OnboardingPage(title: L10n.ob3Title, message: L10n.ob3Body) {
                 IconBadge(systemImage: "bell.and.waves.left.and.right", symbolSize: IconBadgeMetrics.bellSymbolSize)
             }
+        case .free:
+            OnboardingPage(title: L10n.ob4Title, message: L10n.ob4Body(app: L10n.appName)) {
+                IconBadge(systemImage: "heart", symbolSize: IconBadgeMetrics.heartSymbolSize)
+            } footer: {
+                OnboardingChips([L10n.ob4P1, L10n.ob4P2, L10n.ob4P3])
+            }
         }
     }
 
@@ -104,7 +110,9 @@ struct OnboardingView: View {
                 primaryButton(L10n.ob3Allow) {
                     Task { await model.allowNotifications() }
                 }
-                plainButton(L10n.ob3Later, action: model.finish)
+                plainButton(L10n.ob3Later, action: model.showFree)
+            case .free:
+                primaryButton(L10n.ob4Start, action: model.finish)
             }
         }
         // Innen auf dem iPhone Duo (regular) schmaler und mittig (`.onb-actions`).

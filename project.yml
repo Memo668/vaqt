@@ -29,6 +29,10 @@ settings:
     # TODO(placeholder): Adresse hinter Einstellungen › Quellcode („Open Source auf GitHub“). Das Repo hat
     # noch keine öffentliche Adresse; vor dem ersten Archiv eintragen.
     SOURCE_CODE_URL: https://example.com/gebetszeiten
+    # TODO(placeholder): Adresse der App im App Store hinter Einstellungen › Unterstützen › „App
+    # weiterempfehlen“ (entschieden am 15.11.2026: „App-Store-Link“). Die Kennung (id…) vergibt App Store
+    # Connect beim Anlegen der App; dann hier eintragen.
+    APP_STORE_URL: https://apps.apple.com/app/id0000000000
     DEVELOPMENT_TEAM: V7652FBKMY
     CODE_SIGN_STYLE: Automatic
     ENABLE_USER_SCRIPT_SANDBOXING: YES
@@ -80,6 +84,8 @@ targets:
         AppGroupIdentifier: $(APP_GROUP_ID)
         # Adresse hinter Einstellungen › Quellcode (Features: AppInfo.sourceCodeURL).
         SourceCodeURL: $(SOURCE_CODE_URL)
+        # Adresse im App Store für „App weiterempfehlen“ (Features: AppInfo.appStoreURL).
+        AppStoreURL: $(APP_STORE_URL)
         # Hintergrundaktualisierung (Phase 8): iOS weckt die App etwa einmal am Tag kurz, und sie plant
         # die Mitteilungen neu (Features: BackgroundRefresh). Die Kennung ist die Bundle-ID mit „.refresh“.
         UIBackgroundModes: [fetch]

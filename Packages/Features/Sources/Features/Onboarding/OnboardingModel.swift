@@ -8,10 +8,11 @@ import PrayerCore
 /// 1. Willkommen → „Weiter“.
 /// 2. Standort: „Standort erlauben“ fragt erst jetzt mit dem Dialog des Systems. Erlaubt → Schritt 3;
 ///    abgelehnt → Stadt-Sheet, mit einer Wahl → Schritt 3. „Stadt manuell wählen“ → Stadt-Sheet → Schritt 3.
-/// 3. Mitteilungen: „Mitteilungen erlauben“ fragt erst jetzt; danach wie „Später“ in die App.
+/// 3. Mitteilungen: „Mitteilungen erlauben“ fragt erst jetzt; danach wie „Später“ zu Schritt 4.
+/// 4. „Kostenlos. Ohne Werbung.“ (Spec § 9.9) → „Los geht’s“ in die App.
 ///
-/// „Überspringen“ auf Schritt 1 und 2 führt sofort in die App, ohne zu fragen. Das Onboarding erscheint
-/// danach nicht wieder.
+/// „Überspringen“ auf Schritt 1 bis 3 führt sofort zu Schritt 4, ohne zu fragen (`ob-free`). Das
+/// Onboarding erscheint danach nicht wieder.
 @MainActor
 @Observable
 final class OnboardingModel {
@@ -36,9 +37,10 @@ final class OnboardingModel {
         navigation.onboardingStep ?? .welcome
     }
 
-    /// „Überspringen“ gibt es auf Schritt 1 und 2 (`s < 2`).
+    /// „Überspringen“ gibt es auf Schritt 1 und 2 (`s < N - 1` mit dem Knopf auf Schritt 3 fällt dort
+    /// weg, weil „Später“ dasselbe tut).
     var showsSkip: Bool {
-        step != .notifications
+        step == .welcome || step == .location
     }
 
     private var location: PlaceModel { today.location }
@@ -88,14 +90,19 @@ final class OnboardingModel {
         }
     }
 
-    /// „Mitteilungen erlauben“ (`ob-notif`): fragt mit dem Dialog des Systems, dann in die App – wie die
+    /// „Mitteilungen erlauben“ (`ob-notif`): fragt mit dem Dialog des Systems, dann zu Schritt 4 – wie die
     /// Antwort auch ausfällt. Erlaubt, sind die Mitteilungen schon geplant.
     func allowNotifications() async {
         await notifications.requestAuthorization()
-        finish()
+        showFree()
     }
 
-    /// „Später“ und „Überspringen“ (`ob-finish`): in die App, ohne zu fragen.
+    /// „Später“ und „Überspringen“ (`ob-free`): zu Schritt 4, ohne zu fragen.
+    func showFree() {
+        navigation.onboardingStep = .free
+    }
+
+    /// „Los geht’s“ (`ob-finish`): in die App.
     func finish() {
         today.settings.completeOnboarding()
         navigation.onboardingStep = nil

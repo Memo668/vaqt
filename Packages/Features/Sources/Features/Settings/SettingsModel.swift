@@ -24,6 +24,8 @@ public final class SettingsModel {
 
     /// Adresse hinter „Quellcode“; `nil`, solange keine eingetragen ist.
     public let sourceCodeURL: URL?
+    /// Adresse der App im App Store – was „App weiterempfehlen“ teilt; ohne Adresse fehlt der Knopf.
+    public let appStoreURL: URL?
     /// „1.0 (1)“ – Version und Build der App.
     public let version: String
 
@@ -35,7 +37,7 @@ public final class SettingsModel {
     init(
         settings: SettingsStore, today: TodayModel, navigation: AppNavigation,
         timesSource: any PrayerTimesSource, notificationAuthorizer: any NotificationAuthorizing,
-        sourceCodeURL: URL?, version: String, locale: Locale = L10n.locale
+        sourceCodeURL: URL?, appStoreURL: URL? = nil, version: String, locale: Locale = L10n.locale
     ) {
         self.settings = settings
         self.today = today
@@ -43,6 +45,7 @@ public final class SettingsModel {
         self.timesSource = timesSource
         self.notificationAuthorizer = notificationAuthorizer
         self.sourceCodeURL = sourceCodeURL
+        self.appStoreURL = appStoreURL
         self.version = version
         self.locale = locale
     }

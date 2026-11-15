@@ -31,13 +31,14 @@ struct SettingsDestination: View {
         case .appearance: AppearancePage()
         case .language: LanguagePage()
         case .privacy: PrivacyPage()
+        case .support: SupportPage()
         }
     }
 }
 
 // MARK: - Startseite
 
-/// Die Einstellungen: Standort, Berechnung, Mitteilungen, Darstellung, Über (`PAGES.settings`).
+/// Die Einstellungen: Standort, Berechnung, Mitteilungen, Darstellung, Unterstützen, Über (`PAGES.settings`).
 struct SettingsPage: View {
     @Environment(SettingsModel.self) private var model
     @Environment(\.openURL) private var openURL
@@ -49,6 +50,7 @@ struct SettingsPage: View {
             calculationSection
             notificationSection
             appearanceSection
+            supportSection
             aboutSection
         }
         .groupedListMetrics()
@@ -159,6 +161,19 @@ struct SettingsPage: View {
             ListSectionHeader(L10n.secAppearance)
         } footer: {
             ListSectionFooter(L10n.kerahatFooter)
+        }
+    }
+
+    /// „Gebetszeiten unterstützen“ mit rotem Herz, auch nach dem Onboarding (Spec § 9.9).
+    private var supportSection: some View {
+        Section {
+            NavigationLink(value: SettingsRoute.support) {
+                IconRowLabel(
+                    L10n.supportRow(app: L10n.appName), detail: L10n.supportRowSub,
+                    systemImage: "heart", tint: Palette.red
+                )
+            }
+            .listRowMetrics()
         }
     }
 
@@ -479,6 +494,50 @@ struct PrivacyPage: View {
                 .padding(.top, SettingsMetrics.subpageGap)
         }
         .background(Palette.backgroundGrouped)
+    }
+}
+
+/// Einstellungen › Unterstützen (`PAGES.support`, Spec § 9.9): wofür Spenden gedacht sind, der Hinweis,
+/// dass Spenden bald möglich sind, und „App weiterempfehlen“. Gezahlt wird in v1 nichts (entschieden am
+/// 15.11.2026: „Erst nur der Hinweis“).
+struct SupportPage: View {
+    @Environment(SettingsModel.self) private var model
+
+    var body: some View {
+        SettingsList {
+            // Der Kopf hat seinen Abstand selbst (`.sup-hero`: 18 pt unten); die Liste legt keinen dazu.
+            Section {
+                SupportHero(title: L10n.ob4Title, message: L10n.supportLead(app: L10n.appName))
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
+            }
+            .listSectionSpacing(0)
+            Section {
+                IconRowLabel(L10n.supAcc, detail: L10n.supAccSub, systemImage: "shield")
+                    .listRowMetrics()
+                IconRowLabel(L10n.supCare, detail: L10n.supCareSub, systemImage: "gearshape")
+                    .listRowMetrics()
+                IconRowLabel(L10n.supContent, detail: L10n.supContentSub, systemImage: "book")
+                    .listRowMetrics()
+            } header: {
+                ListSectionHeader(L10n.supportWhat)
+            }
+            Section {
+                SupportSoonCard(title: L10n.supportSoon, message: L10n.supportSoonBody) {
+                    if let url = model.appStoreURL {
+                        // TODO(placeholder): die Adresse gibt es erst mit der App in App Store Connect.
+                        ShareLink(item: url) {
+                            PillButtonLabel(L10n.supportShare, systemImage: "square.and.arrow.up")
+                        }
+                        .buttonStyle(PillButtonStyle())
+                    }
+                }
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
+            } footer: {
+                ListSectionFooter(L10n.supportFoot)
+            }
+        }
     }
 }
 

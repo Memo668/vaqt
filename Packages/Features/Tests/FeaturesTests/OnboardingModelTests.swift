@@ -127,12 +127,16 @@ struct OnboardingModelTests {
         #expect(fixture.model.step == .location)
     }
 
-    @Test("„Mitteilungen erlauben“ fragt erst jetzt, plant gleich und führt in die App")
+    @Test("„Mitteilungen erlauben“ fragt erst jetzt, plant gleich und führt zu „Kostenlos“, dann „Los geht’s“ in die App")
     func allowNotifications() async throws {
         let fixture = fixture(step: .location)
         await fixture.model.allowLocation()
         await fixture.model.allowNotifications()
         #expect(await fixture.notifications.requests == 1)
+        #expect(fixture.model.step == .free)
+        #expect(!fixture.model.showsSkip)
+        #expect(!fixture.settings.onboardingCompleted)
+        fixture.model.finish()
         #expect(fixture.navigation.onboardingStep == nil)
         #expect(fixture.settings.onboardingCompleted)
         // Erlaubt: Die Mitteilungen für Berlin sind schon vorgemerkt, die erste ist die Erinnerung an Maghrib.
@@ -141,21 +145,27 @@ struct OnboardingModelTests {
         #expect(planned.first?.id == "reminder.2026-11-10.maghrib")
     }
 
-    @Test("„Später“ führt in die App, ohne zu fragen und ohne zu planen")
+    @Test("„Später“ führt zu „Kostenlos. Ohne Werbung.“, ohne zu fragen und ohne zu planen")
     func later() async {
         let fixture = fixture(step: .notifications)
-        fixture.model.finish()
+        fixture.model.showFree()
+        #expect(fixture.model.step == .free)
         #expect(await fixture.notifications.requests == 0)
+        #expect(fixture.scheduler.calls.isEmpty)
+        fixture.model.finish()
         #expect(fixture.navigation.onboardingStep == nil)
         #expect(fixture.settings.onboardingCompleted)
-        #expect(fixture.scheduler.calls.isEmpty)
     }
 
-    @Test("„Überspringen“ auf Schritt 1 und 2 führt in die App, ohne nach etwas zu fragen", arguments: [
+    @Test("„Überspringen“ auf Schritt 1 und 2 führt zu „Kostenlos“, ohne nach etwas zu fragen", arguments: [
         OnboardingStep.welcome, .location,
     ])
     func skip(step: OnboardingStep) async {
         let fixture = fixture(step: step)
+        #expect(fixture.model.showsSkip)
+        fixture.model.showFree()
+        #expect(fixture.model.step == .free)
+        #expect(!fixture.settings.onboardingCompleted)
         fixture.model.finish()
         #expect(fixture.navigation.onboardingStep == nil)
         #expect(fixture.settings.onboardingCompleted)
@@ -163,9 +173,16 @@ struct OnboardingModelTests {
         #expect(await fixture.notifications.requests == 0)
     }
 
+    @Test("vier Schritte, der letzte ist „Kostenlos. Ohne Werbung.“")
+    func steps() {
+        #expect(OnboardingStep.allCases == [.welcome, .location, .notifications, .free])
+        #expect(OnboardingStep(rawValue: 3) == .free)
+    }
+
     @Test("nach „Überspringen“ fragt die Zeiten-Seite selbst nach dem Standort")
     func todayAsksAfterSkip() async {
         let fixture = fixture()
+        fixture.model.showFree()
         fixture.model.finish()
         await fixture.today.activate()
         #expect(await fixture.location.requests == 1)

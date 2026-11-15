@@ -30,6 +30,8 @@ public enum SettingsRoute: String, CaseIterable, Hashable, Sendable {
     case language
     /// Einstellungen › Datenschutz (`privacy`).
     case privacy
+    /// Einstellungen › Unterstützen (`support`, Spec § 9.9).
+    case support
 
     /// Titel der Seite aus dem String Catalog (`PAGE_TITLE`).
     public var title: String {
@@ -46,6 +48,7 @@ public enum SettingsRoute: String, CaseIterable, Hashable, Sendable {
         case .appearance: L10n.appearance
         case .language: L10n.language
         case .privacy: L10n.privacy
+        case .support: L10n.supportTitle
         }
     }
 

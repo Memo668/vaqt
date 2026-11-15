@@ -119,7 +119,7 @@ struct AppContent: View {
         _settingsModel = State(initialValue: SettingsModel(
             settings: settings, today: today, navigation: navigation,
             timesSource: environment.timesSource, notificationAuthorizer: environment.notificationAuthorizer,
-            sourceCodeURL: AppInfo.sourceCodeURL, version: AppInfo.version
+            sourceCodeURL: AppInfo.sourceCodeURL, appStoreURL: AppInfo.appStoreURL, version: AppInfo.version
         ))
         _onboarding = State(initialValue: OnboardingModel(navigation: navigation, today: today, notifications: notifications))
         _adhan = State(initialValue: AdhanPlayerModel(settings: settings))
@@ -211,6 +211,13 @@ enum AppInfo {
     /// Adresse des Quellcodes (`SourceCodeURL`, gefüllt aus `SOURCE_CODE_URL` in project.yml).
     static var sourceCodeURL: URL? {
         (Bundle.main.object(forInfoDictionaryKey: "SourceCodeURL") as? String)
+            .flatMap { $0.isEmpty ? nil : URL(string: $0) }
+    }
+
+    /// Adresse der App im App Store für „App weiterempfehlen“ (`AppStoreURL`, gefüllt aus `APP_STORE_URL`
+    /// in project.yml). TODO(placeholder) bis zum Anlegen der App in App Store Connect.
+    static var appStoreURL: URL? {
+        (Bundle.main.object(forInfoDictionaryKey: "AppStoreURL") as? String)
             .flatMap { $0.isEmpty ? nil : URL(string: $0) }
     }
 }

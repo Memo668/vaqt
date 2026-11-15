@@ -1,19 +1,26 @@
 import SwiftUI
 
-/// Eine Seite des Onboardings: Zeichen oder Symbol, Titel und Text, mittig – `.onb-page` im Prototyp.
-public struct OnboardingPage<Icon: View>: View {
+/// Eine Seite des Onboardings: Zeichen oder Symbol, Titel und Text, mittig, auf Seite 4 darunter die
+/// Chips – `.onb-page` im Prototyp.
+public struct OnboardingPage<Icon: View, Footer: View>: View {
     private let title: String
     private let message: String
     private let icon: Icon
+    private let footer: Footer
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
-    /// - Parameter icon: das große Zeichen der App (`AppMark(size: .large)`) oder ein Symbol auf
-    ///   getöntem Kreis (`IconBadge`).
-    public init(title: String, message: String, @ViewBuilder icon: () -> Icon) {
+    /// - Parameters:
+    ///   - icon: das große Zeichen der App (`AppMark(size: .large)`) oder ein Symbol auf getöntem Kreis
+    ///     (`IconBadge`).
+    ///   - footer: was unter dem Text steht – auf Seite 4 die Chips (`OnboardingChips`).
+    public init(
+        title: String, message: String, @ViewBuilder icon: () -> Icon, @ViewBuilder footer: () -> Footer
+    ) {
         self.title = title
         self.message = message
         self.icon = icon()
+        self.footer = footer()
     }
 
     public var body: some View {
@@ -29,6 +36,7 @@ public struct OnboardingPage<Icon: View>: View {
             Text(message)
                 .textStyle(.body, lineHeight: OnboardingMetrics.messageLineHeight)
                 .foregroundStyle(Palette.textSecondary)
+            footer
         }
         .multilineTextAlignment(.center)
         .fixedSize(horizontal: false, vertical: true)
@@ -36,6 +44,96 @@ public struct OnboardingPage<Icon: View>: View {
         .frame(maxWidth: OnboardingMetrics.pageMaxWidth(regular: horizontalSizeClass == .regular))
         .padding(.horizontal, OnboardingMetrics.pageInsetX)
         .frame(maxWidth: .infinity)
+    }
+}
+
+extension OnboardingPage where Footer == EmptyView {
+
+    /// Eine Seite ohne etwas unter dem Text.
+    public init(title: String, message: String, @ViewBuilder icon: () -> Icon) {
+        self.init(title: title, message: message, icon: icon) { EmptyView() }
+    }
+}
+
+/// Die Chips unter dem Text der Seite „Kostenlos. Ohne Werbung.“: „Keine Werbung“, „Kein Tracking“,
+/// „Kein Konto“ mit Haken, getönt in Akzent, mittig umbrechend (`.ob-free`, Spec § 9.9).
+public struct OnboardingChips: View {
+    private let items: [String]
+
+    public init(_ items: [String]) {
+        self.items = items
+    }
+
+    public var body: some View {
+        CenteredFlowLayout(spacing: OnboardingMetrics.chipGap) {
+            ForEach(items, id: \.self) { item in
+                HStack(spacing: OnboardingMetrics.chipInnerGap) {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: OnboardingMetrics.chipSymbolSize, weight: .semibold))
+                        .accessibilityHidden(true)
+                    Text(item)
+                        .textStyle(.subheadline, weight: .semibold, lineHeight: OnboardingMetrics.chipLineHeight)
+                }
+                .foregroundStyle(Palette.accent)
+                .padding(.horizontal, OnboardingMetrics.chipPaddingX)
+                .padding(.vertical, OnboardingMetrics.chipPaddingY)
+                .background(Palette.accentTint, in: .capsule)
+            }
+        }
+        .padding(.top, OnboardingMetrics.chipsTop)
+        .accessibilityElement(children: .combine)
+    }
+}
+
+/// Reihen, die mittig umbrechen – wie `display: flex; flex-wrap: wrap; justify-content: center`.
+struct CenteredFlowLayout: SwiftUI.Layout {
+    var spacing: CGFloat
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: LayoutSubviews, cache: inout ()) -> CGSize {
+        let rows = rows(width: proposal.width ?? .infinity, subviews: subviews)
+        let width = rows.map(\.width).max() ?? 0
+        let height = rows.map(\.height).reduce(0, +) + spacing * CGFloat(max(rows.count - 1, 0))
+        return CGSize(width: min(width, proposal.width ?? width), height: height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: LayoutSubviews, cache: inout ()) {
+        var y = bounds.minY
+        for row in rows(width: bounds.width, subviews: subviews) {
+            var x = bounds.midX - row.width / 2
+            for index in row.indices {
+                let size = subviews[index].sizeThatFits(.unspecified)
+                subviews[index].place(
+                    at: CGPoint(x: x, y: y + (row.height - size.height) / 2),
+                    proposal: ProposedViewSize(size)
+                )
+                x += size.width + spacing
+            }
+            y += row.height + spacing
+        }
+    }
+
+    private struct Row {
+        var indices: [Int] = []
+        var width: CGFloat = 0
+        var height: CGFloat = 0
+    }
+
+    private func rows(width: CGFloat, subviews: LayoutSubviews) -> [Row] {
+        var rows: [Row] = []
+        var current = Row()
+        for (index, subview) in subviews.enumerated() {
+            let size = subview.sizeThatFits(.unspecified)
+            let needed = current.indices.isEmpty ? size.width : current.width + spacing + size.width
+            if needed > width, !current.indices.isEmpty {
+                rows.append(current)
+                current = Row()
+            }
+            current.width = current.indices.isEmpty ? size.width : current.width + spacing + size.width
+            current.height = max(current.height, size.height)
+            current.indices.append(index)
+        }
+        if !current.indices.isEmpty { rows.append(current) }
+        return rows
     }
 }
 
@@ -92,6 +190,15 @@ public enum OnboardingMetrics {
     static let titleTracking: CGFloat = 0.36
     /// Text (`.onb-page p`: `line-height: 1.42`).
     static let messageLineHeight: CGFloat = 1.42
+    /// Chips der Seite 4 (`.ob-free`: `gap: 8px; margin: 22px 0 0`; `li`: `gap: 6px; padding: 7px 12px`,
+    /// 600 Subheadline/1,2, `ic('check', 16)`).
+    static let chipsTop: CGFloat = 22
+    static let chipGap: CGFloat = 8
+    static let chipInnerGap: CGFloat = 6
+    static let chipPaddingX: CGFloat = 12
+    static let chipPaddingY: CGFloat = 7
+    static let chipLineHeight: CGFloat = 1.2
+    static let chipSymbolSize: CGFloat = 12
     /// Punkte (`.onb-dots`: `height: 24px; gap: 8px`; `.dot`: 7 pt, der aktuelle 20 pt breit).
     static let dotsHeight: CGFloat = 24
     static let dotGap: CGFloat = 8

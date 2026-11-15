@@ -112,18 +112,22 @@ enum AppGlyphGeometry {
 public struct IconBadge: View {
     private let systemImage: String
     private let symbolSize: CGFloat
+    private let side: CGFloat
 
-    /// - Parameter symbolSize: Schriftgröße des SF Symbols, so gewählt, dass es so groß erscheint wie die
-    ///   Zeichnung des Prototyps (`ic(…, 48)`).
-    public init(systemImage: String, symbolSize: CGFloat) {
+    /// - Parameters:
+    ///   - symbolSize: Schriftgröße des SF Symbols, so gewählt, dass es so groß erscheint wie die
+    ///     Zeichnung des Prototyps (`ic(…, 48)`).
+    ///   - side: Durchmesser des Kreises; 112 pt, auf der Seite „Unterstützen“ 88 pt (`.sup-hero .onb-badge`).
+    public init(systemImage: String, symbolSize: CGFloat, side: CGFloat = IconBadgeMetrics.side) {
         self.systemImage = systemImage
         self.symbolSize = symbolSize
+        self.side = side
     }
 
     public var body: some View {
         Circle()
             .fill(Palette.accentTint)
-            .frame(width: IconBadgeMetrics.side, height: IconBadgeMetrics.side)
+            .frame(width: side, height: side)
             .overlay {
                 Image(systemName: systemImage)
                     .font(.system(size: symbolSize, weight: IconBadgeMetrics.symbolWeight))
@@ -135,7 +139,12 @@ public struct IconBadge: View {
 
 /// Maße des Kreises (`.onb-badge`: 112 × 112 pt) und der Symbole darin.
 public enum IconBadgeMetrics {
-    static let side: CGFloat = 112
+    public static let side: CGFloat = 112
+    /// Der kleinere Kreis auf der Seite „Unterstützen“.
+    public static let supportSide: CGFloat = 88
+    /// `ic('heart', 50)` auf Seite 4 des Onboardings, `ic('heart', 44)` auf der Seite „Unterstützen“.
+    public static let heartSymbolSize: CGFloat = 38
+    public static let supportHeartSymbolSize: CGFloat = 33
     static let symbolWeight: Font.Weight = .medium
     /// `ic('locFill', 48)`: der gefüllte Pfeil, rund 31 pt breit.
     public static let locationSymbolSize: CGFloat = 34
