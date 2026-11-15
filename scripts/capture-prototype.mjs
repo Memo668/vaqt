@@ -126,7 +126,10 @@ try {
     await page.evaluate(() => document.fonts.ready);
     for (const st of batch) {
       await page.evaluate(({ st, dark }) => {
-        // Jeder Zustand beginnt beim Ausgangszustand des Prototyps.
+        // Jeder Zustand beginnt beim Ausgangszustand des Prototyps – auch der Bildlauf: `render()` übernimmt
+        // die Lage der Bereiche aus dem DOM, sonst stünde etwa iphone/42 noch so weit unten wie 41 (bis
+        // Phase 13 so aufgenommen).
+        document.querySelectorAll('#stage [data-scroll]').forEach(el => { el.scrollTop = 0; });
         Object.assign(S, {
           view: 'app', device: 'iphone', sysTheme: dark ? 'dark' : 'light', lang: 'de', rtl: false, _autoRtl: false,
           locDenied: false, offline: false, highLat: false, bigType: false,

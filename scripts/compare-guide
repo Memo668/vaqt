@@ -12,8 +12,8 @@
 # iphone/41 (nach unten gescrollt) und 42 (Maghrib von Hand gewählt) brauchen Wischen und Tippen; das
 # kann simctl nicht. Liegen ihre Aufnahmen schon in screenshots-out/phase-5/ – guide-41.png und
 # guide-42.png, aufgenommen mit dem UI-Hilfsprojekt (scripts/ui-harness/scripts/iphone-41-42-guide.txt, OUT gleich) –,
-# vergleicht das Skript sie mit. Für 41 muss die erste Karte des Ablaufs 133 pt unter der Oberkante
-# stehen (Referenz 129 pt).
+# vergleicht das Skript sie mit. Für 41 muss die erste Karte des Ablaufs 526 pt unter der Oberkante
+# stehen (Referenz 522,3 pt, seit v0.8).
 #
 # Ergebnis in screenshots-out/phase-5/: guide-40.png, catalog-guide.png, catalog-steps.png (Aufnahmen)
 # und compare-<Ausschnitt>.png (oben Referenz, Mitte Aufnahme, unten Unterschied).
@@ -25,7 +25,7 @@
 #   - Karten und Auswahl sind 12 pt breiter. Ihre linke und ihre rechte Hälfte werden getrennt
 #     verglichen, jede an ihrem Rand ausgerichtet.
 #   - Im Katalog stehen die Bausteine in Referenzbreite, 6 pt vom Rand: guide 21 pt tiefer als in
-#     iphone/40, steps 70 pt tiefer als in iphone/41.
+#     iphone/40; steps zeigt den Ablauf ab der ersten Karte bei 199,3 pt (iphone/41: 522,3 pt).
 #
 # Der Simulator lässt sich mit SIM='…' wählen, wie im Makefile.
 set -euo pipefail
@@ -37,28 +37,36 @@ OUT="${OUT:-$ROOT/screenshots-out/phase-5}"
 ZOOM="${ZOOM:-3}"
 WAIT="${WAIT:-2.5}"
 
-# Ausschnitte in pt (x,y,Breite,Höhe), erst im Referenzbild, dann in der Aufnahme.
+# Ausschnitte in pt (x,y,Breite,Höhe), erst im Referenzbild, dann in der Aufnahme. Seit v0.8 (Phase 13) hat
+# die Kopfkarte den Knopf „Gebet Schritt für Schritt“; die Lagen stammen aus dem Prototyp
+# (`getBoundingClientRect`, im Referenzbild 1 pt tiefer) und dem Baum der Bedienungshilfen der App.
 #   Leiste     wie bei der Zeiten-Seite, links ausgerichtet.
 #   Auswahl    Spur 123 bis 157 pt (App 126 bis 160), linke und rechte Hälfte.
-#   Karte      Kopfkarte ab 171 pt (App 174), 303 pt hoch, in iphone/42 347 pt; linke und rechte Hälfte.
-#   Vorher     Überschrift und die beiden ersten Karten ab 495 pt (App 3,67 pt tiefer, weil die Karte
-#              0,67 pt höher ist).
-#   Ablauf     iphone/41: Schritte 1 bis 3 ab 129 pt (App 133).
+#   Karte      Kopfkarte ab 171 pt (App 174) bis zur ersten Zeile der Rakʿa-Folge. Im Referenzbild (390 pt)
+#              bricht „Sitzen · Salām“ in eine zweite Zeile, in der App (402 pt) nicht: Darunter liegt alles in
+#              der App 35,7 pt höher. Rechts deshalb nur bis über die Folge.
+#   Knopf      „Gebet Schritt für Schritt“ und die Zeile darunter, mittig (Referenz ab 511,4 pt, App 475,7 pt).
+#   Vorher     Überschrift und die erste Karte (Referenz ab 631 pt, App 595,8 pt); darunter liegt im
+#              Referenzbild schon die Tableiste.
+#   Ablauf     iphone/41: Schritte 1 bis 3 ab 512 pt; die erste Karte steht im Referenzbild bei 522,3 pt, in
+#              der App soll sie 4 pt tiefer stehen (526 pt, Skript des UI-Hilfsprojekts).
+#   Wahl       iphone/42 (Maghrib): Die Folge hat eine Zeile wie in der App; die Karte ist 441 pt hoch.
 # Leiste (seit v0.8): Chips mittig, Einstellungskreis rechts.
 BAR_REF=60,50,270,76;         BAR_SHOT=66,54,270,76
 SEG_L_REF=0,117,200,46;       SEG_L_SHOT=0,120,200,46
 SEG_R_REF=190,117,200,46;     SEG_R_SHOT=202,120,200,46
-CARD_L_REF=0,165,230,315;     CARD_L_SHOT=0,168,230,315
-CARD_R_REF=160,165,230,315;   CARD_R_SHOT=172,168,230,315
-PICK_L_REF=0,165,230,358;     PICK_L_SHOT=0,168,230,358
-PICK_R_REF=160,165,230,358;   PICK_R_SHOT=172,168,230,358
-BEFORE_L_REF=0,495,230,240;   BEFORE_L_SHOT=0,498.67,230,240
-BEFORE_R_REF=160,495,230,240; BEFORE_R_SHOT=172,498.67,230,240
-STEPS_L_REF=0,120,230,470;    STEPS_L_SHOT=0,124,230,470
-STEPS_R_REF=160,120,230,470;  STEPS_R_SHOT=172,124,230,470
-# Katalog: in Referenzbreite, 6 pt vom Rand.
+CARD_L_REF=0,165,230,262;     CARD_L_SHOT=0,168,230,262
+CARD_R_REF=160,165,230,205;   CARD_R_SHOT=172,168,230,205
+WALK_REF=45,500,300,92;       WALK_SHOT=51,464.3,300,92
+PICK_L_REF=0,165,230,450;     PICK_L_SHOT=0,168,230,450
+PICK_R_REF=160,165,230,450;   PICK_R_SHOT=172,168,230,450
+BEFORE_L_REF=0,621,230,118;   BEFORE_L_SHOT=0,585.8,230,118
+BEFORE_R_REF=160,621,230,118; BEFORE_R_SHOT=172,585.8,230,118
+STEPS_L_REF=0,512,230,240;    STEPS_L_SHOT=0,516,230,240
+STEPS_R_REF=160,512,230,240;  STEPS_R_SHOT=172,516,230,240
+# Katalog: in Referenzbreite, 6 pt vom Rand; die erste Karte des Ablaufs steht dort bei 199,3 pt.
 GUIDE_REF=0,117,390,620;      GUIDE_CATALOG=6,138,390,620
-STEPS_REF=0,120,390,470;      STEPS_CATALOG=6,190,390,470
+STEPS_REF=0,512,390,240;      STEPS_CATALOG=6,189,390,240
 
 # compare Name Referenzbild Referenz-Ausschnitt Aufnahme Aufnahme-Ausschnitt
 compare() {
@@ -94,6 +102,7 @@ compare seg-l-40 40-guide-asr "$SEG_L_REF" "$OUT/guide-40.png" "$SEG_L_SHOT"
 compare seg-r-40 40-guide-asr "$SEG_R_REF" "$OUT/guide-40.png" "$SEG_R_SHOT"
 compare card-l-40 40-guide-asr "$CARD_L_REF" "$OUT/guide-40.png" "$CARD_L_SHOT"
 compare card-r-40 40-guide-asr "$CARD_R_REF" "$OUT/guide-40.png" "$CARD_R_SHOT"
+compare walk-40 40-guide-asr "$WALK_REF" "$OUT/guide-40.png" "$WALK_SHOT"
 compare vorher-l-40 40-guide-asr "$BEFORE_L_REF" "$OUT/guide-40.png" "$BEFORE_L_SHOT"
 compare vorher-r-40 40-guide-asr "$BEFORE_R_REF" "$OUT/guide-40.png" "$BEFORE_R_SHOT"
 
