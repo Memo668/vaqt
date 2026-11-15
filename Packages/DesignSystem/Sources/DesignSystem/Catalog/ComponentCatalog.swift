@@ -187,7 +187,7 @@ public struct ComponentCatalog: View {
                 CatalogGroup("Anleitung – 14:25 Asr, 08:04 Dhuhr als nächstes, Maghrib von Hand, ohne Zeiten") {
                     CatalogGuide(header: CatalogFixtures.guideHeader(time: "14:25"), inset: 0)
                     ForEach(CatalogFixtures.guideStates, id: \.self) { header in
-                        GuideHeaderCard(header) {}
+                        GuideHeaderCard(header, onWalk: {}, onReturn: {})
                     }
                 }
                 CatalogGroup("Anleitung – Ablauf") {
@@ -497,7 +497,7 @@ struct CatalogGuide: View {
     var inset: CGFloat = Layout.inset
 
     var body: some View {
-        GuideOverview(header: header, onSelect: { _ in }, onReturn: {}, onOpenQibla: {})
+        GuideOverview(header: header, onSelect: { _ in }, onWalk: {}, onReturn: {}, onOpenQibla: {})
             .padding(.horizontal, inset - Layout.inset)
     }
 }

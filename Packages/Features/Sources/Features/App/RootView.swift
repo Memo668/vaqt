@@ -110,7 +110,11 @@ struct AppContent: View {
         _today = State(initialValue: today)
         _qibla = State(initialValue: QiblaModel(location: location, headingSource: environment.headingSource))
         // Die Anleitung nimmt ihre Zeiten aus dem Zeitstrahl der Zeiten-Seite.
-        _guide = State(initialValue: GuideModel(today: today))
+        let guide = GuideModel(today: today)
+        if let walk = environment.initialWalk {
+            guide.startWalk(prayer: walk.prayer, at: walk.index)
+        }
+        _guide = State(initialValue: guide)
         // Verse und Nachholen beginnen ihren Tag um Mitternacht am Ort der Zeiten-Seite.
         _verses = State(initialValue: VersesModel(clock: environment.clock, location: location, toast: toast))
         _qada = State(initialValue: QadaModel(

@@ -1,12 +1,22 @@
 import SwiftUI
 
-/// Runder Glass-Button – der Einstellungskreis der oberen Leiste.
+/// Runder Glass-Button – der Einstellungskreis der oberen Leiste, und kleiner der Kreis zum Schließen im
+/// Durchlauf „Schritt für Schritt“ (`.glass-btn`, 44 pt).
 ///
 /// Echtes Liquid Glass des Systems: `.buttonStyle(.glass)` mit `.buttonBorderShape(.circle)`
 /// (Design Spec § 3, „TopBar“). Der Durchmesser ist die Höhe der Leiste und wächst mit ihr.
 public struct GlassCircleButton: View {
+    /// Größe des Kreises.
+    public enum Size: Sendable {
+        /// So hoch wie die obere Leiste (52 pt), Symbol 20 pt – der Einstellungskreis.
+        case bar
+        /// 44 pt, Symbol wie `ic('xmark', 18)` – `.glass-btn` im Durchlauf.
+        case regular
+    }
+
     private let systemImage: String
     private let label: String
+    private let size: Size
     private let action: () -> Void
 
     @ScaledMetric(relativeTo: .body) private var typeScale: CGFloat = 1
@@ -14,19 +24,26 @@ public struct GlassCircleButton: View {
     /// - Parameters:
     ///   - systemImage: SF Symbol, z. B. `gearshape`.
     ///   - label: Text für VoiceOver und den Large Content Viewer, z. B. `L10n.tabSettings`.
-    public init(systemImage: String, label: String, action: @escaping () -> Void) {
+    ///   - size: Größe des Kreises; ohne Angabe so hoch wie die obere Leiste.
+    public init(systemImage: String, label: String, size: Size = .bar, action: @escaping () -> Void) {
         self.systemImage = systemImage
         self.label = label
+        self.size = size
         self.action = action
     }
 
     public var body: some View {
-        let diameter = GlassMetrics.barHeight(typeScale: typeScale)
+        let diameter = size == .bar
+            ? GlassMetrics.barHeight(typeScale: typeScale)
+            : GlassMetrics.regularCircle * min(max(typeScale, 1), Layout.topBarMaxScale)
         Button(action: action) {
             // Der Stil des Systems legt eigenen Innenabstand um den Inhalt. Damit der Kreis genau so
             // groß wird wie die Leiste hoch ist, füllt der Inhalt den Platz, den der Stil ihm lässt.
             Image(systemName: systemImage)
-                .font(.system(size: GlassMetrics.circleSymbolSize, weight: GlassMetrics.symbolWeight))
+                .font(.system(
+                    size: size == .bar ? GlassMetrics.circleSymbolSize : GlassMetrics.regularSymbolSize,
+                    weight: size == .bar ? GlassMetrics.symbolWeight : GlassMetrics.regularSymbolWeight
+                ))
                 .foregroundStyle(Palette.label)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
@@ -45,6 +62,11 @@ enum GlassMetrics {
     /// Symbol im Einstellungskreis – `ic('gear', 24)`. Als Schriftgröße eines SF Symbols so gewählt,
     /// dass es so breit erscheint wie die Zeichnung des Prototyps (knapp 21 pt).
     static let circleSymbolSize: CGFloat = 20
+    /// Kreis zum Schließen im Durchlauf (`.glass-btn`: 44 × 44 pt) mit `ic('xmark', 18)`: ein Kreuz von
+    /// 7,5 pt, Strich 1,35 pt. Als Schriftgröße eines SF Symbols so gewählt, dass es so groß erscheint.
+    static let regularCircle: CGFloat = 44
+    static let regularSymbolSize: CGFloat = 12
+    static let regularSymbolWeight: Font.Weight = .semibold
     /// Symbol in einem Chip – `ic(icon, 22)`; im Prototyp 18 pt breit.
     static let chipSymbolSize: CGFloat = 18
     /// Strichstärke der Symbole: Der Prototyp zeichnet mit 1,65 bis 1,8 pt.

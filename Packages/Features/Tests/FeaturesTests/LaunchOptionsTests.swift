@@ -202,7 +202,7 @@ struct LaunchOptionsTests {
         let pages = LaunchOptions.Page.allCases.compactMap { page in page.settingsRoute.map { (page, $0) } }
         #expect(pages.map(\.0.rawValue) == [
             "settings", "method", "asr", "hl", "adjust", "perPrayer", "reminder", "live", "sound", "appearance",
-            "language", "privacy", "support", "adhan",
+            "language", "privacy", "licenses", "support", "adhan",
         ])
         for (page, route) in pages where page != .adhan {
             #expect(route.rawValue == page.rawValue)

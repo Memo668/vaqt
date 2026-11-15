@@ -15,9 +15,11 @@ import PrayerCore
 /// -debugHighLatitude            Berlin, 21. Juni
 /// -debugLocationDenied  -debugOffline
 /// -debugTab today|qibla|guide|verses|qada|settings
-///           method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|support|adhan|city
+///           method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|licenses|support|adhan|city
 /// -debugOnboarding 1|2|3|4      Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
 /// -debugDayOffset 1             Zeiten-Seite zeigt einen anderen Tag, −365 bis 365 (Spec § 9.4)
+/// -debugWalk dhuhr              „Gebet Schritt für Schritt“ für dieses Gebet offen, über der Anleitung (Spec § 9.6)
+/// -debugWalkStep 9              Seite des Durchlaufs wie `S.walk.i`: 0 = Start, die letzte = „Gebet beendet“
 /// -debugQiblaHeading 137
 /// -debugQiblaAccuracy 40        Genauigkeit des Kompasses in Grad; über 25 erscheint die Kalibrierungskarte
 /// -debugNotifications           echte Mitteilungen auch mit Mock-Zeiten; fragt beim Start nach der Erlaubnis
@@ -33,7 +35,7 @@ public struct LaunchOptions: Equatable, Sendable {
     /// Stadt-Sheet über der Zeiten-Seite.
     public enum Page: String, CaseIterable, Sendable {
         case today, qibla, guide, verses, qada, settings
-        case method, asr, hl, adjust, perPrayer, reminder, live, sound, appearance, language, privacy, support
+        case method, asr, hl, adjust, perPrayer, reminder, live, sound, appearance, language, privacy, licenses, support
         case adhan
         /// Das Stadt-Sheet über der Zeiten-Seite (`iphone/85`, `duo/closed-85`, `duo/open-85`).
         case city
@@ -53,6 +55,10 @@ public struct LaunchOptions: Equatable, Sendable {
     public var onboardingStep: Int?
     /// Tage, die die Zeiten-Seite beim Start vor (+) oder zurück (−) zeigt (`-debugDayOffset`), −365 bis 365.
     public var dayOffset = 0
+    /// Gebet, dessen Durchlauf „Schritt für Schritt“ beim Start offen ist (`-debugWalk`).
+    public var walkPrayer: Prayer?
+    /// Seite dieses Durchlaufs (`-debugWalkStep`), 0 = Start; zu große Werte zeigen die letzte.
+    public var walkStep = 0
     public var fixtureTimes = false
     public var date: CalendarDay?
     public var time: ClockTime?
@@ -119,6 +125,14 @@ public struct LaunchOptions: Equatable, Sendable {
                 dayOffset = value(of: argument, from: &rest, expected: "eine Zahl von Tagen von −365 bis 365") {
                     Int($0).flatMap { (-365...365).contains($0) ? $0 : nil }
                 } ?? 0
+            case "-debugWalk":
+                walkPrayer = value(of: argument, from: &rest, expected: "eines der Gebete fajr, dhuhr, asr, maghrib, isha") {
+                    Prayer(rawValue: $0).flatMap { $0 == .sunrise ? nil : $0 }
+                }
+            case "-debugWalkStep":
+                walkStep = value(of: argument, from: &rest, expected: "eine Seite ab 0") {
+                    Int($0).flatMap { $0 >= 0 ? $0 : nil }
+                } ?? 0
             case "-debugQiblaHeading":
                 qiblaHeading = value(of: argument, from: &rest, expected: "ein Kurs von 0 bis unter 360 Grad") {
                     Double($0).flatMap { (0..<360).contains($0) ? $0 : nil }
@@ -141,6 +155,9 @@ public struct LaunchOptions: Equatable, Sendable {
         }
         if qiblaAccuracy != nil, effectiveQiblaHeading == nil {
             problems.append("-debugQiblaAccuracy wirkt nur mit festem Kurs: zusammen mit -debugQiblaHeading oder -debugFixtureTimes.")
+        }
+        if walkStep != 0, walkPrayer == nil {
+            problems.append("-debugWalkStep wirkt nur zusammen mit -debugWalk.")
         }
         if onboardingStep != nil, skipOnboarding {
             problems.append("-debugOnboarding zeigt das Onboarding; -debugSkipOnboarding wird übergangen.")

@@ -223,7 +223,7 @@ struct AppEnvironmentTests {
     @Test("-debugTab mit einer Seite der Einstellungen öffnet sie über den Einstellungen im Tab „Gebete“", arguments: [
         ("method", SettingsRoute.method), ("asr", .asr), ("hl", .highLatitude), ("adjust", .adjustments),
         ("perPrayer", .perPrayer), ("reminder", .reminder), ("live", .liveActivity), ("sound", .sound),
-        ("appearance", .appearance), ("language", .language), ("privacy", .privacy),
+        ("appearance", .appearance), ("language", .language), ("privacy", .privacy), ("licenses", .licenses),
     ])
     func settingsPage(argument: String, route: SettingsRoute) {
         let environment = AppEnvironment(options: LaunchOptions(arguments: ["-debugTab", argument]))

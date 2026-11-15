@@ -60,6 +60,9 @@ public struct AppEnvironment: Sendable {
     public var skipsOnboarding: Bool
     /// Tage, die die Zeiten-Seite beim Start vor oder zurück zeigt (`-debugDayOffset`); sonst heute.
     public var initialDayOffset = 0
+    /// Durchlauf „Gebet Schritt für Schritt“, der beim Start offen ist: Gebet und Seite (`-debugWalk`,
+    /// `-debugWalkStep`).
+    public var initialWalk: (prayer: Prayer, index: Int)?
     /// Schritt, mit dem das Onboarding beim Start erscheint, auch wenn es schon durchlaufen ist
     /// (`-debugOnboarding`).
     public var onboardingStep: OnboardingStep?
@@ -236,13 +239,15 @@ extension AppEnvironment {
         plansLiveActivities = !options.fixtureTimes || options.liveActivity
         liveActivityDebugStart = options.liveActivity ? clock.now : nil
         initialTab = AppTab(options.page)
-        initialPage = PrayersPage(options.page)
+        // Der Durchlauf liegt über der Anleitung; ohne `-debugTab` ist sie die Seite darunter.
+        initialPage = options.walkPrayer != nil && options.page == nil ? .guide : PrayersPage(options.page)
         settingsPath = options.page?.settingsRoute?.path ?? []
         opensAdhanSheet = options.page == .adhan
         opensCitySheet = options.page == .city
         skipsOnboarding = options.skipOnboarding && options.onboardingStep == nil
         onboardingStep = options.onboardingStep.flatMap { OnboardingStep(rawValue: $0 - 1) }
         initialDayOffset = options.dayOffset
+        initialWalk = options.walkPrayer.map { ($0, options.walkStep) }
         launchOptions = options
     }
 }

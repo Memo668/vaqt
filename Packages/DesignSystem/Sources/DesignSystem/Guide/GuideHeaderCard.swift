@@ -2,17 +2,22 @@ import PrayerCore
 import SwiftUI
 
 /// Die Kopfkarte der Anleitung: Status und Zeitfenster, Symbol und Name des Gebets, drei Fakten-Kacheln
-/// (Rakʿa Fard, Rezitation, Sunna), die Rakʿa-Folge, der Hinweis zu al-Fātiḥa und nach einer manuellen
-/// Wahl der Knopf „Zum aktuellen Gebet“. Die `<article class="card">` in `guidePage()`.
+/// (Rakʿa Fard, Rezitation, Sunna), die Rakʿa-Folge, der Hinweis zu al-Fātiḥa, der Knopf „Gebet Schritt
+/// für Schritt“ (Spec § 9.6) und nach einer manuellen Wahl der Knopf „Zum aktuellen Gebet“. Die
+/// `<article class="card">` in `guidePage()`.
 public struct GuideHeaderCard: View {
     private let header: GuideHeader
+    private let onWalk: () -> Void
     private let onReturn: () -> Void
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
-    /// - Parameter onReturn: „Zum aktuellen Gebet“ (`guide-now`).
-    public init(_ header: GuideHeader, onReturn: @escaping () -> Void) {
+    /// - Parameters:
+    ///   - onWalk: „Gebet Schritt für Schritt“ (`walk-start`) für das gezeigte Gebet.
+    ///   - onReturn: „Zum aktuellen Gebet“ (`guide-now`).
+    public init(_ header: GuideHeader, onWalk: @escaping () -> Void, onReturn: @escaping () -> Void) {
         self.header = header
+        self.onWalk = onWalk
         self.onReturn = onReturn
     }
 
@@ -50,12 +55,29 @@ public struct GuideHeaderCard: View {
                         .padding(.top, GuideHeaderMetrics.noteTop)
                 }
 
+                walk
+
                 if let returnPrayer = header.returnPrayer {
                     PillButton(L10n.guideBack, systemImage: returnPrayer.symbolName, action: onReturn)
                         .padding(.top, GuideHeaderMetrics.buttonTop)
                 }
             }
         }
+    }
+
+    /// „Gebet Schritt für Schritt“ mit Symbol und darunter „Haltung für Haltung durch alle 4 Rakʿas von
+    /// Dhuhr.“ (`.g-walk`, `.g-walk-sub`).
+    private var walk: some View {
+        VStack(spacing: 0) {
+            PrimaryButton(L10n.wkStart, systemImage: GuideHeaderMetrics.walkSymbol, action: onWalk)
+            Text(L10n.wkStartSub(n: String(header.rakahs.count), p: header.prayer.localizedName))
+                .textStyle(.footnote, lineHeight: GuideHeaderMetrics.walkSubLineHeight)
+                .foregroundStyle(Palette.textSecondary)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+                .padding(.top, GuideHeaderMetrics.walkSubTop)
+        }
+        .padding(.top, GuideHeaderMetrics.walkTop)
     }
 
     /// Drei gleich breite, gleich hohe Kacheln (`.facts`: `grid-template-columns: repeat(3,1fr)`). Ab den
@@ -75,7 +97,8 @@ public struct GuideHeaderCard: View {
 }
 
 /// Maße der Kopfkarte (`.g-head`: `gap: 12px; margin: 10px 0 16px`; `.g-title`: `…/1.15`;
-/// `.rak`: `margin-top: 18px`; `.g-note`: `margin: 12px 0 0; line-height: 1.38`; `.g-now`: `margin-top: 14px`).
+/// `.rak`: `margin-top: 18px`; `.g-note`: `margin: 12px 0 0; line-height: 1.38`; `.g-now`: `margin-top: 14px`;
+/// `.g-walk`: `margin-top: 18px`, `ic('play', 18)`; `.g-walk-sub`: `margin: 8px 0 0`, Footnote, Zeilenhöhe 1,35).
 enum GuideHeaderMetrics {
     static let titleGap: CGFloat = 12
     static let titleTop: CGFloat = 10
@@ -85,4 +108,8 @@ enum GuideHeaderMetrics {
     static let noteTop: CGFloat = 12
     static let noteLineHeight: CGFloat = 1.38
     static let buttonTop: CGFloat = 14
+    static let walkTop: CGFloat = 18
+    static let walkSymbol = "play.fill"
+    static let walkSubTop: CGFloat = 8
+    static let walkSubLineHeight: CGFloat = 1.35
 }

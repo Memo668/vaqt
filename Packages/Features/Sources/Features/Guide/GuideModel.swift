@@ -18,6 +18,8 @@ public final class GuideModel {
 
     /// Die manuelle Wahl (`S.guidePick`).
     public private(set) var selection = GuideSelection()
+    /// Der laufende Durchlauf „Gebet Schritt für Schritt“ (`S.walk`); `nil`, wenn keiner offen ist.
+    public var walk: WalkSession?
     /// Die Tagesphase beim letzten Abgleich.
     private var checkedPhase: DayPhase?
 
@@ -67,6 +69,42 @@ public final class GuideModel {
         selection.followTime()
     }
 
+    // MARK: - Schritt für Schritt
+
+    /// „Gebet Schritt für Schritt“ (`walk-start`): öffnet den Durchlauf für das Gebet, das die Anleitung
+    /// gerade zeigt, auf der Startseite. Er bleibt bei diesem Gebet, auch wenn währenddessen das aktuelle
+    /// wechselt.
+    public func startWalk() {
+        startWalk(prayer: state.prayer)
+    }
+
+    /// Öffnet den Durchlauf für ein Gebet ab einer Seite – für `-debugWalk` und `-debugWalkStep`.
+    public func startWalk(prayer: Prayer, at index: Int = 0) {
+        guard let guideWalk = GuideWalk(prayer: prayer) else { return }
+        walk = WalkSession(walk: guideWalk, index: guideWalk.clamped(index))
+    }
+
+    /// „Beginnen“ und „Weiter“ (`walk-next`); auf der letzten Seite bleibt es dabei.
+    public func nextWalkStep() {
+        guard var session = walk else { return }
+        session.index = session.walk.index(after: session.index)
+        session.direction = .forward
+        walk = session
+    }
+
+    /// „Zurück“ (`walk-prev`); auf der Startseite bleibt es dabei.
+    public func previousWalkStep() {
+        guard var session = walk else { return }
+        session.index = session.walk.index(before: session.index)
+        session.direction = .backward
+        walk = session
+    }
+
+    /// Der Kreis oben und „Fertig“ (`walk-close`).
+    public func closeWalk() {
+        walk = nil
+    }
+
     // MARK: - Ablauf
 
     /// Holt die Tagesphase zur Uhrzeit und gleicht die Wahl ab: Wechselt das aktuelle Gebet, verfällt sie.
@@ -99,4 +137,22 @@ public final class GuideModel {
     /// So lange nach dem Beginn eines Ereignisses wacht `run()` auf – knapp danach, damit die Phase sicher
     /// schon die neue ist.
     nonisolated static let wakeDelay: TimeInterval = 0.5
+}
+
+/// Ein offener Durchlauf „Gebet Schritt für Schritt“: das Gebet, die Seite und die Richtung, in die
+/// zuletzt geblättert wurde (`S.walk = {p, i, dir}`).
+public struct WalkSession: Identifiable, Hashable, Sendable {
+    public let walk: GuideWalk
+    /// Die Seite, 0 = Start (`i`).
+    public var index: Int
+    /// Wohin zuletzt geblättert wurde (`dir`); davon hängt ab, von welcher Seite die neue hereingleitet.
+    public var direction: GuideWalkScreen.Direction = .forward
+
+    /// Ein Durchlauf je Gebet: Wechselt das Gebet, ist es ein neues Vollbild.
+    public var id: Prayer { walk.prayer }
+
+    public init(walk: GuideWalk, index: Int = 0) {
+        self.walk = walk
+        self.index = walk.clamped(index)
+    }
 }

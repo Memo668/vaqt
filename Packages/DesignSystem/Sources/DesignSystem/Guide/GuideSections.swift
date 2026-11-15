@@ -9,21 +9,25 @@ public struct GuideOverview: View {
     private let header: GuideHeader
     private let focus: AccessibilityFocusState<Prayer?>.Binding?
     private let onSelect: (Prayer) -> Void
+    private let onWalk: () -> Void
     private let onReturn: () -> Void
     private let onOpenQibla: () -> Void
 
     /// - Parameters:
     ///   - focus: Fokus von VoiceOver auf einem Teil der Auswahl.
     ///   - onSelect: Tippen auf ein Gebet der Auswahl (`guide-pick`).
+    ///   - onWalk: „Gebet Schritt für Schritt“ (`walk-start`).
     ///   - onReturn: „Zum aktuellen Gebet“ (`guide-now`).
     ///   - onOpenQibla: „Qibla öffnen“.
     public init(
         header: GuideHeader, focus: AccessibilityFocusState<Prayer?>.Binding? = nil,
-        onSelect: @escaping (Prayer) -> Void, onReturn: @escaping () -> Void, onOpenQibla: @escaping () -> Void
+        onSelect: @escaping (Prayer) -> Void, onWalk: @escaping () -> Void, onReturn: @escaping () -> Void,
+        onOpenQibla: @escaping () -> Void
     ) {
         self.header = header
         self.focus = focus
         self.onSelect = onSelect
+        self.onWalk = onWalk
         self.onReturn = onReturn
         self.onOpenQibla = onOpenQibla
     }
@@ -36,7 +40,7 @@ public struct GuideOverview: View {
             .padding(.top, GuideLayout.segmentsTop)
             .padding(.bottom, GuideLayout.segmentsBottom)
 
-            GuideHeaderCard(header, onReturn: onReturn)
+            GuideHeaderCard(header, onWalk: onWalk, onReturn: onReturn)
 
             SectionHeader(L10n.beforeTitle)
                 .padding(.top, SectionHeader.spacingAbove)

@@ -9,14 +9,25 @@ import SwiftUI
 /// Schritt meint, sagt der Text daneben. In der Leserichtung von rechts nach links wird sie nicht
 /// gespiegelt, wie im Prototyp.
 public struct PoseFigure: View {
-    private let pose: GuideStep.Pose
+    /// Größe der Kachel: in den Karten des Ablaufs oder groß im Durchlauf „Schritt für Schritt“.
+    public enum Size: Sendable {
+        /// Karte im Ablauf (`.pose`: 58 pt, Radius 16, Zeichnung 46 pt).
+        case card
+        /// Durchlauf (`.walk-pose`: 172 pt, Radius 44, Zeichnung 126 pt; Spec § 9.6).
+        case walk
+    }
 
-    public init(_ pose: GuideStep.Pose) {
+    private let pose: GuideStep.Pose
+    private let size: Size
+
+    public init(_ pose: GuideStep.Pose, size: Size = .card) {
         self.pose = pose
+        self.size = size
     }
 
     public var body: some View {
-        let scale = PoseFigureMetrics.figureSize / PoseShape.viewBox
+        let metrics = PoseFigureMetrics(size)
+        let scale = metrics.figureSize / PoseShape.viewBox
         ZStack {
             PoseShape(pose)
                 .stroke(Palette.accent, style: Self.strokeStyle(width: PoseShape.strokeWidth * scale))
@@ -26,11 +37,11 @@ public struct PoseFigure: View {
                     style: Self.strokeStyle(width: PoseGroundShape.strokeWidth * scale)
                 )
         }
-        .frame(width: PoseFigureMetrics.figureSize, height: PoseFigureMetrics.figureSize)
+        .frame(width: metrics.figureSize, height: metrics.figureSize)
         // Sonst spiegelt SwiftUI die Zeichnung bei der Leserichtung von rechts nach links.
         .environment(\.layoutDirection, .leftToRight)
-        .frame(width: PoseFigureMetrics.tileSize, height: PoseFigureMetrics.tileSize)
-        .background(Palette.accentTint, in: .rect(cornerRadius: PoseFigureMetrics.tileRadius, style: .continuous))
+        .frame(width: metrics.tileSize, height: metrics.tileSize)
+        .background(Palette.accentTint, in: .rect(cornerRadius: metrics.tileRadius, style: .continuous))
         .accessibilityHidden(true)
     }
 
@@ -40,11 +51,25 @@ public struct PoseFigure: View {
     }
 }
 
-/// Maße der Kachel (`.pose`: 58 × 58 pt, Radius 16; die Zeichnung 46 × 46 pt, mittig).
-enum PoseFigureMetrics {
-    static let tileSize: CGFloat = 58
-    static let tileRadius: CGFloat = 16
-    static let figureSize: CGFloat = 46
+/// Maße der Kachel: in der Karte `.pose` (58 × 58 pt, Radius 16; die Zeichnung 46 × 46 pt, mittig), im
+/// Durchlauf `.walk-pose` (172 × 172 pt, Radius 44; `.walk-pose svg`: 126 × 126 pt).
+struct PoseFigureMetrics {
+    let tileSize: CGFloat
+    let tileRadius: CGFloat
+    let figureSize: CGFloat
+
+    init(_ size: PoseFigure.Size) {
+        switch size {
+        case .card:
+            tileSize = 58
+            tileRadius = 16
+            figureSize = 46
+        case .walk:
+            tileSize = WalkMetrics.tileSize
+            tileRadius = WalkMetrics.tileRadius
+            figureSize = 126
+        }
+    }
 }
 
 /// Die Linien einer Haltungsfigur – `POSE` im Prototyp, in dessen Raster von 48 × 48.

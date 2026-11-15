@@ -85,9 +85,14 @@ struct GuideComponentTests {
         let scale: CGFloat = 46 / 48
         expectClose(tile.minX, 6 + small.minX * scale)
         expectClose(tile.width, small.width * scale)
-        #expect(PoseFigureMetrics.tileSize == 58)
-        #expect(PoseFigureMetrics.figureSize == 46)
-        #expect(PoseFigureMetrics.tileRadius == 16)
+        let card = PoseFigureMetrics(.card)
+        #expect(card.tileSize == 58)
+        #expect(card.figureSize == 46)
+        #expect(card.tileRadius == 16)
+        let walk = PoseFigureMetrics(.walk)
+        #expect(walk.tileSize == 172)
+        #expect(walk.figureSize == 126)
+        #expect(walk.tileRadius == 44)
     }
 
     // MARK: - Segmente

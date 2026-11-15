@@ -1,36 +1,112 @@
 import SwiftUI
 
 /// Der Hauptknopf: eine Kapsel in Akzent, 50 pt hoch, die Breite füllend, Schrift 17 pt halbfett, davor
-/// auf Wunsch ein Symbol – `.btn.btn-primary` im Prototyp. Gesperrt ist er blasser (`.btn:disabled`),
-/// gedrückt leicht verkleinert (`.btn:active`).
+/// (oder dahinter) auf Wunsch ein Symbol – `.btn.btn-primary` im Prototyp. Gesperrt ist er blasser
+/// (`.btn:disabled`), gedrückt leicht verkleinert (`.btn:active`).
 public struct PrimaryButton: View {
-    private let title: String
-    private let systemImage: String?
+    private let label: ActionButtonLabel
     private let action: () -> Void
 
-    public init(_ title: String, systemImage: String? = nil, action: @escaping () -> Void) {
-        self.title = title
-        self.systemImage = systemImage
+    /// - Parameters:
+    ///   - systemImage: SF Symbol neben dem Titel.
+    ///   - imagePlacement: vor dem Titel (Standard) oder dahinter wie bei „Weiter ›“.
+    public init(
+        _ title: String, systemImage: String? = nil, imagePlacement: ActionButtonLabel.Placement = .leading,
+        action: @escaping () -> Void
+    ) {
+        self.label = ActionButtonLabel(title: title, systemImage: systemImage, placement: imagePlacement)
+        self.action = action
+    }
+
+    /// Mit einem Pfeil wie `ic('chevronRight', 18)`: kleiner als die übrigen Symbole und in einem Feld
+    /// von 18 pt, so dass der Abstand zum Titel dem des Prototyps entspricht.
+    public init(_ title: String, chevron: String, imagePlacement: ActionButtonLabel.Placement, action: @escaping () -> Void) {
+        self.label = ActionButtonLabel(title: title, systemImage: chevron, placement: imagePlacement, style: .chevron)
         self.action = action
     }
 
     public var body: some View {
-        Button(action: action) {
-            HStack(spacing: PrimaryButtonMetrics.gap) {
-                if let systemImage {
-                    Image(systemName: systemImage)
-                        .font(.system(size: PrimaryButtonMetrics.symbolSize, weight: .semibold))
-                        .accessibilityHidden(true)
-                }
-                Text(title)
-                    .font(TypeScale.body.font(weight: .semibold))
-                    .multilineTextAlignment(.center)
-            }
-            .padding(.horizontal, PrimaryButtonMetrics.paddingX)
-            .frame(maxWidth: .infinity, minHeight: PrimaryButtonMetrics.height)
-            .contentShape(.capsule)
+        Button(action: action) { label }
+            .buttonStyle(PrimaryButtonStyle())
+    }
+}
+
+/// Der getönte Knopf: dieselbe Kapsel in getöntem Akzent, Schrift in Akzent – `.btn.btn-tinted` im
+/// Prototyp, z. B. „‹ Zurück“ im Durchlauf „Schritt für Schritt“.
+public struct TintedButton: View {
+    private let label: ActionButtonLabel
+    private let action: () -> Void
+
+    public init(
+        _ title: String, systemImage: String? = nil, imagePlacement: ActionButtonLabel.Placement = .leading,
+        action: @escaping () -> Void
+    ) {
+        self.label = ActionButtonLabel(title: title, systemImage: systemImage, placement: imagePlacement)
+        self.action = action
+    }
+
+    /// Mit einem Pfeil wie `ic('chevronLeft', 18)` (siehe `PrimaryButton.init(_:chevron:imagePlacement:action:)`).
+    public init(_ title: String, chevron: String, imagePlacement: ActionButtonLabel.Placement, action: @escaping () -> Void) {
+        self.label = ActionButtonLabel(title: title, systemImage: chevron, placement: imagePlacement, style: .chevron)
+        self.action = action
+    }
+
+    public var body: some View {
+        Button(action: action) { label }
+            .buttonStyle(TintedButtonStyle())
+    }
+}
+
+/// Inhalt der Knöpfe `.btn`: Titel und Symbol mit 8 pt Abstand, mittig, mindestens 50 pt hoch.
+public struct ActionButtonLabel: View {
+    /// Wo das Symbol steht. Die Richtung folgt der Leserichtung; SF Symbols wie `chevron.forward` drehen
+    /// sich bei Rechts nach links von selbst.
+    public enum Placement: Sendable {
+        case leading
+        case trailing
+    }
+
+    /// Wie das Symbol gezeichnet wird.
+    enum SymbolStyle: Sendable {
+        /// 15 pt halbfett, so breit wie es ist – z. B. der Haken (`ic('check', 18)`).
+        case standard
+        /// Pfeil (`ic('chevronLeft', 18)`): 12 pt, mittig in einem Feld von 18 pt wie die Zeichnung im
+        /// Prototyp, die nur die Mitte ihres Felds füllt.
+        case chevron
+    }
+
+    let title: String
+    let systemImage: String?
+    let placement: Placement
+    var style: SymbolStyle = .standard
+
+    public var body: some View {
+        HStack(spacing: PrimaryButtonMetrics.gap) {
+            if placement == .leading { symbol }
+            Text(title)
+                .font(TypeScale.body.font(weight: .semibold))
+                .multilineTextAlignment(.center)
+            if placement == .trailing { symbol }
         }
-        .buttonStyle(PrimaryButtonStyle())
+        .padding(.horizontal, PrimaryButtonMetrics.paddingX)
+        .frame(maxWidth: .infinity, minHeight: PrimaryButtonMetrics.height)
+        .contentShape(.capsule)
+    }
+
+    @ViewBuilder private var symbol: some View {
+        if let systemImage {
+            switch style {
+            case .standard:
+                Image(systemName: systemImage)
+                    .font(.system(size: PrimaryButtonMetrics.symbolSize, weight: .semibold))
+                    .accessibilityHidden(true)
+            case .chevron:
+                Image(systemName: systemImage)
+                    .font(.system(size: PrimaryButtonMetrics.chevronSize, weight: PrimaryButtonMetrics.chevronWeight))
+                    .frame(width: PrimaryButtonMetrics.chevronBox)
+                    .accessibilityHidden(true)
+            }
+        }
     }
 }
 
@@ -49,6 +125,21 @@ struct PrimaryButtonStyle: ButtonStyle {
     }
 }
 
+/// Fläche in getöntem Akzent (`--accent-tint`), Schrift in Akzent; sonst wie der Hauptknopf.
+struct TintedButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(Palette.accent)
+            .background(Palette.accentTint, in: .capsule)
+            .opacity(isEnabled ? 1 : PrimaryButtonMetrics.disabledOpacity)
+            .scaleEffect(configuration.isPressed && !reduceMotion ? PrimaryButtonMetrics.pressedScale : 1)
+            .animation(.spring(duration: 0.2), value: configuration.isPressed)
+    }
+}
+
 /// Maße des Hauptknopfs (`.btn`: `min-height: 50px; padding: 0 20px; gap: 8px`).
 enum PrimaryButtonMetrics {
     static let height: CGFloat = 50
@@ -56,6 +147,10 @@ enum PrimaryButtonMetrics {
     static let gap: CGFloat = 8
     /// `ic('check', 18)`
     static let symbolSize: CGFloat = 15
+    /// `ic('chevronLeft', 18)`: Pfeil 4,9 × 9,75 pt mit Strich 1,35 pt in einem Feld von 18 pt.
+    static let chevronSize: CGFloat = 12
+    static let chevronWeight: Font.Weight = .medium
+    static let chevronBox: CGFloat = 18
     static let disabledOpacity = 0.4
     static let pressedScale: CGFloat = 0.97
 }
