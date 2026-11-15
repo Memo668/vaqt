@@ -74,17 +74,17 @@ Einzutragen in App Store Connect › TestFlight › Testinformationen, auf Deuts
 Deutsch:
 
 ```text
-Vaqt ist eine gemeinnützige App für die fünf täglichen Gebete – werbefrei, ohne Tracking und ohne Konto. Sie rechnet die Zeiten auf dem iPhone, für deinen Standort oder eine gewählte Stadt, und zeigt sie als Tagesbogen mit Countdown. Dazu kommen die Qibla-Richtung mit Kompass, eine Anleitung zu jedem Gebet, ein Vers des Tages und eine Übersicht zum Nachholen. Mitteilungen mit Adhan, Widgets für Home- und Sperrbildschirm und eine Live-Aktivität zum nächsten Gebet sind dabei; auf dem iPhone Duo nutzt die App beide Hälften. Sprachen: Deutsch, Türkisch, Englisch und Spanisch.
+Vaqt ist eine gemeinnützige App für die fünf täglichen Gebete – werbefrei, ohne Tracking und ohne Konto. Sie rechnet die Zeiten auf dem iPhone, für deinen Standort oder eine gewählte Stadt, und zeigt sie als Tagesbogen mit Countdown. Dazu kommen die Qibla-Richtung mit Kompass, eine Anleitung zu jedem Gebet, ein Vers des Tages und eine Übersicht zum Nachholen. Mitteilungen mit Adhan, Widgets für Home- und Sperrbildschirm und eine Live-Aktivität zum nächsten Gebet sind dabei; auf dem iPhone Duo nutzt die App beide Hälften. Sprachen: Deutsch, Türkisch, Englisch, Spanisch, Französisch, Niederländisch, Bosnisch, Albanisch, Arabisch, Urdu, Indonesisch, Malaiisch, Bengali, Persisch, Russisch und Italienisch.
 
-Dies ist die erste Beta. Einige Inhalte sind noch Platzhalter: die Übersetzungen der Verse, die Adhan-Aufnahmen und das App-Symbol. Die Texte der Anleitung hat noch niemand fachlich geprüft.
+Dies ist die erste Beta. Einige Inhalte sind noch Platzhalter: die Übersetzungen der Verse, die Adhan-Aufnahmen und das App-Symbol. Die Texte der Anleitung hat noch niemand fachlich geprüft, und die Sprachen ab Französisch sind Entwürfe, die noch Muttersprachler durchsehen.
 ```
 
 Englisch:
 
 ```text
-Vaqt is a non-profit app for the five daily prayers – no ads, no tracking, no account. It calculates the times on your iPhone, for your location or a city you choose, and shows them as a day arc with a countdown. It also has the Qibla direction with a compass, a guide to each prayer, a verse of the day and an overview for making up missed prayers. Notifications with the adhan, widgets for the Home Screen and Lock Screen and a Live Activity for the next prayer are included; on iPhone Duo the app uses both halves. Languages: German, Turkish, English and Spanish.
+Vaqt is a non-profit app for the five daily prayers – no ads, no tracking, no account. It calculates the times on your iPhone, for your location or a city you choose, and shows them as a day arc with a countdown. It also has the Qibla direction with a compass, a guide to each prayer, a verse of the day and an overview for making up missed prayers. Notifications with the adhan, widgets for the Home Screen and Lock Screen and a Live Activity for the next prayer are included; on iPhone Duo the app uses both halves. Languages: German, Turkish, English, Spanish, French, Dutch, Bosnian, Albanian, Arabic, Urdu, Indonesian, Malay, Bengali, Persian, Russian and Italian.
 
-This is the first beta. Some content is still a placeholder: the verse translations, the adhan recordings and the app icon. Nobody has reviewed the guide texts for religious accuracy yet.
+This is the first beta. Some content is still a placeholder: the verse translations, the adhan recordings and the app icon. Nobody has reviewed the guide texts for religious accuracy yet, and the languages from French on are drafts that native speakers have yet to review.
 ```
 
 ### Was testen – Build 0.1.0 (1)
@@ -99,8 +99,8 @@ Erste Beta. Bitte im Alltag ausprobieren, vor allem:
 – Kommen die Mitteilungen pünktlich, auch über mehrere Tage, bei gesperrtem iPhone und geschlossener App? Ist der Adhan zu hören?
 – Zeigen Widgets und Live-Aktivität (ab 30 Minuten vor jedem Gebet) die richtigen Zeiten?
 – Dreht der Qibla-Kompass ruhig und in die richtige Richtung?
-– Ist etwas unverständlich, abgeschnitten oder falsch übersetzt?
-Bekannt: Verse, Adhan-Aufnahmen und Symbol sind Platzhalter, die Anleitung ist ungeprüft, „Quellcode“ führt noch ins Leere.
+– Ist etwas unverständlich, abgeschnitten oder falsch übersetzt? Die Sprache lässt sich in den Einstellungen wechseln; Arabisch, Urdu und Persisch laufen von rechts nach links.
+Bekannt: Verse, Adhan-Aufnahmen und Symbol sind Platzhalter, die Anleitung ist ungeprüft, die Sprachen ab Französisch sind Entwürfe (Verse dort auf Englisch), „Quellcode“ führt noch ins Leere.
 Feedback am besten mit Screenshot direkt aus TestFlight.
 ```
 
@@ -112,8 +112,8 @@ First beta. Please use it in everyday life and check in particular:
 – Do notifications arrive on time, also over several days, with the iPhone locked and the app closed? Can you hear the adhan?
 – Do the widgets and the Live Activity (from 30 minutes before each prayer) show the right times?
 – Does the Qibla compass turn smoothly and point the right way?
-– Is anything unclear, cut off or mistranslated?
-Known: verses, adhan recordings and icon are placeholders, the guide has not been reviewed yet, “Source Code” does not lead anywhere yet.
+– Is anything unclear, cut off or mistranslated? The language can be changed in Settings; Arabic, Urdu and Persian run right to left.
+Known: verses, adhan recordings and icon are placeholders, the guide has not been reviewed yet, the languages from French on are drafts (verses in English there), “Source Code” does not lead anywhere yet.
 Feedback ideally with a screenshot straight from TestFlight.
 ```
 

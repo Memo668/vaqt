@@ -407,7 +407,7 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 
 ## Annahmen in Phase 15
 
-Geprüft am 15.11.2026 auf dem iPhone 18 Pro mit iOS 27.2 gegen den Prototyp in derselben Sprache (`make compare-language`: AR, AR mit Region Saudi-Arabien, RU, FR, BN; dazu die Wahl in der App) und mit `make capture` in allen 16 Sprachen. `make test`: TESTZAHL. Die Übersicht steht in `docs/REFERENCE-CHECK.md` unter „Phase 15“.
+Geprüft am 15.11.2026 auf dem iPhone 18 Pro mit iOS 27.2 gegen den Prototyp in derselben Sprache (`make compare-language`: AR, AR mit Region Saudi-Arabien, RU, FR, BN; dazu die Wahl in der App) und mit `make capture` in allen 16 Sprachen. `make test`: 1016 Tests grün (PrayerCore 456, DesignSystem 232, Features 328). Die Übersicht steht in `docs/REFERENCE-CHECK.md` unter „Phase 15“.
 
 ### Was mit dem Prototyp übereinstimmt
 
