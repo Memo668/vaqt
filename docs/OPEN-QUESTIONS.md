@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 15.11.2026, Phase 15 (16 Sprachen) gebaut, noch nicht abgenommen.
+Stand: 16.11.2026, nach der Abnahme von Phase 15 (mit dem Nachtrag „Sonnenaufgang im Bogen“).
 
 ## Für die erste Beta
 
@@ -186,6 +186,7 @@ Diese Punkte standen bis Phase 10 unter „Braucht eine Entscheidung“.
 | 12 | 15.11.2026, „Abnehmen, Phase 13“ | `a47cf8c` | Duo nicht geprüft; Anleitung und Verse erst nach Phase 13 gegen v0.8; Live-Aktivität und Widgets mit Phase 14; `APP_STORE_URL` ist ein Platzhalter |
 | 13 | 15.11.2026, „Abnehmen, Phase 14“ | `4281498` | VoiceOver von Hand, Duo und echtes Gerät nicht geprüft; fachliche Prüfung der Anleitung (43 Texte `TODO(review)`) |
 | 14 | 15.11.2026, „Abnahme, und Phase 15 go“ | `729266f` | Rechteck nach Wunsch mittig im Stil der Live-Aktivität; Rechteck alle 10 statt 5 Minuten (10-MB-Grenze); Mitteilungen (`system/92`), Duo und echtes Gerät nicht geprüft; endgültiger Name vor dem App Store |
+| 15 | 16.11.2026, „abgenommen“ | `a548cd6` | Nachtrag nach Wunsch: Sonnenaufgang als Punkt im Bogen, gleich groß wie die Gebete, überall mit Bogen (Spec § 9.14); vorher auf Wunsch per Fast-Forward in `main` (`e27186a`); Widgets und Live-Aktivität in RTL nur im Katalog; Duo-Referenzen ohne Sonnenaufgang; Muttersprachler für die zwölf neuen Sprachen vor dem App Store |
 
 ### Erste Beta, entschieden am 12.11.2026
 
