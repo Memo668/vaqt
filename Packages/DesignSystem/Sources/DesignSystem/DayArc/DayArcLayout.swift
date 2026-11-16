@@ -81,7 +81,8 @@ public struct DayArcLayout: Hashable, Sendable {
     public let progress: Double
     /// Ob „jetzt“ zwischen Fadschr und Ischa liegt. Nur dann ist der Knopf zu sehen (`dp.active`).
     public let showsKnob: Bool
-    /// Die fünf Gebete in ihrer Tagesfolge. Spätere Marker liegen über früheren.
+    /// Die fünf Gebete und der Sonnenaufgang in ihrer Tagesfolge (Spec § 9.14). Spätere Marker liegen über
+    /// früheren. Der Sonnenaufgang ist nie das laufende Gebet, wird aber gefüllt, sobald die Sonne aufgegangen ist.
     public let markers: [Marker]
     /// Die Kerahat-Segmente; leer, wenn die App Kerahat nicht zeigt.
     public let kerahat: [KerahatSegment]
@@ -135,7 +136,7 @@ public struct DayArcLayout: Hashable, Sendable {
         }
 
         var markers: [Marker] = []
-        for prayer in Prayer.five {
+        for prayer in Prayer.allCases {
             let fraction = fraction(of: times[prayer])
             let center = metrics.point(at: fraction, isRightToLeft: isRightToLeft)
             let markerState = state(prayer)
@@ -188,9 +189,10 @@ public struct DayArcLayout: Hashable, Sendable {
         kerahat.map { "\($0.startTime)–\($0.endTime)" }.joined(separator: ", ")
     }
 
-    /// Wie viele der fünf Gebetszeiten heute begonnen haben – für den VoiceOver-Text `arcPrayers`.
+    /// Wie viele der fünf Gebetszeiten heute begonnen haben – für den VoiceOver-Text `arcPrayers`. Der
+    /// Sonnenaufgang zählt nicht mit.
     public var begunCount: Int {
-        markers.count { $0.state != .upcoming }
+        markers.count { $0.prayer != .sunrise && $0.state != .upcoming }
     }
 
     /// Radius, auf dem die Kerahat-Segmente liegen – auf der Spur der des Bogens.

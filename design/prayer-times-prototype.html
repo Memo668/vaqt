@@ -2226,7 +2226,9 @@ function arcHTML(ph, gk = 'home', skin = gk){
       /* Sperrbildschirm (einfarbig): Kerahat gestreift – dunkler Grund, darüber weiße Striche, auf hellem wie dunklem Teil der Spur zu sehen */
       return (g.kBase ? `<path class="arc-k-base ${cls}" d="${dd}"/>` : '') + `<path class="arc-k ${cls}" d="${dd}"/>`; }).join('') : '';
   let marks = '', labels = '', prev = null;
-  FIVE.forEach(p => {
+  /* Nachtrag 16.11.2026: Der Sonnenaufgang steht als sechster Punkt im Bogen, gleich groß wie die Gebete (Spec § 9.14).
+     Er ist nie das laufende Gebet (`phase()`), wird aber gefüllt, sobald die Sonne aufgegangen ist. */
+  PRAYERS.forEach(p => {
     const f = (ph.t[p] - ph.t.fajr)/span, [x, y] = arcPoint(f, g);
     const cur = !!(ph.current && ph.current.d === 0 && ph.current.p === p), r = cur ? g.mc : g.m, is = cur ? g.isc : g.is;
     const tight = prev && Math.hypot(x - prev[0], y - prev[1]) < r + prev[2] + (prev[3] ? 14 : 6); prev = [x, y, r, cur];

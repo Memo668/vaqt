@@ -37,7 +37,7 @@ struct DayArcLayoutTests {
 
     private func marker(_ layout: DayArcLayout, _ prayer: Prayer) -> DayArcLayout.Marker {
         guard let marker = layout.markers.first(where: { $0.prayer == prayer }) else {
-            preconditionFailure("Der Bogen zeigt alle fünf Gebete")
+            preconditionFailure("Der Bogen zeigt alle fünf Gebete und den Sonnenaufgang")
         }
         return marker
     }
@@ -145,14 +145,17 @@ struct DayArcLayoutTests {
     @Test("14:25, Asr läuft (iphone/10): Lage der Marker und der Zeiten")
     func asrActive() {
         let layout = layout("berlin", "14:25")
-        #expect(layout.markers.map(\.prayer) == [.fajr, .dhuhr, .asr, .maghrib, .isha])
-        #expect(layout.markers.map(\.state) == [.passed, .passed, .current, .upcoming, .upcoming])
-        #expect(layout.markers.map(\.radius) == [15, 15, 17, 15, 15])
-        #expect(layout.markers.map(\.symbolSize) == [16, 16, 18, 16, 16])
-        #expect(layout.markers.map(\.time.description) == ["05:16", "11:52", "14:00", "16:27", "18:17"])
+        #expect(layout.markers.map(\.prayer) == [.fajr, .sunrise, .dhuhr, .asr, .maghrib, .isha])
+        #expect(layout.markers.map(\.state) == [.passed, .passed, .passed, .current, .upcoming, .upcoming])
+        #expect(layout.markers.map(\.radius) == [15, 15, 15, 17, 15, 15])
+        #expect(layout.markers.map(\.symbolSize) == [16, 16, 16, 18, 16, 16])
+        #expect(layout.markers.map(\.time.description) == ["05:16", "07:14", "11:52", "14:00", "16:27", "18:17"])
         #expect(layout.markers.allSatisfy { !$0.isTight })
 
         #expect(close(marker(layout, .fajr).center, 33.128, 135.536))
+        // Seit 16.11.2026 steht auch der Sonnenaufgang im Bogen (Spec § 9.14), Zeit außen am Bogen.
+        #expect(close(marker(layout, .sunrise).center, 64.825, 91.074))
+        #expect(close(marker(layout, .sunrise).timeCenter, 39.035, 65.114))
         #expect(close(marker(layout, .dhuhr).center, 181.557, 44.02))
         #expect(close(marker(layout, .asr).center, 239.565, 55.747))
         #expect(close(marker(layout, .maghrib).center, 295.783, 93.725))
@@ -194,7 +197,9 @@ struct DayArcLayoutTests {
     @Test("08:04, nach Sonnenaufgang (iphone/13): Fadschr hat begonnen, keines läuft, der Knopf ist zu sehen")
     func afterSunrise() {
         let layout = layout("berlin", "08:04")
-        #expect(layout.markers.map(\.state) == [.passed, .upcoming, .upcoming, .upcoming, .upcoming])
+        #expect(layout.markers.map(\.state) == [.passed, .passed, .upcoming, .upcoming, .upcoming, .upcoming])
+        // Der Sonnenaufgang ist gefüllt, aber nie das laufende Gebet, und zählt für VoiceOver nicht mit.
+        #expect(marker(layout, .sunrise).radius == 15)
         #expect(close(CGFloat(layout.progress), 0.215))
         #expect(layout.showsKnob)
         #expect(close(layout.knobCenter, 82.435, 75.926))
@@ -223,7 +228,7 @@ struct DayArcLayoutTests {
         let layout = layout("berlin", "23:30")
         #expect(layout.progress == 1)
         #expect(!layout.showsKnob)
-        #expect(layout.markers.map(\.state) == [.passed, .passed, .passed, .passed, .current])
+        #expect(layout.markers.map(\.state) == [.passed, .passed, .passed, .passed, .passed, .current])
         #expect(layout.begunCount == 5)
         // Der größere Marker schiebt die Zeit darunter um 2 pt nach unten.
         #expect(close(marker(layout, .isha).timeCenter, 324.872, 164.536))
@@ -232,8 +237,10 @@ struct DayArcLayoutTests {
     @Test("Jakarta 17:57 (iphone/22): Ischa liegt eng an Maghrib und bekommt den Ring")
     func jakartaCloseMarkers() {
         let layout = layout("jakarta", "17:57")
-        #expect(layout.markers.map(\.state) == [.passed, .passed, .passed, .current, .upcoming])
-        #expect(layout.markers.map(\.isTight) == [false, false, false, false, true])
+        #expect(layout.markers.map(\.state) == [.passed, .passed, .passed, .passed, .current, .upcoming])
+        // In Jakarta liegt auch der Sonnenaufgang eng an Fadschr.
+        #expect(layout.markers.map(\.isTight) == [false, true, false, false, false, true])
+        #expect(close(marker(layout, .sunrise).center, 49.581, 108.56))
         #expect(close(marker(layout, .asr).center, 258.04, 64.59))
         #expect(close(marker(layout, .maghrib).center, 309.869, 110.515))
         #expect(close(marker(layout, .isha).center, 324.872, 135.536))
@@ -252,7 +259,8 @@ struct DayArcLayoutTests {
     func tightRule(city: String, time: String, expected: Bool) {
         let layout = layout(city, time)
         #expect(marker(layout, .isha).isTight == expected)
-        #expect(layout.markers.dropLast().allSatisfy { !$0.isTight })
+        #expect(marker(layout, .sunrise).isTight == expected)
+        #expect([Prayer.fajr, .dhuhr, .asr, .maghrib].allSatisfy { !marker(layout, $0).isTight })
     }
 
     // MARK: - Kerahat
@@ -328,9 +336,11 @@ struct DayArcLayoutTests {
     @Test("ARCS.la: dieselbe Zeichnung kleiner und flacher")
     func liveActivityLayout() {
         let layout = layout("berlin", "14:25", metrics: .liveActivity)
-        #expect(layout.markers.map(\.radius) == [10.5, 10.5, 12, 10.5, 10.5])
-        #expect(layout.markers.map(\.symbolSize) == [12, 12, 13, 12, 12])
+        #expect(layout.markers.map(\.radius) == [10.5, 10.5, 10.5, 12, 10.5, 10.5])
+        #expect(layout.markers.map(\.symbolSize) == [12, 12, 12, 13, 12, 12])
         #expect(close(marker(layout, .fajr).center, 27.994, 96.269))
+        #expect(close(marker(layout, .sunrise).center, 60.951, 60.657))
+        #expect(close(marker(layout, .sunrise).timeCenter, 44.302, 39.961))
         #expect(close(marker(layout, .dhuhr).center, 167.27, 24.016))
         #expect(close(marker(layout, .asr).center, 219.087, 33.059))
         #expect(close(marker(layout, .maghrib).center, 271.601, 62.751))
@@ -348,6 +358,7 @@ struct DayArcLayoutTests {
     func liveWidgetLayout() {
         let layout = layout("berlin", "14:25", metrics: .liveWidget)
         #expect(close(marker(layout, .fajr).center, 26.597, 92.786))
+        #expect(close(marker(layout, .sunrise).center, 57.965, 58.89))
         #expect(close(marker(layout, .dhuhr).center, 159.16, 24.015))
         #expect(close(marker(layout, .asr).center, 208.481, 32.622))
         #expect(close(marker(layout, .maghrib).center, 258.464, 60.884))
@@ -359,9 +370,10 @@ struct DayArcLayoutTests {
     @Test("ARCS.acc: die Gebete wie `arcPoint()` des Prototyps; die Enden lassen die Mitte für den Text frei")
     func lockScreenLayout() {
         let layout = layout("berlin", "14:25", metrics: .lockScreen)
-        #expect(layout.markers.map(\.radius) == [6.5, 6.5, 7.5, 6.5, 6.5])
-        #expect(layout.markers.map(\.symbolSize) == [8, 8, 9, 8, 8])
+        #expect(layout.markers.map(\.radius) == [6.5, 6.5, 6.5, 7.5, 6.5, 6.5])
+        #expect(layout.markers.map(\.symbolSize) == [8, 8, 8, 9, 8, 8])
         #expect(close(marker(layout, .fajr).center, 8.379, 44.869))
+        #expect(close(marker(layout, .sunrise).center, 25.804, 26.669))
         #expect(close(marker(layout, .dhuhr).center, 81.178, 8.008))
         #expect(close(marker(layout, .asr).center, 108.103, 12.608))
         #expect(close(marker(layout, .maghrib).center, 135.537, 27.738))
@@ -376,7 +388,8 @@ struct DayArcLayoutTests {
     @Test("ARCS.la, Jakarta: Ischa ist auch im kleinen Bogen eng")
     func liveActivityTight() {
         let layout = layout("jakarta", "17:57", metrics: .liveActivity)
-        #expect(layout.markers.map(\.isTight) == [false, false, false, false, true])
+        // Im Bogen der Live-Aktivität liegt der Sonnenaufgang knapp nicht eng (28,1 pt, Grenze 27 pt).
+        #expect(layout.markers.map(\.isTight) == [false, false, false, false, false, true])
         #expect(close(marker(layout, .maghrib).center, 285.757, 76.098))
         #expect(close(marker(layout, .maghrib).timeCenter, 306.823, 56.228))
     }
