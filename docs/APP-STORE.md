@@ -87,7 +87,7 @@ Vaqt is a non-profit app for the five daily prayers – no ads, no tracking, no 
 This is the first beta. Some content is still a placeholder: the verse translations, the adhan recordings and the app icon. Nobody has reviewed the guide texts for religious accuracy yet, and the languages from French on are drafts that native speakers have yet to review.
 ```
 
-### Was testen – Build 0.1.0 (1)
+### Was testen – Build 0.1.0 (2)
 
 Für jeden weiteren Build anpassen: Was ist neu, was soll geprüft werden?
 
@@ -100,7 +100,7 @@ Erste Beta. Bitte im Alltag ausprobieren, vor allem:
 – Zeigen Widgets und Live-Aktivität (ab 30 Minuten vor jedem Gebet) die richtigen Zeiten?
 – Dreht der Qibla-Kompass ruhig und in die richtige Richtung?
 – Ist etwas unverständlich, abgeschnitten oder falsch übersetzt? Die Sprache lässt sich in den Einstellungen wechseln; Arabisch, Urdu und Persisch laufen von rechts nach links.
-Bekannt: Verse, Adhan-Aufnahmen und Symbol sind Platzhalter, die Anleitung ist ungeprüft, die Sprachen ab Französisch sind Entwürfe (Verse dort auf Englisch), „Quellcode“ führt noch ins Leere.
+Bekannt: Verse, Adhan-Aufnahmen und Symbol sind Platzhalter, die Anleitung ist ungeprüft, die Sprachen ab Französisch sind Entwürfe (Verse dort auf Englisch).
 Feedback am besten mit Screenshot direkt aus TestFlight.
 ```
 
@@ -113,7 +113,7 @@ First beta. Please use it in everyday life and check in particular:
 – Do the widgets and the Live Activity (from 30 minutes before each prayer) show the right times?
 – Does the Qibla compass turn smoothly and point the right way?
 – Is anything unclear, cut off or mistranslated? The language can be changed in Settings; Arabic, Urdu and Persian run right to left.
-Known: verses, adhan recordings and icon are placeholders, the guide has not been reviewed yet, the languages from French on are drafts (verses in English there), “Source Code” does not lead anywhere yet.
+Known: verses, adhan recordings and icon are placeholders, the guide has not been reviewed yet, the languages from French on are drafts (verses in English there).
 Feedback ideally with a screenshot straight from TestFlight.
 ```
 

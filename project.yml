@@ -19,16 +19,15 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
     MARKETING_VERSION: "0.1.0"
-    CURRENT_PROJECT_VERSION: "1"
+    CURRENT_PROJECT_VERSION: "2"
     # Bundle-ID und App Group des Entwicklerkontos (Einzelperson, entschieden am 15.11.2026: „Mit deinem
     # Namen“; docs/OPEN-QUESTIONS.md). Nach dem ersten Upload nicht mehr ändern. Beide stehen nur hier:
     # Info.plists, Entitlements und Hintergrundaufgabe beider Targets nehmen sie von hier, Makefile und
     # Skripte über scripts/bundle-id, das Protokoll über die Bundle-ID der App.
     APP_BUNDLE_ID: de.mehmetyilmaz.gebetszeiten
     APP_GROUP_ID: group.de.mehmetyilmaz.gebetszeiten
-    # TODO(placeholder): Adresse hinter Einstellungen › Quellcode („Open Source auf GitHub“). Das Repo hat
-    # noch keine öffentliche Adresse; vor dem ersten Archiv eintragen.
-    SOURCE_CODE_URL: https://example.com/gebetszeiten
+    # Adresse hinter Einstellungen › Quellcode („Open Source auf GitHub“), seit 16.11.2026 das öffentliche Repo.
+    SOURCE_CODE_URL: https://github.com/Memo668/vaqt
     # TODO(placeholder): Adresse der App im App Store hinter Einstellungen › Unterstützen › „App
     # weiterempfehlen“ (entschieden am 15.11.2026: „App-Store-Link“). Die Kennung (id…) vergibt App Store
     # Connect beim Anlegen der App; dann hier eintragen.

@@ -475,7 +475,7 @@ Die Vorab-Erinnerung braucht im Türkischen eine Endung, die von der Uhrzeit abh
 
 Neben `noTimes` (Phase 3) und `noCompass` (Phase 4) hat der Prototyp in Phase 7 den Text `hlMoonsighting` bekommen: der Hinweis unter „Hohe Breitengrade“, dass die Regel bei Moonsighting nicht wirkt. Der Katalog hatte damit 273 Einträge, seit Phase 13 sind es 337.
 
-Die Adresse hinter „Quellcode“ steht als Platzhalter in `project.yml` (`SOURCE_CODE_URL`) und kommt über die Info.plist (`SourceCodeURL`) in die App.
+Die Adresse hinter „Quellcode“ steht in `project.yml` (`SOURCE_CODE_URL`, seit 16.11.2026 das öffentliche Repo `https://github.com/Memo668/vaqt`) und kommt über die Info.plist (`SourceCodeURL`) in die App.
 
 ## Große Schrift und Barrierefreiheit
 

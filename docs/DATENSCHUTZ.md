@@ -4,18 +4,20 @@
   Grundlage: die Seite „Datenschutz“ der App (PAGES.privacy im Prototyp, privacyBody1–3 im String Catalog)
   und docs/APP-STORE.md, genauer gefasst nach dem Code.
   Adresse: diese Datei auf GitHub, sobald das Repo öffentlich ist (entschieden am 14.11.2026, „GitHub, beim
-  Quellcode“). Vor dem Veröffentlichen: die Platzhalter ausfüllen und den Text prüfen lassen.
+  Quellcode“). Verantwortlicher und Aufbewahrung ausgefüllt am 16.11.2026 („Nur Name und E-Mail“); fachlich
+  geprüft ist der Text noch nicht.
 -->
 
 # Datenschutzerklärung für die App „Vaqt“
 
-Stand: 15. November 2026
+Stand: 16. November 2026
 
 **Kurz gesagt:** Die App erhebt keine Daten. Es gibt kein Konto, keine Werbung, keine Analyse-Werkzeuge und keinen eigenen Server. Was du einstellst, bleibt auf deinem iPhone. Ins Netz geht die App nur für zwei Dinge, und zwar zum Kartendienst von Apple: für den Namen deines Ortes und für Vorschläge in der Ortssuche.
 
 ## Verantwortlich
 
-TODO(placeholder): Name, Anschrift und E-Mail-Adresse des Anbieters der App.
+Mehmet Zahit Yilmaz  
+E-Mail: [vaqt@m-yilmaz.com](mailto:vaqt@m-yilmaz.com)
 
 ## Was auf deinem iPhone bleibt
 
@@ -63,11 +65,11 @@ Testest du eine Beta über TestFlight, gibt Apple uns diese Angaben weiter:
 - Absturzberichte, die TestFlight automatisch sammelt,
 - Feedback, das du über TestFlight schickst, mit Screenshots, Kommentaren und den Angaben zum Gerät, die TestFlight dazu sammelt.
 
-Wir nutzen diese Angaben nur, um die App zu verbessern, und geben sie nicht weiter. Rechtsgrundlage ist unser berechtigtes Interesse, die App vor der Veröffentlichung zu testen (Art. 6 Abs. 1 lit. f DSGVO). TODO(placeholder): wie lange wir die Angaben aufbewahren, zum Beispiel bis zum Ende der Beta. Was Apple bei TestFlight erhebt und wie lange Apple es aufbewahrt, steht unter [TestFlight & Datenschutz](https://www.apple.com/legal/privacy/data/de/test-flight/).
+Wir nutzen diese Angaben nur, um die App zu verbessern, und geben sie nicht weiter. Rechtsgrundlage ist unser berechtigtes Interesse, die App vor der Veröffentlichung zu testen (Art. 6 Abs. 1 lit. f DSGVO). Wir bewahren diese Angaben höchstens bis zum Ende der Beta auf. Was Apple bei TestFlight erhebt und wie lange Apple es aufbewahrt, steht unter [TestFlight & Datenschutz](https://www.apple.com/legal/privacy/data/de/test-flight/).
 
 ## Deine Rechte
 
-Nach der Datenschutz-Grundverordnung hast du das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Weil die App keine Daten an uns schickt, haben wir außerhalb von TestFlight nichts über dich gespeichert. Zu den Angaben aus TestFlight wende dich an die Adresse oben. Du kannst dich außerdem bei einer Datenschutz-Aufsichtsbehörde beschweren.
+Nach der Datenschutz-Grundverordnung hast du das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Weil die App keine Daten an uns schickt, haben wir außerhalb von TestFlight nichts über dich gespeichert. Zu den Angaben aus TestFlight schreib an die E-Mail-Adresse oben. Du kannst dich außerdem bei einer Datenschutz-Aufsichtsbehörde beschweren.
 
 ## Änderungen
 

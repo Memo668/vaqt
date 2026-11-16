@@ -3,18 +3,20 @@
   spec § 9.13). English counterpart of
   docs/DATENSCHUTZ.md; the German text is the reference.
   Address: this file on GitHub once the repo is public (decided 14 Nov 2026, „GitHub, beim Quellcode“).
-  Before publishing: fill in the placeholders and have the text reviewed.
+  Provider and retention filled in on 16 Nov 2026 (name and email only); the text has not been
+  reviewed by a lawyer yet.
 -->
 
 # Privacy Policy for the App “Vaqt”
 
-Last updated: 15 November 2026
+Last updated: 16 November 2026
 
 **In short:** The app collects no data. There is no account, no advertising, no analytics and no server of our own. What you set up stays on your iPhone. The app only goes online for two things, and only to Apple’s map service: to get the name of your location and to show suggestions in the city search.
 
 ## Responsible
 
-TODO(placeholder): name, postal address and email address of the app’s provider.
+Mehmet Zahit Yilmaz  
+Email: [vaqt@m-yilmaz.com](mailto:vaqt@m-yilmaz.com)
 
 ## What stays on your iPhone
 
@@ -62,11 +64,11 @@ If you test a beta through TestFlight, Apple passes the following on to us:
 - crash reports that TestFlight collects automatically,
 - feedback you send through TestFlight, with screenshots, comments and the device details TestFlight collects with it.
 
-We use this information only to improve the app and do not pass it on. The legal basis is our legitimate interest in testing the app before its release (Art. 6(1)(f) GDPR). TODO(placeholder): how long we keep the information, for example until the end of the beta. What Apple collects with TestFlight and how long Apple keeps it is described in [TestFlight & Privacy](https://www.apple.com/legal/privacy/data/en/test-flight/).
+We use this information only to improve the app and do not pass it on. The legal basis is our legitimate interest in testing the app before its release (Art. 6(1)(f) GDPR). We keep this information until the end of the beta at the latest. What Apple collects with TestFlight and how long Apple keeps it is described in [TestFlight & Privacy](https://www.apple.com/legal/privacy/data/en/test-flight/).
 
 ## Your rights
 
-Under the General Data Protection Regulation, you have the right of access, rectification, erasure, restriction of processing, data portability and objection. Because the app sends no data to us, we hold nothing about you outside TestFlight. For the information from TestFlight, contact the address above. You also have the right to lodge a complaint with a data protection supervisory authority.
+Under the General Data Protection Regulation, you have the right of access, rectification, erasure, restriction of processing, data portability and objection. Because the app sends no data to us, we hold nothing about you outside TestFlight. For the information from TestFlight, write to the email address above. You also have the right to lodge a complaint with a data protection supervisory authority.
 
 ## Changes
 
