@@ -15,6 +15,7 @@ Die erste Beta über TestFlight kommt nach Phase 11 – seit dem 15.11.2026 nach
 - **Angelegt am 16.11.2026:** die App „Vaqt – Prayer Time“ in App Store Connect (Apple-ID `6835351684`, Primärsprache Deutsch, SKU `gebetszeiten-ios`) und die interne TestFlight-Gruppe „Intern“ mit automatischer Verteilung. Darin ist der Inhaber als Tester.
 - **Externe Tester (16.11.2026, „Alles für externe Tester fertig machen“):**
   - Das Repo ist öffentlich auf GitHub, `https://github.com/Memo668/vaqt` (Auswahl „Ganzes Repo öffentlich“). Gepusht ist nur `main`.
+  - Lizenz des Repos (16.11.2026, Auswahl „Ja, MIT“): MIT in `LICENSE`. Die fremden Teile aus `docs/THIRD-PARTY.md` behalten ihre eigene Lizenz.
   - In der Datenschutzerklärung stehen Name und E-Mail des Verantwortlichen (Auswahl „Nur Name und E-Mail“) und die Aufbewahrung „höchstens bis zum Ende der Beta“. Den Text hat noch niemand rechtlich geprüft.
   - „Quellcode“ in der App zeigt seit Build 2 auf das Repo.
   - In App Store Connect sind die Testinformationen auf Deutsch und Englisch eingetragen: Beschreibung, Feedback-E-Mail, Adresse der Datenschutzerklärung je Sprache, der Kontakt für die Beta-App-Prüfung, die Hinweise für Apple und „Anmeldung erforderlich: nein“.
