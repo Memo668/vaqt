@@ -109,6 +109,11 @@ public enum LiveActivityMetrics {
     public static let endsLineHeight: CGFloat = 14 / 12
     public static let endsOpacity: Double = 0.6
     public static let endsTop: CGFloat = 8
+    /// Die Enden rücken weiter ein als der Balken – im Prototyp stehen sie bündig mit ihm. iOS schneidet den
+    /// Inhalt der erweiterten Insel unten an den runden Ecken ab, auf Höhe dieser Zeile gut 25 pt vom Rand;
+    /// mit `expandedInset` allein fehlte dem „A“ von „Asr“ und der letzten Ziffer rechts ein Stück (gemessen
+    /// auf dem iPhone 18 Pro mit iOS 27.2 am 16.11.2026).
+    public static let endsInset: CGFloat = 8
 }
 
 /// Texte der Live-Aktivität.
@@ -376,6 +381,7 @@ public struct LiveActivityExpandedBottom: View {
             .font(LiveActivityMetrics.endsFont)
             .opacity(LiveActivityMetrics.endsOpacity)
             .lineHeight(LiveActivityMetrics.endsLineHeight, fontSize: 12)
+            .padding(.horizontal, LiveActivityMetrics.endsInset)
             .padding(.top, LiveActivityMetrics.endsTop)
         }
         .foregroundStyle(.white)

@@ -116,6 +116,8 @@ struct WidgetComponentTests {
         #expect(LiveActivityMetrics.countSize == 30)
         #expect(LiveActivityMetrics.bigSize == 38)
         #expect(LiveActivityMetrics.expandedInset == 24)
+        // Die Enden unter dem Balken rücken weiter ein, sonst schneiden die Ecken der Insel sie an.
+        #expect(LiveActivityMetrics.endsInset == 8)
         #expect(DayArcMetrics.liveActivity.size == CGSize(width: 330, height: 122))
     }
 
