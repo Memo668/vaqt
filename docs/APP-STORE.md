@@ -125,7 +125,7 @@ No account or sign-in is needed. Location access is optional: without it, choose
 
 ## Mit dem Konto: Ablauf bis zum Upload
 
-Was ohne Konto nicht geht, in der Reihenfolge, in der es dran ist. Noch nicht ausprobiert; die Liste steht auch unter „Für die erste Beta“ in `docs/OPEN-QUESTIONS.md`.
+Was ohne Konto nicht geht, in der Reihenfolge, in der es dran ist. Durchlaufen am 16.11.2026 bis zum Upload von 0.1.0 (1) und zur internen Gruppe „Intern“; die Liste steht auch unter „Für die erste Beta“ in `docs/OPEN-QUESTIONS.md`.
 
 1. **Konto und Team (erledigt am 15.11.2026):** Apple Developer Program als Einzelperson, Team `V7652FBKMY` in `DEVELOPMENT_TEAM` (`project.yml`).
 2. **Kennungen (eingetragen am 15.11.2026):** `de.mehmetyilmaz.gebetszeiten`, `.widgets` und `group.de.mehmetyilmaz.gebetszeiten` in `project.yml` (`APP_BUNDLE_ID`, `APP_GROUP_ID`), danach `make project`. Registriert werden die App-ID, die der Extension (`<Bundle-ID>.widgets`) und die App Group beim ersten signierten Build mit automatischer Signatur oder von Hand unter Certificates, Identifiers & Profiles. Als Fähigkeit brauchen beide nur App Groups; Mitteilungen und Live-Aktivität kommen ohne Push aus.
@@ -141,4 +141,12 @@ Was ohne Konto nicht geht, in der Reihenfolge, in der es dran ist. Noch nicht au
    ```
 
 5. **Upload:** in Xcode über Organizer › Distribute App › App Store Connect, oder mit `xcodebuild -exportArchive` und einer Export-Liste mit `method` = `app-store-connect` und `destination` = `upload`. Jeder weitere Upload braucht eine höhere Build-Nummer (`CURRENT_PROJECT_VERSION` in `project.yml`).
+
+   **Stolperstein (16.11.2026):** Nach der Hochstufung des persönlichen Teams scheiterte der Upload mit „Failed to Use Accounts – App Store Connect access for "V7652FBKMY" is required“, auch über den Organizer. Xcode hatte das Team noch als kostenloses „Personal Team“ gespeichert (`defaults read com.apple.dt.Xcode IDEProvisioningTeamByIdentifier`). Ein Neustart von Xcode half nicht. Erst Abmelden und neu Anmelden unter Xcode › Einstellungen › Apple Accounts hat es behoben, danach stand dort `teamType = Individual`.
+
+   ```bash
+   xcodebuild -exportArchive -archivePath /Volumes/Extern/Builds/NamazVakti/Archives/Vaqt-0.1.0-1.xcarchive -exportOptionsPlist ExportOptions-upload.plist -exportPath /Volumes/Extern/Builds/NamazVakti/Export/Vaqt-0.1.0-1 -allowProvisioningUpdates
+   ```
+
+   Die Export-Liste: `method` = `app-store-connect`, `destination` = `upload`, `teamID` = `V7652FBKMY`, `signingStyle` = `automatic`, `uploadSymbols` = ja, `manageAppVersionAndBuildNumber` = nein.
 6. **Testen:** zuerst intern (Mitglieder des Teams, ohne Prüfung durch Apple), dann externe Tester; der erste Build für externe Tester geht durch die Beta-App-Prüfung.
