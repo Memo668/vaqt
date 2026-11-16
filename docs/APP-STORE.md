@@ -59,11 +59,11 @@ Einzutragen in App Store Connect › TestFlight › Testinformationen, auf Deuts
 | Feld | Inhalt |
 |---|---|
 | Beta-Beschreibung (Beta App Description) | unten, Pflicht |
-| Feedback-E-Mail | TODO(placeholder): trägst du ein; sie ist auch die Antwortadresse der Einladungen |
+| Feedback-E-Mail | die Adresse aus der Datenschutzerklärung (eingetragen am 16.11.2026); sie ist auch die Antwortadresse der Einladungen |
 | Marketing-URL | – |
 | Datenschutzrichtlinie (URL) | `docs/DATENSCHUTZ.md` und `docs/PRIVACY.md` auf GitHub (oben) |
 | Was testen (What to Test) | je Build, unten |
-| Beta-App-Prüfung: Kontakt | TODO(placeholder): Name, Telefon und E-Mail für Rückfragen von Apple |
+| Beta-App-Prüfung: Kontakt | Name, Telefon und E-Mail für Rückfragen von Apple, eingetragen am 16.11.2026 (die Telefonnummer steht nur in App Store Connect) |
 | Beta-App-Prüfung: Anmeldung erforderlich | nein, die App hat kein Konto |
 | Beta-App-Prüfung: Hinweise | unten, auf Englisch für Apple |
 | Lizenzvereinbarung | die Standardvereinbarung von Apple |
