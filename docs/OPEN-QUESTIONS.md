@@ -18,7 +18,8 @@ Die erste Beta über TestFlight kommt nach Phase 11 – seit dem 15.11.2026 nach
   - In der Datenschutzerklärung stehen Name und E-Mail des Verantwortlichen (Auswahl „Nur Name und E-Mail“) und die Aufbewahrung „höchstens bis zum Ende der Beta“. Den Text hat noch niemand rechtlich geprüft.
   - „Quellcode“ in der App zeigt seit Build 2 auf das Repo.
   - In App Store Connect sind die Testinformationen auf Deutsch und Englisch eingetragen: Beschreibung, Feedback-E-Mail, Adresse der Datenschutzerklärung je Sprache, der Kontakt für die Beta-App-Prüfung, die Hinweise für Apple und „Anmeldung erforderlich: nein“.
-  - Die externe Gruppe heißt „Extern“. Build 0.1.0 (2) ist darin und steht seit dem 16.11.2026 zur Beta-App-Prüfung bei Apple („Waiting for Review“). Tester gibt es dort noch keine.
+  - Die externe Gruppe heißt „Extern“. Build 0.1.0 (2) ist darin und steht seit dem 16.11.2026 zur Beta-App-Prüfung bei Apple („Waiting for Review“).
+  - Öffentlicher Link (16.11.2026, Auswahl „Öffentlicher Link“): `https://testflight.apple.com/join/2jTMrhur`, offen für alle, ohne Obergrenze. Beitreten geht erst, wenn Apple einen Build der Gruppe freigegeben hat.
 
 Erledigt ohne Konto am 14.11.2026: `make archive` baut das Release-Archiv ohne Signatur, und `scripts/check-archive` findet es in Ordnung – nur iPhone (vorher iPhone und iPad, unten unter „Annahmen in der Beta-Vorbereitung“), Exportkontrolle `ITSAppUsesNonExemptEncryption = NO`, beide Manifeste, Icon, alle Texte in vier Sprachen, kein Debug-Code. Dazu die Datenschutzerklärung (`docs/DATENSCHUTZ.md`, `docs/PRIVACY.md`) und die Texte für TestFlight (`docs/APP-STORE.md`). Mit Phase 11 kamen das Platzhalter-Icon und die Datenschutz-Manifeste. Die Platzhalter – Übersetzungen der Verse, Adhan-Aufnahmen, Texte der Anleitung, Icon, Link „Quellcode“ – dürfen in der Beta bleiben; „Was testen“ nennt sie.
 
