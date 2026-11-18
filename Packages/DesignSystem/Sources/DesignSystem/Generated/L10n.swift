@@ -737,6 +737,14 @@ public enum L10n {
     public static var alarmFooter: String { text("alarmFooter") }
     /// „Eine feste Uhrzeit bleibt gleich, der Sonnenaufgang wandert übers Jahr. „Vor Sonnenaufgang“ folgt ihm jeden Tag; eine feste Uhrzeit klingelt spätestens 5 Minuten vor Sonnenaufgang.“
     public static var alarmFixedFooter: String { text("alarmFixedFooter") }
+    /// „Der kurze Adhan spielt die Stimme, die du unter „Adhan anhören“ gewählt hast.“
+    public static var alarmSoundFooter: String { text("alarmSoundFooter") }
+    /// „Wecker sind nicht erlaubt. Erlaube sie in den iOS-Einstellungen.“
+    public static var alarmDeniedFooter: String { text("alarmDeniedFooter") }
+    /// „Stopp“
+    public static var alarmStop: String { text("alarmStop") }
+    /// „Damit der Wecker zu Fadschr auch im Stummmodus und bei Fokus klingelt.“
+    public static var alAlarmBody: String { text("alAlarmBody") }
 
     /// Name einer Sure aus `SURAH` im Prototyp, z. B. „Al-Baqara“ für 2.
     public static func surahName(_ surah: Int) -> String { text("surah_\(surah)") }
@@ -1110,6 +1118,10 @@ public enum L10n {
         "alarmToday",
         "alarmFooter",
         "alarmFixedFooter",
+        "alarmSoundFooter",
+        "alarmDeniedFooter",
+        "alarmStop",
+        "alAlarmBody",
         "surah_2",
         "surah_13",
         "surah_20",

@@ -345,6 +345,9 @@ The coordinates are rounded to 0.01° before they are stored or sent (in the app
   - When on, the choice "Vor Sonnenaufgang" (default; minutes 10–120, step 5, default 45) or "Feste Uhrzeit" (step 5 min, 03:00 to sunrise − 5).
   - A fixed time rings at most 5 min before sunrise.
   - The footers explain the daily ring, silent mode and Focus, and how the two modes differ.
+  - **Sound** (added 18.11.2026 with the Phase 17 plan): a group "Klang" with "Systemton" (default, the iOS alarm sound) or "Kurzer Adhan" (the voice chosen in the adhan sheet; at Fajr its Fajr version once there is a recording). Footer `alarmSoundFooter`.
+  - **Permission denied:** the switch stays off and cannot be turned on; below it "iOS-Einstellungen öffnen", footer `alarmDeniedFooter`. The settings row and the chip then show "Aus" or nothing.
+- **Alarm alert:** title "Wecker zu Fadschr" (`alarmRow`), one button "Stopp" (`alarmStop`), no snooze (decided 18.11.2026). Reason in the system dialog: `alAlarmBody`.
 - **Today screen:** The Fajr row shows a small chip with a clock glyph and today's ring time.
 - **Implementation:** AlarmKit (iOS 26). The permission is asked when the alarm is first turned on, and the daily time is recalculated with the prayer times.
 
@@ -355,6 +358,7 @@ The coordinates are rounded to 0.01° before they are stored or sent (in the app
 
 ## Changelog
 - **v0.9 (18.11.2026):** Changes after the first beta (§ 10): "Verbotszeit" in German and longer kerahat windows on the arc, info sheet on prohibited times, Live Activity at 30 % with orange prohibited time and compact ended activities (newest on top), Live widget at 30 %, new onboarding title, location and Live Activity hints, honest privacy texts, qada for men and women with reset, Fajr alarm (Phase 17), share link to TestFlight.
+  - *Addendum 18.11.2026 (Phase 17 plan):* the alarm sound is a choice of system sound or short adhan; denied permission keeps the switch off with a link to iOS Settings; the alert has only "Stopp", no snooze (§ 10.8).
 - **v0.8, addendum 4 (16.11.2026):** sunrise as a marker on the day arc, same look as the prayers, everywhere the arc appears (§ 9.14).
 - **v0.8, addendum 3 (15.11.2026):** plural forms for counted texts in `PLURAL`, digits and calendar per locale (§ 9.10).
 - **v0.8, addendum 2 (15.11.2026):** Lock Screen rectangular widget in the Live Activity style – arc centred, markers with symbols, knob with ring, prayer and countdown inside the arc, kerahat striped (§ 9.11).

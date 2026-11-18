@@ -80,6 +80,8 @@ targets:
         # Sprachen stehen in App/InfoPlist.xcstrings. Beides kommt aus `T.alLocBody` im Prototyp –
         # `scripts/import-strings --check` prüft, dass dieser Wert dem deutschen Text entspricht.
         NSLocationWhenInUseUsageDescription: "Dein Standort dient nur der Berechnung der Gebetszeiten. Für den Ortsnamen fragt die App Apple Karten."
+        # Begründung im System-Dialog von AlarmKit (Wecker zu Fadschr, Phase 17), aus `T.alAlarmBody`.
+        NSAlarmKitUsageDescription: "Damit der Wecker zu Fadschr auch im Stummmodus und bei Fokus klingelt."
         # Die App Group, in deren UserDefaults die Einstellungen liegen (Features: SettingsStore),
         # damit Widgets und Live-Aktivität sie ab Phase 9 lesen können.
         AppGroupIdentifier: $(APP_GROUP_ID)

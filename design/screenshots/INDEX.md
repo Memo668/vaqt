@@ -54,6 +54,7 @@ Abweichungen des Prototyps, denen die App nicht folgt (Spec > Screenshot > HTML)
 | `iphone/22-home-jakarta-close-markers.png` | Jakarta, Maghrib active: close markers (Maghrib → Isha 72 min) get a ring |
 | `iphone/23-home-next-day.png` | Next day (`-debugDayOffset 1`): that day's times, relative day + date instead of the countdown, „Zurück zu heute“ (§ 9.4) |
 | `iphone/23-home-next-day-dark.png` | Same in dark mode |
+| `iphone/24-home-alarm-chip.png` | Fajr alarm on (`-debugAlarm before`): chip with clock glyph and today's ring time 06:29 in the Fajr row (§ 10.8, Phase 17) |
 
 ## Qibla – Phase 4
 
@@ -127,6 +128,11 @@ Vollbild über der Anleitung; `-debugWalk dhuhr -debugWalkStep N` mit `N` wie `S
 | `iphone/82-settings-hl-manual-dark.png` | Same in dark mode |
 | `iphone/83-settings-support.png` | Settings › Unterstützen (§ 9.9) |
 | `iphone/83-settings-support-dark.png` | Same in dark mode |
+| `iphone/84-settings-alarm.png` | Settings › Wecker zu Fadschr (`-debugTab alarm -debugAlarm before`): on, 45 min before sunrise, system sound (§ 10.8, Phase 17) |
+| `iphone/84-settings-alarm-dark.png` | Same in dark mode |
+| `iphone/84-settings-alarm-fixed.png` | Same with a fixed time 05:30 and the short adhan (`-debugAlarm fixed`) |
+| `iphone/84-settings-alarm-off.png` | Same page, alarm off (`-debugTab alarm`) |
+| `iphone/84-settings-alarm-denied.png` | Alarm permission denied (`-debugAlarm denied`): switch off and disabled, „iOS-Einstellungen öffnen“ |
 
 ## Sheets – Phase 3 (Stadt) und 7 (Adhan)
 

@@ -834,6 +834,107 @@
         }
       }
     },
+    "alAlarmBody" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ليرنّ منبّه الفجر حتى في الوضع الصامت وعند تفعيل التركيز."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "যাতে ফজরের অ্যালার্ম নীরব মোডে এবং ফোকাস চালু থাকলেও বাজে।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Da bi alarm za sabah zvonio i u nečujnom načinu rada i kada je uključen fokus."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Damit der Wecker zu Fadschr auch im Stummmodus und bei Fokus klingelt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "So the Fajr alarm rings even in silent mode and with a Focus on."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para que la alarma de Fajr suene incluso en modo silencio y con un modo de concentración activado."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تا زنگ هشدار صبح حتی در حالت بی‌صدا و با تمرکز روشن به صدا درآید."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Pour que l’alarme du Fajr sonne même en mode silencieux et avec un mode de concentration activé."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Agar Alarm Subuh tetap berbunyi dalam mode senyap dan saat Fokus aktif."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Perché la sveglia per Fajr suoni anche in modalità silenziosa e con una modalità Full immersion attiva."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Supaya Penggera Subuh tetap berbunyi dalam mod senyap dan ketika Fokus aktif."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Zodat de wekker voor Fajr ook in de stille modus en met een focus aan afgaat."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Чтобы будильник на Фаджр звонил даже в бесшумном режиме и при включённом фокусировании."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Që alarmi i sabahut të bjerë edhe në modalitetin e heshtur dhe kur Fokusi është aktiv."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sabah namazı alarmı sessiz modda ve odak açıkken de çalsın diye."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تاکہ فجر کا الارم خاموش موڈ میں اور فوکس آن ہونے پر بھی بجے۔"
+          }
+        }
+      }
+    },
     "alarmBefore" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -931,6 +1032,107 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "طلوعِ آفتاب سے پہلے"
+          }
+        }
+      }
+    },
+    "alarmDeniedFooter" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "المنبّهات غير مسموح بها. اسمح بها في إعدادات iOS."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "অ্যালার্মের অনুমতি নেই। iOS সেটিংসে অনুমতি দিন।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alarmi nisu dozvoljeni. Dozvolite ih u postavkama iOS-a."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wecker sind nicht erlaubt. Erlaube sie in den iOS-Einstellungen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarms aren’t allowed. Allow them in iOS Settings."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las alarmas no están permitidas. Permítelas en Ajustes de iOS."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "زنگ‌های هشدار مجاز نیستند. آن‌ها را در تنظیمات iOS مجاز کنید."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Les alarmes ne sont pas autorisées. Autorisez-les dans les Réglages d’iOS."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alarm tidak diizinkan. Izinkan di Pengaturan iOS."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Le sveglie non sono consentite. Consentile nelle Impostazioni di iOS."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Penggera tidak dibenarkan. Benarkannya dalam Seting iOS."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Wekkers zijn niet toegestaan. Sta ze toe in de iOS-instellingen."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Будильники не разрешены. Разрешите их в Настройках iOS."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alarmet nuk lejohen. Lejojini te Cilësimet e iOS."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarmlara izin verilmiyor. iOS Ayarları’ndan izin ver."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "الارم کی اجازت نہیں ہے۔ iOS سیٹنگز میں اجازت دیں۔"
           }
         }
       }
@@ -1538,6 +1740,208 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "فجر کا الارم"
+          }
+        }
+      }
+    },
+    "alarmSoundFooter" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "يستخدم الأذان القصير الصوت الذي اخترته في «الاستماع إلى الأذان»."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "সংক্ষিপ্ত আজান সেই কণ্ঠে বাজে, যা আপনি “আজান শুনুন”-এ বেছে নিয়েছেন।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Kratki ezan koristi glas koji ste odabrali pod „Preslušaj ezan“."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der kurze Adhan spielt die Stimme, die du unter „Adhan anhören“ gewählt hast."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The short adhan plays the voice you chose under “Preview Adhan”."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El adhan corto usa la voz que elegiste en «Escuchar el adhan»."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "اذان کوتاه با صدایی پخش می‌شود که در «شنیدن اذان» انتخاب کرده‌اید."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "L’adhan court utilise la voix choisie dans « Écouter l’adhan »."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Azan Singkat memakai suara yang Anda pilih di “Dengarkan Azan”."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "L’adhan breve usa la voce scelta in “Anteprima adhan”."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Azan Pendek menggunakan suara yang anda pilih dalam “Dengar Azan”."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "De korte adhaan gebruikt de stem die je bij ‘Beluister adhaan’ hebt gekozen."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Короткий азан звучит голосом, который вы выбрали в «Прослушать азан»."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ezani i shkurtër përdor zërin që zgjodhët te „Dëgjo ezanin“."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kısa ezan, „Ezanı dinle“ bölümünde seçtiğin sesle çalar."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "مختصر اذان وہی آواز چلاتی ہے جو آپ نے «اذان سنیں» میں چنی ہے۔"
+          }
+        }
+      }
+    },
+    "alarmStop" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "إيقاف"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "থামান"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Zaustavi"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stopp"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detener"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "توقف"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Arrêter"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Hentikan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Interrompi"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Henti"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Stop"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Стоп"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ndalo"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durdur"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "بند کریں"
           }
         }
       }

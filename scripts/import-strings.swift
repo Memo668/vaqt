@@ -104,6 +104,8 @@ let projectURL = rootURL.appendingPathComponent("project.yml")
 /// im Prototyp der Text des nachgebauten Dialogs (`alLocBody`, design/screenshots/iphone/04).
 let infoPlistTexts: [(plistKey: String, textKey: String)] = [
     ("NSLocationWhenInUseUsageDescription", "alLocBody"),
+    // Begründung im System-Dialog von AlarmKit (Wecker zu Fadschr, Spec § 10.8); der Prototyp hat keinen Nachbau.
+    ("NSAlarmKitUsageDescription", "alAlarmBody"),
 ]
 
 // MARK: - `T` aus dem Prototyp schneiden

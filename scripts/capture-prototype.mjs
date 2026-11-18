@@ -109,6 +109,14 @@ const STATES = [
   { file: 'iphone/83-settings-support', at: hm(14, 25), s: { ...home, stack: { settings: ['settings', 'support'] } } },
   { file: 'iphone/83-settings-support-dark', dark: true, at: hm(14, 25), s: { ...home, stack: { settings: ['settings', 'support'] } } },
 
+  // Wecker zu Fadschr – Phase 17 (Spec § 10.8): Seite in allen Zuständen, Chip in der Fadschr-Zeile
+  { file: 'iphone/24-home-alarm-chip', at: hm(14, 25), s: { ...home, alarmOn: true } },
+  { file: 'iphone/84-settings-alarm', at: hm(14, 25), s: { ...home, alarmOn: true, stack: { settings: ['settings', 'alarm'] } } },
+  { file: 'iphone/84-settings-alarm-dark', dark: true, at: hm(14, 25), s: { ...home, alarmOn: true, stack: { settings: ['settings', 'alarm'] } } },
+  { file: 'iphone/84-settings-alarm-fixed', at: hm(14, 25), s: { ...home, alarmOn: true, alarmMode: 'fixed', alarmSound: 'adhan', stack: { settings: ['settings', 'alarm'] } } },
+  { file: 'iphone/84-settings-alarm-off', at: hm(14, 25), s: { ...home, stack: { settings: ['settings', 'alarm'] } } },
+  { file: 'iphone/84-settings-alarm-denied', at: hm(14, 25), s: { ...home, alarmDenied: true, stack: { settings: ['settings', 'alarm'] } } },
+
   // Außerhalb der App – Phase 9, Änderungen 1 und 11 (Phase 14). Die Ansichten `widgets`, `live` und
   // `notifs` zeigen mehrere Bildschirme nebeneinander; `screen` wählt einen davon (0 = der erste).
   { file: 'system/90-lockscreen-widgets', at: hm(14, 25, 1), s: { ...home, view: 'widgets' }, screen: 0 },

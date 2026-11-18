@@ -1,6 +1,108 @@
 {
   "sourceLanguage" : "de",
   "strings" : {
+    "NSAlarmKitUsageDescription" : {
+      "comment" : "Aus `T.alAlarmBody` im Prototyp.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ليرنّ منبّه الفجر حتى في الوضع الصامت وعند تفعيل التركيز."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "যাতে ফজরের অ্যালার্ম নীরব মোডে এবং ফোকাস চালু থাকলেও বাজে।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Da bi alarm za sabah zvonio i u nečujnom načinu rada i kada je uključen fokus."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Damit der Wecker zu Fadschr auch im Stummmodus und bei Fokus klingelt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "So the Fajr alarm rings even in silent mode and with a Focus on."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para que la alarma de Fajr suene incluso en modo silencio y con un modo de concentración activado."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تا زنگ هشدار صبح حتی در حالت بی‌صدا و با تمرکز روشن به صدا درآید."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Pour que l’alarme du Fajr sonne même en mode silencieux et avec un mode de concentration activé."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Agar Alarm Subuh tetap berbunyi dalam mode senyap dan saat Fokus aktif."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Perché la sveglia per Fajr suoni anche in modalità silenziosa e con una modalità Full immersion attiva."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Supaya Penggera Subuh tetap berbunyi dalam mod senyap dan ketika Fokus aktif."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Zodat de wekker voor Fajr ook in de stille modus en met een focus aan afgaat."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Чтобы будильник на Фаджр звонил даже в бесшумном режиме и при включённом фокусировании."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Që alarmi i sabahut të bjerë edhe në modalitetin e heshtur dhe kur Fokusi është aktiv."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sabah namazı alarmı sessiz modda ve odak açıkken de çalsın diye."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تاکہ فجر کا الارم خاموش موڈ میں اور فوکس آن ہونے پر بھی بجے۔"
+          }
+        }
+      }
+    },
     "NSLocationWhenInUseUsageDescription" : {
       "comment" : "Aus `T.alLocBody` im Prototyp.",
       "extractionState" : "manual",
