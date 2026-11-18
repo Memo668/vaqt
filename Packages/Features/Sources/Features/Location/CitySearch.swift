@@ -85,8 +85,10 @@ public final class MapKitCitySearch: NSObject, CitySearching {
         if let center, center != self.center {
             // Treffer in der Umgebung zuerst; weiter entfernte bleiben möglich (`regionPriority`).
             self.center = center
+            // Nur gerundet (Spec § 10.6): Gespeicherte Orte aus Build 2 und älter sind noch genau.
+            let rounded = center.coarse
             completer.region = MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude),
+                center: CLLocationCoordinate2D(latitude: rounded.latitude, longitude: rounded.longitude),
                 latitudinalMeters: Self.regionSpan, longitudinalMeters: Self.regionSpan
             )
         }

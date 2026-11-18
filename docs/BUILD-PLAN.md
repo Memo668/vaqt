@@ -295,6 +295,8 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 
 *Grundlage: Spec v0.9 § 10.1–10.7 und § 10.9, Prototyp „Änderungen vom 17./18.11.2026“, entschieden am 17./18.11.2026 (`docs/OPEN-QUESTIONS.md`). Danach Build 0.1.0 (3) für TestFlight.*
 
+*Gebaut am 18.11.2026 auf `claude/phase-16` (ab `c17a65e`), 1023 Tests grün, geprüft im Simulator gegen die neuen Referenzbilder; Annahmen und Abweichungen in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 16“). Das Widget „Live“ bleibt deckend (iOS lässt es nicht durchscheinen).*
+
 - **Texte:**
   - Neue und geänderte Schlüssel in `T`. DE, TR und EN sind entworfen.
   - ES und die zwölf weiteren Sprachen als KI-Entwurf ergänzen („Needs Review“).

@@ -167,11 +167,14 @@ public struct QadaCalculatorCard: View {
         let title = field.localizedTitle
         let size = QadaCalculatorMetrics.fieldValueSize * min(max(typeScale, 0), QadaCalculatorMetrics.valueMaxScale)
         return VStack(spacing: QadaCalculatorMetrics.fieldInnerGap) {
+            // Zwei Zeilen für die längeren Titel bei Frauen („Wochenbett insgesamt (Tage)“, Spec § 10.7).
             Text(title)
                 .textStyle(.caption1, lineHeight: QadaCalculatorMetrics.labelLineHeight)
                 .foregroundStyle(Palette.textSecondary)
-                .lineLimit(1)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
                 .minimumScaleFactor(0.8)
+                .fixedSize(horizontal: false, vertical: true)
             Text(QadaSummary.number(value))
                 .font(.system(size: size, weight: .bold, design: .rounded))
                 .monospacedDigit()

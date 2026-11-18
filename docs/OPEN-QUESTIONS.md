@@ -452,6 +452,40 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 | Nachholen | „Ja, so lassen“ | Die App startet leer: kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr. `iphone/60` und `61` zeigen die Beispielzahlen des Prototyps; die gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Annahme für Phase 6: Mit `-debugFixtureTimes` zeigt die Seite sie. |
 | JAKIM und Kemenag | „Ja, so lassen“ | reine Winkel 20°/18°. Vor der Veröffentlichung gegen offizielle Tabellen zu prüfen, siehe oben. |
 
+## Annahmen in Phase 16
+
+Gebaut am 18.11.2026 auf `claude/phase-16` (ab der Spec-Fassung `c17a65e`). Die Referenzbilder sind neu aus dem Prototyp v0.9 aufgenommen (53 Dateien: `iphone/01`–`04`, `10`–`23`, `30`–`34`, `40`–`50`, `60`, `61`, `70`–`75`, `system/90`–`96`), wo sich Texte oder Aussehen geändert haben.
+
+### Was mit den Referenzbildern übereinstimmt
+- **Zeiten-Seite** (`iphone/10`): Verbotszeit-Zeilen mit Infopunkt; die Abschnitte im Bogen sind länger, auch der vor Dhuhr ist neben dem Punkt zu sehen.
+- **Weitere Seiten:** das Sheet „Was sind Verbotszeiten?“, der Hinweis bei Asr in der Anleitung, Onboarding-Seite 3 mit dem Hinweis auf die Live-Aktivität und der Rechner mit „Für wen?“ und „Alles zurücksetzen“, alle im Simulator geprüft.
+- **Live-Aktivität im Simulator:**
+  - In der Verbotszeit orange, oben „Verbotszeit bis 16:27“, Deckkraft 30 %.
+  - Nach dem Wechsel die schmale Zeile „Maghrib · 16:27 · hat begonnen“.
+
+### Was abweicht und bleibt
+- **Widget „Live“ deckend statt 30 % (Spec § 10.4):**
+  - Grund: iOS lässt bei Home-Widgets das Hintergrundbild nicht durchscheinen, sondern legt eine eigene helle bzw. dunkle Fläche darunter. Mit 30 % wurde das Widget blass, und die weiße Schrift war schwer lesbar (Simulator, 18.11.2026).
+  - Deshalb `LiveActivityMetrics.liveWidgetBackgroundOpacity = 1`.
+  - Entscheidung des Nutzers offen: so lassen oder doch 30 %.
+- **Schmale Zeile kommt mit Verzögerung:** iOS zeichnet eine Aktivität erst einige Zeit nach ihrem `staleDate` neu. Im Simulator dauerte das gut eine bis zwei Minuten; bis dahin stand „0:00“. Wie es am Gerät ist, muss sich noch zeigen.
+- **Kein Zusatz in der Asr-Zeile:** Der Hinweis auf das Farḍ steht nur in der Erklärung und in der Anleitung (entschieden am 18.11.2026).
+
+### Annahmen in der Umsetzung
+- **Zurücksetzen:** „Alles zurücksetzen“ leert Zähler, Summen, Plan (5 pro Tag) und Rechner; die Wahl Mann oder Frau bleibt.
+- **Abzug bei Frauen:** Regeltage je Monat = Zeitraum ÷ 30 × Tage, gerundet; dazu das Wochenbett; höchstens der Zeitraum. Ältere gespeicherte Stände gelten als „Mann“.
+- **Hinweis in der Anleitung:** Er steht bei Asr immer, auch wenn „Verbotszeiten zeigen“ aus ist (`GuideHeaderCard`).
+- **Ohne „Verbotszeiten zeigen“** gibt es kein Orange und keinen zweiten Teil; die Live-Aktivität bleibt grün.
+- **Live-Aktivität:**
+  - Ältere Inhalte aus Build 2 ohne `segment` gelten als grün bis zum Gebet.
+  - Die App beendet gewechselte Aktivitäten sofort, statt sie 15 Minuten stehen zu lassen.
+- **`-debugLiveActivity`** plant um 14:25 jetzt zwei Teile für Maghrib: grün ab dem Start, orange ab 15:42.
+- **Texte:** 37 neue Schlüssel; dazu `ob2Title`, `ob2Body`, `alLocBody`, `locFooter` und `privacyBody2` neu in allen Sprachen. Die 13 Sprachen ab ES sind KI-Entwürfe. Unsichere Begriffe:
+  - Name von Apple Karten auf Urdu, Persisch und Bengalisch: als „Apple Maps“ gelassen.
+  - Wörter für Wochenbett (nifas).
+  - „Fokus“ in den Weckertexten (Phase 17).
+- **Datenschutz:** Die Erklärung nennt jetzt die Rundung auf etwa 1 km und den gerundeten Standort als Region bei der Stadtsuche. Auch die Stadtsuche rundet ihn.
+
 ## Annahmen in Phase 15
 
 Geprüft am 15.11.2026 auf dem iPhone 18 Pro mit iOS 27.2 gegen den Prototyp in derselben Sprache (`make compare-language`: AR, AR mit Region Saudi-Arabien, RU, FR, BN; dazu die Wahl in der App) und mit `make capture` in allen 16 Sprachen. `make test`: 1016 Tests grün (PrayerCore 456, DesignSystem 232, Features 328). Die Übersicht steht in `docs/REFERENCE-CHECK.md` unter „Phase 15“.

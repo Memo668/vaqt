@@ -58,6 +58,10 @@ public enum LiveActivityMetrics {
     /// Deckkraft des Verlaufs von Live-Aktivität und Widget „Live“: 30 %, damit Hintergrundbild und Unschärfe
     /// des Systems durchscheinen (Spec § 10.3, § 10.4; `--la-pct: 30%`).
     public static let backgroundOpacity: Double = 0.3
+    /// Deckkraft im Widget „Live“: voll. iOS legt unter `containerBackground` eine eigene helle bzw. dunkle Fläche
+    /// statt des Hintergrundbilds; mit 30 % wurde das Widget blass und die weiße Schrift schwer lesbar
+    /// (Simulator, 18.11.2026). Spec § 10.4 lässt das offen; die Entscheidung liegt beim Nutzer.
+    public static let liveWidgetBackgroundOpacity: Double = 1
 
     /// Der Verlauf in der Verbotszeit (`.la.is-kerahat`, `--k-or: #EC8530`): oben links Orange zu 80 % auf Weiß,
     /// in der Mitte das Orange, unten rechts zu 76 % auf Schwarz (Spec § 10.3).
@@ -319,9 +323,11 @@ struct LiveHeader: View {
 /// Verbotszeit auf Orange, mit 30 % Deckkraft (Spec § 10.3, § 10.4).
 public struct LiveActivityBackground: View {
     private let isProhibited: Bool
+    private let opacity: Double
 
-    public init(isProhibited: Bool = false) {
+    public init(isProhibited: Bool = false, opacity: Double = LiveActivityMetrics.backgroundOpacity) {
         self.isProhibited = isProhibited
+        self.opacity = opacity
     }
 
     public var body: some View {
@@ -331,7 +337,7 @@ public struct LiveActivityBackground: View {
                 stops: isProhibited ? LiveActivityMetrics.prohibitedStops : LiveActivityMetrics.backgroundStops,
                 startPoint: points.start, endPoint: points.end
             )
-            .opacity(LiveActivityMetrics.backgroundOpacity)
+            .opacity(opacity)
         }
     }
 }

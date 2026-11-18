@@ -417,6 +417,13 @@ Wie die Zeiten-Seite nennen die Widgets das nächste Ereignis, auch den Sonnenau
 
 Die Live-Aktivität läuft je Pflichtgebet, ohne Sonnenaufgang, standardmäßig ab 30 Minuten vorher (Einstellungen › Live-Aktivität: Aus, 10, 15, 20, 30, 45, 60, 90 oder 120 Minuten). iOS startet sie selbst (`Activity.request(…, start:)`), auch wenn die App nicht läuft. Ab Gebetsbeginn ist sie `stale` und zeigt „Jetzt“ statt des Countdowns, der Bogen das Gebet als laufend. 15 Minuten nach Beginn endet sie. Ein geplantes Ende kennt ActivityKit nicht; die App beendet die Aktivität, sobald sie läuft – zum Gebetsbeginn, wenn sie vorn ist, sonst beim Start, wenn sie nach vorn kommt, oder bei der Hintergrundaktualisierung – und lässt sie bis 15 Minuten nach Beginn auf dem Sperrbildschirm stehen. Läuft die App nicht, bleibt „Jetzt“ stehen; iOS beendet eine Aktivität nach spätestens 8 Stunden. iOS nimmt höchstens fünf Aktivitäten je App an, geplante mitgezählt; die App plant die nächsten fünf.
 
+Seit Phase 16 (Spec § 10.3):
+- **Verbotszeit:** Fällt die Verbotszeit vor Dhuhr oder Maghrib in die Strecke, gibt es zwei Aktivitäten: eine grüne bis zu ihrem Beginn und eine orange (Kennung mit dem Zusatz „verbot“) bis zum Gebet.
+- **Kein „Jetzt“:** Zu ihrem `staleDate` schrumpft eine Aktivität auf eine schmale Zeile, „Asr · 14:00 · hat begonnen“ bzw. „Verbotszeit ab 11:42“. Sobald die App läuft, beendet sie die Aktivität sofort.
+- **Reihenfolge:** `relevanceScore` wächst mit dem Start, die neueste steht deshalb oben und in der Dynamic Island.
+- **Deckkraft:** Der Hintergrund hat 30 % Deckkraft. Das Widget „Live“ bleibt deckend, weil iOS unter Widgets eine eigene Fläche legt (siehe `docs/OPEN-QUESTIONS.md`, „Annahmen in Phase 16“).
+- **Aufräumen:** Die Widget-Erweiterung sieht die Aktivitäten der App nicht und kann sie deshalb nicht beenden.
+
 ### Abgleich von `system/90`, `91` und `93`–`96`
 
 `make compare-system` nimmt den Katalog (`-debugCatalog widgets`, `live`) in den Maßen des Prototyps auf und legt jeden Baustein neben die Referenz. Im System selbst – Widgets auf Home- und Sperrbildschirm, Live-Aktivität auf dem Sperrbildschirm und in der Dynamic Island – stellt das UI-Hilfsprojekt die Referenzbilder nach; die Schritte und Argumente stehen in `docs/PROMPTS.md`, was abweicht in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 9“ und „Annahmen in Phase 14“). Die Widgets von „Vaqt“ liegen im Simulator auf der Seite links neben der des Hilfsprojekts; eingerichtet werden sie mit `system-setup-home-widgets.txt` und `system-setup-lock-widgets.txt`.

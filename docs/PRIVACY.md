@@ -9,7 +9,7 @@
 
 # Privacy Policy for the App “Vaqt”
 
-Last updated: 16 November 2026
+Last updated: 18 November 2026
 
 **In short:** The app collects no data. There is no account, no advertising, no analytics and no server of our own. What you set up stays on your iPhone. The app only goes online for two things, and only to Apple’s map service: to get the name of your location and to show suggestions in the city search.
 
@@ -30,7 +30,7 @@ This data is kept in the app’s storage. Widgets and the Live Activity read it 
 
 ## Location
 
-With your permission (“While Using the App”), the app determines your location. It only requests a coarse location, accurate to about three kilometres; iOS may still provide a more precise one. From your location, the app calculates the prayer times and the Qibla direction on the device.
+With your permission (“While Using the App”), the app determines your location. It only requests a coarse location, accurate to about three kilometres; if iOS provides a more precise one, the app rounds it to about one kilometre (two decimal places of the coordinates) before storing or passing it on. From your location, the app calculates the prayer times and the Qibla direction on the device.
 
 To show the name of your location, for example “Berlin”, the app sends the coordinates to Apple’s map service (MapKit). It gets back the name, country and time zone. The request goes directly to Apple; nothing reaches us.
 
@@ -38,7 +38,7 @@ Without permission, you choose your city by hand. You can change the permission 
 
 ## City search
 
-When you search for a city, the text you type goes to Apple’s map service so that suggestions appear. When you pick one, its coordinates come back. This, too, goes directly to Apple.
+When you search for a city, the text you type goes to Apple’s map service so that suggestions appear. If you have allowed location access, the app also sends your rounded location as a region, so that nearby places come first. When you pick a suggestion, its coordinates come back. This, too, goes directly to Apple.
 
 Requests to the map service are covered by [Apple’s Privacy Policy](https://www.apple.com/legal/privacy/).
 

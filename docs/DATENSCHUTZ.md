@@ -10,7 +10,7 @@
 
 # Datenschutzerklärung für die App „Vaqt“
 
-Stand: 16. November 2026
+Stand: 18. November 2026
 
 **Kurz gesagt:** Die App erhebt keine Daten. Es gibt kein Konto, keine Werbung, keine Analyse-Werkzeuge und keinen eigenen Server. Was du einstellst, bleibt auf deinem iPhone. Ins Netz geht die App nur für zwei Dinge, und zwar zum Kartendienst von Apple: für den Namen deines Ortes und für Vorschläge in der Ortssuche.
 
@@ -31,7 +31,7 @@ Diese Daten liegen im Speicher der App. Widgets und Live-Aktivität lesen sie au
 
 ## Standort
 
-Mit deiner Erlaubnis („Beim Verwenden der App“) bestimmt die App deinen Standort. Sie fordert ihn nur grob an, auf etwa drei Kilometer genau; iOS kann ihn trotzdem genauer liefern. Aus dem Standort rechnet die App auf dem Gerät die Gebetszeiten und die Richtung der Qibla.
+Mit deiner Erlaubnis („Beim Verwenden der App“) bestimmt die App deinen Standort. Sie fordert ihn nur grob an, auf etwa drei Kilometer genau; liefert iOS ihn genauer, rundet die App ihn auf etwa einen Kilometer (zwei Nachkommastellen der Koordinaten), bevor sie ihn speichert oder weitergibt. Aus dem Standort rechnet die App auf dem Gerät die Gebetszeiten und die Richtung der Qibla.
 
 Für den Namen deines Ortes, zum Beispiel „Berlin“, schickt die App die Koordinaten an den Kartendienst von Apple (MapKit). Zurück kommen Name, Land und Zeitzone. Die Anfrage geht direkt an Apple; bei uns kommt nichts an.
 
@@ -39,7 +39,7 @@ Ohne Erlaubnis wählst du deine Stadt von Hand. Ändern kannst du die Erlaubnis 
 
 ## Ortssuche
 
-Suchst du eine Stadt, geht der Text, den du eintippst, an den Kartendienst von Apple, damit Vorschläge erscheinen. Wählst du einen aus, kommen seine Koordinaten zurück. Auch das geht direkt an Apple.
+Suchst du eine Stadt, geht der Text, den du eintippst, an den Kartendienst von Apple, damit Vorschläge erscheinen. Hast du den Standort erlaubt, gibt die App den gerundeten Standort als Region mit, damit nahe Orte zuerst erscheinen. Wählst du einen Vorschlag aus, kommen seine Koordinaten zurück. Auch das geht direkt an Apple.
 
 Für die Anfragen an den Kartendienst gilt die [Datenschutzrichtlinie von Apple](https://www.apple.com/de/legal/privacy/).
 

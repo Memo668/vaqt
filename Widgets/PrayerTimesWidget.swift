@@ -183,6 +183,8 @@ struct PrayerLiveWidgetView: View {
         return LivePrayerWidget(content: entry.content)
             .environment(\.locale, L10n.locale)
             .environment(\.layoutDirection, L10n.layoutDirection)
-            .containerBackground(for: .widget) { LiveActivityBackground() }
+            .containerBackground(for: .widget) {
+                LiveActivityBackground(opacity: LiveActivityMetrics.liveWidgetBackgroundOpacity)
+            }
     }
 }
