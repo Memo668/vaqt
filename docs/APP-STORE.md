@@ -87,14 +87,21 @@ Vaqt is a non-profit app for the five daily prayers – no ads, no tracking, no 
 This is the first beta. Some content is still a placeholder: the verse translations, the adhan recordings and the app icon. Nobody has reviewed the guide texts for religious accuracy yet, and the languages from French on are drafts that native speakers have yet to review.
 ```
 
-### Was testen – Build 0.1.0 (2)
+### Was testen – Build 0.1.0 (3)
 
-Für jeden weiteren Build anpassen: Was ist neu, was soll geprüft werden?
+Neu seit Build 2 (Spec § 10). Für jeden weiteren Build anpassen: Was ist neu, was soll geprüft werden?
 
 Deutsch:
 
 ```text
-Erste Beta. Bitte im Alltag ausprobieren, vor allem:
+Neu in Build 3:
+– Verbotszeiten (Kerahat): im Bogen besser sichtbar, mit ⓘ in der Liste und einer Erklärung.
+– Live-Aktivität durchscheinend, in der Verbotszeit orange; nach Gebetsbeginn schrumpft sie auf eine schmale Zeile, die neueste steht oben.
+– Nachholen: Auswahl Mann oder Frau (Regel und Wochenbett werden abgezogen) und „Alles zurücksetzen“.
+– Ehrlichere Datenschutztexte: Für den Ortsnamen fragt die App Apple Karten.
+Bitte besonders prüfen: Wird die Live-Aktivität in der Verbotszeit orange, und wie schnell schrumpft sie nach Gebetsbeginn? Stören sich mehrere Live-Aktivitäten auf dem Sperrbildschirm?
+
+Außerdem bitte im Alltag ausprobieren, vor allem:
 – Stimmen die Gebetszeiten für deinen Ort? Vergleiche mit deiner Moschee oder deinem Kalender; Methode und Minuten lassen sich in den Einstellungen ändern.
 – Kommen die Mitteilungen pünktlich, auch über mehrere Tage, bei gesperrtem iPhone und geschlossener App? Ist der Adhan zu hören?
 – Zeigen Widgets und Live-Aktivität (ab 30 Minuten vor jedem Gebet) die richtigen Zeiten?
@@ -107,7 +114,14 @@ Feedback am besten mit Screenshot direkt aus TestFlight.
 Englisch:
 
 ```text
-First beta. Please use it in everyday life and check in particular:
+New in build 3:
+– Makruh times: easier to see on the arc, with ⓘ in the list and an explanation.
+– Live Activity is translucent and turns orange during makruh times; after the prayer begins it shrinks to a slim line, the newest stays on top.
+– Make-up prayers: choose man or woman (menstruation and postnatal days are deducted) and "Reset Everything".
+– More accurate privacy texts: the app asks Apple Maps for the place name.
+Please check in particular: Does the Live Activity turn orange during makruh times, and how quickly does it shrink after the prayer begins? Do several Live Activities on the Lock Screen get in the way?
+
+Also please use it in everyday life and check in particular:
 – Are the prayer times right for your location? Compare with your mosque or calendar; method and minutes can be changed in Settings.
 – Do notifications arrive on time, also over several days, with the iPhone locked and the app closed? Can you hear the adhan?
 – Do the widgets and the Live Activity (from 30 minutes before each prayer) show the right times?

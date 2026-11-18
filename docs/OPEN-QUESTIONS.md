@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 16.11.2026, nach der Abnahme von Phase 15 (mit dem Nachtrag „Sonnenaufgang im Bogen“).
+Stand: 18.11.2026, nach der Abnahme von Phase 16 (Änderungen nach der ersten Beta, Spec § 10); als Nächstes Build 0.1.0 (3) und Phase 17 (Wecker).
 
 ## Für die erste Beta
 
@@ -233,6 +233,7 @@ Diese Punkte standen bis Phase 10 unter „Braucht eine Entscheidung“.
 | 13 | 15.11.2026, „Abnehmen, Phase 14“ | `3b1a354` | VoiceOver von Hand, Duo und echtes Gerät nicht geprüft; fachliche Prüfung der Anleitung (43 Texte `TODO(review)`) |
 | 14 | 15.11.2026, „Abnahme, und Phase 15 go“ | `9c8de98` | Rechteck nach Wunsch mittig im Stil der Live-Aktivität; Rechteck alle 10 statt 5 Minuten (10-MB-Grenze); Mitteilungen (`system/92`), Duo und echtes Gerät nicht geprüft; endgültiger Name vor dem App Store |
 | 15 | 16.11.2026, „abgenommen“ | `d11db74` | Nachtrag nach Wunsch: Sonnenaufgang als Punkt im Bogen, gleich groß wie die Gebete, überall mit Bogen (Spec § 9.14); vorher auf Wunsch per Fast-Forward in `main` (`f51d0d5`); Widgets und Live-Aktivität in RTL nur im Katalog; Duo-Referenzen ohne Sonnenaufgang; Muttersprachler für die zwölf neuen Sprachen vor dem App Store |
+| 16 | 18.11.2026, „Abgenommen“ | `e270627` | Am iPhone 18 Pro und Duo ausprobiert. Das Widget „Live“ bleibt deckend (iOS lässt Home-Widgets nicht durchscheinen; so abgenommen). Offen: fachliche Prüfung der Verbotszeiten-Erklärung und der Regel für Frauen (Ibrahim), die 13 Sprachen als KI-Entwurf, Phase 17 Wecker. Danach Build 0.1.0 (3). |
 
 ### Erste Beta, entschieden am 12.11.2026
 
