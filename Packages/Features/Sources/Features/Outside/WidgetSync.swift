@@ -25,7 +25,7 @@ public struct AppGroupWidgetPublisher: WidgetPublishing {
         guard state.save(to: defaults) else { return }
         // Aus der App im Vordergrund zählt das Neuladen nicht gegen das Budget von WidgetKit.
         WidgetCenter.shared.reloadAllTimelines()
-        WidgetSync.log.notice("Widgets neu geladen: \(state.cityName, privacy: .public), \(state.language.rawValue, privacy: .public)")
+        WidgetSync.log.notice("Widgets neu geladen: \(state.cityName, privacy: .private), \(state.language.rawValue, privacy: .public)")
     }
 }
 

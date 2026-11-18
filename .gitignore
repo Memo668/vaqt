@@ -15,3 +15,12 @@ Package.resolved.orig
 # Lokale Ausgaben
 /build/
 /screenshots-out/
+
+# Signieren und Verteilen – gehört nie ins öffentliche Repo (Sicherheitsprüfung vom 17.11.2026)
+*.p8
+*.p12
+*.cer
+*.mobileprovision
+*.xcarchive
+*.ipa
+ExportOptions*.plist

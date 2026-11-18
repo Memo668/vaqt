@@ -10,8 +10,10 @@ let package = Package(
         .library(name: "PrayerCore", targets: ["PrayerCore"]),
     ],
     dependencies: [
-        // Einzige Fremdabhängigkeit des Projekts (MIT).
-        .package(url: "https://github.com/batoulapps/adhan-swift", from: "1.5.0"),
+        // Einzige Fremdabhängigkeit des Projekts (MIT). Genau diese Fassung, damit jeder Build dieselben Zeiten
+        // rechnet: Das Package.resolved der App liegt im erzeugten Xcode-Projekt und ist nicht eingecheckt
+        // (Sicherheitsprüfung vom 17.11.2026). Neue Fassung: hier, in docs/THIRD-PARTY.md und die Tests prüfen.
+        .package(url: "https://github.com/batoulapps/adhan-swift", exact: "1.5.0"),
     ],
     targets: [
         .target(

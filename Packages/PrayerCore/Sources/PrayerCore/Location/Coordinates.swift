@@ -10,6 +10,14 @@ public struct Coordinates: Hashable, Codable, Sendable {
         self.longitude = longitude
     }
 
+    /// Auf zwei Nachkommastellen gerundet, also auf gut einen Kilometer (0,01° Breite ≈ 1,1 km). So genau
+    /// braucht es die App für Gebetszeiten und Qibla – die Zeiten verschieben sich dadurch um höchstens ein
+    /// paar Sekunden. Gespeichert und an den Geocoder von Apple geschickt wird nur das (Sicherheitsprüfung
+    /// vom 17.11.2026).
+    public var coarse: Coordinates {
+        Coordinates(latitude: (latitude * 100).rounded() / 100, longitude: (longitude * 100).rounded() / 100)
+    }
+
     /// Mittlerer Erdradius in Kilometern (IUGG).
     private static let earthRadiusKm = 6371.0088
 

@@ -34,9 +34,10 @@ public struct MapKitPlaceResolver: PlaceResolving {
 
 /// Der aktuelle Ort über Core Location, mit der Freigabe „Beim Verwenden der App“.
 ///
-/// Der Standort bleibt auf dem Gerät. Für den Namen der Stadt gehen die Koordinaten einmal an den
-/// Geocoder von Apple; ohne Netz liefert die Quelle den Ort ohne Namen, mit der Zeitzone des Geräts.
-/// Für Gebetszeiten genügt die Stadt: Gefragt wird mit einer Genauigkeit von drei Kilometern.
+/// Für den Namen der Stadt gehen die Koordinaten einmal an den Geocoder von Apple; ohne Netz liefert die
+/// Quelle den Ort ohne Namen, mit der Zeitzone des Geräts. Für Gebetszeiten genügt die Stadt: Gefragt wird
+/// mit einer Genauigkeit von drei Kilometern, und weiter geht der Standort nur auf 0,01° gerundet
+/// (`Coordinates.coarse`) – auch mit „Genauer Standort“ liefert iOS sonst Meter genau.
 @MainActor
 public final class CoreLocationSource: NSObject, LocationSource {
     private let resolver: any PlaceResolving
@@ -69,7 +70,7 @@ public final class CoreLocationSource: NSObject, LocationSource {
         guard await authorization() == .authorized, let location = await requestLocation() else { return nil }
         let coordinates = Coordinates(
             latitude: location.coordinate.latitude, longitude: location.coordinate.longitude
-        )
+        ).coarse
         if let place = await resolver.place(at: coordinates) {
             return place
         }

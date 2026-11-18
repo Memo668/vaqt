@@ -569,7 +569,7 @@ struct SupportPage: View {
             Section {
                 SupportSoonCard(title: L10n.supportSoon, message: L10n.supportSoonBody) {
                     if let url = model.appStoreURL {
-                        // TODO(placeholder): die Adresse gibt es erst mit der App in App Store Connect.
+                        // Während der Beta die Einladung zu TestFlight (project.yml, APP_STORE_URL).
                         ShareLink(item: url) {
                             PillButtonLabel(L10n.supportShare, systemImage: "square.and.arrow.up")
                         }

@@ -10,6 +10,16 @@ struct LocationSourceTests {
         coordinates: Coordinates(latitude: 52.52, longitude: 13.405), timeZoneIdentifier: "Europe/Berlin"
     )
 
+    @Test("Koordinaten werden auf 0,01° gerundet – weniger als einen Kilometer neben dem Standort")
+    func coarseCoordinates() {
+        let exact = Coordinates(latitude: 52.520008, longitude: 13.404954)
+        #expect(exact.coarse == Coordinates(latitude: 52.52, longitude: 13.40))
+        #expect(exact.coarse.distanceKm(to: exact) < 1)
+        let jakarta = Coordinates(latitude: -6.208763, longitude: 106.845599)
+        #expect(jakarta.coarse == Coordinates(latitude: -6.21, longitude: 106.85))
+        #expect(jakarta.coarse.coarse == jakarta.coarse)
+    }
+
     @Test("mit Freigabe liefert die feste Quelle ihren Ort")
     func authorized() async {
         let source = FixedLocationSource(place: berlin, status: .authorized)

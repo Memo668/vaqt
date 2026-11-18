@@ -28,10 +28,10 @@ settings:
     APP_GROUP_ID: group.de.mehmetyilmaz.gebetszeiten
     # Adresse hinter Einstellungen › Quellcode („Open Source auf GitHub“), seit 16.11.2026 das öffentliche Repo.
     SOURCE_CODE_URL: https://github.com/Memo668/vaqt
-    # TODO(placeholder): Adresse der App im App Store hinter Einstellungen › Unterstützen › „App
-    # weiterempfehlen“ (entschieden am 15.11.2026: „App-Store-Link“). Die Kennung (id…) vergibt App Store
-    # Connect beim Anlegen der App; dann hier eintragen.
-    APP_STORE_URL: https://apps.apple.com/app/id0000000000
+    # Adresse hinter Einstellungen › Unterstützen › „App weiterempfehlen“. Während der Beta die öffentliche
+    # Einladung zu TestFlight (entschieden am 18.11.2026); vor dem App Store die Seite der App eintragen,
+    # https://apps.apple.com/app/id6835351684 (docs/OPEN-QUESTIONS.md, „Vor dem App Store“).
+    APP_STORE_URL: https://testflight.apple.com/join/2jTMrhur
     DEVELOPMENT_TEAM: V7652FBKMY
     CODE_SIGN_STYLE: Automatic
     ENABLE_USER_SCRIPT_SANDBOXING: YES

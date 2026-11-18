@@ -20,6 +20,15 @@ Die erste Beta über TestFlight kommt nach Phase 11 – seit dem 15.11.2026 nach
   - „Quellcode“ in der App zeigt seit Build 2 auf das Repo.
   - In App Store Connect sind die Testinformationen auf Deutsch und Englisch eingetragen: Beschreibung, Feedback-E-Mail, Adresse der Datenschutzerklärung je Sprache, der Kontakt für die Beta-App-Prüfung, die Hinweise für Apple und „Anmeldung erforderlich: nein“.
   - Die externe Gruppe heißt „Extern“. Build 0.1.0 (2) ist darin und steht seit dem 16.11.2026 zur Beta-App-Prüfung bei Apple („Waiting for Review“).
+  - Sicherheitsprüfung (17.11.2026, korrigiert am 18.11. auf Wunsch des Nutzers):
+    - Koordinaten gehen nur auf 0,01° gerundet weiter (`Coordinates.coarse`).
+    - Adhan Swift ist fest auf 1.5.0.
+    - Der Stadtname steht nicht mehr offen im Protokoll.
+    - „App weiterempfehlen“ zeigt auf die TestFlight-Einladung.
+    - `.gitignore` schützt Signier-Dateien.
+    - Für die Adhan-Aufnahmen stehen Prüfsummen in `docs/THIRD-PARTY.md`.
+    - Die Commit-Adresse ist jetzt vaqt@m-yilmaz.com, auch rückwirkend.
+    - Offen: Die Datenschutztexte in der App (Standort geht für den Ortsnamen an Apple Karten) ändern sich mit Phase 16, nach Abnahme des Prototyps vom 17./18.11.
   - Öffentlicher Link (16.11.2026, Auswahl „Öffentlicher Link“): `https://testflight.apple.com/join/2jTMrhur`, offen für alle, ohne Obergrenze. Beitreten geht erst, wenn Apple einen Build der Gruppe freigegeben hat.
 
 Erledigt ohne Konto am 14.11.2026: `make archive` baut das Release-Archiv ohne Signatur, und `scripts/check-archive` findet es in Ordnung – nur iPhone (vorher iPhone und iPad, unten unter „Annahmen in der Beta-Vorbereitung“), Exportkontrolle `ITSAppUsesNonExemptEncryption = NO`, beide Manifeste, Icon, alle Texte in vier Sprachen, kein Debug-Code. Dazu die Datenschutzerklärung (`docs/DATENSCHUTZ.md`, `docs/PRIVACY.md`) und die Texte für TestFlight (`docs/APP-STORE.md`). Mit Phase 11 kamen das Platzhalter-Icon und die Datenschutz-Manifeste. Die Platzhalter – Übersetzungen der Verse, Adhan-Aufnahmen, Texte der Anleitung, Icon, Link „Quellcode“ – dürfen in der Beta bleiben; „Was testen“ nennt sie.
@@ -49,6 +58,8 @@ Offen bzw. Annahmen:
 - **Duo:** Der Prototyp zeigt die neuen Elemente nur auf dem iPhone ausführlich; auf dem Duo gelten die Regeln aus Spec § 8 (Durchlauf als Vollbild, Tage-Navigation in der linken Spalte).
 
 ## Vor dem App Store
+
+- **„App weiterempfehlen“** zeigt seit dem 18.11.2026 auf die Einladung zu TestFlight (`APP_STORE_URL` in project.yml, Wunsch des Nutzers). Vor dem App Store die Seite der App eintragen: `https://apps.apple.com/app/id6835351684`. `scripts/check-archive` weist auf den TestFlight-Link hin und lehnt die Platzhalter-Kennung `id0000000000` ab.
 
 **Inhalte und Rechte**
 

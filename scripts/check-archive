@@ -190,6 +190,13 @@ source_url="$(value "$INFO" SourceCodeURL)"
 case "$source_url" in
   *example.com*) note "Link „Quellcode“ ist noch ein Platzhalter ($source_url; SOURCE_CODE_URL in project.yml)" ;;
 esac
+# „App weiterempfehlen“ darf nicht auf eine App-Kennung zeigen, die es nicht gibt (Sicherheitsprüfung vom 17.11.2026).
+share_url="$(value "$INFO" AppStoreURL)"
+case "$share_url" in
+  *id0000000000*|"") fail "Link „App weiterempfehlen“ ist ein Platzhalter oder leer (${share_url:-leer}; APP_STORE_URL in project.yml)" ;;
+  *testflight.apple.com*) note "„App weiterempfehlen“ zeigt auf die TestFlight-Einladung – vor dem App Store die Seite der App eintragen" ;;
+  *) ok "Link „App weiterempfehlen“: $share_url" ;;
+esac
 
 # Debug: Die Startargumente stehen nur in DEBUG-Builds im Code (CLAUDE.md, „Debug-Simulation“).
 for binary in "$APP/Gebetszeiten" "$EXT/GebetszeitenWidgets"; do

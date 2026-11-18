@@ -221,8 +221,8 @@ enum AppInfo {
             .flatMap { $0.isEmpty ? nil : URL(string: $0) }
     }
 
-    /// Adresse der App im App Store für „App weiterempfehlen“ (`AppStoreURL`, gefüllt aus `APP_STORE_URL`
-    /// in project.yml). TODO(placeholder) bis zum Anlegen der App in App Store Connect.
+    /// Adresse für „App weiterempfehlen“ (`AppStoreURL`, gefüllt aus `APP_STORE_URL` in project.yml): während
+    /// der Beta die Einladung zu TestFlight, danach die Seite der App im App Store.
     static var appStoreURL: URL? {
         (Bundle.main.object(forInfoDictionaryKey: "AppStoreURL") as? String)
             .flatMap { $0.isEmpty ? nil : URL(string: $0) }

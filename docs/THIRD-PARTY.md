@@ -36,3 +36,11 @@ Neue Fassung einbinden: Archiv der Release laden, Prüfsumme gegen `digest` der 
 ## Adhan-Aufnahmen
 
 Platzhalter von Wikimedia Commons (CC0 1.0 bzw. gemeinfrei), siehe `docs/OPEN-QUESTIONS.md` unter „Adhan-Aufnahmen“ und `App/Sounds/`. Sie verlangen keinen Lizenzhinweis; ihre Herkunft ist vor dem App Store zu prüfen.
+
+Prüfsummen (SHA-256), festgehalten am 18.11.2026:
+
+| Datei | SHA-256 |
+|---|---|
+| `App/Sounds/adhan-voice1.caf` | `56fcd8d321a6735c78e17fdb2477d3b915f8e19ceacd6f69c34cb021e2162fa7` |
+| `App/Sounds/adhan-voice2.caf` | `ed932deb81b814672fb65972c0a926ca6a4958c4d7a9fdd87dc94394adede8ea` |
+| `App/Sounds/live-activity-silence.caf` | `7d04dabd0bb85e7a498394eb4d32e3e51a33c2b313d85e1a4c85ad4269233e04` (eigene Stille, kein fremder Teil) |
