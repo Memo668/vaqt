@@ -96,6 +96,8 @@ struct TodayPage: View {
             ForEach(model.rows) { row in
                 PrayerRow(row, bell: model.bell(for: row.prayer)) {
                     model.cycleBell(for: row.prayer)
+                } onKerahatInfo: {
+                    model.isKerahatInfoPresented = true
                 }
             }
         }

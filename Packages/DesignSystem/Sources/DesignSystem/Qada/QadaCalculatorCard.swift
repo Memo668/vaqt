@@ -1,16 +1,18 @@
 import PrayerCore
 import SwiftUI
 
-/// Der Nachhol-Rechner als eigene Karte ganz unten auf der Seite „Nachholen“ (Spec § 9.8, `.qcalc` in
-/// `qadaPage()`): oben eine Kachel mit dem Symbol des Tabs, Titel und Einleitung; darunter drei
-/// nummerierte Schritte – Zeitraum (Jahre, Monate, Tage mit je einem Stepper), Witr, Ergebnis groß in
-/// Akzent –, dann der Knopf „Als offen übernehmen“ und der Hinweis dazu. Bei 0 Tagen ist der Knopf
-/// gesperrt. Die Karte hat einen feinen Rand in Akzent.
+/// Der Nachhol-Rechner als eigene Karte ganz unten auf der Seite „Nachholen“ (Spec § 9.8, § 10.7, `.qcalc` in
+/// `qadaPage()`): oben eine Kachel mit dem Symbol des Tabs, Titel und Einleitung; darunter vier
+/// nummerierte Schritte – für wen (Mann oder Frau, bei Frauen Regel und Wochenbett), Zeitraum (Jahre,
+/// Monate, Tage mit je einem Stepper), Witr, Ergebnis groß in Akzent –, dann der Knopf „Als offen
+/// übernehmen“, der Hinweis dazu und „Alles zurücksetzen“ mit Warnung. Bei 0 Tagen ist der Knopf gesperrt.
+/// Die Karte hat einen feinen Rand in Akzent.
 public struct QadaCalculatorCard: View {
     private let ledger: QadaLedger
     private let onAction: (QadaAction) -> Void
 
     @ScaledMetric(relativeTo: .body) private var typeScale: CGFloat = 1
+    @State private var confirmsReset = false
 
     public init(ledger: QadaLedger, onAction: @escaping (QadaAction) -> Void) {
         self.ledger = ledger
@@ -21,9 +23,10 @@ public struct QadaCalculatorCard: View {
         VStack(alignment: .leading, spacing: 0) {
             head
             VStack(alignment: .leading, spacing: QadaCalculatorMetrics.stepGap) {
-                step(1) { period }
-                step(2) { witr }
-                step(3) { result }
+                step(1) { person }
+                step(2) { period }
+                step(3) { witr }
+                step(4) { result }
             }
             .padding(.top, QadaCalculatorMetrics.stepsTop)
             .padding(.bottom, QadaCalculatorMetrics.stepsBottom)
@@ -38,6 +41,23 @@ public struct QadaCalculatorCard: View {
                 .foregroundStyle(Palette.textSecondary)
                 .padding(.top, QadaCalculatorMetrics.footTop)
                 .padding(.horizontal, QadaCalculatorMetrics.footInsetX)
+
+            // Spec § 10.7: „Alles zurücksetzen“ in Rot, mit Warnung vorher.
+            Button(L10n.qadaReset, role: .destructive) {
+                confirmsReset = true
+            }
+            .buttonStyle(.borderless)
+            .textStyle(.body, lineHeight: QadaCalculatorMetrics.witrLineHeight)
+            .frame(maxWidth: .infinity, minHeight: Layout.minTapTarget)
+            .padding(.top, QadaCalculatorMetrics.resetTop)
+            .alert(L10n.qadaResetTitle, isPresented: $confirmsReset) {
+                Button(L10n.cancel, role: .cancel) {}
+                Button(L10n.qadaResetConfirm, role: .destructive) {
+                    onAction(.reset)
+                }
+            } message: {
+                Text(L10n.qadaResetBody)
+            }
         }
         .padding(QadaCalculatorMetrics.padding)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -103,7 +123,33 @@ public struct QadaCalculatorCard: View {
             .accessibilityAddTraits(.isHeader)
     }
 
-    /// Schritt 1: Jahre, Monate und Tage in drei gleich breiten Feldern.
+    /// Schritt 1: Mann oder Frau als Segmente; bei Frauen zwei Felder für die Tage, an denen die Gebete
+    /// entfallen, und der Hinweis dazu (Spec § 10.7).
+    private var person: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            label(L10n.qcWho)
+            Picker(L10n.qcWho, selection: Binding(get: { ledger.person }, set: { onAction(.setPerson($0)) })) {
+                Text(L10n.qcMan).tag(QadaLedger.Person.man)
+                Text(L10n.qcWoman).tag(QadaLedger.Person.woman)
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            if ledger.person == .woman {
+                HStack(spacing: QadaCalculatorMetrics.fieldGap) {
+                    field(.menstruationDays)
+                    field(.postnatalDays)
+                }
+                .padding(.top, QadaCalculatorMetrics.personFieldsTop)
+                Text(hyphenating: L10n.qcWomanNote)
+                    .textStyle(.footnote, lineHeight: QadaCalculatorMetrics.labelLineHeight)
+                    .foregroundStyle(Palette.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, QadaCalculatorMetrics.detailTop)
+            }
+        }
+    }
+
+    /// Schritt 2: Jahre, Monate und Tage in drei gleich breiten Feldern.
     private var period: some View {
         VStack(alignment: .leading, spacing: 0) {
             label(L10n.qcStep1)
@@ -189,7 +235,9 @@ public struct QadaCalculatorCard: View {
                 }
             }
             .accessibilityElement(children: .combine)
-            Text(L10n.qcResultDetail(d: ledger.periodDays, k: ledger.prayers.count))
+            Text(ledger.waivedDays > 0
+                 ? L10n.qcResultDetailF(d: ledger.spanDays, x: ledger.waivedDays, k: ledger.prayers.count)
+                 : L10n.qcResultDetail(d: ledger.periodDays, k: ledger.prayers.count))
                 .textStyle(.footnote, lineHeight: QadaCalculatorMetrics.labelLineHeight)
                 .monospacedDigit()
                 .foregroundStyle(Palette.textSecondary)
@@ -200,6 +248,10 @@ public struct QadaCalculatorCard: View {
 
 /// Maße der Karte (`.qcalc`, `.qc-*` im Prototyp).
 enum QadaCalculatorMetrics {
+    /// Abstand der Felder für Regel und Wochenbett unter den Segmenten.
+    static let personFieldsTop: CGFloat = 10
+    /// Abstand von „Alles zurücksetzen“ zum Hinweis darüber (`.qc-reset`: `margin-top: 14px`).
+    static let resetTop: CGFloat = 6
     /// `.qcalc`: `padding: 18px 18px 16px`, Rand innen 1,5 pt in Akzent zu 30 %.
     static let padding = EdgeInsets(top: 18, leading: 18, bottom: 16, trailing: 18)
     static let outlineOpacity = 0.3

@@ -55,6 +55,22 @@ public enum LiveActivityMetrics {
         return (start, end)
     }
 
+    /// Deckkraft des Verlaufs von Live-Aktivität und Widget „Live“: 30 %, damit Hintergrundbild und Unschärfe
+    /// des Systems durchscheinen (Spec § 10.3, § 10.4; `--la-pct: 30%`).
+    public static let backgroundOpacity: Double = 0.3
+
+    /// Der Verlauf in der Verbotszeit (`.la.is-kerahat`, `--k-or: #EC8530`): oben links Orange zu 80 % auf Weiß,
+    /// in der Mitte das Orange, unten rechts zu 76 % auf Schwarz (Spec § 10.3).
+    public static let prohibitedStops: [Gradient.Stop] = [
+        .init(color: Color(Palette.Values.liveActivityProhibited.mixed(0.80, with: .white)), location: 0),
+        .init(color: Color(Palette.Values.liveActivityProhibited), location: 0.5),
+        .init(color: Color(Palette.Values.liveActivityProhibited.mixed(0.76, with: .black)), location: 1),
+    ]
+
+    /// Die schmale Zeile einer abgelaufenen Aktivität (`.la-compact`): 11 pt oben und unten, 14 pt seitlich,
+    /// 13 pt halbfett (Spec § 10.3).
+    public static let endedPadding = EdgeInsets(top: 11, leading: 14, bottom: 11, trailing: 14)
+
     /// Höhe im Prototyp ohne iOS: Kopf, Bogen und Abstände – höchstens 160 pt (Spec § 3).
     public static let lockScreenHeight: CGFloat = 155
 
@@ -62,6 +78,10 @@ public enum LiveActivityMetrics {
 
     /// Der dunkle Akzent (`--accent-d`, `#4CC2AE`): Symbol, Zeit und Countdown in der Insel.
     public static let islandAccent = Color(Palette.Values.accentDark)
+    /// Die Farbe der Insel: in der Verbotszeit Orange (`#F0A257`, Spec § 10.3), sonst der dunkle Akzent.
+    public static func islandAccent(_ content: LiveActivityContent) -> Color {
+        content.isProhibited ? Palette.LiveActivity.islandProhibited : islandAccent
+    }
     /// Symbol links in der kompakten Insel – `ic(…, 18)`.
     public static let compactSymbolBox: CGFloat = 18
     /// Countdown rechts (`.di-cd`: 600 14px/1, `-.2px`).
@@ -140,14 +160,15 @@ public enum LiveActivityTexts {
     }
 }
 
-/// Der Countdown der Live-Aktivität – oder ab Gebetsbeginn „Jetzt“ (entschieden mit dem Plan für Phase 9).
+/// Der Countdown der Live-Aktivität. Nach dem Wechsel steht die Uhrzeit des Gebets – „Jetzt“ gibt es seit
+/// Spec § 10.3 nicht mehr.
 struct LiveActivityCountdown: View {
     let content: LiveActivityContent
     let hasBegun: Bool
 
     var body: some View {
         if hasBegun {
-            Text(L10n.now)
+            Text(L10n.time(content.prayerTime))
         } else {
             let end = content.deviceCountdownEnd
             let start = min(content.deviceDate(content.countdown.now), end)
@@ -162,29 +183,42 @@ struct LiveActivityCountdown: View {
 /// Tagesbogen in Weiß auf Akzent, im Bogen „Maghrib · 16:27“ und der Countdown (`laBanner()`; Spec § 3,
 /// „Live Activity“, Variante 5h: Akzent-Hintergrund mit Bogen).
 ///
-/// Ab Gebetsbeginn (`isStale`) zeigt der Bogen das Gebet als laufend, und statt des Countdowns steht
-/// „Jetzt“. Den Hintergrund setzt `LiveActivityBackground`.
+/// In der Verbotszeit ist sie orange, und im Kopf steht „Verbotszeit bis 16:27“ statt der Stadt. Nach ihrem
+/// Wechsel (`isStale`: Gebetsbeginn oder Beginn der Verbotszeit) schrumpft sie auf eine schmale Zeile
+/// (`LiveActivityEndedRow`, Spec § 10.3). Den Hintergrund setzt `LiveActivityBackground`.
 public struct LiveActivityLockScreen: View {
     private let content: LiveActivityContent
-    private let hasBegun: Bool
+    private let hasEnded: Bool
 
-    /// - Parameter isStale: `context.isStale` – das Gebet hat begonnen.
+    /// - Parameter isStale: `context.isStale` – die Aktivität hat gewechselt.
     public init(content: LiveActivityContent, isStale: Bool) {
         self.content = content
-        hasBegun = isStale || content.hasBegun
+        hasEnded = isStale || content.hasBegun
     }
 
     public var body: some View {
-        VStack(spacing: 0) {
-            LiveHeader(cityName: content.cityName)
+        if hasEnded {
+            LiveActivityEndedRow(content: content)
+        } else {
+            running
+        }
+    }
 
-            DayArc(phase: hasBegun ? content.begun : content.countdown, style: .liveActivity, showKerahat: content.showKerahat) {
+    private var running: some View {
+        VStack(spacing: 0) {
+            LiveHeader(
+                trailing: content.isProhibited ? content.prohibitedHeader : content.cityName,
+                isEmphasized: content.isProhibited
+            )
+
+            DayArc(phase: content.countdown, style: content.isProhibited ? .liveActivityProhibited : .liveActivity,
+                   showKerahat: content.showKerahat) {
                 VStack(spacing: 0) {
                     Text(LiveActivityTexts.nameAndTime(content))
                         .font(LiveActivityMetrics.nameFont)
                         .opacity(LiveActivityMetrics.nameOpacity)
                         .lineHeight(LiveActivityMetrics.nameLineHeight, fontSize: 13)
-                    LiveActivityCountdown(content: content, hasBegun: hasBegun)
+                    LiveActivityCountdown(content: content, hasBegun: false)
                         .font(LiveActivityMetrics.countFont)
                         .tracking(LiveActivityMetrics.countTracking)
                         .multilineTextAlignment(.center)
@@ -200,10 +234,64 @@ public struct LiveActivityLockScreen: View {
     }
 }
 
-/// Kopf der Live-Aktivität und des Widgets „Live“: App-Symbol und Name der App, rechts die Stadt
-/// (`.la-head`; Spec § 9.1: das App-Symbol statt der Mondsichel).
+/// Eine abgelaufene Aktivität als schmale Zeile (`.la-compact`, Spec § 10.3): App-Symbol, „Asr · 14:27“ und
+/// rechts „hat begonnen“ – beim grünen Teil vor einer Verbotszeit „Verbotszeit ab 11:42“.
+public struct LiveActivityEndedRow: View {
+    private let content: LiveActivityContent
+
+    public init(content: LiveActivityContent) {
+        self.content = content
+    }
+
+    public var body: some View {
+        HStack(spacing: 10) {
+            HStack(spacing: LiveActivityMetrics.iconGap) {
+                AppMark(size: .header)
+                    .environment(\.colorScheme, .light)
+                Text(LiveActivityTexts.nameAndTime(content))
+            }
+            Spacer(minLength: 8)
+            Text(trailing)
+                .fontWeight(.medium)
+                .opacity(LiveActivityMetrics.cityOpacity)
+        }
+        .font(LiveActivityMetrics.headFont)
+        .tracking(LiveActivityMetrics.headTracking)
+        .lineLimit(1)
+        .foregroundStyle(.white)
+        .padding(LiveActivityMetrics.endedPadding)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var trailing: String {
+        if content.kind == .beforeProhibited, let start = content.prohibitedStartTime {
+            return L10n.kerahatFrom(a: L10n.time(start))
+        }
+        return L10n.laBegan
+    }
+}
+
+extension LiveActivityContent {
+    /// „Verbotszeit bis 16:27“ im Kopf der orangen Aktivität (`kerahatNow`).
+    var prohibitedHeader: String {
+        L10n.kerahatNow(b: L10n.time(prayerTime))
+    }
+}
+
+/// Kopf der Live-Aktivität und des Widgets „Live“: App-Symbol und Name der App, rechts die Stadt – oder in der
+/// Verbotszeit „Verbotszeit bis …“ (`.la-head`; Spec § 9.1, § 10.3).
 struct LiveHeader: View {
-    let cityName: String
+    let trailing: String
+    var isEmphasized = false
+
+    init(cityName: String) {
+        trailing = cityName
+    }
+
+    init(trailing: String, isEmphasized: Bool) {
+        self.trailing = trailing
+        self.isEmphasized = isEmphasized
+    }
 
     var body: some View {
         HStack(spacing: 0) {
@@ -216,9 +304,9 @@ struct LiveHeader: View {
                 Text(L10n.appName)
             }
             Spacer(minLength: 8)
-            Text(cityName)
-                .fontWeight(.medium)
-                .opacity(LiveActivityMetrics.cityOpacity)
+            Text(trailing)
+                .fontWeight(isEmphasized ? .semibold : .medium)
+                .opacity(isEmphasized ? 1 : LiveActivityMetrics.cityOpacity)
         }
         .font(LiveActivityMetrics.headFont)
         .tracking(LiveActivityMetrics.headTracking)
@@ -227,14 +315,23 @@ struct LiveHeader: View {
     }
 }
 
-/// Der Hintergrund der Live-Aktivität: der Verlauf auf dem hellen Akzent (`.la`).
+/// Der Hintergrund der Live-Aktivität und des Widgets „Live“: der Verlauf auf dem hellen Akzent (`.la`), in der
+/// Verbotszeit auf Orange, mit 30 % Deckkraft (Spec § 10.3, § 10.4).
 public struct LiveActivityBackground: View {
-    public init() {}
+    private let isProhibited: Bool
+
+    public init(isProhibited: Bool = false) {
+        self.isProhibited = isProhibited
+    }
 
     public var body: some View {
         GeometryReader { proxy in
             let points = LiveActivityMetrics.gradientPoints(size: proxy.size)
-            LinearGradient(stops: LiveActivityMetrics.backgroundStops, startPoint: points.start, endPoint: points.end)
+            LinearGradient(
+                stops: isProhibited ? LiveActivityMetrics.prohibitedStops : LiveActivityMetrics.backgroundStops,
+                startPoint: points.start, endPoint: points.end
+            )
+            .opacity(LiveActivityMetrics.backgroundOpacity)
         }
     }
 }
@@ -251,7 +348,7 @@ public struct LiveActivityCompactLeading: View {
 
     public var body: some View {
         WidgetSymbol(name: content.prayer.prayer.symbolName, box: LiveActivityMetrics.compactSymbolBox)
-            .foregroundStyle(LiveActivityMetrics.islandAccent)
+            .foregroundStyle(LiveActivityMetrics.islandAccent(content))
             // VoiceOver: der Name des Gebets vor dem Countdown rechts, statt nur „2:01:29“ (Phase 11).
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(content.prayer.prayer.localizedName)
@@ -272,7 +369,7 @@ public struct LiveActivityCompactTrailing: View {
         LiveActivityCountdown(content: content, hasBegun: hasBegun)
             .font(LiveActivityMetrics.compactCountFont)
             .tracking(LiveActivityMetrics.compactCountTracking)
-            .foregroundStyle(LiveActivityMetrics.islandAccent)
+            .foregroundStyle(LiveActivityMetrics.islandAccent(content))
             .multilineTextAlignment(.trailing)
             .frame(maxWidth: LiveActivityMetrics.compactCountWidth, alignment: .trailing)
     }
@@ -293,11 +390,11 @@ public struct LiveActivityMinimal: View {
             label: { EmptyView() },
             currentValueLabel: {
                 WidgetSymbol(name: content.prayer.prayer.symbolName, box: 14)
-                    .foregroundStyle(LiveActivityMetrics.islandAccent)
+                    .foregroundStyle(LiveActivityMetrics.islandAccent(content))
             }
         )
         .progressViewStyle(.circular)
-        .tint(LiveActivityMetrics.islandAccent)
+        .tint(LiveActivityMetrics.islandAccent(content))
         // VoiceOver: der Name des Gebets statt eines namenlosen Rings (Phase 11).
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(content.prayer.prayer.localizedName)
@@ -318,7 +415,7 @@ public struct LiveActivityExpandedLeading: View {
             Text(L10n.time(content.prayerTime))
         }
         .font(LiveActivityMetrics.topFont)
-        .foregroundStyle(LiveActivityMetrics.islandAccent)
+        .foregroundStyle(LiveActivityMetrics.islandAccent(content))
         .frame(height: LiveActivityMetrics.topHeight)
     }
 }
@@ -369,7 +466,7 @@ public struct LiveActivityExpandedBottom: View {
             LiveActivityCountdown(content: content, hasBegun: hasBegun)
                 .font(LiveActivityMetrics.bigFont)
                 .tracking(LiveActivityMetrics.bigTracking)
-                .foregroundStyle(LiveActivityMetrics.islandAccent)
+                .foregroundStyle(LiveActivityMetrics.islandAccent(content))
                 .lineHeight(LiveActivityMetrics.bigLineHeight, fontSize: LiveActivityMetrics.bigSize)
             LiveActivityBar(content: content)
                 .padding(.top, LiveActivityMetrics.barTop)
@@ -397,7 +494,7 @@ struct LiveActivityBar: View {
     var body: some View {
         ProgressView(timerInterval: content.deviceBarInterval, countsDown: false, label: { EmptyView() }, currentValueLabel: { EmptyView() })
             .progressViewStyle(.linear)
-            .tint(LiveActivityMetrics.islandAccent)
+            .tint(LiveActivityMetrics.islandAccent(content))
             .frame(height: LiveActivityMetrics.barHeight)
             .overlay(alignment: .topLeading) {
                 if content.showKerahat, !content.kerahat.isEmpty {

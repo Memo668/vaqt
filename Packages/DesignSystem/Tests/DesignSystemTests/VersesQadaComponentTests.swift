@@ -115,7 +115,9 @@ struct VersesQadaComponentTests {
         #expect(QadaPrayer.witr.localizedName == L10n.p_witr)
         #expect(QadaPrayer.fajr.localizedName == Prayer.fajr.localizedName)
         #expect(Set(QadaPrayer.allCases.map(\.localizedName)).count == 6)
-        #expect(QadaLedger.Field.allCases.map(\.localizedTitle) == [L10n.years, L10n.months, L10n.days, L10n.qadaPerDay])
+        #expect(QadaLedger.Field.allCases.map(\.localizedTitle) == [
+            L10n.years, L10n.months, L10n.days, L10n.qadaPerDay, L10n.qcHayz, L10n.qcNifas,
+        ])
     }
 
     @Test("die Symbole der Seiten gibt es im System", arguments: [

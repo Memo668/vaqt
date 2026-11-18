@@ -7,6 +7,8 @@ public enum DayArcStyle: Hashable, Sendable {
     case home
     /// Der kleine Bogen der Live-Aktivität: weiß auf Akzent (`ARCS.la`, `.arc-la`).
     case liveActivity
+    /// Der Bogen der Live-Aktivität in der Verbotszeit: dieselben Maße, auf Orange (Spec § 10.3).
+    case liveActivityProhibited
     /// Der Bogen des mittleren Widgets „Live“: wie in der Live-Aktivität, etwas schmaler (`ARCS.wla` mit
     /// dem Aussehen `la`; Spec § 9.11).
     case liveWidget
@@ -17,7 +19,7 @@ public enum DayArcStyle: Hashable, Sendable {
     public var metrics: DayArcMetrics {
         switch self {
         case .home: .home
-        case .liveActivity: .liveActivity
+        case .liveActivity, .liveActivityProhibited: .liveActivity
         case .liveWidget: .liveWidget
         case .lockScreen: .lockScreen
         }
@@ -27,6 +29,7 @@ public enum DayArcStyle: Hashable, Sendable {
         switch self {
         case .home: .home
         case .liveActivity, .liveWidget: .liveActivity
+        case .liveActivityProhibited: .liveActivityProhibited
         case .lockScreen: .lockScreen
         }
     }
@@ -189,6 +192,19 @@ struct DayArcColors {
         knobShadow: nil,
         // Die Symbole sind hier nur gut 8 pt groß; erst mit dieser Stärke ist der Strich so kräftig
         // wie im Prototyp (1,15 pt).
+        symbolWeight: .heavy
+    )
+
+    /// `.la.is-kerahat`: wie `liveActivity`, auf Orange (Spec § 10.3).
+    static let liveActivityProhibited = DayArcColors(
+        track: Palette.LiveActivity.track, done: Palette.LiveActivity.foreground,
+        markerUpcoming: Palette.LiveActivity.prohibitedMarker, symbolUpcoming: Palette.LiveActivity.foreground,
+        markerBegun: Palette.LiveActivity.foreground, symbolBegun: Palette.LiveActivity.prohibitedDeep,
+        glow: Palette.LiveActivity.foreground.opacity(0.22), ring: Palette.LiveActivity.prohibited,
+        time: Palette.LiveActivity.time, timeCurrent: Palette.LiveActivity.foreground,
+        kerahat: Palette.LiveActivity.prohibitedKerahat, kerahatOpacity: 0.95, kerahatPastOpacity: 0.5, kerahatActiveOpacity: 1,
+        knob: Palette.LiveActivity.prohibited, knobStroke: Palette.LiveActivity.foreground, knobStrokeWidth: 2,
+        knobShadow: nil,
         symbolWeight: .heavy
     )
 

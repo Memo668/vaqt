@@ -71,6 +71,8 @@ public final class QadaModel {
         save()
         if action == .applyPeriod {
             toast.show(L10n.qadaApplied(n: ledger.periodPrayers), systemImage: QadaModel.appliedSymbol)
+        } else if action == .reset {
+            toast.show(L10n.qadaResetDone, systemImage: QadaModel.appliedSymbol)
         }
     }
 

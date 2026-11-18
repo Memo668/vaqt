@@ -224,21 +224,26 @@ struct QadaLedgerTests {
 
     // MARK: - Stepper für Zeitraum und Plan
 
-    @Test("die Grenzen der Stepper: Jahre 0–60, Monate 0–11, Tage 0–30, pro Tag 1–20")
+    @Test("die Grenzen der Stepper: Jahre 0–60, Monate 0–11, Tage 0–30, pro Tag 1–20, Regel 3–10, Wochenbett 0–400")
     func ranges() {
-        #expect(QadaLedger.Field.allCases.map(\.rawValue) == ["years", "months", "days", "perDay"])
+        #expect(QadaLedger.Field.allCases.map(\.rawValue) == [
+            "years", "months", "days", "perDay", "menstruationDays", "postnatalDays",
+        ])
+        #expect(QadaLedger.Field.menstruationDays.range == 3...10)
+        #expect(QadaLedger.Field.postnatalDays.range == 0...400)
+        #expect(QadaLedger.Field.postnatalDays.stepSize == 5)
         #expect(QadaLedger.Field.years.range == 0...60)
         #expect(QadaLedger.Field.months.range == 0...11)
         #expect(QadaLedger.Field.days.range == 0...30)
         #expect(QadaLedger.Field.perDay.range == 1...20)
     }
 
-    @Test("ein Stepper zählt um eins und bleibt an seinen Grenzen stehen", arguments: QadaLedger.Field.allCases)
+    @Test("ein Stepper zählt um seinen Schritt und bleibt an seinen Grenzen stehen", arguments: QadaLedger.Field.allCases)
     func steps(field: QadaLedger.Field) {
         var ledger = QadaLedger()
         let start = ledger[field]
         ledger.step(field, by: 1)
-        #expect(ledger[field] == start + 1)
+        #expect(ledger[field] == start + field.stepSize)
         ledger.step(field, by: -1)
         #expect(ledger[field] == start)
 
@@ -386,7 +391,7 @@ struct QadaLedgerTests {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
         let json = String(decoding: try encoder.encode(ledger), as: UTF8.self)
-        #expect(json == #"{"days":0,"includesWitr":false,"months":0,"open":{"fajr":501},"perDay":5,"total":{"fajr":545},"years":0}"#)
+        #expect(json == #"{"days":0,"includesWitr":false,"menstruationDays":7,"months":0,"open":{"fajr":501},"perDay":5,"person":"man","postnatalDays":0,"total":{"fajr":545},"years":0}"#)
     }
 
     @Test("ein gespeicherter Stand hält die Grenzen der Stepper ein")
@@ -411,5 +416,49 @@ struct QadaLedgerTests {
         #expect(ledger.openCount(of: .asr) == 3)
         #expect(ledger.totalCount == 0)
         #expect(try JSONDecoder().decode(QadaLedger.self, from: Data("{}".utf8)) == QadaLedger())
+    }
+
+    // MARK: - Mann oder Frau, Zurücksetzen (Spec § 10.7)
+
+    @Test("bei Frauen entfallen Regel und Wochenbett: 1 Jahr 6 Monate, 7 Tage je Monat und 40 Tage Wochenbett")
+    func womanDeduction() {
+        var ledger = QadaLedger(years: 1, months: 6, days: 0, perDay: 5, includesWitr: false, total: [:], open: [:])
+        #expect(ledger.spanDays == 545)
+        #expect(ledger.waivedDays == 0)
+        #expect(ledger.periodDays == 545)
+        ledger.person = .woman
+        for _ in 0..<8 { ledger.step(.postnatalDays, by: 1) }
+        // 545 ÷ 30 × 7 = 127,2 → 127 Tage Regel, dazu 40 Tage Wochenbett.
+        #expect(ledger[.postnatalDays] == 40)
+        #expect(ledger.waivedDays == 167)
+        #expect(ledger.periodDays == 378)
+        #expect(ledger.periodPrayers == 378 * 5)
+        ledger.applyPeriod()
+        #expect(ledger.openCount(of: .fajr) == 378)
+    }
+
+    @Test("es entfallen höchstens so viele Tage, wie der Zeitraum hat")
+    func deductionBounded() {
+        var ledger = QadaLedger(
+            years: 0, months: 0, days: 20, perDay: 5, includesWitr: false, total: [:], open: [:],
+            person: .woman, menstruationDays: 10, postnatalDays: 40
+        )
+        #expect(ledger.waivedDays == 20)
+        #expect(ledger.periodDays == 0)
+        ledger.person = .man
+        #expect(ledger.periodDays == 20)
+    }
+
+    @Test("Alles zurücksetzen: Zähler, Plan und Rechner leer, die Wahl Mann oder Frau bleibt")
+    func reset() {
+        var ledger = QadaLedger(
+            years: 2, months: 3, days: 4, perDay: 9, includesWitr: true, total: [.fajr: 700], open: [.fajr: 650],
+            person: .woman, menstruationDays: 5, postnatalDays: 80
+        )
+        ledger.reset()
+        var expected = QadaLedger()
+        expected.person = .woman
+        #expect(ledger == expected)
+        #expect(ledger.totalCount == 0 && ledger.perDay == 5 && ledger.spanDays == 0)
     }
 }

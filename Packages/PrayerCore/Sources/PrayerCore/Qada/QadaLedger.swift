@@ -22,12 +22,23 @@ public enum QadaPrayer: String, CaseIterable, Codable, CodingKeyRepresentable, S
 /// nur in DEBUG (`QadaLedger.prototypeSample`).
 public struct QadaLedger: Hashable, Codable, Sendable {
 
-    /// Ein Wert mit Stepper: die drei Felder des Rechners „Verpasster Zeitraum“ und der Plan pro Tag.
+    /// Für wen gerechnet wird (Spec § 10.7): Bei Frauen entfallen die Gebete an den Tagen der Regel und des
+    /// Wochenbetts; sie werden nicht nachgeholt.
+    public enum Person: String, Codable, CaseIterable, Sendable {
+        case man
+        case woman
+    }
+
+    /// Ein Wert mit Stepper: die Felder des Rechners und der Plan pro Tag.
     public enum Field: String, CaseIterable, Sendable {
         case years
         case months
         case days
         case perDay
+        /// Tage der Regel je Monat (nur bei Frauen, Spec § 10.7).
+        case menstruationDays
+        /// Tage des Wochenbetts insgesamt (nur bei Frauen).
+        case postnatalDays
 
         /// Grenzen des Steppers (`qstep`). An den Rändern ist der jeweilige Knopf gesperrt.
         public var range: ClosedRange<Int> {
@@ -36,7 +47,14 @@ public struct QadaLedger: Hashable, Codable, Sendable {
             case .months: 0...11
             case .days: 0...30
             case .perDay: 1...20
+            case .menstruationDays: 3...10
+            case .postnatalDays: 0...400
             }
+        }
+
+        /// So weit zählt ein Tipp auf „−“ oder „+“: beim Wochenbett 5 Tage, sonst 1.
+        public var stepSize: Int {
+            self == .postnatalDays ? 5 : 1
         }
     }
 
@@ -51,6 +69,12 @@ public struct QadaLedger: Hashable, Codable, Sendable {
     public private(set) var perDay: Int
     /// Ob Witr mitzählt (`witr`). Ohne Witr bleiben dessen Zahlen stehen, zählen aber nicht.
     public var includesWitr: Bool
+    /// Mann oder Frau (`S.qadaSex`).
+    public var person: Person
+    /// Tage der Regel je Monat, 3 bis 10, anfangs 7.
+    public private(set) var menstruationDays: Int
+    /// Tage des Wochenbetts insgesamt, 0 bis 400.
+    public private(set) var postnatalDays: Int
 
     /// Je Gebet: wie viele insgesamt nachzuholen sind (`tot`) und wie viele davon noch offen sind (`open`).
     private var total: [QadaPrayer: Int]
@@ -61,16 +85,23 @@ public struct QadaLedger: Hashable, Codable, Sendable {
         self.init(years: 0, months: 0, days: 0, perDay: 5, includesWitr: false, total: [:], open: [:])
     }
 
+    /// Anfangswert der Regeltage je Monat.
+    public static let defaultMenstruationDays = 7
+
     /// Ein Stand aus gespeicherten Werten. Werte außerhalb der Grenzen werden an den Rand gesetzt.
     public init(
         years: Int, months: Int, days: Int, perDay: Int, includesWitr: Bool,
-        total: [QadaPrayer: Int], open: [QadaPrayer: Int]
+        total: [QadaPrayer: Int], open: [QadaPrayer: Int],
+        person: Person = .man, menstruationDays: Int = QadaLedger.defaultMenstruationDays, postnatalDays: Int = 0
     ) {
         self.years = Self.clamp(years, to: Field.years.range)
         self.months = Self.clamp(months, to: Field.months.range)
         self.days = Self.clamp(days, to: Field.days.range)
         self.perDay = Self.clamp(perDay, to: Field.perDay.range)
         self.includesWitr = includesWitr
+        self.person = person
+        self.menstruationDays = Self.clamp(menstruationDays, to: Field.menstruationDays.range)
+        self.postnatalDays = Self.clamp(postnatalDays, to: Field.postnatalDays.range)
         self.total = total.mapValues { max(0, $0) }
         self.open = open.mapValues { Self.clamp($0, to: Self.openRange) }
     }
@@ -154,12 +185,27 @@ public struct QadaLedger: Hashable, Codable, Sendable {
         case .months: months
         case .days: days
         case .perDay: perDay
+        case .menstruationDays: menstruationDays
+        case .postnatalDays: postnatalDays
         }
     }
 
     /// Der verpasste Zeitraum in Tagen: Ein Jahr zählt 365 Tage, ein Monat 30 (Spec § 4).
-    public var periodDays: Int {
+    public var spanDays: Int {
         years * 365 + months * 30 + days
+    }
+
+    /// Tage, an denen die Gebete entfallen (Spec § 10.7): bei Frauen die Regel je Monat des Zeitraums (gerundet)
+    /// und das Wochenbett, höchstens der ganze Zeitraum; bei Männern 0.
+    public var waivedDays: Int {
+        guard person == .woman else { return 0 }
+        let menstruation = Int((Double(spanDays) / 30 * Double(menstruationDays)).rounded())
+        return min(spanDays, menstruation + postnatalDays)
+    }
+
+    /// Tage mit nachzuholenden Gebeten: der Zeitraum ohne die entfallenden Tage.
+    public var periodDays: Int {
+        max(0, spanDays - waivedDays)
     }
 
     /// Gebete im verpassten Zeitraum: Tage mal Zahl der Gebete, die zählen.
@@ -173,13 +219,24 @@ public struct QadaLedger: Hashable, Codable, Sendable {
     public mutating func step(_ field: Field, by delta: Int) {
         // Mehr als die Breite des Bereichs bewirkt nichts; so läuft die Summe nie über.
         let width = field.range.upperBound - field.range.lowerBound
-        let value = Self.clamp(self[field] + min(max(delta, -width), width), to: field.range)
+        let change = min(max(delta, -width), width) * field.stepSize
+        let value = Self.clamp(self[field] + change, to: field.range)
         switch field {
         case .years: years = value
         case .months: months = value
         case .days: days = value
         case .perDay: perDay = value
+        case .menstruationDays: menstruationDays = value
+        case .postnatalDays: postnatalDays = value
         }
+    }
+
+    /// „Alles zurücksetzen“ (Spec § 10.7): offene Gebete, Summen, Plan und Rechner auf den leeren Stand. Die
+    /// Wahl Mann oder Frau bleibt.
+    public mutating func reset() {
+        let person = person
+        self = QadaLedger()
+        self.person = person
     }
 
     /// Ob sich ein Gebet als nachgeholt abhaken lässt; bei 0 offenen ist der Knopf „−“ gesperrt.
@@ -224,7 +281,7 @@ public struct QadaLedger: Hashable, Codable, Sendable {
 extension QadaLedger {
 
     private enum CodingKeys: String, CodingKey {
-        case years, months, days, perDay, includesWitr, total, open
+        case years, months, days, perDay, includesWitr, total, open, person, menstruationDays, postnatalDays
     }
 
     /// Liest einen gespeicherten Stand. Wie beim Anlegen gelten die Grenzen der Stepper; was fehlt, hat
@@ -239,7 +296,10 @@ extension QadaLedger {
             perDay: try container.decodeIfPresent(Int.self, forKey: .perDay) ?? empty.perDay,
             includesWitr: try container.decodeIfPresent(Bool.self, forKey: .includesWitr) ?? empty.includesWitr,
             total: try container.decodeIfPresent([QadaPrayer: Int].self, forKey: .total) ?? [:],
-            open: try container.decodeIfPresent([QadaPrayer: Int].self, forKey: .open) ?? [:]
+            open: try container.decodeIfPresent([QadaPrayer: Int].self, forKey: .open) ?? [:],
+            person: try container.decodeIfPresent(Person.self, forKey: .person) ?? empty.person,
+            menstruationDays: try container.decodeIfPresent(Int.self, forKey: .menstruationDays) ?? empty.menstruationDays,
+            postnatalDays: try container.decodeIfPresent(Int.self, forKey: .postnatalDays) ?? empty.postnatalDays
         )
     }
 }

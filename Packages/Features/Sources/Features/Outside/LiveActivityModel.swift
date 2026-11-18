@@ -49,8 +49,8 @@ public struct NoLiveActivityScheduler: LiveActivityScheduling {
 ///
 /// Geplant wird bei jedem Start, wenn die App nach vorn kommt, nach jeder Änderung an dem, was eingeht
 /// (`inputs`), und bei der Hintergrundaktualisierung. Solange die App läuft, sieht sie außerdem zu jedem
-/// Gebetsbeginn nach (`nextCheck`): Dann beendet sie die Aktivität, die bis 15 Minuten danach mit „Jetzt“
-/// auf dem Sperrbildschirm stehen bleibt. Was geplant wird, bestimmen `LiveActivityPlanner` und
+/// Wechsel nach (`nextCheck`, Gebetsbeginn oder Beginn der Verbotszeit): Dann beendet sie die Aktivität,
+/// die sonst als schmale Zeile stehen bliebe (Spec § 10.3). Was geplant wird, bestimmen `LiveActivityPlanner` und
 /// `LiveActivityLifecycle` in PrayerCore.
 @MainActor
 @Observable

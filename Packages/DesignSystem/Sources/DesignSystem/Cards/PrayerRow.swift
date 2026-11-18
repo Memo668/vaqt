@@ -13,6 +13,7 @@ public struct PrayerRow: View {
     private let model: PrayerRowModel
     private let bell: BellState
     private let onBell: () -> Void
+    private let onKerahatInfo: (() -> Void)?
 
     @ScaledMetric(relativeTo: .caption2) private var chipLineHeight = TypeScale.caption2.pointSize
     @ScaledMetric(relativeTo: .caption) private var captionSize = TypeScale.caption1.pointSize
@@ -21,10 +22,15 @@ public struct PrayerRow: View {
     /// - Parameters:
     ///   - bell: Stand der Mitteilung für dieses Ereignis.
     ///   - onBell: Tippen auf die Glocke; die Seite wechselt den Stand (`BellState.next`).
-    public init(_ model: PrayerRowModel, bell: BellState, onBell: @escaping () -> Void) {
+    ///   - onKerahatInfo: Tippen auf die Kerahat-Zeile öffnet „Was sind Verbotszeiten?“ (Spec § 10.2); mit
+    ///     diesem Knopf trägt die Zeile den Infopunkt.
+    public init(
+        _ model: PrayerRowModel, bell: BellState, onBell: @escaping () -> Void, onKerahatInfo: (() -> Void)? = nil
+    ) {
         self.model = model
         self.bell = bell
         self.onBell = onBell
+        self.onKerahatInfo = onKerahatInfo
     }
 
     public var body: some View {
@@ -41,7 +47,15 @@ public struct PrayerRow: View {
                     time
                 }
                 if let kerahat = model.kerahat {
-                    caption(kerahat)
+                    if let onKerahatInfo {
+                        Button(action: onKerahatInfo) {
+                            caption(kerahat, showsInfo: true)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityHint(L10n.kerahatInfoTitle)
+                    } else {
+                        caption(kerahat, showsInfo: false)
+                    }
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -138,7 +152,7 @@ public struct PrayerRow: View {
         }
     }
 
-    private func caption(_ kerahat: PrayerRowModel.KerahatCaption) -> some View {
+    private func caption(_ kerahat: PrayerRowModel.KerahatCaption, showsInfo: Bool) -> some View {
         HStack(alignment: .top, spacing: RowMetrics.dotGap) {
             Circle()
                 .fill(Palette.kerahat)
@@ -156,7 +170,18 @@ public struct PrayerRow: View {
                 .lineLimit(stacksTime ? RowMetrics.stackedCaptionLines : nil)
                 .minimumScaleFactor(stacksTime ? RowMetrics.stackedCaptionMinimumScale : 1)
                 .fixedSize(horizontal: false, vertical: true)
+            if showsInfo {
+                // Der Infopunkt (`.k-i`: `ic('info', 13)`, Deckkraft 0,6, 2 pt Abstand; Spec § 10.2).
+                Image(systemName: "info.circle")
+                    .font(.system(size: RowMetrics.kerahatInfoSize))
+                    .foregroundStyle(kerahatColor(isActive: kerahat.isActive))
+                    .opacity(RowMetrics.kerahatInfoOpacity)
+                    .padding(.leading, RowMetrics.kerahatInfoGap - RowMetrics.dotGap)
+                    .padding(.top, captionSize * 0.62 - RowMetrics.kerahatInfoSize / 2)
+                    .accessibilityHidden(true)
+            }
         }
+        .contentShape(.rect)
     }
 
     // MARK: - Farben
@@ -193,6 +218,11 @@ public struct PrayerRow: View {
 enum RowMetrics {
     /// Abstand zwischen Symbol, Name, Uhrzeit und Glocke (`gap: 12px`).
     static let gap: CGFloat = 12
+    /// Infopunkt hinter der Kerahat-Zeile (`.k-i`: 13 pt, Deckkraft 0,6, 2 pt plus der Abstand von 5 pt der Zeile;
+    /// Spec § 10.2).
+    static let kerahatInfoSize: CGFloat = 13
+    static let kerahatInfoOpacity: Double = 0.6
+    static let kerahatInfoGap: CGFloat = 7
     /// Innenabstand vor dem Symbol (`padding-inline: 16px 4px`).
     static let leading: CGFloat = 16
     /// Innenabstand hinter der Glocke.

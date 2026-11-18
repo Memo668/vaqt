@@ -151,6 +151,11 @@ struct AppContent: View {
             CitySheet(today: today, search: today.citySearch)
                 .centeredSheetCard(isRegular: horizontalSizeClass == .regular)
         }
+        // Der Infopunkt einer Kerahat-Zeile (Spec § 10.2).
+        .sheet(isPresented: $today.isKerahatInfoPresented) {
+            KerahatInfoSheet(times: today.shownDayTimes)
+                .centeredSheetCard(isRegular: horizontalSizeClass == .regular)
+        }
         // „Adhan anhören“ in den Einstellungen; Schließen hält die Wiedergabe an.
         .sheet(isPresented: $navigation.isAdhanSheetPresented, onDismiss: adhan.stop) {
             AdhanSheet(model: adhan)

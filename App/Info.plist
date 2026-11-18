@@ -50,7 +50,7 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Dein Standort wird nur auf diesem Gerät zur Berechnung der Gebetszeiten verwendet.</string>
+	<string>Dein Standort dient nur der Berechnung der Gebetszeiten. Für den Ortsnamen fragt die App Apple Karten.</string>
 	<key>NSSupportsLiveActivities</key>
 	<true/>
 	<key>SourceCodeURL</key>

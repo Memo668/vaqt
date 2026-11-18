@@ -185,11 +185,11 @@ public enum L10n {
     public static var qadaPctLabel: String { text("qadaPctLabel") }
     /// „Noch {n} offen“
     public static func qadaLeft(n: String) -> String { text("qadaLeft", n) }
-    /// „Kerahat {r}“
+    /// „Verbotszeit {r}“
     public static func kerahatRow(r: String) -> String { text("kerahatRow", r) }
-    /// „Kerahat bis {b}“
+    /// „Verbotszeit bis {b}“
     public static func kerahatNow(b: String) -> String { text("kerahatNow", b) }
-    /// „Kerahat-Zeiten zeigen“
+    /// „Verbotszeiten zeigen“
     public static var showKerahat: String { text("showKerahat") }
     /// „Im Bogen eingezeichnet, die Uhrzeiten stehen bei den Zeiten: etwa 45 Min. nach Sonnenaufgang, 10 Min. vor Dhuhr und 45 Min. vor Maghrib. Nach hanafitischer Lehre wird dann nicht gebetet (das Asr des Tages ausgenommen).“
     public static var kerahatFooter: String { text("kerahatFooter") }
@@ -201,13 +201,13 @@ public enum L10n {
     public static var obSkip: String { text("obSkip") }
     /// „Weiter“
     public static var obContinue: String { text("obContinue") }
-    /// „Gebetszeiten. Ruhig und genau.“
+    /// „Jedes Gebet zur rechten Zeit.“
     public static var ob1Title: String { text("ob1Title") }
     /// „Werbefrei, ohne Tracking und gemeinnützig. Nur das, was du brauchst.“
     public static var ob1Body: String { text("ob1Body") }
-    /// „Dein Standort bleibt auf dem iPhone“
+    /// „Berechnet auf deinem iPhone“
     public static var ob2Title: String { text("ob2Title") }
-    /// „Die Zeiten werden direkt auf deinem Gerät berechnet. Dein Standort wird nie gesendet oder gespeichert.“
+    /// „Die Zeiten werden direkt auf deinem Gerät berechnet. Dein Standort geht an niemanden außer Apple Karten, das den Ortsnamen liefert.“
     public static var ob2Body: String { text("ob2Body") }
     /// „Standort erlauben“
     public static var ob2Allow: String { text("ob2Allow") }
@@ -223,7 +223,7 @@ public enum L10n {
     public static var ob3Later: String { text("ob3Later") }
     /// „„Vaqt“ erlauben, deinen Standort zu verwenden?“
     public static var alLocTitle: String { text("alLocTitle") }
-    /// „Dein Standort wird nur auf diesem Gerät zur Berechnung der Gebetszeiten verwendet.“
+    /// „Dein Standort dient nur der Berechnung der Gebetszeiten. Für den Ortsnamen fragt die App Apple Karten.“
     public static var alLocBody: String { text("alLocBody") }
     /// „Einmal erlauben“
     public static var alLocOnce: String { text("alLocOnce") }
@@ -307,7 +307,7 @@ public enum L10n {
     public static var useLocation: String { text("useLocation") }
     /// „Stadt“
     public static var city: String { text("city") }
-    /// „Dein Standort wird nur auf diesem Gerät verwendet.“
+    /// „Die Gebetszeiten berechnet die App auf diesem Gerät. Nur für den Ortsnamen fragt sie Apple Karten.“
     public static var locFooter: String { text("locFooter") }
     /// „Der Standortzugriff ist aus. Erlaube ihn in den iOS-Einstellungen oder wähle eine Stadt.“
     public static var locDeniedFooter: String { text("locDeniedFooter") }
@@ -443,7 +443,7 @@ public enum L10n {
     public static var tagline: String { text("tagline") }
     /// „Diese App erhebt keine Daten.“
     public static var privacyBody1: String { text("privacyBody1") }
-    /// „Kein Konto, keine Werbung, keine Analyse-Tools. Dein Standort wird nur auf diesem Gerät zur Berechnung verwendet und verlässt es nie.“
+    /// „Kein Konto, keine Werbung, keine Analyse-Tools. Die Gebetszeiten berechnet die App auf diesem Gerät. Für den Ortsnamen und die Stadtsuche fragt sie Apple Karten – wir selbst erhalten davon nichts.“
     public static var privacyBody2: String { text("privacyBody2") }
     /// „App-Store-Datenschutzangabe: „Keine Daten erfasst“.“
     public static var privacyBody3: String { text("privacyBody3") }
@@ -572,7 +572,7 @@ public enum L10n {
     public static var supportShare: String { text("supportShare") }
     /// „Spenden sind freiwillig. Alle Funktionen bleiben für alle kostenlos.“
     public static var supportFoot: String { text("supportFoot") }
-    /// „Kerahat-Zeiten: {list}“
+    /// „Verbotszeiten: {list}“
     public static func kerahatArc(list: String) -> String { text("kerahatArc", list) }
     /// „Im Toleranzbereich“
     public static var inTol: String { text("inTol") }
@@ -662,6 +662,81 @@ public enum L10n {
     public static var licAdhanSub: String { text("licAdhanSub") }
     /// „Die App enthält freie Software und Schriften. Die Lizenztexte stehen im englischen Original.“
     public static var licensesFooter: String { text("licensesFooter") }
+    /// „Was sind Verbotszeiten?“
+    public static var kerahatInfoTitle: String { text("kerahatInfoTitle") }
+    /// „Heute“
+    public static var kerahatToday: String { text("kerahatToday") }
+    /// „Verbotszeiten (Kerahat) sind drei kurze Zeitfenster am Tag, in denen man nicht beten soll. Das Gebet ist dann makrūh, also zu meiden.“
+    public static var kerahatInfoP1: String { text("kerahatInfoP1") }
+    /// „Sonnenaufgang, bis die Sonne etwas höher steht“
+    public static var kerahatInfoL1: String { text("kerahatInfoL1") }
+    /// „Kurz vor Dhuhr, wenn die Sonne am höchsten steht“
+    public static var kerahatInfoL2: String { text("kerahatInfoL2") }
+    /// „Vor Sonnenuntergang, wenn das Licht gelb wird“
+    public static var kerahatInfoL3: String { text("kerahatInfoL3") }
+    /// „Asr noch nicht gebetet?“
+    public static var kerahatAsrTitle: String { text("kerahatAsrTitle") }
+    /// „Hast du Asr bis in die Verbotszeit vor Sonnenuntergang verschoben, bete trotzdem noch das Farḍ von Asr – die Sunna lässt du dann weg. Das Gebet gilt als rechtzeitig verrichtet, nicht als nachgeholt, selbst wenn die Sonne während des Gebets untergeht. Das gilt nur für Asr.“
+    public static var kerahatAsrBody: String { text("kerahatAsrBody") }
+    /// „Als Grund ist überliefert, dass zu diesen Zeiten die Sonne angebetet wurde.“
+    public static var kerahatInfoP2: String { text("kerahatInfoP2") }
+    /// „Nach der hanafitischen Rechtsschule. Die Fenster sind Näherungen: 45 Minuten nach Sonnenaufgang, 10 Minuten vor Dhuhr und 45 Minuten vor Sonnenuntergang.“
+    public static var kerahatInfoFoot: String { text("kerahatInfoFoot") }
+    /// „In der Verbotszeit vor Sonnenuntergang betest du nur noch das Farḍ – das Gebet gilt trotzdem als rechtzeitig.“
+    public static var gAsrKerahat: String { text("gAsrKerahat") }
+    /// „Vor jedem Gebet zeigt {app} außerdem einen Countdown auf dem Sperrbildschirm, die Live-Aktivität. Abschalten kannst du sie jederzeit unter Einstellungen › Live-Aktivität.“
+    public static func ob3Live(app: String) -> String { text("ob3Live", app) }
+    /// „Verbotszeit ab {a}“
+    public static func kerahatFrom(a: String) -> String { text("kerahatFrom", a) }
+    /// „hat begonnen“
+    public static var laBegan: String { text("laBegan") }
+    /// „Für wen?“
+    public static var qcWho: String { text("qcWho") }
+    /// „Mann“
+    public static var qcMan: String { text("qcMan") }
+    /// „Frau“
+    public static var qcWoman: String { text("qcWoman") }
+    /// „Regel pro Monat (Tage)“
+    public static var qcHayz: String { text("qcHayz") }
+    /// „Wochenbett insgesamt (Tage)“
+    public static var qcNifas: String { text("qcNifas") }
+    /// „An den Tagen der Regel und des Wochenbetts entfallen die Gebete – sie werden nicht nachgeholt.“
+    public static var qcWomanNote: String { text("qcWomanNote") }
+    /// „{d} Tage − {x} Tage Regel und Wochenbett, je {k} Gebete“
+    /// Mehrzahl nach `d`, `x`, `k` (`PLURAL` im Prototyp).
+    public static func qcResultDetailF(d: Int, x: Int, k: Int) -> String { text("qcResultDetailF", d, x, k) }
+    /// „Alles zurücksetzen“
+    public static var qadaReset: String { text("qadaReset") }
+    /// „Alle Werte zurücksetzen?“
+    public static var qadaResetTitle: String { text("qadaResetTitle") }
+    /// „Offene Gebete, Plan und die Angaben im Rechner werden auf null gesetzt. Das lässt sich nicht rückgängig machen.“
+    public static var qadaResetBody: String { text("qadaResetBody") }
+    /// „Zurücksetzen“
+    public static var qadaResetConfirm: String { text("qadaResetConfirm") }
+    /// „Alles zurückgesetzt“
+    public static var qadaResetDone: String { text("qadaResetDone") }
+    /// „Wecker zu Fadschr“
+    public static var alarmRow: String { text("alarmRow") }
+    /// „Wecker“
+    public static var alarmSwitch: String { text("alarmSwitch") }
+    /// „Weckzeit“
+    public static var alarmWhen: String { text("alarmWhen") }
+    /// „Vor Sonnenaufgang“
+    public static var alarmModeBefore: String { text("alarmModeBefore") }
+    /// „Feste Uhrzeit“
+    public static var alarmModeFixed: String { text("alarmModeFixed") }
+    /// „Uhrzeit“
+    public static var alarmTime: String { text("alarmTime") }
+    /// „Vor Sonnenaufgang“
+    public static var alarmBefore: String { text("alarmBefore") }
+    /// „Klingelt heute um {t}“
+    public static func alarmRings(t: String) -> String { text("alarmRings", t) }
+    /// „Heute beginnt Fadschr um {f}, die Sonne geht um {s} auf.“
+    public static func alarmToday(f: String, s: String) -> String { text("alarmToday", f, s) }
+    /// „Der Wecker klingelt jeden Tag, auch im Stummmodus und bei Fokus – wie der Wecker von iOS.“
+    public static var alarmFooter: String { text("alarmFooter") }
+    /// „Eine feste Uhrzeit bleibt gleich, der Sonnenaufgang wandert übers Jahr. „Vor Sonnenaufgang“ folgt ihm jeden Tag; eine feste Uhrzeit klingelt spätestens 5 Minuten vor Sonnenaufgang.“
+    public static var alarmFixedFooter: String { text("alarmFixedFooter") }
 
     /// Name einer Sure aus `SURAH` im Prototyp, z. B. „Al-Baqara“ für 2.
     public static func surahName(_ surah: Int) -> String { text("surah_\(surah)") }
@@ -998,6 +1073,43 @@ public enum L10n {
         "licAmiriSub",
         "licAdhanSub",
         "licensesFooter",
+        "kerahatInfoTitle",
+        "kerahatToday",
+        "kerahatInfoP1",
+        "kerahatInfoL1",
+        "kerahatInfoL2",
+        "kerahatInfoL3",
+        "kerahatAsrTitle",
+        "kerahatAsrBody",
+        "kerahatInfoP2",
+        "kerahatInfoFoot",
+        "gAsrKerahat",
+        "ob3Live",
+        "kerahatFrom",
+        "laBegan",
+        "qcWho",
+        "qcMan",
+        "qcWoman",
+        "qcHayz",
+        "qcNifas",
+        "qcWomanNote",
+        "qcResultDetailF",
+        "qadaReset",
+        "qadaResetTitle",
+        "qadaResetBody",
+        "qadaResetConfirm",
+        "qadaResetDone",
+        "alarmRow",
+        "alarmSwitch",
+        "alarmWhen",
+        "alarmModeBefore",
+        "alarmModeFixed",
+        "alarmTime",
+        "alarmBefore",
+        "alarmRings",
+        "alarmToday",
+        "alarmFooter",
+        "alarmFixedFooter",
         "surah_2",
         "surah_13",
         "surah_20",

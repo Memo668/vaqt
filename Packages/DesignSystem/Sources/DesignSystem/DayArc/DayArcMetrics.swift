@@ -111,6 +111,11 @@ public struct DayArcMetrics: Hashable, Sendable {
         .pi - 2 * endAngle
     }
 
+    /// Länge des Bogens von Fadschr bis Ischa in pt (auf dem Radius der Spur).
+    public var arcLength: CGFloat {
+        radius * CGFloat(sweep)
+    }
+
     /// Winkel zu einem Anteil des Gebetstages – `arcAngle(f)`. 0 ist Fadschr, 1 ist Ischa.
     public func angle(at fraction: Double) -> Double {
         endAngle + fraction * sweep

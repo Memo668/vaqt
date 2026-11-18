@@ -49,6 +49,13 @@ public final class TodayModel {
     public private(set) var otherDayTimes: DayTimes?
     /// Ob das Stadt-Sheet offen ist.
     public var isCitySheetPresented = false
+    /// „Was sind Verbotszeiten?“ – geöffnet über den Infopunkt einer Kerahat-Zeile (Spec § 10.2).
+    public var isKerahatInfoPresented = false
+
+    /// Die Zeiten des gezeigten Tages – für die Fenster im Sheet „Was sind Verbotszeiten?“.
+    public var shownDayTimes: DayTimes? {
+        otherDayTimes ?? timeline?.today
+    }
     /// Wie oft im Stadt-Sheet ein Ort gewählt wurde – eine Stadt oder „Aktueller Standort“. Daran erkennt
     /// das Onboarding, dass das Sheet mit einer Wahl geschlossen wurde und nicht mit „Abbrechen“.
     public private(set) var cityChoices = 0

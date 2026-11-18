@@ -55,6 +55,48 @@ extension OnboardingPage where Footer == EmptyView {
     }
 }
 
+/// Der Hinweis auf Seite 3 unter dem Text: Vor jedem Gebet zeigt die App eine Live-Aktivität, und sie lässt sich
+/// unter Einstellungen › Live-Aktivität abschalten (`.ob-live`, Spec § 10.5). Info-Symbol in Akzent, getönter
+/// Grund, Radius 14, Fußnote.
+public struct OnboardingNote: View {
+    private let text: String
+
+    public init(_ text: String) {
+        self.text = text
+    }
+
+    public var body: some View {
+        HStack(alignment: .top, spacing: OnboardingNoteMetrics.gap) {
+            Image(systemName: "info.circle")
+                .font(.system(size: OnboardingNoteMetrics.symbolSize))
+                .foregroundStyle(Palette.accent)
+                .accessibilityHidden(true)
+            Text(text)
+                .textStyle(.footnote, lineHeight: OnboardingNoteMetrics.lineHeight)
+                .foregroundStyle(Palette.textSecondary)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(.vertical, OnboardingNoteMetrics.paddingY)
+        .padding(.horizontal, OnboardingNoteMetrics.paddingX)
+        .background(Palette.fillTertiary, in: .rect(cornerRadius: OnboardingNoteMetrics.radius, style: .continuous))
+        .frame(maxWidth: OnboardingNoteMetrics.maxWidth)
+        .padding(.top, OnboardingNoteMetrics.top)
+    }
+}
+
+/// Maße des Hinweises (`.ob-live`: 18 pt Abstand, 10/12 pt innen, Radius 14, höchstens 320 pt breit).
+enum OnboardingNoteMetrics {
+    static let top: CGFloat = 18
+    static let paddingX: CGFloat = 12
+    static let paddingY: CGFloat = 10
+    static let radius: CGFloat = 14
+    static let gap: CGFloat = 8
+    static let symbolSize: CGFloat = 16
+    static let lineHeight: CGFloat = 1.38
+    static let maxWidth: CGFloat = 320
+}
+
 /// Die Chips unter dem Text der Seite „Kostenlos. Ohne Werbung.“: „Keine Werbung“, „Kein Tracking“,
 /// „Kein Konto“ mit Haken, getönt in Akzent, mittig umbrechend (`.ob-free`, Spec § 9.9).
 public struct OnboardingChips: View {

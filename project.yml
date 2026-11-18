@@ -79,7 +79,7 @@ targets:
         # Begründung im System-Dialog der Standortabfrage. Grundwert für die Info.plist; die 16
         # Sprachen stehen in App/InfoPlist.xcstrings. Beides kommt aus `T.alLocBody` im Prototyp –
         # `scripts/import-strings --check` prüft, dass dieser Wert dem deutschen Text entspricht.
-        NSLocationWhenInUseUsageDescription: "Dein Standort wird nur auf diesem Gerät zur Berechnung der Gebetszeiten verwendet."
+        NSLocationWhenInUseUsageDescription: "Dein Standort dient nur der Berechnung der Gebetszeiten. Für den Ortsnamen fragt die App Apple Karten."
         # Die App Group, in deren UserDefaults die Einstellungen liegen (Features: SettingsStore),
         # damit Widgets und Live-Aktivität sie ab Phase 9 lesen können.
         AppGroupIdentifier: $(APP_GROUP_ID)

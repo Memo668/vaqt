@@ -137,6 +137,18 @@ public enum Palette {
         public static let time = Color(RGBA.white)
         /// Kerahat-Marken in warmem Gelb, `#F3C979`.
         public static let kerahat = Color(Values.liveActivityKerahat)
+
+        // Spec § 10.3: in der Verbotszeit orange (`.la.is-kerahat`).
+        /// Grundfarbe in der Verbotszeit, `#EC8530`.
+        public static let prohibited = Color(Values.liveActivityProhibited)
+        /// Symbole begonnener Gebete und Knopf auf Orange, `#C4661F`.
+        public static let prohibitedDeep = Color(Values.liveActivityProhibitedDeep)
+        /// Marker kommender Gebete: Weiß zu 30 % auf Orange.
+        public static let prohibitedMarker = Color(RGBA.white.mixed(0.30, with: Values.liveActivityProhibited))
+        /// Kerahat-Abschnitte auf Orange, `#FFE2BF`.
+        public static let prohibitedKerahat = Color(RGBA(hex: 0xFFE2BF))
+        /// Symbol, Zeit, Countdown und Balken in der Dynamic Island, `#F0A257`.
+        public static let islandProhibited = Color(RGBA(hex: 0xF0A257))
     }
 
     // MARK: - Sperrbildschirm
@@ -194,5 +206,8 @@ public enum Palette {
         public static let kerahatTextDark = RGBA(hex: 0xE3B36B)
 
         public static let liveActivityKerahat = RGBA(hex: 0xF3C979)
+        /// Orange der Live-Aktivität in der Verbotszeit (Spec § 10.3).
+        public static let liveActivityProhibited = RGBA(hex: 0xEC8530)
+        public static let liveActivityProhibitedDeep = RGBA(hex: 0xC4661F)
     }
 }

@@ -73,6 +73,8 @@ extension QadaLedger.Field {
         case .months: L10n.months
         case .days: L10n.days
         case .perDay: L10n.qadaPerDay
+        case .menstruationDays: L10n.qcHayz
+        case .postnatalDays: L10n.qcNifas
         }
     }
 }

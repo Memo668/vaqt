@@ -1,19 +1,28 @@
 import Foundation
 
-/// Eine geplante Live-Aktivität: eine je Gebet (Spec § 4, Frage 16 entschieden mit dem Plan für Phase 9).
+/// Eine geplante Live-Aktivität: eine je Gebet (Spec § 4, Frage 16 entschieden mit dem Plan für Phase 9),
+/// bei Dhuhr und Maghrib mit Verbotszeit zwei (Spec § 10.3).
 public struct LiveActivityPlan: Hashable, Sendable, Identifiable {
-    /// Kennung, die für dasselbe Gebet gleich bleibt, z. B. `live.2026-11-10.maghrib`.
+    /// Kennung, die für dasselbe Gebet gleich bleibt, z. B. `live.2026-11-10.maghrib`; der orange Teil in der
+    /// Verbotszeit hängt `.verbot` an.
     public let id: String
     public let prayer: Prayer
     /// Der Tag, zu dem das Gebet gehört. Ein Ischa nach Mitternacht gehört zum Vortag.
     public let day: CalendarDay
     /// Ab hier läuft die Aktivität (App-Uhr): so viele Minuten vor dem Gebet, wie eingestellt.
     public let start: Date
-    /// Gebetsbeginn: Ab hier ist die Aktivität `isStale` und zeigt „Jetzt“.
+    /// Gebetsbeginn.
     public let prayerDate: Date
-    /// 15 Minuten nach Gebetsbeginn endet die Aktivität (Einstellungen › Live-Aktivität, `liveActFooter`).
+    /// Ab hier ist die Aktivität `isStale` und zeigt nur noch eine schmale Zeile; läuft die App, beendet sie
+    /// sie dann (Spec § 10.3). Gebetsbeginn oder, beim grünen Teil vor einer Verbotszeit, deren Beginn.
     public let end: Date
     public let content: LiveActivityContent
+
+    /// Gewicht für iOS (`relevanceScore`): je später der Start, desto höher – so steht die neueste Aktivität
+    /// oben auf dem Sperrbildschirm und in der Dynamic Island (Spec § 10.3).
+    public var relevance: Double {
+        start.timeIntervalSince1970 / 60
+    }
 
     /// Minuten zwischen Start und Gebet, für den Hinweis beim Start („Maghrib in 30 Minuten“).
     public var leadMinutes: Int {
@@ -21,8 +30,8 @@ public struct LiveActivityPlan: Hashable, Sendable, Identifiable {
     }
 
     /// Die Kennung zu Gebet und Tag.
-    public static func identifier(prayer: Prayer, day: CalendarDay) -> String {
-        "live." + day.description + "." + prayer.rawValue
+    public static func identifier(prayer: Prayer, day: CalendarDay, prohibited: Bool = false) -> String {
+        "live." + day.description + "." + prayer.rawValue + (prohibited ? ".verbot" : "")
     }
 }
 
@@ -30,17 +39,18 @@ public struct LiveActivityPlan: Hashable, Sendable, Identifiable {
 /// mit dem Plan für Phase 9; Spec § 4, Frage 16).
 ///
 /// Eine Aktivität beginnt so viele Minuten vor dem Gebet, wie unter Einstellungen › Live-Aktivität gewählt
-/// (Standard 30), zählt bis zum Gebetsbeginn herunter, zeigt dann „Jetzt“ und endet 15 Minuten nach
-/// Beginn. iOS startet sie selbst zum geplanten Zeitpunkt (`Activity.request(…, start:)`), auch wenn die
-/// App nicht läuft.
+/// (Standard 30), und zählt bis zum Gebetsbeginn herunter. iOS startet sie selbst zum geplanten Zeitpunkt
+/// (`Activity.request(…, start:)`), auch wenn die App nicht läuft.
 ///
-/// Damit nicht zwei Aktivitäten zugleich laufen, beginnt eine Aktivität frühestens, wenn die des vorigen
-/// Gebets endet – bei langem Vorlauf oder dicht folgenden Gebeten (Maghrib und Ischa) also etwas später.
-/// Liegen zwei Gebete weniger als 15 Minuten auseinander (Regel „Nachtmitte“), überlappen sie.
+/// Seit Spec § 10.3: Zum Gebetsbeginn wird sie `stale` und schrumpft auf eine Zeile; die App beendet sie,
+/// sobald sie läuft. Fällt die Verbotszeit vor Dhuhr oder Maghrib in die Strecke, gibt es zwei Aktivitäten:
+/// die grüne bis zum Beginn der Verbotszeit, die orange von dort bis zum Gebet. Eine Aktivität beginnt
+/// frühestens mit dem vorigen Gebet.
 public struct LiveActivityPlanner: Sendable {
 
-    /// So lange nach Gebetsbeginn läuft eine Aktivität noch.
-    public static let endDelay: TimeInterval = 15 * 60
+    /// So lange nach ihrem Wechsel (`staleDate`) bleibt eine Aktivität im Plan. Seit Spec § 10.3 keine Zeit
+    /// mehr: Die App beendet sie sofort, auf dem Sperrbildschirm steht bis dahin die schmale Zeile.
+    public static let endDelay: TimeInterval = 0
     /// So weit voraus plant die App: Aktivitäten, die in dieser Zeit beginnen.
     public static let horizon: TimeInterval = 24 * 60 * 60
     /// So viele Aktivitäten nimmt iOS je App an, geplante mitgezählt; die sechste lehnt es ab
@@ -100,40 +110,30 @@ public struct LiveActivityPlanner: Sendable {
 
         if let debugStart {
             guard let next = prayers.first(where: { $0.date > debugStart }) else { return [] }
-            let end = next.date.addingTimeInterval(Self.endDelay)
-            guard end > now,
-                  let plan = makePlan(next, start: debugStart, now: now, place: place, settings: settings, options: options)
-            else { return [] }
-            return [plan]
+            return makePlans(next, start: debugStart, now: now, place: place, settings: settings, options: options)
+                .filter { $0.end > now }
         }
 
         let lead = TimeInterval(options.leadMinutes) * 60
         let latestStart = now.addingTimeInterval(Self.horizon)
         var plans: [LiveActivityPlan] = []
-        // Eine Aktivität, deren Gebet schon begonnen hat, beendet die App sogleich (sie bleibt nur auf dem
-        // Sperrbildschirm stehen); sie zählt deshalb nicht zur Höchstzahl.
-        var upcoming = 0
-        for (index, prayer) in prayers.enumerated() {
-            if prayer.date > now {
-                guard upcoming < limit else { break }
-            }
+        prayers: for (index, prayer) in prayers.enumerated() {
             var start = prayer.date.addingTimeInterval(-lead)
             if index > 0 {
-                // Frühestens, wenn die Aktivität des vorigen Gebets endet – außer die beiden liegen so dicht,
-                // dass dann schon dieses Gebet begonnen hätte.
-                let previousEnd = prayers[index - 1].date.addingTimeInterval(Self.endDelay)
-                if previousEnd > start, previousEnd < prayer.date {
-                    start = previousEnd
+                // Frühestens mit dem vorigen Gebet – außer die beiden liegen so dicht, dass dann schon dieses
+                // Gebet begonnen hätte.
+                let previous = prayers[index - 1].date
+                if previous > start, previous < prayer.date {
+                    start = previous
                 }
             }
-            let end = prayer.date.addingTimeInterval(Self.endDelay)
-            guard end > now else { continue }
+            guard prayer.date > now else { continue }
             guard start <= latestStart else { break }
-            if let plan = makePlan(prayer, start: start, now: now, place: place, settings: settings, options: options) {
+            // Was schon gewechselt hat, kommt nicht mehr in den Plan; die App beendet es (`LiveActivityLifecycle`).
+            for plan in makePlans(prayer, start: start, now: now, place: place, settings: settings, options: options)
+            where plan.end > now {
+                guard plans.count < limit else { break prayers }
                 plans.append(plan)
-                if prayer.date > now {
-                    upcoming += 1
-                }
             }
         }
         return plans
@@ -159,10 +159,52 @@ public struct LiveActivityPlanner: Sendable {
         .sorted { ($0.date, $0.day) < ($1.date, $1.day) }
     }
 
+    /// Die Aktivitäten zu einem Gebet: eine, oder bei einer Verbotszeit vor dem Gebet zwei – die grüne bis zu
+    /// ihrem Beginn und die orange bis zum Gebet (Spec § 10.3). Beginnt die Strecke schon in der Verbotszeit,
+    /// nur die orange. Ohne den Schalter „Kerahat-Zeiten zeigen“ bleibt es bei einer grünen.
+    func makePlans(
+        _ prayer: PrayerDate, start: Date, now: Date, place: Place, settings: CalculationSettings, options: Options
+    ) -> [LiveActivityPlan] {
+        let window = options.showKerahat ? prohibitedWindow(before: prayer, place: place, settings: settings) : nil
+        guard let window, window.start < prayer.date else {
+            return makePlan(prayer, start: start, now: now, place: place, settings: settings, options: options)
+                .map { [$0] } ?? []
+        }
+        if window.start <= start {
+            return makePlan(
+                prayer, start: start, now: now, place: place, settings: settings, options: options,
+                segment: .prohibited, prohibitedStart: window.start
+            ).map { [$0] } ?? []
+        }
+        return [
+            makePlan(
+                prayer, start: start, now: now, place: place, settings: settings, options: options,
+                segment: .beforeProhibited, prohibitedStart: window.start
+            ),
+            makePlan(
+                prayer, start: window.start, now: now, place: place, settings: settings, options: options,
+                segment: .prohibited, prohibitedStart: window.start
+            ),
+        ].compactMap { $0 }
+    }
+
+    /// Die Verbotszeit, die mit dem Gebet endet: vor Dhuhr (Zenit) und vor Maghrib (Sonnenuntergang).
+    func prohibitedWindow(before prayer: PrayerDate, place: Place, settings: CalculationSettings) -> KerahatWindow? {
+        let kind: KerahatWindow.Kind
+        switch prayer.prayer {
+        case .dhuhr: kind = .zenith
+        case .maghrib: kind = .sunset
+        default: return nil
+        }
+        guard let times = source.times(on: prayer.day, at: place, settings: settings) else { return nil }
+        return Kerahat.windows(for: times).first { $0.id == kind && abs($0.end.timeIntervalSince(prayer.date)) < 60 }
+    }
+
     /// Plan und Inhalt einer Aktivität. Der Bogen bis zum Beginn zeigt den Stand beim Start, oder jetzt,
     /// falls die Aktivität schon läuft. `nil`, wenn für einen der nötigen Tage Zeiten fehlen.
     func makePlan(
-        _ prayer: PrayerDate, start: Date, now: Date, place: Place, settings: CalculationSettings, options: Options
+        _ prayer: PrayerDate, start: Date, now: Date, place: Place, settings: CalculationSettings, options: Options,
+        segment: LiveActivityContent.Segment = .regular, prohibitedStart: Date? = nil
     ) -> LiveActivityPlan? {
         let shownAt = min(max(start, now), prayer.date)
         guard let timeline = source.timeline(at: shownAt, place: place, settings: settings),
@@ -180,12 +222,13 @@ public struct LiveActivityPlanner: Sendable {
             kerahat: options.showKerahat
                 ? LiveActivityContent.kerahatMarks(between: previous.date, and: event.date, windows: windows) : [],
             cityName: options.cityName, isCurrentLocation: options.isCurrentLocation,
-            showKerahat: options.showKerahat, clockOffset: options.clockOffset
+            showKerahat: options.showKerahat, clockOffset: options.clockOffset,
+            segment: segment, prohibitedStart: prohibitedStart
         )
         return LiveActivityPlan(
-            id: LiveActivityPlan.identifier(prayer: prayer.prayer, day: prayer.day),
+            id: LiveActivityPlan.identifier(prayer: prayer.prayer, day: prayer.day, prohibited: segment == .prohibited),
             prayer: prayer.prayer, day: prayer.day, start: start, prayerDate: prayer.date,
-            end: prayer.date.addingTimeInterval(Self.endDelay), content: content
+            end: content.staleDate.addingTimeInterval(Self.endDelay), content: content
         )
     }
 }

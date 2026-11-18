@@ -64,7 +64,10 @@ public struct SystemLiveActivityScheduler: LiveActivityScheduling {
     /// hier gesucht und benutzt, ohne den Hauptakteur zu verlassen.
     private nonisolated static func update(id: String, content: LiveActivityContent) async {
         guard let activity = Activity<PrayerActivityAttributes>.activities.first(where: { $0.id == id }) else { return }
-        await activity.update(ActivityContent(state: content, staleDate: content.deviceCountdownEnd))
+        // Die Relevanz bleibt, wie sie beim Anmelden war: Sie hängt am Start (`LiveActivityPlan.relevance`).
+        await activity.update(ActivityContent(
+            state: content, staleDate: content.deviceStaleDate, relevanceScore: activity.content.relevanceScore
+        ))
         log.notice("Aufgefrischt: \(activity.attributes.planID, privacy: .public)")
     }
 
@@ -75,7 +78,7 @@ public struct SystemLiveActivityScheduler: LiveActivityScheduling {
         let offset = (content ?? activity.content.state).clockOffset
         let policy: ActivityUIDismissalPolicy = dismissAt.map { .after($0.addingTimeInterval(-offset)) } ?? .immediate
         await activity.end(content.map { ActivityContent(state: $0, staleDate: nil) }, dismissalPolicy: policy)
-        let note = dismissAt == nil ? "" : " (steht bis 15 Min. nach Beginn)"
+        let note = dismissAt == nil ? "" : " (steht noch bis \(dismissAt!))"
         log.notice("Beendet: \(activity.attributes.planID, privacy: .public)\(note, privacy: .public)")
     }
 
@@ -84,7 +87,10 @@ public struct SystemLiveActivityScheduler: LiveActivityScheduling {
     private func request(_ plan: LiveActivityPlan, wording: any LiveActivityWording) {
         let content = plan.content
         let attributes = PrayerActivityAttributes(planID: plan.id, start: plan.start)
-        let activityContent = ActivityContent(state: content, staleDate: content.deviceCountdownEnd)
+        // Spec § 10.3: wechselt zum Gebetsbeginn oder zum Beginn der Verbotszeit; die neueste steht obenauf.
+        let activityContent = ActivityContent(
+            state: content, staleDate: content.deviceStaleDate, relevanceScore: plan.relevance
+        )
         let deviceStart = content.deviceDate(plan.start)
         do {
             if deviceStart <= Date() {

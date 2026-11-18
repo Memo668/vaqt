@@ -55,6 +55,21 @@ public struct GuideHeaderCard: View {
                         .padding(.top, GuideHeaderMetrics.noteTop)
                 }
 
+                // Spec § 10.2: Bei Asr der Hinweis auf die Verbotszeit vor Sonnenuntergang – nur das Farḍ.
+                if header.prayer == .asr {
+                    HStack(alignment: .firstTextBaseline, spacing: GuideHeaderMetrics.kerahatNoteGap) {
+                        Circle()
+                            .fill(Palette.kerahat)
+                            .frame(width: GuideHeaderMetrics.kerahatDot, height: GuideHeaderMetrics.kerahatDot)
+                            .accessibilityHidden(true)
+                        Text(L10n.gAsrKerahat)
+                            .textStyle(.footnote, lineHeight: GuideHeaderMetrics.noteLineHeight)
+                            .foregroundStyle(Palette.textSecondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .padding(.top, GuideHeaderMetrics.noteTop)
+                }
+
                 walk
 
                 if let returnPrayer = header.returnPrayer {
@@ -100,6 +115,9 @@ public struct GuideHeaderCard: View {
 /// `.rak`: `margin-top: 18px`; `.g-note`: `margin: 12px 0 0; line-height: 1.38`; `.g-now`: `margin-top: 14px`;
 /// `.g-walk`: `margin-top: 18px`, `ic('play', 18)`; `.g-walk-sub`: `margin: 8px 0 0`, Footnote, Zeilenhöhe 1,35).
 enum GuideHeaderMetrics {
+    /// Punkt vor dem Hinweis zur Verbotszeit bei Asr (`.g-note-k`: 5 pt, Abstand 7 pt; Spec § 10.2).
+    static let kerahatDot: CGFloat = 5
+    static let kerahatNoteGap: CGFloat = 7
     static let titleGap: CGFloat = 12
     static let titleTop: CGFloat = 10
     static let titleBottom: CGFloat = 16

@@ -7,16 +7,17 @@ import WidgetKit
 /// Die Live-Aktivität zum nächsten Gebet: auf dem Sperrbildschirm der Bogen in Weiß auf Akzent, in der
 /// Dynamic Island kompakt, minimal und erweitert (Spec § 3, „Live Activity“; Variante 5h).
 ///
-/// Ab Gebetsbeginn ist der Inhalt `stale` (`staleDate`): Der Bogen zeigt das Gebet als laufend, statt des
-/// Countdowns steht „Jetzt“. Keine Knöpfe.
+/// Zu ihrem `staleDate` (Gebetsbeginn oder Beginn der Verbotszeit) schrumpft sie auf eine schmale Zeile; in
+/// der Verbotszeit ist sie orange (Spec § 10.3). Keine Knöpfe.
 struct PrayerLiveActivity: Widget {
 
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: PrayerActivityAttributes.self) { context in
             let _ = Self.applyLanguage()
+            // Spec § 10.3: der Verlauf mit 30 % Deckkraft über durchsichtigem Grund, in der Verbotszeit orange.
             LiveActivityLockScreen(content: context.state, isStale: context.isStale)
-                .background(LiveActivityBackground())
-                .activityBackgroundTint(Palette.LiveActivity.background)
+                .background(LiveActivityBackground(isProhibited: context.state.isProhibited))
+                .activityBackgroundTint(.clear)
                 .activitySystemActionForegroundColor(.white)
                 .environment(\.locale, L10n.locale)
                 .environment(\.layoutDirection, L10n.layoutDirection)
@@ -45,7 +46,7 @@ struct PrayerLiveActivity: Widget {
                 LiveActivityMinimal(content: context.state)
                     .environment(\.layoutDirection, L10n.layoutDirection)
             }
-            .keylineTint(LiveActivityMetrics.islandAccent)
+            .keylineTint(LiveActivityMetrics.islandAccent(context.state))
             .contentMargins(.horizontal, LiveActivityMetrics.expandedInset, for: .expanded)
         }
     }

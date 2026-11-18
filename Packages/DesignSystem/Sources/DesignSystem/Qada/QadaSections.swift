@@ -14,6 +14,10 @@ public enum QadaAction: Equatable, Sendable {
     case setWitr(Bool)
     /// „Als offen übernehmen“.
     case applyPeriod
+    /// „Für wen?“ – Mann oder Frau (Spec § 10.7).
+    case setPerson(QadaLedger.Person)
+    /// „Alles zurücksetzen“, nach der Warnung bestätigt (Spec § 10.7).
+    case reset
 }
 
 extension QadaLedger {
@@ -26,6 +30,8 @@ extension QadaLedger {
         case .addMissed(let prayer): addMissed(prayer)
         case .setWitr(let isOn): includesWitr = isOn
         case .applyPeriod: applyPeriod()
+        case .setPerson(let person): self.person = person
+        case .reset: reset()
         }
     }
 }

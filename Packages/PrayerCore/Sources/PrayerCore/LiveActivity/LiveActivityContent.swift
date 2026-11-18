@@ -12,6 +12,18 @@ import Foundation
 /// Der Inhalt ist der `ContentState` der Aktivität und wird dafür als JSON gespeichert.
 public struct LiveActivityContent: Codable, Hashable, Sendable {
 
+    /// Welcher Teil der Strecke bis zum Gebet (Spec § 10.3). Eine Aktivität ändert sich ohne die App nur
+    /// einmal, zu ihrem `staleDate`. Bei Dhuhr und Maghrib, deren Verbotszeit in die Strecke fällt, gibt es
+    /// deshalb zwei: die grüne bis zum Beginn der Verbotszeit, dann die orange bis zum Gebet.
+    public enum Segment: String, Codable, Hashable, Sendable {
+        /// Grün, bis zum Gebetsbeginn.
+        case regular
+        /// Grün, bis die Verbotszeit vor dem Gebet beginnt; danach als schmale Zeile „Verbotszeit ab …“.
+        case beforeProhibited
+        /// Orange, in der Verbotszeit bis zum Gebetsbeginn.
+        case prohibited
+    }
+
     /// Ein Kerahat-Fenster unter dem Balken der Dynamic Island, als Anteil der Strecke vom vorigen Ereignis
     /// bis zum Gebet (`segs` in `diExpanded()`).
     public struct KerahatMark: Codable, Hashable, Sendable {
@@ -42,15 +54,18 @@ public struct LiveActivityContent: Codable, Hashable, Sendable {
     /// Uhr der App minus Gerätezeit in Sekunden. Nur mit `-debugDate`/`-debugTime` nicht 0: Dann laufen
     /// Countdown und Balken mit der Gerätezeit, zeigen aber die Zeiten der Debug-Uhr.
     public let clockOffset: TimeInterval
-    /// Ob das Gebet schon begonnen hat, als die App die Aktivität beendet hat. Eine beendete Aktivität
-    /// bleibt bis 15 Minuten nach Beginn auf dem Sperrbildschirm und zeigt dann „Jetzt“, auch ohne
-    /// `isStale`.
+    /// Ob das Gebet schon begonnen hat, als die App die Aktivität beendet hat. Bis Spec v0.8 blieb sie dann
+    /// mit „Jetzt“ stehen; seit § 10.3 beendet die App sie sofort. Bleibt für ältere gespeicherte Inhalte.
     public let hasBegun: Bool
+    /// Teil der Strecke (Spec § 10.3); `nil` in Inhalten von Build 2 und älter, dort gilt `regular`.
+    public let segment: Segment?
+    /// Beginn der Verbotszeit vor dem Gebet (App-Uhr), wenn die Aktivität dazu gehört.
+    public let prohibitedStart: Date?
 
     public init(
         prayer: DayPhase.Event, previous: DayPhase.Event, countdown: DayPhase, begun: DayPhase,
         kerahat: [KerahatMark], cityName: String, isCurrentLocation: Bool, showKerahat: Bool,
-        clockOffset: TimeInterval = 0, hasBegun: Bool = false
+        clockOffset: TimeInterval = 0, hasBegun: Bool = false, segment: Segment = .regular, prohibitedStart: Date? = nil
     ) {
         self.prayer = prayer
         self.previous = previous
@@ -62,6 +77,34 @@ public struct LiveActivityContent: Codable, Hashable, Sendable {
         self.showKerahat = showKerahat
         self.clockOffset = clockOffset
         self.hasBegun = hasBegun
+        self.segment = segment
+        self.prohibitedStart = prohibitedStart
+    }
+
+    /// Teil der Strecke; ältere Inhalte ohne Angabe sind `regular`.
+    public var kind: Segment {
+        segment ?? .regular
+    }
+
+    /// Ob die Aktivität in der Verbotszeit läuft und deshalb orange ist.
+    public var isProhibited: Bool {
+        kind == .prohibited
+    }
+
+    /// Beginn der Verbotszeit am Ort, z. B. 11:42 – für „Verbotszeit ab 11:42“.
+    public var prohibitedStartTime: ClockTime? {
+        prohibitedStart.map { ClockTime($0, in: countdown.times.timeZone) }
+    }
+
+    /// Wann die Aktivität ihr Aussehen wechselt, in App-Zeit: die grüne vor einer Verbotszeit zu deren Beginn,
+    /// sonst zum Gebetsbeginn. Danach zeigt sie nur noch eine schmale Zeile.
+    public var staleDate: Date {
+        kind == .beforeProhibited ? (prohibitedStart ?? prayer.date) : prayer.date
+    }
+
+    /// `staleDate` in Gerätezeit – so bekommt es iOS.
+    public var deviceStaleDate: Date {
+        deviceDate(staleDate)
     }
 
     /// Derselbe Inhalt, als habe das Gebet schon begonnen.
@@ -69,7 +112,7 @@ public struct LiveActivityContent: Codable, Hashable, Sendable {
         LiveActivityContent(
             prayer: prayer, previous: previous, countdown: countdown, begun: begun, kerahat: kerahat,
             cityName: cityName, isCurrentLocation: isCurrentLocation, showKerahat: showKerahat,
-            clockOffset: clockOffset, hasBegun: true
+            clockOffset: clockOffset, hasBegun: true, segment: kind, prohibitedStart: prohibitedStart
         )
     }
 

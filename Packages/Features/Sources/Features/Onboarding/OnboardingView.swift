@@ -85,6 +85,9 @@ struct OnboardingView: View {
         case .notifications:
             OnboardingPage(title: L10n.ob3Title, message: L10n.ob3Body) {
                 IconBadge(systemImage: "bell.and.waves.left.and.right", symbolSize: IconBadgeMetrics.bellSymbolSize)
+            } footer: {
+                // Spec § 10.5: Hinweis auf die Live-Aktivität und wo man sie abschaltet.
+                OnboardingNote(L10n.ob3Live(app: L10n.appName))
             }
         case .free:
             OnboardingPage(title: L10n.ob4Title, message: L10n.ob4Body(app: L10n.appName)) {

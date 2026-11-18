@@ -73,6 +73,9 @@ public struct DayArcLayout: Hashable, Sendable {
     public static let tightGapAfterCurrent: CGFloat = 14
     /// Kürzere Kerahat-Segmente werden nicht gezeichnet (`f1 - f0 < .001`).
     public static let shortestSegment = 0.001
+    /// Ein Kerahat-Abschnitt reicht vom Punkt, an dem er liegt, mindestens um den Radius des laufenden
+    /// Gebets plus so viel weiter, wie dieser Anteil eines Punktradius angibt (Spec § 10.1, `kMinF`).
+    public static let kerahatVisibleShare: CGFloat = 0.8
 
     public let metrics: DayArcMetrics
     /// Ob Fadschr rechts beginnt.
@@ -165,10 +168,19 @@ public struct DayArcLayout: Hashable, Sendable {
         self.markers = markers
 
         if showKerahat {
+            // Spec § 10.1: Jeder Abschnitt schaut sichtbar unter dem Punkt hervor, an dem er liegt – das Fenster nach
+            // Sonnenaufgang wächst nach vorn, die vor Dhuhr und Maghrib wachsen zurück. Die Länge ist dann nicht
+            // mehr maßstäblich; die Uhrzeiten (VoiceOver, Zeilen) bleiben genau.
+            let minimum = Double(Self.kerahatMinimumLength(metrics) / metrics.arcLength)
             kerahat = Kerahat.windows(for: times).compactMap { window in
-                let start = min(1, max(0, fraction(of: window.start)))
-                let end = min(1, max(0, fraction(of: window.end)))
+                var start = min(1, max(0, fraction(of: window.start)))
+                var end = min(1, max(0, fraction(of: window.end)))
                 guard end - start >= Self.shortestSegment else { return nil }
+                if window.id == .sunrise {
+                    end = min(1, max(end, start + minimum))
+                } else {
+                    start = max(0, min(start, end - minimum))
+                }
                 return KerahatSegment(
                     id: window.id, start: start, end: end, state: kerahatState(window),
                     startTime: ClockTime(window.start, in: times.timeZone), endTime: ClockTime(window.end, in: times.timeZone)
@@ -177,6 +189,12 @@ public struct DayArcLayout: Hashable, Sendable {
         } else {
             kerahat = []
         }
+    }
+
+    /// Mindestlänge eines Kerahat-Abschnitts entlang des Bogens in pt: Home 17 + 12 = 29, Live-Aktivität und
+    /// Widget „Live“ 12 + 8,4 = 20,4, Rechteck 7,5 + 5,2 = 12,7 (Spec § 10.1).
+    public static func kerahatMinimumLength(_ metrics: DayArcMetrics) -> CGFloat {
+        metrics.currentMarkerRadius + kerahatVisibleShare * metrics.markerRadius
     }
 
     /// Mitte des Knopfes für „jetzt“.

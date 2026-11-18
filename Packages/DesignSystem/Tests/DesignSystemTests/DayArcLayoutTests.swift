@@ -270,16 +270,24 @@ struct DayArcLayoutTests {
         let layout = layout("berlin", "14:25")
         #expect(layout.kerahatRadius == 162)
         #expect(layout.kerahat.map(\.id) == [.sunrise, .zenith, .sunset])
-        let expected: [(Double, Double)] = [(0.151, 0.209), (0.494, 0.507), (0.802, 0.859)]
-        for (segment, (start, end)) in zip(layout.kerahat, expected) {
-            #expect(close(CGFloat(segment.start), CGFloat(start)))
-            #expect(close(CGFloat(segment.end), CGFloat(end)))
-        }
+        // Spec § 10.1: Die Seite am Punkt bleibt, die andere reicht mindestens 29 pt (17 + 0,8 × 15) weiter –
+        // nach Sonnenaufgang nach vorn, vor Dhuhr und Maghrib zurück. Die 45-Minuten-Fenster wären sonst gut
+        // 21 pt lang, das vor Dhuhr nur 4,7 pt und läge ganz unter dem Dhuhr-Punkt.
         let metrics = layout.metrics
+        let minimum = Double(DayArcLayout.kerahatMinimumLength(metrics) / metrics.arcLength)
+        #expect(close(DayArcLayout.kerahatMinimumLength(metrics), 29))
+        #expect(close(CGFloat(layout.kerahat[0].start), 0.151))
+        #expect(close(CGFloat(layout.kerahat[1].end), 0.507))
+        #expect(close(CGFloat(layout.kerahat[2].end), 0.859))
+        for segment in layout.kerahat {
+            #expect(abs((segment.end - segment.start) - minimum) < 0.0005)
+        }
         #expect(close(metrics.point(at: layout.kerahat[0].start, radius: 143), 78.216, 104.553))
-        #expect(close(metrics.point(at: layout.kerahat[0].end, radius: 143), 92.122, 92.417))
-        #expect(close(metrics.point(at: layout.kerahat[2].start, radius: 143), 268.463, 94.441))
         #expect(close(metrics.point(at: layout.kerahat[2].end, radius: 143), 282.087, 106.893))
+        // Das Fenster vor Dhuhr endet am Dhuhr-Punkt und reicht sichtbar (14 pt) unter ihm hervor.
+        let dhuhr = layout.markers.first { $0.prayer == .dhuhr }!
+        let zenithStart = metrics.point(at: layout.kerahat[1].start)
+        #expect(hypot(zenithStart.x - dhuhr.center.x, zenithStart.y - dhuhr.center.y) > dhuhr.radius + 10)
         #expect(layout.kerahat.allSatisfy { !$0.isActive })
         // 14:25: Die Fenster nach Sonnenaufgang und vor Dhuhr sind vorbei, das vor Maghrib kommt noch.
         #expect(layout.kerahat.map(\.state) == [.past, .past, .upcoming])

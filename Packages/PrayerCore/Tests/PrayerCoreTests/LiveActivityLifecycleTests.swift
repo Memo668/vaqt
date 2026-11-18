@@ -67,17 +67,24 @@ struct LiveActivityLifecycleTests {
         #expect(actions == existing.map { .end(activityID: $0.activityID, content: nil, dismissAt: nil) })
     }
 
-    @Test("Gebetsbeginn: die Aktivität endet und bleibt mit „Jetzt“ bis 15 Minuten danach stehen")
+    @Test("Gebetsbeginn: läuft die App, endet die Aktivität sofort – kein „Jetzt“ mehr (Spec § 10.3)")
     func endsAtPrayer() throws {
         let running = try #require(plan(at: "16:00").first)
-        let now = plan(at: "16:27")
-        let target = try #require(now.first)
-        let actions = LiveActivityLifecycle.actions(existing: [existing(running, id: "M", pending: false)], plan: now, now: at("16:27"))
-        #expect(actions.first == .end(activityID: "M", content: target.content.markedBegun, dismissAt: at("16:42")))
+        let actions = LiveActivityLifecycle.actions(existing: [existing(running, id: "M", pending: false)], plan: plan(at: "16:27"), now: at("16:27"))
+        #expect(actions.first == .end(activityID: "M", content: nil, dismissAt: nil))
         #expect(requests(actions).first == "live.2026-11-10.isha")
     }
 
-    @Test("mehr als 15 Minuten nach Beginn endet sie sofort")
+    @Test("Beginn der Verbotszeit: die grüne endet, die orange startet sofort")
+    func switchesToProhibited() throws {
+        let green = try #require(plan(at: "11:30").first)
+        #expect(green.content.kind == .beforeProhibited)
+        let actions = LiveActivityLifecycle.actions(existing: [existing(green, id: "G", pending: false)], plan: plan(at: "11:42"), now: at("11:42"))
+        #expect(actions.first == .end(activityID: "G", content: nil, dismissAt: nil))
+        #expect(requests(actions).first == "live.2026-11-10.dhuhr.verbot")
+    }
+
+    @Test("später nach Beginn endet sie ebenso sofort")
     func overdue() throws {
         let running = try #require(plan(at: "16:00").first)
         let actions = LiveActivityLifecycle.actions(existing: [existing(running, id: "M", pending: false)], plan: plan(at: "16:50"), now: at("16:50"))
@@ -107,10 +114,12 @@ struct LiveActivityLifecycleTests {
         #expect(actions == [.end(activityID: "B", content: nil, dismissAt: nil)])
     }
 
-    @Test("solange die App läuft, sieht sie zum nächsten Gebetsbeginn wieder nach")
+    @Test("solange die App läuft, sieht sie zum nächsten Wechsel wieder nach")
     func nextCheck() {
         #expect(LiveActivityLifecycle.nextCheck(plan: plan(at: "14:25"), now: at("14:25")) == at("16:27"))
         #expect(LiveActivityLifecycle.nextCheck(plan: plan(at: "16:30"), now: at("16:30")) == at("18:17"))
+        // Vor Dhuhr schon zum Beginn der Verbotszeit, dann wechselt die grüne.
+        #expect(LiveActivityLifecycle.nextCheck(plan: plan(at: "06:00"), now: at("06:00")) == at("11:42"))
         #expect(LiveActivityLifecycle.nextCheck(plan: [], now: at("14:25")) == nil)
     }
 }

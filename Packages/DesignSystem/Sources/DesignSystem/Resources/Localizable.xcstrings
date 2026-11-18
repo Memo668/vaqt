@@ -834,6 +834,1119 @@
         }
       }
     },
+    "alarmBefore" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "قبل الشروق"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "সূর্যোদয়ের আগে"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Prije izlaska sunca"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vor Sonnenaufgang"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before Sunrise"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antes del amanecer"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "پیش از طلوع آفتاب"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Avant le lever du soleil"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sebelum Matahari Terbit"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Prima dell’alba"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sebelum Syuruk"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vóór zonsopgang"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "До восхода"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Para lindjes së diellit"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güneş doğmadan önce"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "طلوعِ آفتاب سے پہلے"
+          }
+        }
+      }
+    },
+    "alarmFixedFooter" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "يبقى الوقت الثابت كما هو، أما الشروق فيتغيّر على مدار السنة. يتبعه خيار «قبل الشروق» كل يوم؛ ويرنّ الوقت الثابت 5 دقائق على الأقل قبل الشروق."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "নির্দিষ্ট সময় একই থাকে, অথচ সূর্যোদয়ের সময় সারা বছর বদলায়। “সূর্যোদয়ের আগে” প্রতিদিন তার সঙ্গে মিলিয়ে চলে; নির্দিষ্ট সময়ের অ্যালার্ম সূর্যোদয়ের অন্তত 5 মিনিট আগে বাজে।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Fiksno vrijeme ostaje isto, dok se izlazak sunca tokom godine pomjera. „Prije izlaska sunca“ ga prati svaki dan; fiksno vrijeme zvoni najkasnije 5 minuta prije izlaska sunca."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine feste Uhrzeit bleibt gleich, der Sonnenaufgang wandert übers Jahr. „Vor Sonnenaufgang“ folgt ihm jeden Tag; eine feste Uhrzeit klingelt spätestens 5 Minuten vor Sonnenaufgang."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A fixed time stays the same while sunrise moves through the year. “Before Sunrise” follows it every day; a fixed time rings no later than 5 minutes before sunrise."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una hora fija no cambia, mientras que el amanecer varía a lo largo del año. “Antes del amanecer” lo sigue cada día; una hora fija suena como muy tarde 5 minutos antes del amanecer."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ساعت ثابت تغییر نمی‌کند، اما طلوع آفتاب در طول سال جابه‌جا می‌شود. «پیش از طلوع آفتاب» هر روز با آن تنظیم می‌شود؛ ساعت ثابت دست‌کم 5 دقیقه پیش از طلوع آفتاب زنگ می‌زند."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Une heure fixe ne change pas, alors que le lever du soleil varie au fil de l’année. « Avant le lever du soleil » le suit chaque jour ; une heure fixe sonne au plus tard 5 minutes avant le lever du soleil."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Waktu tetap tidak berubah, sedangkan waktu matahari terbit bergeser sepanjang tahun. “Sebelum Matahari Terbit” mengikutinya setiap hari; waktu tetap berbunyi paling lambat 5 menit sebelum matahari terbit."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Un orario fisso resta uguale, mentre l’alba si sposta nel corso dell’anno. “Prima dell’alba” la segue ogni giorno; un orario fisso suona al più tardi 5 minuti prima dell’alba."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Masa tetap tidak berubah, manakala waktu syuruk beralih sepanjang tahun. “Sebelum Syuruk” mengikutinya setiap hari; masa tetap berbunyi selewat-lewatnya 5 minit sebelum syuruk."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Een vaste tijd blijft gelijk, terwijl de zonsopgang door het jaar verschuift. ‘Vóór zonsopgang’ volgt die elke dag; een vaste tijd gaat uiterlijk 5 minuten vóór zonsopgang af."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Фиксированное время не меняется, а восход в течение года смещается. «До восхода» следует за ним каждый день; при фиксированном времени будильник звонит не позже чем за 5 минут до восхода."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ora fikse mbetet e njëjtë, ndërsa lindja e diellit zhvendoset gjatë vitit. „Para lindjes së diellit“ e ndjek çdo ditë; ora fikse bie jo më vonë se 5 minuta para lindjes së diellit."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sabit saat değişmez, güneşin doğuşu ise yıl boyunca değişir. „Güneş doğmadan önce“ her gün ona göre ayarlanır; sabit saat en geç güneş doğmadan 5 dakika önce çalar."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "مقررہ وقت ایک جیسا رہتا ہے، جبکہ طلوعِ آفتاب کا وقت سال بھر بدلتا رہتا ہے۔ “طلوعِ آفتاب سے پہلے” ہر روز اس کے ساتھ بدلتا ہے؛ مقررہ وقت والا الارم طلوعِ آفتاب سے کم از کم 5 منٹ پہلے بجتا ہے۔"
+          }
+        }
+      }
+    },
+    "alarmFooter" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "يرنّ المنبّه كل يوم، حتى في الوضع الصامت وعند تفعيل التركيز – مثل منبّه iOS."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "অ্যালার্ম প্রতিদিন বাজে, নীরব মোডে এবং ফোকাস চালু থাকলেও – iOS-এর অ্যালার্মের মতোই।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alarm zvoni svaki dan, čak i u nečujnom načinu rada i kada je uključen fokus – kao alarm u iOS-u."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Wecker klingelt jeden Tag, auch im Stummmodus und bei Fokus – wie der Wecker von iOS."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The alarm rings every day, even in silent mode and with a Focus on – like the iOS alarm."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La alarma suena todos los días, incluso en modo silencio y con un modo de concentración activado – como la alarma de iOS."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "زنگ هشدار هر روز به صدا درمی‌آید، حتی در حالت بی‌صدا و با تمرکز روشن – مانند زنگ هشدار iOS."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "L’alarme sonne tous les jours, même en mode silencieux et avec un mode de concentration activé – comme l’alarme d’iOS."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alarm berbunyi setiap hari, bahkan dalam mode senyap dan saat Fokus aktif – seperti alarm iOS."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "La sveglia suona ogni giorno, anche in modalità silenziosa e con una modalità Full immersion attiva – come la sveglia di iOS."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Penggera berbunyi setiap hari, walaupun dalam mod senyap dan ketika Fokus aktif – seperti penggera iOS."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "De wekker gaat elke dag af, ook in de stille modus en met een focus aan – zoals de wekker van iOS."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Будильник звонит каждый день, даже в бесшумном режиме и при включённом фокусировании – как будильник iOS."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alarmi bie çdo ditë, edhe në modalitetin e heshtur dhe kur Fokusi është aktiv – si alarmi i iOS."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm her gün çalar; sessiz modda ve odak açıkken de – iOS alarmı gibi."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "الارم ہر روز بجتا ہے، خاموش موڈ میں اور فوکس آن ہونے پر بھی – بالکل iOS کے الارم کی طرح۔"
+          }
+        }
+      }
+    },
+    "alarmModeBefore" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "قبل الشروق"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "সূর্যোদয়ের আগে"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Prije izlaska sunca"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vor Sonnenaufgang"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before Sunrise"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antes del amanecer"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "پیش از طلوع آفتاب"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Avant le lever du soleil"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sebelum Matahari Terbit"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Prima dell’alba"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sebelum Syuruk"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vóór zonsopgang"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "До восхода"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Para lindjes së diellit"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güneş doğmadan önce"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "طلوعِ آفتاب سے پہلے"
+          }
+        }
+      }
+    },
+    "alarmModeFixed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "وقت ثابت"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "নির্দিষ্ট সময়"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Fiksno vrijeme"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feste Uhrzeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fixed Time"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hora fija"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ساعت ثابت"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Heure fixe"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Waktu Tetap"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Orario fisso"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Masa Tetap"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vaste tijd"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Фиксированное время"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Orë fikse"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sabit saat"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "مقررہ وقت"
+          }
+        }
+      }
+    },
+    "alarmRings" : {
+      "comment" : "Argumente: 1 = t.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "يرنّ اليوم الساعة %@"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "আজ %@-এ বাজবে"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Danas zvoni u %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klingelt heute um %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rings today at %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suena hoy a las %@"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "امروز ساعت %@ زنگ می‌زند"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sonne aujourd’hui à %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Berbunyi hari ini pukul %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Suona oggi alle %@"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Berbunyi hari ini pada %@"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Gaat vandaag af om %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Сегодня зазвонит в %@"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Bie sot në %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün %@ saatinde çalar"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "آج %@ پر بجے گا"
+          }
+        }
+      }
+    },
+    "alarmRow" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "منبّه الفجر"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ফজরের অ্যালার্ম"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alarm za sabah"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wecker zu Fadschr"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fajr Alarm"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarma de Fajr"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "زنگ هشدار صبح"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alarme du Fajr"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alarm Subuh"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sveglia per Fajr"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Penggera Subuh"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Wekker voor Fajr"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Будильник на Фаджр"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alarmi i sabahut"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sabah namazı alarmı"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "فجر کا الارم"
+          }
+        }
+      }
+    },
+    "alarmSwitch" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "المنبّه"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "অ্যালার্ম"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alarm"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wecker"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarma"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "زنگ هشدار"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alarme"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alarm"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sveglia"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Penggera"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Wekker"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Будильник"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alarmi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "الارم"
+          }
+        }
+      }
+    },
+    "alarmTime" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "الوقت"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "সময়"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vrijeme"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uhrzeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hora"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ساعت"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Heure"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Jam"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Orario"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Masa"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Tijd"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Время"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ora"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saat"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "وقت"
+          }
+        }
+      }
+    },
+    "alarmToday" : {
+      "comment" : "Argumente: 1 = f, 2 = s.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "يدخل الفجر اليوم الساعة %1$@، والشروق الساعة %2$@."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "আজ ফজর শুরু %1$@-এ, সূর্যোদয় %2$@-এ।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Danas sabah nastupa u %1$@, a sunce izlazi u %2$@."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heute beginnt Fadschr um %1$@, die Sonne geht um %2$@ auf."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today Fajr begins at %1$@, sunrise is at %2$@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoy el Fajr empieza a las %1$@ y el sol sale a las %2$@."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "امروز نماز صبح ساعت %1$@ آغاز می‌شود و آفتاب ساعت %2$@ طلوع می‌کند."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Aujourd’hui, le Fajr commence à %1$@ et le soleil se lève à %2$@."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Hari ini Subuh masuk pukul %1$@, matahari terbit pukul %2$@."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Oggi Fajr inizia alle %1$@ e l’alba è alle %2$@."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Hari ini Subuh masuk pada %1$@, syuruk pada %2$@."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vandaag begint Fajr om %1$@, de zon komt op om %2$@."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Сегодня Фаджр начинается в %1$@, восход – в %2$@."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sot sabahu hyn në %1$@, dielli lind në %2$@."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün imsak %1$@, güneş %2$@."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "آج فجر کا وقت %1$@ پر شروع ہوتا ہے، طلوعِ آفتاب %2$@ پر ہے۔"
+          }
+        }
+      }
+    },
+    "alarmWhen" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "وقت المنبّه"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "অ্যালার্মের সময়"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vrijeme alarma"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weckzeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm Time"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hora de la alarma"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "زمان زنگ هشدار"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Heure de l’alarme"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Waktu Alarm"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Orario della sveglia"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Masa Penggera"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Wektijd"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Время будильника"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ora e alarmit"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm saati"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "الارم کا وقت"
+          }
+        }
+      }
+    },
     "allMethods" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -941,97 +2054,97 @@
         "ar" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "يُستخدم موقعك على هذا الجهاز فقط لحساب مواقيت الصلاة."
+            "value" : "يُستخدم موقعك فقط لحساب مواقيت الصلاة. ولمعرفة اسم المكان، يستعلم التطبيق من خرائط Apple."
           }
         },
         "bn" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "আপনার অবস্থান শুধু এই ডিভাইসে নামাজের সময় হিসাব করতে ব্যবহার করা হয়।"
+            "value" : "আপনার অবস্থান শুধু নামাজের সময় হিসাব করতে ব্যবহার করা হয়। জায়গার নামের জন্য অ্যাপটি Apple Maps-এর কাছে জানতে চায়।"
           }
         },
         "bs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Vaša lokacija koristi se samo na ovom uređaju za izračunavanje namaskih vakata."
+            "value" : "Vaša lokacija koristi se samo za izračunavanje namaskih vakata. Za naziv mjesta aplikacija pita Apple Karte."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dein Standort wird nur auf diesem Gerät zur Berechnung der Gebetszeiten verwendet."
+            "value" : "Dein Standort dient nur der Berechnung der Gebetszeiten. Für den Ortsnamen fragt die App Apple Karten."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your location is only used on this device to calculate prayer times."
+            "value" : "Your location is only used to calculate prayer times. For the place name, the app asks Apple Maps."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tu ubicación solo se usa en este dispositivo para calcular los horarios."
+            "value" : "Tu ubicación solo se usa para calcular los horarios de oración. Para el nombre del lugar, la app consulta Mapas de Apple."
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "موقعیت شما فقط روی همین دستگاه برای محاسبه اوقات نماز استفاده می‌شود."
+            "value" : "موقعیت شما فقط برای محاسبه اوقات نماز استفاده می‌شود. برای نام مکان، برنامه از Apple Maps می‌پرسد."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Votre position est utilisée uniquement sur cet appareil pour calculer les heures de prière."
+            "value" : "Votre position sert uniquement à calculer les heures de prière. Pour le nom du lieu, l’app interroge Plans d’Apple."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Lokasi Anda hanya digunakan di perangkat ini untuk menghitung jadwal salat."
+            "value" : "Lokasi Anda hanya digunakan untuk menghitung jadwal salat. Untuk nama tempat, app ini bertanya kepada Peta Apple."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "La tua posizione viene usata solo su questo dispositivo per calcolare gli orari di preghiera."
+            "value" : "La tua posizione viene usata solo per calcolare gli orari di preghiera. Per il nome del luogo, l’app si rivolge a Mappe di Apple."
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Lokasi anda hanya digunakan pada peranti ini untuk mengira waktu solat."
+            "value" : "Lokasi anda hanya digunakan untuk mengira waktu solat. Untuk nama tempat, app ini bertanya kepada Peta Apple."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Je locatie wordt alleen op dit apparaat gebruikt om de gebedstijden te berekenen."
+            "value" : "Je locatie wordt alleen gebruikt om de gebedstijden te berekenen. Voor de plaatsnaam raadpleegt de app Apple Kaarten."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Ваша геопозиция используется только на этом устройстве для расчёта времени намаза."
+            "value" : "Ваша геопозиция используется только для расчёта времени намаза. За названием места приложение обращается к Apple Картам."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Vendndodhja juaj përdoret vetëm në këtë pajisje për të llogaritur vaktet e namazit."
+            "value" : "Vendndodhja juaj përdoret vetëm për të llogaritur vaktet e namazit. Për emrin e vendit, aplikacioni pyet Hartat e Apple."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Konumun yalnızca bu cihazda namaz vakitlerini hesaplamak için kullanılır."
+            "value" : "Konumun yalnızca namaz vakitlerini hesaplamak için kullanılır. Yer adı için uygulama Apple Haritalar’a sorar."
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "آپ کا مقام صرف اسی آلے پر اوقاتِ نماز کا حساب لگانے کے لیے استعمال ہوتا ہے۔"
+            "value" : "آپ کا مقام صرف اوقاتِ نماز کا حساب لگانے کے لیے استعمال ہوتا ہے۔ جگہ کے نام کے لیے ایپ Apple Maps سے پوچھتی ہے۔"
           }
         }
       }
@@ -8460,6 +9573,107 @@
         }
       }
     },
+    "gAsrKerahat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "في وقت الكراهة قبل الغروب صلِّ الفرض وحده – وتُعدّ مع ذلك أداءً في وقتها."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "সূর্যাস্তের আগের মাকরুহ সময়ে শুধু ফরজ পড়ুন – তবুও তা সময়মতো আদায় হিসেবে গণ্য হবে।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "U mekruh vaktu pred zalazak sunca klanjajte samo farz – namaz se i dalje računa kao klanjan na vrijeme."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In der Verbotszeit vor Sonnenuntergang betest du nur noch das Farḍ – das Gebet gilt trotzdem als rechtzeitig."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In the makruh time before sunset, pray only the farḍ – it still counts as on time."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En el tiempo makruh antes de la puesta del sol, reza solo el farḍ – aun así cuenta como hecha a su hora."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "در وقت مکروه پیش از غروب، فقط فرض را بخوانید – باز هم در وقت خود ادا شده به شمار می‌آید."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Pendant l’heure makrouh avant le coucher du soleil, priez seulement le farḍ – la prière compte quand même comme accomplie à l’heure."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Pada waktu makruh sebelum matahari terbenam, kerjakan fardunya saja – salat tetap terhitung tepat waktu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Nel momento makruh prima del tramonto, prega solo il farḍ – conta comunque come fatta in tempo."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Pada waktu makruh sebelum matahari terbenam, tunaikan fardu sahaja – solat tetap dikira dalam waktunya."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Bid in de makroeh-tijd vóór zonsondergang alleen de farḍ – het gebed telt nog steeds als op tijd."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Во время макрух перед закатом совершайте только фард – намаз всё равно считается совершённым вовремя."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Në kohën mekruh para perëndimit të diellit falni vetëm farzin – namazi llogaritet përsëri i falur në kohë."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güneş batmadan önceki kerahat vaktinde yalnızca farz kılınır – namaz yine de vaktinde kılınmış sayılır."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "غروب سے پہلے کے مکروہ وقت میں صرف فرض پڑھیں – پھر بھی نماز وقت پر ادا شمار ہوگی۔"
+          }
+        }
+      }
+    },
     "guideBack" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -10809,7 +12023,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kerahat-Zeiten: %@"
+            "value" : "Verbotszeiten: %@"
           }
         },
         "en" : {
@@ -10882,6 +12096,208 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "مکروہ اوقات: %@"
+          }
+        }
+      }
+    },
+    "kerahatAsrBody" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "إن أخّرت العصر إلى وقت الكراهة قبل الغروب، فصلِّ فرض العصر مع ذلك واترك السنة. وتُعدّ الصلاة أداءً في وقتها لا قضاءً، حتى لو غربت الشمس وأنت تصلي. وهذا خاص بالعصر."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "আপনি যদি আসর সূর্যাস্তের আগের মাকরুহ সময় পর্যন্ত দেরি করে থাকেন, তবুও আসরের ফরজ পড়ে নিন এবং সুন্নত বাদ দিন। নামাজটি কাযা নয়, বরং সময়মতো আদায় হিসেবে গণ্য হবে – নামাজের মধ্যে সূর্য ডুবে গেলেও। এই বিধান শুধু আসরের জন্য।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ako ste ikindiju odgodili do mekruh vakta pred zalazak sunca, ipak klanjajte farz ikindije, a sunnet izostavite. Namaz se računa kao klanjan na vrijeme, a ne kao naklanjan – čak i ako sunce zađe dok klanjate. Ovo važi samo za ikindiju."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hast du Asr bis in die Verbotszeit vor Sonnenuntergang verschoben, bete trotzdem noch das Farḍ von Asr – die Sunna lässt du dann weg. Das Gebet gilt als rechtzeitig verrichtet, nicht als nachgeholt, selbst wenn die Sonne während des Gebets untergeht. Das gilt nur für Asr."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you have delayed Asr into the makruh time before sunset, still pray the farḍ of Asr and leave out the sunnah. The prayer counts as on time, not as made up – even if the sun sets while you are praying. This applies only to Asr."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si has retrasado el Asr hasta el tiempo makruh antes de la puesta del sol, reza igualmente el farḍ del Asr y deja la sunna. La oración cuenta como hecha a su hora, no como recuperada – aunque el sol se ponga mientras rezas. Esto solo vale para el Asr."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "اگر نماز عصر را تا وقت مکروه پیش از غروب به تأخیر انداخته‌اید، باز هم فرض عصر را بخوانید و سنت را ترک کنید. این نماز در وقت خود ادا شده به شمار می‌آید، نه قضا – حتی اگر در حین نماز خورشید غروب کند. این حکم فقط مخصوص عصر است."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Si vous avez retardé l’Asr jusqu’à l’heure makrouh avant le coucher du soleil, priez quand même le farḍ de l’Asr et laissez la sunna. La prière compte comme accomplie à l’heure, et non comme rattrapée – même si le soleil se couche pendant que vous priez. Cela ne vaut que pour l’Asr."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Jika Anda menunda Ashar hingga masuk waktu makruh sebelum matahari terbenam, tetaplah kerjakan fardu Ashar dan tinggalkan sunahnya. Salat itu terhitung tepat waktu, bukan qadha – meskipun matahari terbenam saat Anda sedang salat. Ini hanya berlaku untuk Ashar."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Se hai rimandato l’Asr fino al momento makruh prima del tramonto, prega comunque il farḍ dell’Asr e tralascia la sunna. La preghiera conta come fatta in tempo, non come recuperata – anche se il sole tramonta mentre preghi. Vale solo per l’Asr."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Jika anda telah melewatkan Asar hingga masuk waktu makruh sebelum matahari terbenam, tetaplah tunaikan fardu Asar dan tinggalkan sunatnya. Solat itu dikira dalam waktunya, bukan qada – walaupun matahari terbenam ketika anda sedang solat. Ini hanya berlaku bagi Asar."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Heb je Asr uitgesteld tot in de makroeh-tijd vóór zonsondergang, bid dan toch nog de farḍ van Asr en laat de soennah weg. Het gebed telt als op tijd verricht, niet als ingehaald – ook als de zon ondergaat terwijl je bidt. Dit geldt alleen voor Asr."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Если вы отложили Аср до времени макрух перед закатом, всё равно совершите фард Асра, а сунну пропустите. Намаз считается совершённым вовремя, а не восполненным – даже если солнце сядет во время намаза. Это относится только к Асру."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Nëse e keni vonuar ikindinë deri në kohën mekruh para perëndimit të diellit, falni gjithsesi farzin e ikindisë dhe lini synetin. Namazi llogaritet i falur në kohë, jo kaza – edhe nëse dielli perëndon ndërsa jeni duke u falur. Kjo vlen vetëm për ikindinë."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İkindi namazı kerahat vaktine kadar geciktirildiyse yine de kılınır: sünnet terk edilir, yalnızca farz kılınır. Namaz kazaya kalmaz, vaktinde edâ edilmiş sayılır – namazdayken güneş batsa bile. Bu yalnızca ikindi namazına hastır."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "اگر آپ نے عصر کو غروب سے پہلے کے مکروہ وقت تک مؤخر کر دیا ہو تو پھر بھی عصر کے فرض پڑھ لیں اور سنتیں چھوڑ دیں۔ یہ نماز قضا نہیں بلکہ وقت پر ادا شمار ہوگی – چاہے نماز کے دوران سورج غروب ہو جائے۔ یہ حکم صرف عصر کے لیے ہے۔"
+          }
+        }
+      }
+    },
+    "kerahatAsrTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "لم تصلِّ العصر بعد؟"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "এখনো আসর পড়েননি?"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Još niste klanjali ikindiju?"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asr noch nicht gebetet?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haven’t prayed Asr yet?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Aún no has rezado el Asr?"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "هنوز نماز عصر را نخوانده‌اید؟"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vous n’avez pas encore prié l’Asr ?"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Belum salat Ashar?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Non hai ancora pregato l’Asr?"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Belum solat Asar?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Asr nog niet gebeden?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ещё не совершили Аср?"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Nuk e keni falur ende ikindinë?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İkindiyi henüz kılmadın mı?"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ابھی عصر نہیں پڑھی؟"
           }
         }
       }
@@ -10987,6 +12403,815 @@
         }
       }
     },
+    "kerahatFrom" : {
+      "comment" : "Argumente: 1 = a.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "كراهة من %@"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%@ থেকে মাকরুহ"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mekruh od %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbotszeit ab %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Makruh from %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Makruh desde las %@"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "مکروه از %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Makrouh dès %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Makruh mulai %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Makruh dalle %@"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Makruh mulai %@"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Makroeh vanaf %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Макрух с %@"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mekruh nga %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kerahat %@ itibarıyla"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%@ سے مکروہ"
+          }
+        }
+      }
+    },
+    "kerahatInfoFoot" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "وفق المذهب الحنفي. الفترات تقريبية: 45 دقيقة بعد الشروق، و10 دقائق قبل الظهر، و45 دقيقة قبل الغروب."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "হানাফি মাযহাব অনুযায়ী। সময়গুলো আনুমানিক: সূর্যোদয়ের পর 45 মিনিট, যোহরের আগে 10 মিনিট এবং সূর্যাস্তের আগে 45 মিনিট।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Prema hanefijskom mezhebu. Vremena su približna: 45 minuta nakon izlaska sunca, 10 minuta prije podneva i 45 minuta prije zalaska sunca."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach der hanafitischen Rechtsschule. Die Fenster sind Näherungen: 45 Minuten nach Sonnenaufgang, 10 Minuten vor Dhuhr und 45 Minuten vor Sonnenuntergang."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "According to the Hanafi school. The windows are approximate: 45 minutes after sunrise, 10 minutes before Dhuhr and 45 minutes before sunset."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Según la escuela hanafí. Las franjas son aproximadas: 45 minutos tras la salida del sol, 10 minutos antes de Dhuhr y 45 minutos antes de la puesta del sol."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "بر اساس مذهب حنفی. بازه‌ها تقریبی‌اند: 45 دقیقه پس از طلوع آفتاب، 10 دقیقه پیش از ظهر و 45 دقیقه پیش از غروب آفتاب."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Selon l’école hanafite. Les durées sont approximatives : 45 minutes après le lever du soleil, 10 minutes avant le Dohr et 45 minutes avant le coucher du soleil."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Menurut mazhab Hanafi. Rentang waktunya merupakan perkiraan: 45 menit setelah matahari terbit, 10 menit sebelum Dzuhur, dan 45 menit sebelum matahari terbenam."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Secondo la scuola hanafita. Gli intervalli sono approssimativi: 45 minuti dopo l’alba, 10 minuti prima di Dhuhr e 45 minuti prima del tramonto."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Menurut mazhab Hanafi. Tempoh ini ialah anggaran: 45 minit selepas matahari terbit, 10 minit sebelum Zohor dan 45 minit sebelum matahari terbenam."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Volgens de hanafitische school. De tijden zijn bij benadering: 45 minuten na zonsopgang, 10 minuten vóór Dhuhr en 45 minuten vóór zonsondergang."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "По ханафитскому мазхабу. Время указано приблизительно: 45 минут после восхода, 10 минут до Зухра и 45 минут до заката."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sipas medhhebit hanefi. Kohët janë të përafërta: 45 minuta pas lindjes së diellit, 10 minuta para drekës dhe 45 minuta para perëndimit të diellit."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hanefî mezhebine göre. Süreler yaklaşıktır: güneş doğduktan sonra 45 dakika, öğleden önce 10 dakika, güneş batmadan önce 45 dakika."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "حنفی مسلک کے مطابق۔ اوقات تقریبی ہیں: طلوعِ آفتاب کے بعد 45 منٹ، ظہر سے پہلے 10 منٹ اور غروبِ آفتاب سے پہلے 45 منٹ۔"
+          }
+        }
+      }
+    },
+    "kerahatInfoL1" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "الشروق، حتى ترتفع الشمس قليلًا"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "সূর্যোদয়, সূর্য একটু ওপরে ওঠা পর্যন্ত"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Izlazak sunca, dok se sunce malo ne podigne"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonnenaufgang, bis die Sonne etwas höher steht"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sunrise, until the sun has risen a little"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amanecer, hasta que el sol haya subido un poco"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "طلوع آفتاب، تا وقتی خورشید کمی بالا بیاید"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Lever du soleil, jusqu’à ce que le soleil soit un peu monté"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Matahari terbit, hingga matahari naik sedikit"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alba, finché il sole non si è alzato un po’"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Matahari terbit, sehingga matahari naik sedikit"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Zonsopgang, tot de zon iets hoger staat"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Восход, пока солнце немного не поднимется"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Lindja e diellit, derisa dielli të ngrihet pak"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güneş doğarken, biraz yükselene kadar"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "طلوعِ آفتاب، جب تک سورج تھوڑا بلند نہ ہو جائے"
+          }
+        }
+      }
+    },
+    "kerahatInfoL2" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "قُبيل الظهر، حين تكون الشمس في كبد السماء"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "যোহরের একটু আগে, যখন সূর্য ঠিক মাথার ওপরে থাকে"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Neposredno prije podneva, kada je sunce najviše"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurz vor Dhuhr, wenn die Sonne am höchsten steht"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Just before Dhuhr, when the sun is at its highest"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Justo antes de Dhuhr, cuando el sol está en lo más alto"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "کمی پیش از ظهر، وقتی خورشید در بالاترین نقطه است"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Juste avant le Dohr, quand le soleil est au plus haut"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Menjelang Dzuhur, saat matahari berada di titik tertinggi"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Poco prima di Dhuhr, quando il sole è al punto più alto"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sejurus sebelum Zohor, ketika matahari berada di titik tertinggi"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vlak voor Dhuhr, als de zon het hoogst staat"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Незадолго до Зухра, когда солнце в зените"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Pak para drekës, kur dielli është në pikën më të lartë"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öğleden hemen önce, güneş tam tepedeyken"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ظہر سے ذرا پہلے، جب سورج عین سر پر ہو"
+          }
+        }
+      }
+    },
+    "kerahatInfoL3" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "قبل الغروب، حين يصفرّ ضوء الشمس"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "সূর্যাস্তের আগে, যখন রোদ হলদে হয়ে আসে"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Prije zalaska sunca, kada svjetlo požuti"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vor Sonnenuntergang, wenn das Licht gelb wird"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before sunset, when the light turns yellow"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antes de la puesta del sol, cuando la luz se vuelve amarilla"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "پیش از غروب آفتاب، وقتی نور خورشید زرد می‌شود"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Avant le coucher du soleil, quand la lumière jaunit"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sebelum matahari terbenam, saat cahayanya menguning"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Prima del tramonto, quando la luce ingiallisce"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sebelum matahari terbenam, ketika cahayanya menjadi kekuningan"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vóór zonsondergang, als het licht geel wordt"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Перед закатом, когда свет становится жёлтым"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Para perëndimit të diellit, kur drita zverdhet"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güneş batmadan önce, ışığı sararınca"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "غروبِ آفتاب سے پہلے، جب دھوپ زرد ہو جائے"
+          }
+        }
+      }
+    },
+    "kerahatInfoP1" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "أوقات الكراهة ثلاث فترات قصيرة في اليوم تُكره فيها الصلاة – ليست محرّمة، لكن ينبغي اجتنابها."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "মাকরুহ সময় হলো দিনের তিনটি ছোট সময়, যখন নামাজ পড়া মাকরুহ – হারাম নয়, তবে এড়িয়ে চলা উচিত।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mekruh vakti su tri kratka perioda u toku dana kada je klanjanje mekruh – nije haram, ali ga je bolje izbjegavati."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbotszeiten (Kerahat) sind drei kurze Zeitfenster am Tag, in denen man nicht beten soll. Das Gebet ist dann makrūh, also zu meiden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Makruh times are three short windows in the day when praying is makruh – not forbidden, but best avoided."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los tiempos makruh son tres breves franjas del día en las que rezar es makruh – no está prohibido, pero es mejor evitarlo."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "اوقات مکروه سه بازه کوتاه در روز است که نماز خواندن در آن‌ها مکروه است – حرام نیست، اما بهتر است از آن پرهیز شود."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Les heures makrouh sont trois courts moments de la journée où prier est makrouh – ce n’est pas interdit, mais il vaut mieux l’éviter."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Waktu makruh adalah tiga rentang waktu singkat dalam sehari ketika salat hukumnya makruh – tidak haram, tetapi sebaiknya dihindari."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "I momenti makruh sono tre brevi fasce della giornata in cui pregare è makruh – non è vietato, ma è meglio evitarlo."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Waktu makruh ialah tiga tempoh singkat dalam sehari ketika solat adalah makruh – tidak haram, tetapi sebaiknya dielakkan."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Makroeh-tijden zijn drie korte momenten op de dag waarop bidden makroeh is – niet verboden, maar beter te vermijden."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Время макрух – это три коротких промежутка в течение дня, когда совершать намаз – макрух: это не запрещено, но этого лучше избегать."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Kohët mekruh janë tri periudha të shkurtra gjatë ditës kur falja e namazit është mekruh – jo haram, por më mirë të shmanget."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kerahat vakitleri, gün içinde namaz kılmanın mekruh olduğu üç kısa zaman dilimidir – haram değildir, ama kaçınılması gerekir."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "مکروہ اوقات دن کے تین مختصر وقفے ہیں جن میں نماز پڑھنا مکروہ ہے – حرام نہیں، لیکن ان سے بچنا چاہیے۔"
+          }
+        }
+      }
+    },
+    "kerahatInfoP2" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "السبب الوارد في الحديث أن الشمس كانت تُعبد في هذه الأوقات."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "হাদিসে এর কারণ বলা হয়েছে, এই সময়গুলোতে সূর্যের উপাসনা করা হতো।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "U hadisu se kao razlog navodi da se u ta vremena obožavalo sunce."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Als Grund ist überliefert, dass zu diesen Zeiten die Sonne angebetet wurde."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The reason given in the hadith is that the sun was worshipped at these times."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Según el hadiz, el motivo es que en estos momentos se adoraba al sol."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "دلیلی که در حدیث آمده این است که در این اوقات خورشید پرستیده می‌شد."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "La raison donnée dans le hadith est qu’on adorait le soleil à ces moments-là."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alasan yang disebutkan dalam hadis adalah bahwa pada waktu-waktu tersebut matahari disembah."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Secondo l’hadith, il motivo è che in questi momenti si adorava il sole."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sebab yang dinyatakan dalam hadis ialah matahari disembah pada waktu-waktu ini."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Volgens de hadith is de reden dat de zon op deze tijden werd aanbeden."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "В хадисе причиной названо то, что в это время поклонялись солнцу."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Si arsye në hadith përmendet se në këto kohë adhurohej dielli."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rivayete göre sebebi, bu vakitlerde güneşe tapılmasıdır."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "حدیث میں اس کی وجہ یہ بیان ہوئی ہے کہ ان اوقات میں سورج کی پرستش کی جاتی تھی۔"
+          }
+        }
+      }
+    },
+    "kerahatInfoTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ما أوقات الكراهة؟"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "মাকরুহ সময় কী?"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Šta su mekruh vakti?"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Was sind Verbotszeiten?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What is makruh time?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Qué son los tiempos makruh?"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "اوقات مکروه چیست؟"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Que sont les heures makrouh ?"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Apa itu waktu makruh?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Cosa sono i momenti makruh?"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Apakah itu waktu makruh?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Wat zijn makroeh-tijden?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Что такое время макрух?"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Çfarë janë kohët mekruh?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kerahat vakti nedir?"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "مکروہ اوقات کیا ہیں؟"
+          }
+        }
+      }
+    },
     "kerahatNow" : {
       "comment" : "Argumente: 1 = b.",
       "extractionState" : "manual",
@@ -11012,7 +13237,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kerahat bis %@"
+            "value" : "Verbotszeit bis %@"
           }
         },
         "en" : {
@@ -11114,7 +13339,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kerahat %@"
+            "value" : "Verbotszeit %@"
           }
         },
         "en" : {
@@ -11187,6 +13412,208 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "مکروہ %@"
+          }
+        }
+      }
+    },
+    "kerahatToday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "اليوم"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "আজ"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Danas"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heute"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoy"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "امروز"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Aujourd’hui"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Hari Ini"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Oggi"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Hari Ini"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vandaag"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Сегодня"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sot"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "آج"
+          }
+        }
+      }
+    },
+    "laBegan" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "دخل الوقت"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "শুরু হয়েছে"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "nastupio je vakat"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hat begonnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "has begun"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ha empezado"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "آغاز شد"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "a commencé"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "waktunya telah masuk"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "è iniziato"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "telah masuk waktu"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "is begonnen"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "время наступило"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "hyri vakti"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "başladı"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "وقت شروع ہو گیا"
           }
         }
       }
@@ -12207,97 +14634,97 @@
         "ar" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "يُستخدم موقعك على هذا الجهاز فقط."
+            "value" : "تُحسب مواقيت الصلاة على هذا الجهاز. اسم المكان وحده يأتي من خرائط Apple."
           }
         },
         "bn" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "আপনার অবস্থান শুধু এই ডিভাইসেই ব্যবহার করা হয়।"
+            "value" : "নামাজের সময় এই ডিভাইসেই হিসাব করা হয়। শুধু জায়গার নাম Apple Maps থেকে আসে।"
           }
         },
         "bs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Vaša lokacija koristi se samo na ovom uređaju."
+            "value" : "Namaski vakti se računaju na ovom uređaju. Samo naziv mjesta dolazi iz aplikacije Apple Karte."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dein Standort wird nur auf diesem Gerät verwendet."
+            "value" : "Die Gebetszeiten berechnet die App auf diesem Gerät. Nur für den Ortsnamen fragt sie Apple Karten."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your location is only used on this device."
+            "value" : "Prayer times are calculated on this device. Only the place name comes from Apple Maps."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tu ubicación solo se usa en este dispositivo."
+            "value" : "Los horarios de oración se calculan en este dispositivo. Solo el nombre del lugar viene de Mapas de Apple."
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "موقعیت شما فقط روی همین دستگاه استفاده می‌شود."
+            "value" : "اوقات نماز روی این دستگاه محاسبه می‌شود. فقط نام مکان از Apple Maps می‌آید."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Votre position est utilisée uniquement sur cet appareil."
+            "value" : "Les heures de prière sont calculées sur cet appareil. Seul le nom du lieu provient de Plans d’Apple."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Lokasi Anda hanya digunakan di perangkat ini."
+            "value" : "Jadwal salat dihitung di perangkat ini. Hanya nama tempat yang berasal dari Peta Apple."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "La tua posizione viene usata solo su questo dispositivo."
+            "value" : "Gli orari di preghiera vengono calcolati su questo dispositivo. Solo il nome del luogo proviene da Mappe di Apple."
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Lokasi anda hanya digunakan pada peranti ini."
+            "value" : "Waktu solat dikira pada peranti ini. Hanya nama tempat diperoleh daripada Peta Apple."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Je locatie wordt alleen op dit apparaat gebruikt."
+            "value" : "De gebedstijden worden op dit apparaat berekend. Alleen de plaatsnaam komt van Apple Kaarten."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Ваша геопозиция используется только на этом устройстве."
+            "value" : "Время намаза рассчитывается на этом устройстве. Только название места поступает из Apple Карт."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Vendndodhja juaj përdoret vetëm në këtë pajisje."
+            "value" : "Vaktet e namazit llogariten në këtë pajisje. Vetëm emri i vendit vjen nga Hartat e Apple."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Konumun yalnızca bu cihazda kullanılır."
+            "value" : "Namaz vakitleri bu cihazda hesaplanır. Yalnızca yer adı için Apple Haritalar’a sorulur."
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "آپ کا مقام صرف اسی آلے پر استعمال ہوتا ہے۔"
+            "value" : "اوقاتِ نماز کا حساب اس آلے پر ہوتا ہے۔ صرف جگہ کا نام Apple Maps سے آتا ہے۔"
           }
         }
       }
@@ -15288,97 +17715,97 @@
         "ar" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "مواقيت الصلاة بهدوء ودقة"
+            "value" : "كل صلاة في وقتها."
           }
         },
         "bn" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "নামাজের সময়, শান্ত ও নির্ভুল"
+            "value" : "প্রতিটি নামাজ সঠিক সময়ে।"
           }
         },
         "bs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Namaski vakti, mirno i precizno"
+            "value" : "Svaki namaz u svoje vrijeme."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gebetszeiten. Ruhig und genau."
+            "value" : "Jedes Gebet zur rechten Zeit."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Prayer times, calm and precise"
+            "value" : "Every prayer, on time."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Horarios de oración, con calma y precisión"
+            "value" : "Cada oración a su hora."
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "اوقات نماز، آرام و دقیق"
+            "value" : "هر نماز در وقت خودش."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Horaires de prière, sereins et précis"
+            "value" : "Chaque prière à son heure."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Jadwal salat, tenang dan akurat"
+            "value" : "Setiap salat tepat waktu."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Orari di preghiera, sereni e precisi"
+            "value" : "Ogni preghiera al momento giusto."
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Waktu solat, tenang dan tepat"
+            "value" : "Setiap solat tepat pada waktunya."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Gebedstijden, rustig en nauwkeurig"
+            "value" : "Elk gebed op tijd."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Время намаза: спокойно и точно"
+            "value" : "Каждый намаз — вовремя."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Vaktet e namazit, qetë dhe saktë"
+            "value" : "Çdo namaz në kohën e vet."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sakin ve doğru namaz vakitleri"
+            "value" : "Her namaz vaktinde."
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "اوقاتِ نماز، پُرسکون اور درست"
+            "value" : "ہر نماز اپنے وقت پر۔"
           }
         }
       }
@@ -15490,97 +17917,97 @@
         "ar" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "تُحسب المواقيت على جهازك مباشرةً. لا يُرسَل موقعك ولا يُخزَّن في أي مكان أبدًا."
+            "value" : "تُحسب المواقيت على جهازك مباشرةً. لا يُرسَل موقعك إلى أي جهة سوى خرائط Apple، التي توفّر اسم المكان."
           }
         },
         "bn" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "সময়গুলো সরাসরি আপনার ডিভাইসেই হিসাব করা হয়। আপনার অবস্থান কখনো কোথাও পাঠানো বা সংরক্ষণ করা হয় না।"
+            "value" : "সময়গুলো সরাসরি আপনার ডিভাইসেই হিসাব করা হয়। আপনার অবস্থান কেবল Apple Maps-এর কাছে যায়, যা জায়গার নাম জানায় — আর কারও কাছে নয়।"
           }
         },
         "bs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Vakti se računaju direktno na vašem uređaju. Vaša lokacija se nikada nigdje ne šalje niti pohranjuje."
+            "value" : "Vakti se računaju direktno na vašem uređaju. Vaša lokacija se ne šalje nikome osim aplikaciji Apple Karte, koja daje naziv mjesta."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Zeiten werden direkt auf deinem Gerät berechnet. Dein Standort wird nie gesendet oder gespeichert."
+            "value" : "Die Zeiten werden direkt auf deinem Gerät berechnet. Dein Standort geht an niemanden außer Apple Karten, das den Ortsnamen liefert."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Times are calculated right on your device. Your location is never sent or stored anywhere."
+            "value" : "Times are calculated right on your device. Your location goes to no one except Apple Maps, which provides the place name."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Los horarios se calculan directamente en tu dispositivo. Tu ubicación nunca se envía ni se guarda."
+            "value" : "Los horarios se calculan directamente en tu dispositivo. Tu ubicación no se envía a nadie, salvo a Mapas de Apple, que proporciona el nombre del lugar."
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "اوقات مستقیماً روی دستگاه شما محاسبه می‌شود. موقعیت شما هرگز به جایی فرستاده یا ذخیره نمی‌شود."
+            "value" : "اوقات مستقیماً روی دستگاه شما محاسبه می‌شود. موقعیت شما جز به Apple Maps، که نام مکان را می‌دهد، به هیچ‌کس فرستاده نمی‌شود."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Les heures sont calculées directement sur votre appareil. Votre position n’est jamais envoyée ni enregistrée."
+            "value" : "Les heures sont calculées directement sur votre appareil. Votre position n’est transmise à personne, sauf à Plans d’Apple, qui fournit le nom du lieu."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Waktu salat dihitung langsung di perangkat Anda. Lokasi Anda tidak pernah dikirim atau disimpan di mana pun."
+            "value" : "Waktu salat dihitung langsung di perangkat Anda. Lokasi Anda tidak dikirim ke siapa pun selain Peta Apple, yang menyediakan nama tempat."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Gli orari vengono calcolati direttamente sul tuo dispositivo. La tua posizione non viene mai inviata né salvata."
+            "value" : "Gli orari vengono calcolati direttamente sul tuo dispositivo. La tua posizione non viene inviata a nessuno tranne che a Mappe di Apple, che fornisce il nome del luogo."
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Waktu solat dikira terus pada peranti anda. Lokasi anda tidak pernah dihantar atau disimpan di mana-mana."
+            "value" : "Waktu solat dikira terus pada peranti anda. Lokasi anda tidak dihantar kepada sesiapa kecuali Peta Apple, yang memberikan nama tempat."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "De tijden worden direct op je apparaat berekend. Je locatie wordt nooit verstuurd of opgeslagen."
+            "value" : "De tijden worden direct op je apparaat berekend. Je locatie gaat naar niemand behalve Apple Kaarten, die de plaatsnaam levert."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Время рассчитывается прямо на вашем устройстве. Ваша геопозиция никуда не отправляется и нигде не хранится."
+            "value" : "Время рассчитывается прямо на вашем устройстве. Ваша геопозиция не передаётся никому, кроме Apple Карт, которые сообщают название места."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Vaktet llogariten drejtpërdrejt në pajisjen tuaj. Vendndodhja juaj nuk dërgohet e as ruhet askund."
+            "value" : "Vaktet llogariten drejtpërdrejt në pajisjen tuaj. Vendndodhja juaj nuk i dërgohet askujt përveç Hartave të Apple, të cilat japin emrin e vendit."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vakitler doğrudan cihazında hesaplanır. Konumun asla gönderilmez veya kaydedilmez."
+            "value" : "Vakitler doğrudan cihazında hesaplanır. Konumun, yer adını veren Apple Haritalar dışında kimseye gönderilmez."
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "اوقات کا حساب براہِ راست آپ کے آلے پر ہوتا ہے۔ آپ کا مقام کبھی کہیں بھیجا یا محفوظ نہیں کیا جاتا۔"
+            "value" : "اوقات کا حساب براہِ راست آپ کے آلے پر ہوتا ہے۔ آپ کا مقام جگہ کا نام بتانے والے Apple Maps کے سوا کسی کو نہیں بھیجا جاتا۔"
           }
         }
       }
@@ -15692,97 +18119,97 @@
         "ar" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "موقعك يبقى على iPhone"
+            "value" : "تُحسب على iPhone لديك"
           }
         },
         "bn" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "আপনার অবস্থান আপনার iPhone-এই থাকে"
+            "value" : "আপনার iPhone-এ হিসাব করা হয়"
           }
         },
         "bs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Vaša lokacija ostaje na iPhoneu"
+            "value" : "Izračunato na vašem iPhoneu"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dein Standort bleibt auf dem iPhone"
+            "value" : "Berechnet auf deinem iPhone"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your location stays on your iPhone"
+            "value" : "Calculated on your iPhone"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tu ubicación se queda en tu iPhone"
+            "value" : "Calculado en tu iPhone"
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "موقعیت شما روی iPhone می‌ماند"
+            "value" : "محاسبه روی iPhone شما"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Votre position reste sur votre iPhone"
+            "value" : "Calculé sur votre iPhone"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Lokasi Anda tetap di iPhone Anda"
+            "value" : "Dihitung di iPhone Anda"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "La tua posizione resta sul tuo iPhone"
+            "value" : "Calcolato sul tuo iPhone"
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Lokasi anda kekal pada iPhone anda"
+            "value" : "Dikira pada iPhone anda"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Je locatie blijft op je iPhone"
+            "value" : "Berekend op je iPhone"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Ваша геопозиция остаётся на iPhone"
+            "value" : "Рассчитано на вашем iPhone"
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Vendndodhja juaj mbetet në iPhone"
+            "value" : "Llogaritet në iPhone-in tuaj"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Konumun iPhone’unda kalır"
+            "value" : "iPhone’unda hesaplanır"
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "آپ کا مقام آپ کے iPhone پر ہی رہتا ہے"
+            "value" : "حساب آپ کے iPhone پر ہوتا ہے"
           }
         }
       }
@@ -16086,6 +18513,108 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "ابھی نہیں"
+          }
+        }
+      }
+    },
+    "ob3Live" : {
+      "comment" : "Argumente: 1 = app.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "قبل كل صلاة، يعرض %@ أيضًا عدًّا تنازليًا على شاشة القفل: النشاط المباشر. ويمكنك إيقافه في أي وقت من الإعدادات › النشاط المباشر."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "প্রতিটি নামাজের আগে %@ লক স্ক্রিনে একটি কাউন্টডাউনও দেখায়: লাইভ অ্যাক্টিভিটি। যেকোনো সময় সেটিংস › লাইভ অ্যাক্টিভিটি থেকে এটি বন্ধ করতে পারেন।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Prije svakog namaza %@ prikazuje i odbrojavanje na zaključanom ekranu: Aktivnost uživo. Možete je isključiti bilo kada u Postavkama › Aktivnost uživo."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vor jedem Gebet zeigt %@ außerdem einen Countdown auf dem Sperrbildschirm, die Live-Aktivität. Abschalten kannst du sie jederzeit unter Einstellungen › Live-Aktivität."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before each prayer, %@ also shows a countdown on the Lock Screen: the Live Activity. You can turn it off any time in Settings › Live Activity."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antes de cada oración, %@ también muestra una cuenta atrás en la pantalla bloqueada: la Actividad en directo. Puedes desactivarla cuando quieras en Ajustes › Actividad en directo."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "پیش از هر نماز، %@ یک شمارش معکوس هم روی صفحه قفل نشان می‌دهد: فعالیت زنده. هر زمان می‌توانید آن را از تنظیمات › فعالیت زنده خاموش کنید."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Avant chaque prière, %@ affiche aussi un compte à rebours sur l’écran verrouillé : l’Activité en direct. Vous pouvez la désactiver à tout moment dans Réglages › Activité en direct."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sebelum setiap salat, %@ juga menampilkan hitung mundur di Layar Terkunci: Aktivitas Langsung. Anda dapat mematikannya kapan saja di Pengaturan › Aktivitas Langsung."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Prima di ogni preghiera, %@ mostra anche un conto alla rovescia sulla schermata di blocco: l’Attività in tempo reale. Puoi disattivarla quando vuoi in Impostazioni › Attività in tempo reale."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sebelum setiap solat, %@ turut memaparkan kiraan detik pada Skrin Kunci: Aktiviti Langsung. Anda boleh mematikannya bila-bila masa dalam Seting › Aktiviti Langsung."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vóór elk gebed toont %@ ook een aftelling op het toegangsscherm: de Live-activiteit. Je kunt die altijd uitzetten via Instellingen › Live-activiteit."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Перед каждым намазом %@ также показывает обратный отсчёт на экране блокировки – это Live Activity. Отключить её можно в любой момент в Настройках › Live Activity."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Para çdo namazi, %@ shfaq edhe një numërim mbrapsht në ekranin e kyçjes: Aktiviteti live. Mund ta çaktivizoni kurdo te Cilësimet › Aktiviteti live."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ her namazdan önce kilit ekranında bir geri sayım da gösterir: Canlı Etkinlik. İstediğin zaman Ayarlar › Canlı Etkinlik bölümünden kapatabilirsin."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ہر نماز سے پہلے %@ لاک اسکرین پر الٹی گنتی بھی دکھاتی ہے: لائیو ایکٹیویٹی۔ آپ اسے کسی بھی وقت سیٹنگز › لائیو ایکٹیویٹی میں بند کر سکتے ہیں۔"
           }
         }
       }
@@ -19028,97 +21557,97 @@
         "ar" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "لا حساب، ولا إعلانات، ولا أدوات تحليل. يُستخدم موقعك على هذا الجهاز فقط لحساب مواقيت الصلاة، ولا يغادره أبدًا."
+            "value" : "لا حساب، ولا إعلانات، ولا أدوات تحليل. تُحسب مواقيت الصلاة على هذا الجهاز. ولمعرفة اسم المكان والبحث عن المدن، يستعلم التطبيق من خرائط Apple — ولا يصلنا نحن شيء من ذلك أبدًا."
           }
         },
         "bn" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "কোনো অ্যাকাউন্ট নেই, বিজ্ঞাপন নেই, অ্যানালিটিক্স নেই। আপনার অবস্থান শুধু এই ডিভাইসে নামাজের সময় হিসাব করতে ব্যবহার করা হয় এবং কখনো ডিভাইসের বাইরে যায় না।"
+            "value" : "কোনো অ্যাকাউন্ট নেই, বিজ্ঞাপন নেই, অ্যানালিটিক্স নেই। নামাজের সময় এই ডিভাইসেই হিসাব করা হয়। জায়গার নাম ও শহর খোঁজার জন্য অ্যাপটি Apple Maps-এর কাছে জানতে চায় — আমরা এর কিছুই কখনো পাই না।"
           }
         },
         "bs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Bez računa, bez reklama, bez analitike. Vaša lokacija koristi se samo na ovom uređaju za izračunavanje namaskih vakata i nikada ga ne napušta."
+            "value" : "Bez računa, bez reklama, bez analitike. Namaski vakti se računaju na ovom uređaju. Za naziv mjesta i pretragu gradova aplikacija pita Apple Karte — mi od toga nikada ništa ne dobijamo."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kein Konto, keine Werbung, keine Analyse-Tools. Dein Standort wird nur auf diesem Gerät zur Berechnung verwendet und verlässt es nie."
+            "value" : "Kein Konto, keine Werbung, keine Analyse-Tools. Die Gebetszeiten berechnet die App auf diesem Gerät. Für den Ortsnamen und die Stadtsuche fragt sie Apple Karten – wir selbst erhalten davon nichts."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No account, no ads, no analytics. Your location is only used on this device to calculate prayer times and never leaves it."
+            "value" : "No account, no ads, no analytics. Prayer times are calculated on this device. For the place name and city search the app asks Apple Maps – we never receive any of it."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sin cuentas, sin anuncios, sin herramientas de análisis. Tu ubicación solo se usa en este dispositivo para calcular los horarios y nunca sale de él."
+            "value" : "Sin cuentas, sin anuncios, sin herramientas de análisis. Los horarios de oración se calculan en este dispositivo. Para el nombre del lugar y la búsqueda de ciudades, la app consulta Mapas de Apple; nosotros nunca recibimos nada de ello."
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "بدون حساب کاربری، بدون تبلیغات، بدون ابزار تحلیل. موقعیت شما فقط روی همین دستگاه برای محاسبه اوقات نماز استفاده می‌شود و هرگز از آن خارج نمی‌شود."
+            "value" : "بدون حساب کاربری، بدون تبلیغات، بدون ابزار تحلیل. اوقات نماز روی این دستگاه محاسبه می‌شود. برای نام مکان و جستجوی شهر، برنامه از Apple Maps می‌پرسد — ما هرگز هیچ‌یک از این اطلاعات را دریافت نمی‌کنیم."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Aucun compte, aucune publicité, aucun outil d’analyse. Votre position est utilisée uniquement sur cet appareil pour calculer les heures de prière et ne le quitte jamais."
+            "value" : "Aucun compte, aucune publicité, aucun outil d’analyse. Les heures de prière sont calculées sur cet appareil. Pour le nom du lieu et la recherche de ville, l’app interroge Plans d’Apple — nous n’en recevons jamais rien."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Tanpa akun, tanpa iklan, tanpa analitik. Lokasi Anda hanya digunakan di perangkat ini untuk menghitung jadwal salat dan tidak pernah meninggalkannya."
+            "value" : "Tanpa akun, tanpa iklan, tanpa analitik. Jadwal salat dihitung di perangkat ini. Untuk nama tempat dan pencarian kota, app ini bertanya kepada Peta Apple — kami sendiri tidak pernah menerima informasi itu."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Nessun account, nessuna pubblicità, nessuna analisi. La tua posizione viene usata solo su questo dispositivo per calcolare gli orari di preghiera e non lo lascia mai."
+            "value" : "Nessun account, nessuna pubblicità, nessuno strumento di analisi. Gli orari di preghiera vengono calcolati su questo dispositivo. Per il nome del luogo e la ricerca della città, l’app si rivolge a Mappe di Apple — noi non ne riceviamo mai nulla."
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Tiada akaun, tiada iklan, tiada analitik. Lokasi anda hanya digunakan pada peranti ini untuk mengira waktu solat dan tidak pernah meninggalkannya."
+            "value" : "Tiada akaun, tiada iklan, tiada analitik. Waktu solat dikira pada peranti ini. Untuk nama tempat dan carian bandar, app ini bertanya kepada Peta Apple — kami sendiri tidak pernah menerima maklumat itu."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Geen account, geen reclame, geen analysetools. Je locatie wordt alleen op dit apparaat gebruikt om de gebedstijden te berekenen en verlaat het nooit."
+            "value" : "Geen account, geen reclame, geen analysetools. De gebedstijden worden op dit apparaat berekend. Voor de plaatsnaam en het zoeken naar een stad raadpleegt de app Apple Kaarten — wij ontvangen daar zelf nooit iets van."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Без учётной записи, без рекламы, без аналитики. Ваша геопозиция используется только на этом устройстве для расчёта времени намаза и никогда его не покидает."
+            "value" : "Без учётной записи, без рекламы, без аналитики. Время намаза рассчитывается на этом устройстве. За названием места и для поиска города приложение обращается к Apple Картам — сами мы никогда ничего из этого не получаем."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Pa llogari, pa reklama, pa analitikë. Vendndodhja juaj përdoret vetëm në këtë pajisje për të llogaritur vaktet e namazit dhe nuk largohet kurrë prej saj."
+            "value" : "Pa llogari, pa reklama, pa analitikë. Vaktet e namazit llogariten në këtë pajisje. Për emrin e vendit dhe kërkimin e qytetit, aplikacioni pyet Hartat e Apple — ne vetë nuk marrim kurrë asgjë nga këto."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hesap yok, reklam yok, analiz aracı yok. Konumun yalnızca bu cihazda vakitleri hesaplamak için kullanılır ve cihazdan asla çıkmaz."
+            "value" : "Hesap yok, reklam yok, analiz araçları yok. Namaz vakitleri bu cihazda hesaplanır. Yer adı ve şehir araması için Apple Haritalar’a sorulur – biz bunların hiçbirini almayız."
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "نہ اکاؤنٹ، نہ اشتہارات، نہ اینالیٹکس۔ آپ کا مقام صرف اسی آلے پر اوقاتِ نماز کا حساب لگانے کے لیے استعمال ہوتا ہے اور کبھی اس سے باہر نہیں جاتا۔"
+            "value" : "نہ اکاؤنٹ، نہ اشتہارات، نہ اینالیٹکس۔ اوقاتِ نماز کا حساب اس آلے پر ہوتا ہے۔ جگہ کے نام اور شہر کی تلاش کے لیے ایپ Apple Maps سے پوچھتی ہے — ہمیں اس میں سے کچھ بھی کبھی نہیں ملتا۔"
           }
         }
       }
@@ -21780,6 +24309,511 @@
         }
       }
     },
+    "qadaReset" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "إعادة تعيين الكل"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "সবকিছু রিসেট করুন"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Resetuj sve"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alles zurücksetzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset Everything"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restablecer todo"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "بازنشانی همه"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Tout réinitialiser"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Atur Ulang Semua"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Azzera tutto"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Set Semula Semua"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Zet alles op nul"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Сбросить всё"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Rivendos gjithçka"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hepsini sıfırla"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "سب کچھ ری سیٹ کریں"
+          }
+        }
+      }
+    },
+    "qadaResetBody" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ستُعاد الصلوات المتبقية وخطتك وما أدخلته في الحاسبة إلى الصفر. لا يمكن التراجع عن هذا الإجراء."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "বাকি নামাজ, আপনার পরিকল্পনা ও হিসাবের তথ্য শূন্য করা হবে। এটি পূর্বাবস্থায় ফেরানো যাবে না।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Preostali namazi, vaš plan i unosi u kalkulatoru bit će postavljeni na nulu. Ovo se ne može poništiti."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offene Gebete, Plan und die Angaben im Rechner werden auf null gesetzt. Das lässt sich nicht rückgängig machen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open prayers, your plan and the calculator entries are set to zero. This can’t be undone."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las oraciones pendientes, tu plan y los datos del cálculo se pondrán a cero. Esta acción no se puede deshacer."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "نمازهای باقی‌مانده، برنامه شما و مقادیر محاسبه‌گر صفر می‌شوند. این کار برگشت‌پذیر نیست."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Les prières à rattraper, votre plan et les données du calcul seront remis à zéro. Cette action est irréversible."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Salat yang belum diqadha, rencana Anda, dan isian di kalkulator akan diatur ke nol. Tindakan ini tidak dapat diurungkan."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Le preghiere da recuperare, il piano e i dati del calcolo verranno azzerati. Questa azione non può essere annullata."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Solat yang belum diqada, rancangan anda dan maklumat dalam kalkulator akan ditetapkan kepada sifar. Tindakan ini tidak boleh dibuat asal."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Openstaande gebeden, je plan en de gegevens van de berekening worden op nul gezet. Dit kan niet ongedaan worden gemaakt."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Оставшиеся намазы, ваш план и данные в калькуляторе будут обнулены. Это действие нельзя отменить."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Namazet e mbetura, plani juaj dhe të dhënat në llogaritës vendosen në zero. Ky veprim nuk mund të zhbëhet."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kılınmamış namazlar, plan ve hesaplayıcıdaki bilgiler sıfırlanır. Bu işlem geri alınamaz."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "باقی نمازیں، آپ کا منصوبہ اور حساب میں درج معلومات صفر ہو جائیں گی۔ اس عمل کو واپس نہیں لیا جا سکتا۔"
+          }
+        }
+      }
+    },
+    "qadaResetConfirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "إعادة تعيين"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "রিসেট করুন"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Resetuj"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zurücksetzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restablecer"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "بازنشانی"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Réinitialiser"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Atur Ulang"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Azzera"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Set Semula"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Zet op nul"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Сбросить"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Rivendos"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sıfırla"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ری سیٹ کریں"
+          }
+        }
+      }
+    },
+    "qadaResetDone" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تمت إعادة تعيين الكل"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "সবকিছু রিসেট হয়েছে"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sve je resetovano"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alles zurückgesetzt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Everything reset"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todo restablecido"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "همه بازنشانی شد"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Tout est réinitialisé"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Semua telah diatur ulang"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Tutto azzerato"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Semua telah diset semula"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alles op nul gezet"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Всё сброшено"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Gjithçka u rivendos"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hepsi sıfırlandı"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "سب کچھ ری سیٹ ہو گیا"
+          }
+        }
+      }
+    },
+    "qadaResetTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "إعادة تعيين جميع القيم؟"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "সব মান রিসেট করবেন?"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Resetovati sve vrijednosti?"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Werte zurücksetzen?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset all values?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Restablecer todos los valores?"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "همه مقادیر بازنشانی شوند؟"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Réinitialiser toutes les valeurs ?"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Atur ulang semua nilai?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Azzerare tutti i valori?"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Set semula semua nilai?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Alle waarden op nul zetten?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Сбросить все значения?"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Të rivendosen të gjitha vlerat?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tüm değerler sıfırlansın mı?"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تمام اقدار ری سیٹ کریں؟"
+          }
+        }
+      }
+    },
     "qadaResult" : {
       "comment" : "Argumente: 1 = d, 2 = n. Mehrzahl nach d, n aus `PLURAL` im Prototyp (Spec § 9.10).",
       "extractionState" : "manual",
@@ -22388,6 +25422,107 @@
         }
       }
     },
+    "qcHayz" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "أيام الحيض في الشهر"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "মাসে হায়েজের দিন"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Hajz mjesečno (dani)"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regel pro Monat (Tage)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Period per month (days)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menstruación al mes (días)"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "روزهای حیض در ماه"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Règles par mois (jours)"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Haid per Bulan (hari)"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mestruazioni al mese (giorni)"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Haid Sebulan (hari)"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Menstruatie per maand (dagen)"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Хайд в месяц (дни)"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Hajzi në muaj (ditë)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aylık hayız (gün)"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ہر ماہ حیض کے دن"
+          }
+        }
+      }
+    },
     "qcLead" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -22485,6 +25620,208 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "آپ نے کتنے عرصے تک باقاعدگی سے نماز نہیں پڑھی؟ اندازاً مدت کافی ہے۔"
+          }
+        }
+      }
+    },
+    "qcMan" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "رجل"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "পুরুষ"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Muškarac"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mann"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Man"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hombre"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "مرد"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Homme"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Laki-laki"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Uomo"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Lelaki"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Man"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Мужчина"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Burrë"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erkek"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "مرد"
+          }
+        }
+      }
+    },
+    "qcNifas" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "مجموع أيام النفاس"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "নিফাসের মোট দিন"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Nifas ukupno (dani)"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wochenbett insgesamt (Tage)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Postnatal bleeding in total (days)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sangrado posparto en total (días)"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "مجموع روزهای نفاس"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Lochies au total (jours)"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Total Nifas (hari)"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Puerperio in totale (giorni)"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Jumlah Nifas (hari)"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Kraamvloed in totaal (dagen)"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Нифас всего (дни)"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Nifasi gjithsej (ditë)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toplam lohusalık (gün)"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "نفاس کے کل دن"
           }
         }
       }
@@ -23075,6 +26412,836 @@
           "substitutions" : {
             "k" : {
               "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg نماز"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg نمازیں"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "qcResultDetailF" : {
+      "comment" : "Argumente: 1 = d, 2 = x, 3 = k. Mehrzahl nach d, x, k aus `PLURAL` im Prototyp (Spec § 9.10).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%#@d@ − %#@x@ من الحيض والنفاس، %#@k@ في اليوم"
+          },
+          "substitutions" : {
+            "d" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "few" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg أيام"
+                    }
+                  },
+                  "many" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg يومًا"
+                    }
+                  },
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "يوم واحد"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg يوم"
+                    }
+                  },
+                  "two" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "يومان"
+                    }
+                  },
+                  "zero" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg يوم"
+                    }
+                  }
+                }
+              }
+            },
+            "k" : {
+              "argNum" : 3,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "few" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg صلوات"
+                    }
+                  },
+                  "many" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg صلاة"
+                    }
+                  },
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "صلاة واحدة"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg صلاة"
+                    }
+                  },
+                  "two" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "صلاتان"
+                    }
+                  },
+                  "zero" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg صلاة"
+                    }
+                  }
+                }
+              }
+            },
+            "x" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "few" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg أيام"
+                    }
+                  },
+                  "many" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg يومًا"
+                    }
+                  },
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "يوم واحد"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg يوم"
+                    }
+                  },
+                  "two" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "يومان"
+                    }
+                  },
+                  "zero" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg يوم"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$lld দিন − হায়েজ ও নিফাসের %2$lld দিন, প্রতিদিন %3$lld নামাজ"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%#@d@ − %#@x@ hajza i nifasa, po %#@k@"
+          },
+          "substitutions" : {
+            "d" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "few" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg dana"
+                    }
+                  },
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg dan"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg dana"
+                    }
+                  }
+                }
+              }
+            },
+            "k" : {
+              "argNum" : 3,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "few" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg namaza"
+                    }
+                  },
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg namaz"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg namaza"
+                    }
+                  }
+                }
+              }
+            },
+            "x" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "few" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg dana"
+                    }
+                  },
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg dan"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg dana"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@d@ − %#@x@, je %#@k@"
+          },
+          "substitutions" : {
+            "d" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg Tag"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg Tage"
+                    }
+                  }
+                }
+              }
+            },
+            "k" : {
+              "argNum" : 3,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg Gebet"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg Gebete"
+                    }
+                  }
+                }
+              }
+            },
+            "x" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg Tag Regel und Wochenbett"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg Tage Regel und Wochenbett"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@d@ − %#@x@, %#@k@ each"
+          },
+          "substitutions" : {
+            "d" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg day"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg days"
+                    }
+                  }
+                }
+              }
+            },
+            "k" : {
+              "argNum" : 3,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg prayer"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg prayers"
+                    }
+                  }
+                }
+              }
+            },
+            "x" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg day of menstruation and postnatal bleeding"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg days of menstruation and postnatal bleeding"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@d@ − %#@x@ de menstruación y sangrado posparto, %#@k@ al día"
+          },
+          "substitutions" : {
+            "d" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg día"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg días"
+                    }
+                  }
+                }
+              }
+            },
+            "k" : {
+              "argNum" : 3,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg oración"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg oraciones"
+                    }
+                  }
+                }
+              }
+            },
+            "x" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg día"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg días"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$lld روز − %2$lld روز حیض و نفاس، هر روز %3$lld نماز"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%#@d@ − %#@x@ de règles et de lochies, %#@k@ par jour"
+          },
+          "substitutions" : {
+            "d" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg jour"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg jours"
+                    }
+                  }
+                }
+              }
+            },
+            "k" : {
+              "argNum" : 3,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg prière"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg prières"
+                    }
+                  }
+                }
+              }
+            },
+            "x" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg jour"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg jours"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$lld hari − %2$lld hari haid dan nifas, %3$lld salat per hari"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%#@d@ − %#@x@ di mestruazioni e puerperio, %#@k@ al giorno"
+          },
+          "substitutions" : {
+            "d" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg giorno"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg giorni"
+                    }
+                  }
+                }
+              }
+            },
+            "k" : {
+              "argNum" : 3,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg preghiera"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg preghiere"
+                    }
+                  }
+                }
+              }
+            },
+            "x" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg giorno"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg giorni"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$lld hari − %2$lld hari haid dan nifas, %3$lld solat sehari"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%#@d@ − %#@x@ menstruatie en kraamvloed, %#@k@ per dag"
+          },
+          "substitutions" : {
+            "d" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg dag"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg dagen"
+                    }
+                  }
+                }
+              }
+            },
+            "k" : {
+              "argNum" : 3,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg gebed"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg gebeden"
+                    }
+                  }
+                }
+              }
+            },
+            "x" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg dag"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg dagen"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%#@d@ − %#@x@ хайда и нифаса, по %#@k@"
+          },
+          "substitutions" : {
+            "d" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "few" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg дня"
+                    }
+                  },
+                  "many" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg дней"
+                    }
+                  },
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg день"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg дня"
+                    }
+                  }
+                }
+              }
+            },
+            "k" : {
+              "argNum" : 3,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "few" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg намаза"
+                    }
+                  },
+                  "many" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg намазов"
+                    }
+                  },
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg намаз"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg намаза"
+                    }
+                  }
+                }
+              }
+            },
+            "x" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "few" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg дня"
+                    }
+                  },
+                  "many" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg дней"
+                    }
+                  },
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg день"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg дня"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$lld ditë − %2$lld ditë hajz dhe nifas, nga %#@k@"
+          },
+          "substitutions" : {
+            "k" : {
+              "argNum" : 3,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg namaz"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "needs_review",
+                      "value" : "%arg namaze"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld gün − %2$lld gün hayız ve lohusalık, günde %3$lld namaz"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$lld دن − حیض و نفاس کے %2$lld دن، روزانہ %#@k@"
+          },
+          "substitutions" : {
+            "k" : {
+              "argNum" : 3,
               "formatSpecifier" : "lld",
               "variations" : {
                 "plural" : {
@@ -23963,6 +28130,309 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "قضا نمازوں کا حساب"
+          }
+        }
+      }
+    },
+    "qcWho" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "لمن هذا الحساب؟"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "কার জন্য?"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Za koga?"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für wen?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Who is it for?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Para quién?"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "برای چه کسی؟"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Pour qui ?"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Untuk siapa?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Per chi?"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Untuk siapa?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Voor wie?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Для кого?"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Për kë?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kim için?"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "کس کے لیے؟"
+          }
+        }
+      }
+    },
+    "qcWoman" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "امرأة"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "নারী"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Žena"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frau"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Woman"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mujer"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "زن"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Femme"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Perempuan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Donna"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Perempuan"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vrouw"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Женщина"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Grua"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kadın"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "عورت"
+          }
+        }
+      }
+    },
+    "qcWomanNote" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تسقط الصلاة في أيام الحيض والنفاس – ولا تُقضى."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "হায়েজ ও নিফাসের দিনগুলোতে নামাজ মাফ – এগুলোর কাযা করতে হয় না।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "U danima hajza i nifasa namazi otpadaju – oni se ne naklanjaju."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An den Tagen der Regel und des Wochenbetts entfallen die Gebete – sie werden nicht nachgeholt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prayers are waived on days of menstruation and postnatal bleeding – they are not made up."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En los días de menstruación y de sangrado posparto, la oración no es obligatoria – no se recupera."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "در روزهای حیض و نفاس نماز ساقط است – و قضا ندارد."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Les jours de règles et de lochies, la prière n’est pas due – elle ne se rattrape pas."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Pada hari-hari haid dan nifas, kewajiban salat gugur – salat tersebut tidak diqadha."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Nei giorni di mestruazioni e di puerperio la preghiera non è dovuta – non si recupera."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Pada hari-hari haid dan nifas, kewajipan solat gugur – solat itu tidak diqada."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Op dagen van menstruatie en kraamvloed vervalt het gebed – het wordt niet ingehaald."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "В дни хайда и нифаса обязанность намаза снимается – эти намазы не восполняют."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Në ditët e hajzit dhe të nifasit namazet nuk janë detyrë – ato nuk falen kaza."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hayız ve lohusalık günlerinde namaz düşer – bunlar kaza edilmez."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "حیض و نفاس کے دنوں میں نمازیں معاف ہیں – ان کی قضا نہیں کی جاتی۔"
           }
         }
       }
@@ -28132,7 +32602,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kerahat-Zeiten zeigen"
+            "value" : "Verbotszeiten zeigen"
           }
         },
         "en" : {

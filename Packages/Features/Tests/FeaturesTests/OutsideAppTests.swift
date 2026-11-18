@@ -43,13 +43,13 @@ struct OutsideAppTests {
 
     // MARK: - Live-Aktivität
 
-    @Test("30 Min. vorher: fünf Aktivitäten angemeldet, die erste für Maghrib ab 15:57, noch geplant")
+    @Test("30 Min. vorher: fünf Aktivitäten angemeldet, die erste für Maghrib ab 15:57 (orange), noch geplant")
     func startValues() async throws {
         let fixture = fixture()
         await fixture.model.reschedule()
         #expect(fixture.scheduler.activities.map(\.planID) == [
-            "live.2026-11-10.maghrib", "live.2026-11-10.isha", "live.2026-11-11.fajr",
-            "live.2026-11-11.dhuhr", "live.2026-11-11.asr",
+            "live.2026-11-10.maghrib.verbot", "live.2026-11-10.isha", "live.2026-11-11.fajr",
+            "live.2026-11-11.dhuhr", "live.2026-11-11.dhuhr.verbot",
         ])
         let maghrib = try #require(fixture.scheduler.activities.first)
         #expect(maghrib.start == instant("2026-11-10", "15:57"))
@@ -98,7 +98,7 @@ struct OutsideAppTests {
         #expect(fixture.model.nextCheck == nil)
     }
 
-    @Test("zum Gebetsbeginn endet die Aktivität und bleibt mit „Jetzt“ bis 15 Min. danach stehen")
+    @Test("zum Gebetsbeginn endet die Aktivität sofort (Spec § 10.3)")
     func endsAtPrayer() async throws {
         let fixture = fixture(time: "16:00")
         await fixture.model.reschedule()
@@ -109,9 +109,9 @@ struct OutsideAppTests {
             Issue.record("erwartet: Ende der Aktivität für Maghrib, war \(ending)")
             return
         }
-        #expect(content?.hasBegun == true)
-        #expect(dismissAt == instant("2026-11-10", "16:42"))
-        #expect(!fixture.scheduler.activities.contains { $0.planID == "live.2026-11-10.maghrib" })
+        #expect(content == nil)
+        #expect(dismissAt == nil)
+        #expect(!fixture.scheduler.activities.contains { $0.planID.hasPrefix("live.2026-11-10.maghrib") })
         #expect(fixture.model.nextCheck == instant("2026-11-10", "18:17"))
     }
 
@@ -143,13 +143,13 @@ struct OutsideAppTests {
         #expect(running.scheduler.activities.isEmpty)
     }
 
-    @Test("-debugLiveActivity: genau eine Aktivität zum nächsten Gebet, sofort gestartet")
+    @Test("-debugLiveActivity: die Aktivität zum nächsten Gebet sofort gestartet, der orange Teil geplant")
     func debugStart() async throws {
         let start = instant("2026-11-10", "14:25")
         let fixture = fixture(lead: 0, debugStart: start)
         await fixture.model.reschedule()
         let maghrib = try #require(fixture.scheduler.activities.first)
-        #expect(fixture.scheduler.activities.count == 1)
+        #expect(fixture.scheduler.activities.map(\.planID) == ["live.2026-11-10.maghrib", "live.2026-11-10.maghrib.verbot"])
         #expect(maghrib.planID == "live.2026-11-10.maghrib")
         #expect(!maghrib.isPending)
         #expect(maghrib.content.countdown.highlighted == .asr)
