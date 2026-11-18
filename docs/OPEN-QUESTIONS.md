@@ -11,7 +11,7 @@ Die erste Beta über TestFlight kommt nach Phase 11 – seit dem 15.11.2026 nach
 - **Konto und Team (erledigt am 15.11.2026):** Apple Developer Program als Einzelperson (Auswahl „Als Person“ statt Verein), Team `V7652FBKMY` – das bisherige persönliche Team, von Apple hochgestuft. Im App Store steht damit der volle Name des Inhabers als Anbieter; in der Datenschutzerklärung ist er der Verantwortliche. Ein späterer Wechsel zu einem eigenen Studio (juristische Person, etwa UG oder GmbH) geht über Apples Support oder eine Übertragung der App.
 - **Kennungen (festgelegt am 15.11.2026, „Mit deinem Namen“):** App `de.mehmetyilmaz.gebetszeiten`, Extension `de.mehmetyilmaz.gebetszeiten.widgets`, App Group `group.de.mehmetyilmaz.gebetszeiten`, eingetragen in `project.yml`. Registriert werden sie beim ersten signierten Build. Die Bundle-ID ist nach dem ersten Upload fest.
 - **App Store Connect:** die App anlegen unter dem Namen „Vaqt – Prayer Time“ (Arbeitsname, entschieden am 15.11.2026 abends, Spec § 9.13; „Vaqt“ allein ist vergeben, auf dem Home-Bildschirm steht „Vaqt“; bis zur Freigabe änderbar, den endgültigen Namen siehe „Vor dem App Store“; der frühere Name „Gebetszeiten – Namaz Vakti“ ist überholt), App-Datenschutz „Keine Daten erfasst“, die Datenschutzerklärung als Adresse und die Testinformationen. Alles vorbereitet in `docs/APP-STORE.md`; einzutragen sind noch Feedback-E-Mail und Kontakt. Die Adresse der Datenschutzerklärung entsteht, sobald das Repo öffentlich auf GitHub liegt (entschieden am 14.11.2026); vorher Verantwortlichen und Aufbewahrung im Text ausfüllen. Mit dem öffentlichen Repo bekommt auch „Quellcode“ (`SOURCE_CODE_URL`) seine Adresse.
-- **Signiertes Archiv und Upload (erledigt am 16.11.2026):** Build 0.1.0 (1) aus `main` (`3bc0487`) signiert archiviert, von `scripts/check-archive` in Ordnung befunden und hochgeladen.
+- **Signiertes Archiv und Upload (erledigt am 16.11.2026):** Build 0.1.0 (1) aus `main` (`3d3420c`) signiert archiviert, von `scripts/check-archive` in Ordnung befunden und hochgeladen.
 - **Angelegt am 16.11.2026:** die App „Vaqt – Prayer Time“ in App Store Connect (Apple-ID `6835351684`, Primärsprache Deutsch, SKU `gebetszeiten-ios`) und die interne TestFlight-Gruppe „Intern“ mit automatischer Verteilung. Darin ist der Inhaber als Tester.
 - **Externe Tester (16.11.2026, „Alles für externe Tester fertig machen“):**
   - Das Repo ist öffentlich auf GitHub, `https://github.com/Memo668/vaqt` (Auswahl „Ganzes Repo öffentlich“). Gepusht ist nur `main`.
@@ -194,19 +194,19 @@ Diese Punkte standen bis Phase 10 unter „Braucht eine Entscheidung“.
 | Phase | Abgenommen | Stand | Was dazukam oder offen blieb |
 |---|---|---|---|
 | 2 | 11.11.2026 | – | `-debugCatalog` steht auf Wunsch („ja“) auch in `CLAUDE.md` |
-| 3 | 11.11.2026, „Abnehmen“ | `87bbb08` | – |
-| 4 | 12.11.2026, „Abnehmen“ | `56f6bb2` | Kompass am Gerät |
-| 5 | 12.11.2026, „Abnehmen, zusammenführen“ | `8d1726a` | fachliche Prüfung der Anleitung |
-| 6 | 12.11.2026, „Abnehmen“ | `b432fc7` | Spec § 6.12 und § 6.13 wie im Prototyp |
-| 7 | 12.11.2026, „Abnehmen“ | `dfcc6f5` | Ton am Gerät, Rechte der Aufnahmen |
-| 8 | 12.11.2026, „Abnehmen“ | `2a48ba8` | Ton zum Sonnenaufgang: „Systemton“ |
-| 9 | 12.11.2026, „Abnehmen“ | `402627e` | was nur ein Gerät zeigt (oben unter „Am Gerät prüfen“) |
-| 10 | 13.11.2026, „Abnehmen, zusammenführen (Empfohlen)“ | `4f39a9a` | was nur ein Gerät zeigt; die Breiten des Onboardings innen sind nur gerechnet |
-| 11 | 14.11.2026, „Abnehmen“ | `381c556` | `duo/open-*` nicht abgeglichen („Ohne innen abschließen“); was nur ein Gerät zeigt; für die Beta Konto, Kennungen und App Store Connect |
-| 12 | 15.11.2026, „Abnehmen, Phase 13“ | `a47cf8c` | Duo nicht geprüft; Anleitung und Verse erst nach Phase 13 gegen v0.8; Live-Aktivität und Widgets mit Phase 14; `APP_STORE_URL` ist ein Platzhalter |
-| 13 | 15.11.2026, „Abnehmen, Phase 14“ | `4281498` | VoiceOver von Hand, Duo und echtes Gerät nicht geprüft; fachliche Prüfung der Anleitung (43 Texte `TODO(review)`) |
-| 14 | 15.11.2026, „Abnahme, und Phase 15 go“ | `729266f` | Rechteck nach Wunsch mittig im Stil der Live-Aktivität; Rechteck alle 10 statt 5 Minuten (10-MB-Grenze); Mitteilungen (`system/92`), Duo und echtes Gerät nicht geprüft; endgültiger Name vor dem App Store |
-| 15 | 16.11.2026, „abgenommen“ | `a548cd6` | Nachtrag nach Wunsch: Sonnenaufgang als Punkt im Bogen, gleich groß wie die Gebete, überall mit Bogen (Spec § 9.14); vorher auf Wunsch per Fast-Forward in `main` (`e27186a`); Widgets und Live-Aktivität in RTL nur im Katalog; Duo-Referenzen ohne Sonnenaufgang; Muttersprachler für die zwölf neuen Sprachen vor dem App Store |
+| 3 | 11.11.2026, „Abnehmen“ | `8ae0b32` | – |
+| 4 | 12.11.2026, „Abnehmen“ | `0b279b7` | Kompass am Gerät |
+| 5 | 12.11.2026, „Abnehmen, zusammenführen“ | `a47fbb7` | fachliche Prüfung der Anleitung |
+| 6 | 12.11.2026, „Abnehmen“ | `ea6792c` | Spec § 6.12 und § 6.13 wie im Prototyp |
+| 7 | 12.11.2026, „Abnehmen“ | `9a8b98f` | Ton am Gerät, Rechte der Aufnahmen |
+| 8 | 12.11.2026, „Abnehmen“ | `2ed4a2e` | Ton zum Sonnenaufgang: „Systemton“ |
+| 9 | 12.11.2026, „Abnehmen“ | `82d4690` | was nur ein Gerät zeigt (oben unter „Am Gerät prüfen“) |
+| 10 | 13.11.2026, „Abnehmen, zusammenführen (Empfohlen)“ | `aaf8ea4` | was nur ein Gerät zeigt; die Breiten des Onboardings innen sind nur gerechnet |
+| 11 | 14.11.2026, „Abnehmen“ | `72f865f` | `duo/open-*` nicht abgeglichen („Ohne innen abschließen“); was nur ein Gerät zeigt; für die Beta Konto, Kennungen und App Store Connect |
+| 12 | 15.11.2026, „Abnehmen, Phase 13“ | `927a6df` | Duo nicht geprüft; Anleitung und Verse erst nach Phase 13 gegen v0.8; Live-Aktivität und Widgets mit Phase 14; `APP_STORE_URL` ist ein Platzhalter |
+| 13 | 15.11.2026, „Abnehmen, Phase 14“ | `3b1a354` | VoiceOver von Hand, Duo und echtes Gerät nicht geprüft; fachliche Prüfung der Anleitung (43 Texte `TODO(review)`) |
+| 14 | 15.11.2026, „Abnahme, und Phase 15 go“ | `9c8de98` | Rechteck nach Wunsch mittig im Stil der Live-Aktivität; Rechteck alle 10 statt 5 Minuten (10-MB-Grenze); Mitteilungen (`system/92`), Duo und echtes Gerät nicht geprüft; endgültiger Name vor dem App Store |
+| 15 | 16.11.2026, „abgenommen“ | `d11db74` | Nachtrag nach Wunsch: Sonnenaufgang als Punkt im Bogen, gleich groß wie die Gebete, überall mit Bogen (Spec § 9.14); vorher auf Wunsch per Fast-Forward in `main` (`f51d0d5`); Widgets und Live-Aktivität in RTL nur im Katalog; Duo-Referenzen ohne Sonnenaufgang; Muttersprachler für die zwölf neuen Sprachen vor dem App Store |
 
 ### Erste Beta, entschieden am 12.11.2026
 

@@ -241,7 +241,7 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 
 ## Phase 12 – Änderungen am Bestand
 
-*Gebaut am 15.11.2026 auf dem Zweig `phase-12` (ab `3047222`), geprüft gegen die Referenzbilder aus dem Prototyp v0.8; Annahmen in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 12“.*
+*Gebaut am 15.11.2026 auf dem Zweig `phase-12` (ab `eeeb46d`), geprüft gegen die Referenzbilder aus dem Prototyp v0.8; Annahmen in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 12“.*
 
 - **App-Symbol** statt Mondsichel: Onboarding, Zeile am Ende der Einstellungen (Spec § 9.1); Bildsatz mit hell/dunkel.
 - **Obere Leiste mittig**, Einstellungskreis rechts, Zusammenklappen wie bisher; Duo-Leiste unverändert (§ 9.2).
@@ -256,7 +256,7 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 
 ## Phase 13 – Gebet Schritt für Schritt und arabische Schrift
 
-*Gebaut am 15.11.2026 auf dem Zweig `claude/phase-13-cce599` (ab `7558f5e`, Phase 12 abgenommen), geprüft gegen die Referenzbilder aus dem Prototyp v0.8 (`iphone/40`–`51`, neu `43`–`49`); Annahmen in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 13“.*
+*Gebaut am 15.11.2026 auf dem Zweig `claude/phase-13-cce599` (ab `0a3f9aa`, Phase 12 abgenommen), geprüft gegen die Referenzbilder aus dem Prototyp v0.8 (`iphone/40`–`51`, neu `43`–`49`); Annahmen in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 13“.*
 
 - Vollbild-Durchlauf durch das ganze Gebet aus der Anleitung (Spec § 9.6): Ablauf aus `RAKAH` und den Schritten berechnen (PrayerCore `GuideWalk`, Tests: Fadschr 2, Maghrib 3, Dhuhr 4 Rakʿas → 15/22/28 Schritte, dazu Start und Ende), Fortschritt, Zurück/Weiter, Reduce Motion, VoiceOver. Knopf „Gebet Schritt für Schritt“ in der Kopfkarte; Vollbild über `fullScreenCover`; Dynamic Type bis AX (Kopf bis AX1, Knöpfe untereinander, wenn sie nicht passen).
 - Amiri Quran für Verse, Amiri für Formeln einbetten (Release 1.003 von aliftype/amiri, `docs/THIRD-PARTY.md`), Lizenz (OFL) im Lizenzhinweis (§ 9.7): neue Seite Einstellungen › Über › Lizenzen mit Amiri und Adhan Swift (entschieden mit dem Plan).
@@ -266,7 +266,7 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 
 ## Phase 14 – Live-Aktivität und Widgets
 
-*Gebaut am 15.11.2026 auf dem Zweig `claude/phase-14-306a00` (ab `81492cf`, Phase 13 abgenommen), geprüft gegen die Referenzbilder aus dem Prototyp v0.8 (`system/90`, `91`, `93`–`96` neu) im Katalog und im System; Annahmen in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 14“.*
+*Gebaut am 15.11.2026 auf dem Zweig `claude/phase-14-306a00` (ab `066eb90`, Phase 13 abgenommen), geprüft gegen die Referenzbilder aus dem Prototyp v0.8 (`system/90`, `91`, `93`–`96` neu) im Katalog und im System; Annahmen in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 14“.*
 
 - Live-Aktivität: Kerahat auf der Spur (Spec § 9.11).
 - Sperrbildschirm-Widget (rechteckig) mit Bogen, einfarbig (entschieden mit dem Plan: das rechteckige); nach dem Änderungswunsch vom 15.11.2026 im Stil der Live-Aktivität: mittig, Gebete mit Symbol, Jetzt-Punkt mit Ring, Gebet und Countdown im Bogen, Kerahat gestreift.
@@ -279,7 +279,7 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 
 ## Phase 15 – Sechzehn Sprachen
 
-*Gebaut am 15.11.2026 auf dem Zweig `claude/phase-15-9c9615` (ab `dae1611`, Phase 14 abgenommen), abgeglichen gegen den Prototyp in derselben Sprache (`make compare-language`: AR, AR mit Region Saudi-Arabien, RU, FR, BN) und mit `make capture` in allen 16 Sprachen; Annahmen in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 15“.*
+*Gebaut am 15.11.2026 auf dem Zweig `claude/phase-15-9c9615` (ab `8431573`, Phase 14 abgenommen), abgeglichen gegen den Prototyp in derselben Sprache (`make compare-language`: AR, AR mit Region Saudi-Arabien, RU, FR, BN) und mit `make capture` in allen 16 Sprachen; Annahmen in `docs/OPEN-QUESTIONS.md` unter „Annahmen in Phase 15“.*
 
 - String Catalog um FR, NL, BS, SQ, AR, UR, ID, MS, BN, FA, RU, IT aus `T` erweitert (Spec § 9.10); die zwölf Sprachen mit dem Status „Needs Review“, ebenso `App/InfoPlist.xcstrings`. Verse und Suren fallen auf Englisch zurück, Arabisch ohne Übersetzung.
 - Plural-Varianten, wo Zahlen mit Zählwort vorkommen: Formen in `PLURAL` im Prototyp (15 Texte, Kategorien nach CLDR), im Katalog als `substitutions`, in `L10n` die Zahl als `Int`; `L10n.text` schreibt mit der Locale der Textsprache.
