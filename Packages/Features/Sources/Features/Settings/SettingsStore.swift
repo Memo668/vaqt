@@ -42,6 +42,8 @@ public final class SettingsStore {
         /// Vorab-Erinnerung, Live-Aktivität, Klang und Stimme (`S.reminder`, `S.liveAct`, `S.sound`,
         /// `S.adhan.voice`).
         public var notifications = NotificationPreferences()
+        /// Der Wecker zu Fadschr (`S.alarmOn`, `S.alarmMode`, `S.alarmBefore`, `S.alarmTime`, `S.alarmSound`).
+        public var fajrAlarm = FajrAlarmPreferences()
         /// Erscheinungsbild (`S.appearance`).
         public var appearance = Appearance.system
         /// Die in der App gewählte Sprache (`S.lang`); `nil` heißt: wie das Gerät.
@@ -65,6 +67,7 @@ public final class SettingsStore {
     public private(set) var calculation: CalculationSettings
     public private(set) var showKerahat: Bool
     public private(set) var notifications: NotificationPreferences
+    public private(set) var fajrAlarm: FajrAlarmPreferences
     public private(set) var appearance: Appearance
     public private(set) var language: AppLanguage?
     public private(set) var onboardingCompleted: Bool
@@ -91,6 +94,7 @@ public final class SettingsStore {
         calculation = snapshot.calculation
         showKerahat = snapshot.showKerahat
         notifications = snapshot.notifications
+        fajrAlarm = snapshot.fajrAlarm
         appearance = snapshot.appearance
         language = snapshot.language
         onboardingCompleted = snapshot.onboardingCompleted
@@ -107,6 +111,7 @@ public final class SettingsStore {
         snapshot.calculation = calculation
         snapshot.showKerahat = showKerahat
         snapshot.notifications = notifications
+        snapshot.fajrAlarm = fajrAlarm
         snapshot.appearance = appearance
         snapshot.language = language
         snapshot.onboardingCompleted = onboardingCompleted
@@ -227,6 +232,16 @@ public final class SettingsStore {
         setNotifications(notifications)
     }
 
+    // MARK: - Wecker zu Fadschr
+
+    /// Ändert den Wecker, z. B. `{ $0.mode = .fixedTime }`.
+    public func updateFajrAlarm(_ change: (inout FajrAlarmPreferences) -> Void) {
+        var fajrAlarm = fajrAlarm
+        change(&fajrAlarm)
+        self.fajrAlarm = fajrAlarm
+        save(fajrAlarm, forKey: Key.fajrAlarm)
+    }
+
     // MARK: - Darstellung und Sprache
 
     public func setAppearance(_ appearance: Appearance) {
@@ -265,6 +280,7 @@ public final class SettingsStore {
         static let calculation = "settings.calculation"
         static let showKerahat = "settings.showKerahat"
         static let notifications = "settings.notifications"
+        static let fajrAlarm = "settings.fajrAlarm"
         static let appearance = "settings.appearance"
         static let language = "settings.language"
         static let onboardingCompleted = "settings.onboarded"
@@ -295,6 +311,9 @@ public final class SettingsStore {
         }
         if let notifications = decode(NotificationPreferences.self, from: defaults, forKey: Key.notifications) {
             snapshot.notifications = notifications
+        }
+        if let fajrAlarm = decode(FajrAlarmPreferences.self, from: defaults, forKey: Key.fajrAlarm) {
+            snapshot.fajrAlarm = fajrAlarm
         }
         if let appearance = defaults.string(forKey: Key.appearance).flatMap(Appearance.init(rawValue:)) {
             snapshot.appearance = appearance

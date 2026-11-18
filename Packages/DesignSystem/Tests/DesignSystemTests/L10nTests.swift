@@ -79,7 +79,7 @@ struct L10nTests {
         // sechs Verse (Phase 6); seit Phase 12 die 60 Nachträge vom 15.11.2026 (Spec § 9); seit Phase 13
         // die vier Texte der Seite „Lizenzen“ (Spec § 9.7); seit Phase 16 die 37 Nachträge vom 17./18.11.2026
         // (Spec § 10, davon elf für den Wecker aus Phase 17).
-        #expect(L10n.allKeys.count == 374)
+        #expect(L10n.allKeys.count == 378)
         #expect(Set(L10n.allKeys).count == L10n.allKeys.count)
     }
 

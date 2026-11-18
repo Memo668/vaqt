@@ -163,6 +163,23 @@ struct SettingsStoreTests {
         }
     }
 
+    @Test("der Wecker zu Fadschr bleibt über den Neustart")
+    func persistsFajrAlarm() {
+        withSuite { name in
+            let store = SettingsStore(storage: .userDefaults(suiteName: name))
+            #expect(store.fajrAlarm == FajrAlarmPreferences())
+            store.updateFajrAlarm {
+                $0.isOn = true
+                $0.mode = .fixedTime
+                $0.fixedTime = ClockTime(minutesSinceMidnight: 4 * 60 + 50)
+                $0.sound = .adhan
+            }
+            let next = SettingsStore(storage: .userDefaults(suiteName: name))
+            #expect(next.fajrAlarm == store.fajrAlarm)
+            #expect(next.snapshot == store.snapshot)
+        }
+    }
+
     @Test("die Wahl „Stadt statt Standort“ bleibt über den Neustart")
     func persistsManual() {
         withSuite { name in

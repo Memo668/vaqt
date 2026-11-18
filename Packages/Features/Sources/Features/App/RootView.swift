@@ -78,6 +78,7 @@ struct AppContent: View {
     @State private var notifications: NotificationModel
     @State private var widgets: WidgetSync
     @State private var liveActivities: LiveActivityModel
+    @State private var alarm: FajrAlarmModel
     /// Innen auf dem iPhone Duo (regular) erscheinen die Sheets als mittige Karte.
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
@@ -102,6 +103,12 @@ struct AppContent: View {
             settings: settings, location: location, clock: environment.clock,
             timesSource: environment.timesSource, scheduler: environment.liveActivityScheduler,
             isPlanning: environment.plansLiveActivities, debugStart: environment.liveActivityDebugStart
+        ))
+        // Der Wecker zu Fadschr folgt demselben Ort.
+        _alarm = State(initialValue: FajrAlarmModel(
+            settings: settings, location: location, clock: environment.clock,
+            timesSource: environment.timesSource, scheduler: environment.alarmScheduler,
+            isPlanning: environment.plansAlarms, testDate: environment.alarmTestDate
         ))
         let today = TodayModel(
             clock: environment.clock, timesSource: environment.timesSource,
@@ -169,7 +176,12 @@ struct AppContent: View {
         .background {
             OutsideAppPlanning(widgets: widgets, liveActivities: liveActivities, clock: environment.clock)
         }
+        // Die Wecker zu Fadschr ebenso (Spec § 10.8).
+        .background {
+            FajrAlarmPlanning(model: alarm)
+        }
         .environment(settingsModel)
+        .environment(alarm)
         .toasts(from: toast)
         .environment(\.appClock, environment.clock)
         .environment(\.locationSource, environment.locationSource)

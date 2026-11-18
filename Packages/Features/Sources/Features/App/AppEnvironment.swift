@@ -46,6 +46,13 @@ public struct AppEnvironment: Sendable {
     public var plansLiveActivities: Bool
     /// `-debugLiveActivity`: Ab diesem Zeitpunkt läuft genau eine Live-Aktivität, die zum nächsten Gebet.
     public var liveActivityDebugStart: Date?
+    /// Erlaubnis und Wecker zu Fadschr: über AlarmKit, mit `-debugFixtureTimes` nirgends.
+    public var alarmScheduler: any FajrAlarmScheduling
+    /// Ob die App die Wecker zu Fadschr anmeldet. Mit `-debugFixtureTimes` nicht – damit Aufnahmen keine
+    /// auslösen.
+    public var plansAlarms: Bool
+    /// `-debugAlarmIn`: ein zusätzlicher Wecker zu diesem Zeitpunkt (Uhr der App).
+    public var alarmTestDate: Date?
     public var initialTab: AppTab
     /// Die Seite des Gebete-Tabs beim Start.
     public var initialPage: PrayersPage
@@ -88,6 +95,9 @@ public struct AppEnvironment: Sendable {
         liveActivityScheduler: any LiveActivityScheduling = NoLiveActivityScheduler(),
         plansLiveActivities: Bool = true,
         liveActivityDebugStart: Date? = nil,
+        alarmScheduler: any FajrAlarmScheduling = FixedFajrAlarmScheduler(),
+        plansAlarms: Bool = true,
+        alarmTestDate: Date? = nil,
         initialTab: AppTab = .prayers,
         initialPage: PrayersPage = .today,
         settingsPath: [SettingsRoute] = [],
@@ -112,6 +122,9 @@ public struct AppEnvironment: Sendable {
         self.liveActivityScheduler = liveActivityScheduler
         self.plansLiveActivities = plansLiveActivities
         self.liveActivityDebugStart = liveActivityDebugStart
+        self.alarmScheduler = alarmScheduler
+        self.plansAlarms = plansAlarms
+        self.alarmTestDate = alarmTestDate
         self.initialTab = initialTab
         self.initialPage = initialPage
         self.settingsPath = settingsPath
@@ -134,7 +147,8 @@ public struct AppEnvironment: Sendable {
             notificationAuthorizer: SystemNotificationAuthorizer(),
             notificationScheduler: SystemNotificationScheduler(),
             widgetPublisher: AppGroupWidgetPublisher(suiteName: appGroupIdentifier),
-            liveActivityScheduler: SystemLiveActivityScheduler()
+            liveActivityScheduler: SystemLiveActivityScheduler(),
+            alarmScheduler: SystemFajrAlarmScheduler()
         )
     }
 
@@ -190,6 +204,9 @@ extension AppEnvironment {
     /// - `-debugLiveActivity`: genau eine Live-Aktivität, die zum nächsten Gebet, ab dem Start der App –
     ///   auch außerhalb des Vorlaufs und mit Mock-Zeiten. So lassen sich `system/93`–`96` nachstellen.
     ///   Die Widgets bekommen Mock-Zeiten und Debug-Uhr über die App Group.
+    /// - `-debugAlarm`: der Wecker zu Fadschr an oder die Erlaubnis abgelehnt, nur im Speicher und ohne
+    ///   echte Wecker – für `iphone/24` und `iphone/84`. Mit Mock-Zeiten meldet die App sonst keine Wecker an.
+    /// - `-debugAlarmIn`: ein echter Wecker über AlarmKit, so viele Minuten nach dem Start.
     public init(options: LaunchOptions, system: any AppClock = SystemClock(), deviceTimeZone: TimeZone = .current) {
         clock = options.makeClock(system: system, deviceTimeZone: deviceTimeZone)
         if options.effectiveCity != nil || options.locationDenied {
@@ -209,7 +226,7 @@ extension AppEnvironment {
             timesSource = FixtureTimesSource(highLatitude: options.highLatitude)
             connectivity = FixedConnectivity(isOnline: !options.offline)
             citySearch = NoCitySearch()
-            settings = .ephemeral(.prototype(city: options.effectiveCity))
+            settings = .ephemeral(.prototype(city: options.effectiveCity, alarm: options.alarm))
             qadaStorage = .ephemeral(.prototypeSample)
         } else {
             timesSource = AdhanTimesSource()
@@ -238,6 +255,19 @@ extension AppEnvironment {
         liveActivityScheduler = SystemLiveActivityScheduler()
         plansLiveActivities = !options.fixtureTimes || options.liveActivity
         liveActivityDebugStart = options.liveActivity ? clock.now : nil
+        // Mit Mock-Zeiten meldet die App keine Wecker an; `-debugAlarm` setzt nur den Stand der Erlaubnis.
+        // `-debugAlarmIn` stellt immer einen echten Wecker.
+        if options.fixtureTimes, options.alarmInMinutes == nil {
+            alarmScheduler = FixedFajrAlarmScheduler(status: options.alarm.map { $0 == .denied ? .denied : .authorized } ?? .notDetermined)
+        } else {
+            alarmScheduler = SystemFajrAlarmScheduler()
+        }
+        plansAlarms = !options.fixtureTimes
+        if let minutes = options.alarmInMinutes {
+            alarmTestDate = clock.now.addingTimeInterval(TimeInterval(minutes * 60))
+        } else {
+            alarmTestDate = nil
+        }
         initialTab = AppTab(options.page)
         // Der Durchlauf liegt über der Anleitung; ohne `-debugTab` ist sie die Seite darunter.
         initialPage = options.walkPrayer != nil && options.page == nil ? .guide : PrayersPage(options.page)
@@ -281,8 +311,13 @@ extension SettingsStore.Snapshot {
 
     /// Die Startwerte von `S` im Prototyp: Standort automatisch, die Stadt der Fixture als gewählte und
     /// als aktuelle Stadt (`S.city`, `S.deviceCity`), die fünf Städte aus `CITY_IDS` als gespeicherte.
-    static func prototype(city: FixtureTimes.City?) -> SettingsStore.Snapshot {
+    static func prototype(city: FixtureTimes.City?, alarm: LaunchOptions.AlarmState? = nil) -> SettingsStore.Snapshot {
         var snapshot = SettingsStore.Snapshot()
+        switch alarm {
+        case .before: snapshot.fajrAlarm = FajrAlarmPreferences(isOn: true)
+        case .fixed: snapshot.fajrAlarm = FajrAlarmPreferences(isOn: true, mode: .fixedTime, sound: .adhan)
+        case .denied, nil: break
+        }
         let place = city.map { $0.place(named: $0.localizedName) }
         snapshot.manualPlace = place
         snapshot.devicePlace = place

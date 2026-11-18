@@ -15,6 +15,8 @@ struct TodayPage: View {
     let onHighLatitudeRule: () -> Void
 
     @Environment(\.pageArrangement) private var arrangement
+    /// Der Wecker zu Fadschr für den Chip in der Fadschr-Zeile; ohne ihn kein Chip.
+    @Environment(FajrAlarmModel.self) private var alarm: FajrAlarmModel?
 
     var body: some View {
         PageScroll(centersParts: true, alignment: .center) {
@@ -94,7 +96,7 @@ struct TodayPage: View {
     private var rows: some View {
         VStack(spacing: Layout.prayerRowGap) {
             ForEach(model.rows) { row in
-                PrayerRow(row, bell: model.bell(for: row.prayer)) {
+                PrayerRow(row, bell: model.bell(for: row.prayer), alarm: alarmTime(for: row.prayer)) {
                     model.cycleBell(for: row.prayer)
                 } onKerahatInfo: {
                     model.isKerahatInfoPresented = true
@@ -103,6 +105,12 @@ struct TodayPage: View {
         }
         .accessibilityElement(children: .contain)
         .accessibilityLabel(model.gregorianDateText)
+    }
+
+    /// Die Weckzeit des gezeigten Tages in der Fadschr-Zeile, wenn der Wecker klingelt (Spec § 10.8).
+    private func alarmTime(for prayer: Prayer) -> ClockTime? {
+        guard prayer == .fajr, let alarm, let times = model.shownDayTimes else { return nil }
+        return alarm.alarmTime(on: times)
     }
 }
 

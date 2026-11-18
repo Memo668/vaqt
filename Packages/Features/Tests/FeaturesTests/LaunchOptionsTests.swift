@@ -66,6 +66,36 @@ struct LaunchOptionsTests {
         #expect(options.problems.isEmpty)
     }
 
+    @Test("-debugAlarm stellt den Wecker im Speicher, ohne echte Wecker (iphone/24, iphone/84)")
+    @MainActor
+    func alarm() {
+        let before = AppEnvironment(options: LaunchOptions(arguments: ["-debugFixtureTimes", "-debugAlarm", "before"]))
+        #expect(SettingsStore(storage: before.settings).fajrAlarm == FajrAlarmPreferences(isOn: true))
+        #expect(before.alarmScheduler is FixedFajrAlarmScheduler)
+        #expect(!before.plansAlarms)
+
+        let fixed = AppEnvironment(options: LaunchOptions(arguments: ["-debugFixtureTimes", "-debugAlarm", "fixed"]))
+        #expect(SettingsStore(storage: fixed.settings).fajrAlarm == FajrAlarmPreferences(isOn: true, mode: .fixedTime, sound: .adhan))
+
+        let denied = LaunchOptions(arguments: ["-debugFixtureTimes", "-debugAlarm", "denied"])
+        #expect(denied.alarm == .denied)
+        #expect(denied.problems.isEmpty)
+
+        #expect(LaunchOptions(arguments: ["-debugAlarm", "before"]).problems.count == 1)
+        #expect(LaunchOptions(arguments: ["-debugAlarm", "weekly"]).problems.count == 1)
+    }
+
+    @Test("-debugAlarmIn: ein echter Wecker so viele Minuten nach dem Start")
+    func alarmIn() {
+        let options = LaunchOptions(arguments: ["-debugFixtureTimes", "-debugTime", "14:25", "-debugAlarmIn", "2"])
+        #expect(options.alarmInMinutes == 2)
+        #expect(options.problems.isEmpty)
+        let environment = AppEnvironment(options: options)
+        #expect(environment.alarmScheduler is SystemFajrAlarmScheduler)
+        #expect(environment.alarmTestDate.map { abs($0.timeIntervalSince(environment.clock.now) - 120) < 5 } == true)
+        #expect(LaunchOptions(arguments: ["-debugAlarmIn", "0"]).problems.count == 1)
+    }
+
     @Test("jede Stadt aus dem Prototyp", arguments: ["berlin", "istanbul", "madrid", "mecca", "jakarta"])
     func cities(id: String) {
         let options = LaunchOptions(arguments: ["-debugCity", id])
@@ -201,7 +231,7 @@ struct LaunchOptionsTests {
     func settingsPages() {
         let pages = LaunchOptions.Page.allCases.compactMap { page in page.settingsRoute.map { (page, $0) } }
         #expect(pages.map(\.0.rawValue) == [
-            "settings", "method", "asr", "hl", "adjust", "perPrayer", "reminder", "live", "sound", "appearance",
+            "settings", "method", "asr", "hl", "adjust", "perPrayer", "reminder", "live", "alarm", "sound", "appearance",
             "language", "privacy", "licenses", "support", "adhan",
         ])
         for (page, route) in pages where page != .adhan {

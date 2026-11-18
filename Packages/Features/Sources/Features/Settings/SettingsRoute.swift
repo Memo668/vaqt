@@ -22,6 +22,8 @@ public enum SettingsRoute: String, CaseIterable, Hashable, Sendable {
     case reminder
     /// Einstellungen › Live-Aktivität (`live`).
     case liveActivity = "live"
+    /// Einstellungen › Wecker zu Fadschr (`alarm`, Spec § 10.8).
+    case alarm
     /// Einstellungen › Klang (`sound`).
     case sound
     /// Einstellungen › Erscheinungsbild (`appearance`).
@@ -46,6 +48,7 @@ public enum SettingsRoute: String, CaseIterable, Hashable, Sendable {
         case .perPrayer: L10n.perPrayer
         case .reminder: L10n.reminder
         case .liveActivity: L10n.liveAct
+        case .alarm: L10n.alarmRow
         case .sound: L10n.sound
         case .appearance: L10n.appearance
         case .language: L10n.language

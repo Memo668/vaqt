@@ -14,6 +14,7 @@ public struct PrayerRow: View {
     private let bell: BellState
     private let onBell: () -> Void
     private let onKerahatInfo: (() -> Void)?
+    private let alarm: ClockTime?
 
     @ScaledMetric(relativeTo: .caption2) private var chipLineHeight = TypeScale.caption2.pointSize
     @ScaledMetric(relativeTo: .caption) private var captionSize = TypeScale.caption1.pointSize
@@ -24,11 +25,15 @@ public struct PrayerRow: View {
     ///   - onBell: Tippen auf die Glocke; die Seite wechselt den Stand (`BellState.next`).
     ///   - onKerahatInfo: Tippen auf die Kerahat-Zeile öffnet „Was sind Verbotszeiten?“ (Spec § 10.2); mit
     ///     diesem Knopf trägt die Zeile den Infopunkt.
+    ///   - alarm: Weckzeit des Weckers zu Fadschr; die Zeile zeigt sie als Chip mit Uhr hinter dem Namen
+    ///     (Spec § 10.8).
     public init(
-        _ model: PrayerRowModel, bell: BellState, onBell: @escaping () -> Void, onKerahatInfo: (() -> Void)? = nil
+        _ model: PrayerRowModel, bell: BellState, alarm: ClockTime? = nil, onBell: @escaping () -> Void,
+        onKerahatInfo: (() -> Void)? = nil
     ) {
         self.model = model
         self.bell = bell
+        self.alarm = alarm
         self.onBell = onBell
         self.onKerahatInfo = onKerahatInfo
     }
@@ -106,7 +111,7 @@ public struct PrayerRow: View {
             VStack(alignment: .leading, spacing: RowMetrics.nameGap) {
                 name
                     .fixedSize(horizontal: false, vertical: true)
-                if model.showsHighLatitudeMark || isCurrent {
+                if model.showsHighLatitudeMark || isCurrent || alarm != nil {
                     HStack(spacing: RowMetrics.nameGap) { marks }
                 }
             }
@@ -132,6 +137,9 @@ public struct PrayerRow: View {
 
     @ViewBuilder
     private var marks: some View {
+        if let alarm {
+            alarmChip(alarm)
+        }
         if model.showsHighLatitudeMark {
             Image(systemName: "info.circle")
                 .font(.system(size: RowMetrics.infoSize))
@@ -150,6 +158,27 @@ public struct PrayerRow: View {
                 .padding(.vertical, RowMetrics.chipPaddingY)
                 .background(Palette.accent, in: .rect(cornerRadius: RowMetrics.chipRadius, style: .continuous))
         }
+    }
+
+    /// Chip mit der Weckzeit (`.alarm-mark`: `ic('clock', 12)`, 3 pt Abstand, Caption 1 halbfett mit festen
+    /// Ziffern, `padding: 1px 6px`, Radius 8, Füllung `--fill-3`, Schrift `--label-2`, 6 pt mehr Abstand zum
+    /// Namen).
+    private func alarmChip(_ time: ClockTime) -> some View {
+        HStack(spacing: RowMetrics.alarmIconGap) {
+            Image(systemName: "clock")
+                .font(.system(size: RowMetrics.alarmIconSize))
+            Text(L10n.time(time))
+                .textStyle(.caption1, weight: .medium, lineHeight: RowMetrics.alarmLineHeight)
+                .monospacedDigit()
+        }
+        .foregroundStyle(Palette.textSecondary)
+        .fixedSize()
+        .padding(.horizontal, RowMetrics.alarmPaddingX)
+        .padding(.vertical, RowMetrics.alarmPaddingY)
+        .background(Palette.fillTertiary, in: .rect(cornerRadius: RowMetrics.alarmRadius, style: .continuous))
+        .padding(.leading, RowMetrics.alarmLeading)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(L10n.alarmRings(t: L10n.time(time)))
     }
 
     private func caption(_ kerahat: PrayerRowModel.KerahatCaption, showsInfo: Bool) -> some View {
@@ -244,6 +273,15 @@ enum RowMetrics {
     static let chipPaddingX: CGFloat = 6
     static let chipPaddingY: CGFloat = 3
     static let chipRadius: CGFloat = 5
+    /// Chip mit der Weckzeit (`.alarm-mark`, Spec § 10.8): Uhr 12 pt, 3 pt Abstand, `padding: 1px 6px`,
+    /// Radius 8, Zeilenhöhe 1,3 und `margin-inline-start: 6px` zusätzlich zum Abstand der Zeile.
+    static let alarmIconSize: CGFloat = 10
+    static let alarmIconGap: CGFloat = 3
+    static let alarmPaddingX: CGFloat = 6
+    static let alarmPaddingY: CGFloat = 1
+    static let alarmRadius: CGFloat = 8
+    static let alarmLineHeight: CGFloat = 1.3
+    static let alarmLeading: CGFloat = 6
     /// Abstand zwischen Name und Kerahat-Zeile: die 6 pt zwischen den Zeilen von `.prow-name`, um
     /// 1 pt verringert (`.prow-sub`: `margin-top: -1px`).
     static let captionGap: CGFloat = 5

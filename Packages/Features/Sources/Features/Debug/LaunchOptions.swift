@@ -15,7 +15,7 @@ import PrayerCore
 /// -debugHighLatitude            Berlin, 21. Juni
 /// -debugLocationDenied  -debugOffline
 /// -debugTab today|qibla|guide|verses|qada|settings
-///           method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|licenses|support|adhan|city
+///           method|asr|hl|adjust|perPrayer|reminder|live|alarm|sound|appearance|language|privacy|licenses|support|adhan|city
 /// -debugOnboarding 1|2|3|4      Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
 /// -debugDayOffset 1             Zeiten-Seite zeigt einen anderen Tag, −365 bis 365 (Spec § 9.4)
 /// -debugWalk dhuhr              „Gebet Schritt für Schritt“ für dieses Gebet offen, über der Anleitung (Spec § 9.6)
@@ -24,6 +24,8 @@ import PrayerCore
 /// -debugQiblaAccuracy 40        Genauigkeit des Kompasses in Grad; über 25 erscheint die Kalibrierungskarte
 /// -debugNotifications           echte Mitteilungen auch mit Mock-Zeiten; fragt beim Start nach der Erlaubnis
 /// -debugLiveActivity            Live-Aktivität zum nächsten Gebet sofort, auch außerhalb des Vorlaufs und mit Mock-Zeiten
+/// -debugAlarm before|fixed|denied   Wecker zu Fadschr an (vor Sonnenaufgang / feste Uhrzeit mit kurzem Adhan) oder abgelehnt; nur mit -debugFixtureTimes
+/// -debugAlarmIn 2               ein echter Wecker in so vielen Minuten (AlarmKit), zum Test von Ton, Stummmodus und Fokus
 /// -debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|all   Katalog der Bausteine statt der App, für den Abgleich
 /// ```
 ///
@@ -35,7 +37,7 @@ public struct LaunchOptions: Equatable, Sendable {
     /// Stadt-Sheet über der Zeiten-Seite.
     public enum Page: String, CaseIterable, Sendable {
         case today, qibla, guide, verses, qada, settings
-        case method, asr, hl, adjust, perPrayer, reminder, live, sound, appearance, language, privacy, licenses, support
+        case method, asr, hl, adjust, perPrayer, reminder, live, alarm, sound, appearance, language, privacy, licenses, support
         case adhan
         /// Das Stadt-Sheet über der Zeiten-Seite (`iphone/85`, `duo/closed-85`, `duo/open-85`).
         case city
@@ -79,6 +81,21 @@ public struct LaunchOptions: Equatable, Sendable {
     /// `-debugLiveActivity`: genau eine Live-Aktivität, die zum nächsten Gebet, ab dem Start der App – auch
     /// außerhalb des Vorlaufs und mit Mock-Zeiten. Zum Nachstellen von `system/93`–`96`.
     public var liveActivity = false
+    /// Zustand des Weckers zu Fadschr für `-debugAlarm` (`iphone/24`, `iphone/84`).
+    public enum AlarmState: String, CaseIterable, Sendable {
+        /// An, 45 Minuten vor Sonnenaufgang, Systemton.
+        case before
+        /// An, feste Uhrzeit 05:30, kurzer Adhan.
+        case fixed
+        /// Erlaubnis abgelehnt: Schalter aus und gesperrt.
+        case denied
+    }
+    /// `-debugAlarm`: der Wecker in diesem Zustand, ohne Dialog des Systems und ohne echte Wecker. Nur
+    /// zusammen mit `-debugFixtureTimes`, deren Einstellungen nur im Speicher liegen.
+    public var alarm: AlarmState?
+    /// `-debugAlarmIn`: ein echter Wecker über AlarmKit, so viele Minuten nach dem Start – zum Test von Ton,
+    /// Stummmodus und Fokus am Gerät, ohne bis vor Sonnenaufgang zu warten.
+    public var alarmInMinutes: Int?
     /// Abschnitt des Katalogs, den die App statt der Tabs zeigt (`-debugCatalog`). Bogen und
     /// Gebetskarten stehen dort im Zustand der übrigen Argumente.
     public var catalog: ComponentCatalog.Section?
@@ -107,6 +124,13 @@ public struct LaunchOptions: Equatable, Sendable {
                 notifications = true
             case "-debugLiveActivity":
                 liveActivity = true
+            case "-debugAlarm":
+                let states = AlarmState.allCases.map(\.rawValue).joined(separator: ", ")
+                alarm = value(of: argument, from: &rest, expected: "einer der Zustände \(states)") { AlarmState(rawValue: $0) }
+            case "-debugAlarmIn":
+                alarmInMinutes = value(of: argument, from: &rest, expected: "Minuten von 1 bis 120") {
+                    Int($0).flatMap { (1...120).contains($0) ? $0 : nil }
+                }
             case "-debugDate":
                 date = value(of: argument, from: &rest, expected: "ein Datum wie 2026-11-10") { CalendarDay($0) }
             case "-debugTime":
@@ -158,6 +182,9 @@ public struct LaunchOptions: Equatable, Sendable {
         }
         if walkStep != 0, walkPrayer == nil {
             problems.append("-debugWalkStep wirkt nur zusammen mit -debugWalk.")
+        }
+        if alarm != nil, !fixtureTimes {
+            problems.append("-debugAlarm wirkt nur zusammen mit -debugFixtureTimes.")
         }
         if onboardingStep != nil, skipOnboarding {
             problems.append("-debugOnboarding zeigt das Onboarding; -debugSkipOnboarding wird übergangen.")

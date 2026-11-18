@@ -27,6 +27,7 @@ struct SettingsDestination: View {
         case .perPrayer: PerPrayerPage()
         case .reminder: LeadTimePage(kind: .reminder)
         case .liveActivity: LeadTimePage(kind: .liveActivity)
+        case .alarm: AlarmPage()
         case .sound: SoundPage()
         case .appearance: AppearancePage()
         case .language: LanguagePage()
@@ -42,6 +43,7 @@ struct SettingsDestination: View {
 /// Die Einstellungen: Standort, Berechnung, Mitteilungen, Darstellung, Unterstützen, Über (`PAGES.settings`).
 struct SettingsPage: View {
     @Environment(SettingsModel.self) private var model
+    @Environment(FajrAlarmModel.self) private var alarm
     @Environment(\.openURL) private var openURL
     @Environment(\.scenePhase) private var scenePhase
 
@@ -59,6 +61,7 @@ struct SettingsPage: View {
         .task(id: scenePhase) {
             if scenePhase == .active {
                 await model.refreshNotificationAuthorization()
+                await alarm.refreshAuthorization()
             }
         }
     }
@@ -129,6 +132,10 @@ struct SettingsPage: View {
             .listRowMetrics()
             NavigationLink(value: SettingsRoute.liveActivity) {
                 ValueRowLabel(L10n.liveAct, value: model.liveActivityValue)
+            }
+            .listRowMetrics()
+            NavigationLink(value: SettingsRoute.alarm) {
+                ValueRowLabel(L10n.alarmRow, value: alarm.rowValue)
             }
             .listRowMetrics()
             NavigationLink(value: SettingsRoute.sound) {
@@ -588,7 +595,7 @@ struct SupportPage: View {
 // MARK: - Bausteine
 
 /// Die Liste einer Unterseite: Gruppen wie im Prototyp, 10 pt unter der Leiste (`.nav-gap`).
-private struct SettingsList<Content: View>: View {
+struct SettingsList<Content: View>: View {
     @ViewBuilder let content: Content
 
     var body: some View {

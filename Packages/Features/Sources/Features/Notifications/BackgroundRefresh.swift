@@ -62,8 +62,9 @@ public enum BackgroundRefresh {
         schedule()
     }
 
-    /// Widgets und Live-Aktivitäten ohne Oberfläche: Stand schreiben, Aktivitäten planen und alte beenden.
-    /// Einstellungen, Sprache und Ort wie bei den Mitteilungen.
+    /// Widgets, Live-Aktivitäten und Wecker ohne Oberfläche: Stand schreiben, Aktivitäten planen und alte
+    /// beenden, die Wecker der nächsten zwei Wochen anmelden. Einstellungen, Sprache und Ort wie bei den
+    /// Mitteilungen.
     @MainActor
     static func refreshOutsideApp(environment: AppEnvironment) async {
         let settings = SettingsStore(storage: environment.settings)
@@ -78,6 +79,12 @@ public enum BackgroundRefresh {
             settings: settings, location: location, clock: environment.clock,
             timesSource: environment.timesSource, scheduler: environment.liveActivityScheduler,
             isPlanning: environment.plansLiveActivities, debugStart: environment.liveActivityDebugStart
+        ).reschedule()
+        // Die Wecker zu Fadschr schiebt die App ebenso weiter: Sie meldet je Tag einen an, für zwei Wochen.
+        await FajrAlarmModel(
+            settings: settings, location: location, clock: environment.clock,
+            timesSource: environment.timesSource, scheduler: environment.alarmScheduler,
+            isPlanning: environment.plansAlarms
         ).reschedule()
     }
 
