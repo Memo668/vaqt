@@ -667,8 +667,46 @@ button.row:disabled{color:var(--label-3)}
 
 /* Live Activity – Lock Screen banner (accent background, white arc) */
 .la{position:absolute;left:12px;right:12px;bottom:112px;padding:11px 14px 8px;border-radius:24px;color:#fff;text-align:start;
-  background:linear-gradient(160deg,color-mix(in srgb,var(--accent-l) 82%,#fff) 0%,var(--accent-l) 50%,color-mix(in srgb,var(--accent-l) 78%,#000) 100%);
+  background:linear-gradient(160deg,color-mix(in srgb,color-mix(in srgb,var(--accent-l) 82%,#fff) var(--la-pct,100%),transparent) 0%,color-mix(in srgb,var(--accent-l) var(--la-pct,100%),transparent) 50%,color-mix(in srgb,color-mix(in srgb,var(--accent-l) 78%,#000) var(--la-pct,100%),transparent) 100%);
+  -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
   box-shadow:0 8px 26px rgba(0,0,0,.2)}
+/* Änderung vom 17.11.2026: in der Kerahat-Zeit orange – „jetzt nicht beten“ (bei Asr: nur noch das Farḍ) */
+.la.is-kerahat{--k-or:#EC8530;background:linear-gradient(160deg,color-mix(in srgb,color-mix(in srgb,var(--k-or) 80%,#fff) var(--la-pct,100%),transparent) 0%,color-mix(in srgb,var(--k-or) var(--la-pct,100%),transparent) 50%,color-mix(in srgb,color-mix(in srgb,var(--k-or) 76%,#000) var(--la-pct,100%),transparent) 100%)}
+.la.is-kerahat .la-city{opacity:1;font-weight:600}
+.la-stack{position:absolute;left:12px;right:12px;bottom:112px;display:flex;flex-direction:column;gap:8px}
+.la-stack .la{position:static}
+.la.la-compact{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 14px;border-radius:20px;font:600 13px/16px var(--font);letter-spacing:-.08px}
+.la-compact .la-city{opacity:.72;font-weight:500}
+.la.is-kerahat .arc-la .pm.is-passed,.la.is-kerahat .arc-la .pm.is-current{color:#C4661F}
+.la.is-kerahat .arc-la .pm-c{fill:color-mix(in srgb,#fff 30%,#D9772B)}
+.la.is-kerahat .arc-la .pm.is-passed .pm-c,.la.is-kerahat .arc-la .pm.is-current .pm-c{fill:#fff}
+.la.is-kerahat .arc-la .pm.is-tight .pm-c{stroke:#D9772B}
+.la.is-kerahat .arc-la .arc-now circle{fill:#D9772B}
+.la.is-kerahat .arc-la .arc-k.on-track{stroke:#FFE2BF}
+.di.is-kerahat .di-ic,.di.is-kerahat .di-cd,.di.is-kerahat .di-lead,.di.is-kerahat .di-big{color:#F0A257}
+.di.is-kerahat .di-bar i{background:#F0A257}
+/* Änderung vom 17.11.2026: Kerahat-Zeile als Link zur Erklärung */
+.k-link{border:0;background:none;padding:0;margin:0;text-align:start;cursor:pointer;font:inherit;color:inherit}
+.prow-sub.k-link{font:400 var(--fs-caption1)/1.25 var(--font)}
+.k-link .k-i{display:inline-grid;margin-inline-start:2px;opacity:.6;align-self:center}
+.k-sheet{padding:4px 20px 0}
+.k-sheet p{margin:0 0 12px;font:400 var(--fs-body)/1.42 var(--font);color:var(--label)}
+.k-sheet h3{margin:18px 0 6px;font:600 var(--fs-headline)/1.3 var(--font)}
+.k-sheet .k-foot{font-size:var(--fs-footnote);color:var(--label-2)}
+.k-row .row-ic{display:grid;place-items:center}
+.k-row .row-value{white-space:nowrap;font-variant-numeric:tabular-nums}
+.k-row .k-dot{margin:0;width:8px;height:8px;opacity:1}
+.g-note-k{display:flex;gap:7px;align-items:flex-start}
+.qc-sex{margin-top:8px}
+.qc-note{margin:8px 0 0;font-size:var(--fs-footnote);line-height:1.35;color:var(--label-2)}
+.qc-reset{display:block;margin:14px auto 2px;padding:8px 12px;border:0;background:none;color:var(--red,#FF3B30);font:400 var(--fs-body)/1.3 var(--font)}
+.alert-btn.destructive{color:var(--red,#FF3B30)}
+.alarm-mark{display:inline-flex;align-items:center;gap:3px;margin-inline-start:6px;padding:1px 6px;border-radius:8px;background:var(--fill-3);
+  color:var(--label-2);font:500 var(--fs-caption1)/1.3 var(--font);font-variant-numeric:tabular-nums;vertical-align:2px}
+.onb-page .ob-live{display:flex;gap:8px;align-items:flex-start;max-width:320px;margin:18px auto 0;padding:10px 12px;border-radius:14px;background:var(--fill-3,rgba(120,120,128,.12));
+  color:var(--label-2);font:400 var(--fs-footnote)/1.38 var(--font);text-align:start}
+.ob-live svg{flex:none;margin-top:1px;color:var(--accent)}
+.g-note-k .k-dot{margin-top:.45em;opacity:1}
 .la-head{display:flex;justify-content:space-between;align-items:center;font:600 13px/16px var(--font);letter-spacing:-.08px}
 .la-app{display:inline-flex;align-items:center;gap:5px}
 .la-city{opacity:.72;font-weight:500}
@@ -889,7 +927,8 @@ button.row:disabled{color:var(--label-3)}
 .arc-la .arc-k.on-track{stroke:#F3C979;stroke-width:7;stroke-linecap:butt;opacity:.95}
 .arc-la .arc-k.on-track.is-past{opacity:.5}
 .w-la{display:block;width:338px;height:158px;padding:9px 12px 0;border-radius:22px;color:#fff;text-align:start;
-  background:linear-gradient(160deg,color-mix(in srgb,var(--accent-l) 82%,#fff) 0%,var(--accent-l) 50%,color-mix(in srgb,var(--accent-l) 78%,#000) 100%)}
+  background:linear-gradient(160deg,color-mix(in srgb,color-mix(in srgb,var(--accent-l) 82%,#fff) var(--la-pct,100%),transparent) 0%,color-mix(in srgb,var(--accent-l) var(--la-pct,100%),transparent) 50%,color-mix(in srgb,color-mix(in srgb,var(--accent-l) 78%,#000) var(--la-pct,100%),transparent) 100%);
+  -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4)}
 .w-la .wla-arc{width:314px;height:116px;margin:2px auto 0}
 .acc-arcw{display:block;position:relative;padding:0}
 /* Nachtrag Phase 14: der Bogen mittig im Rechteck (vorher lag das SVG wegen backdrop-filter an der Ecke), Gebet und Countdown im Bogen wie in der Live-Aktivität */
@@ -970,7 +1009,7 @@ de:{
   qadaFooter:'Ob und wie verpasste Gebete nachzuholen sind, beantworten Gelehrte unterschiedlich. Frag im Zweifel deinen Imam.',
   qadaApplied:'{n} Gebete als offen übernommen', p_witr:'Witr', stepLess:'{x} weniger', stepMore:'{x} mehr',
   qadaPctLabel:'nachgeholt', qadaLeft:'Noch {n} offen',
-  kerahatRow:'Kerahat {r}', kerahatNow:'Kerahat bis {b}', showKerahat:'Kerahat-Zeiten zeigen',
+  kerahatRow:'Verbotszeit {r}', kerahatNow:'Verbotszeit bis {b}', showKerahat:'Verbotszeiten zeigen',
   kerahatFooter:'Dezent markiert im Bogen und bei den Zeiten: etwa 45 Min. nach Sonnenaufgang, 10 Min. vor Dhuhr und 45 Min. vor Maghrib. Nach hanafitischer Lehre wird dann nicht gebetet (das Asr des Tages ausgenommen).',
   liveAct:'Live-Aktivität', liveActFooter:'Countdown zum nächsten Gebet auf dem Sperrbildschirm und in der Dynamic Island. Endet 15 Minuten nach Gebetsbeginn.',
   obSkip:'Überspringen', obContinue:'Weiter',
@@ -1339,7 +1378,7 @@ Object.assign(T.de, {
   supportSoon:'Spenden sind bald möglich', supportSoonBody:'Die Möglichkeit zu spenden kommt mit einem der nächsten Updates. Bis dahin hilft es schon, wenn du die App weiterempfiehlst.',
   supportShare:'App weiterempfehlen', supportFoot:'Spenden sind freiwillig. Alle Funktionen bleiben für alle kostenlos.',
   kerahatFooter:'Im Bogen eingezeichnet, die Uhrzeiten stehen bei den Zeiten: etwa 45 Min. nach Sonnenaufgang, 10 Min. vor Dhuhr und 45 Min. vor Maghrib. Nach hanafitischer Lehre wird dann nicht gebetet (das Asr des Tages ausgenommen).',
-  kerahatArc:'Kerahat-Zeiten: {list}',
+  kerahatArc:'Verbotszeiten: {list}',
   inTol:'Im Toleranzbereich', tolLegend:'Der markierte Bereich reicht 40° zu jeder Seite der Qibla.',
   wkStart:'Gebet Schritt für Schritt', wkStartSub:'Haltung für Haltung durch alle {n} Rakʿas von {p}.',
   wkRak:'Rakʿa {r} von {n}', wkStep:'Schritt {i} von {k}', wkNext:'Weiter', wkPrev:'Zurück', wkBegin:'Beginnen', wkDone:'Fertig',
@@ -1510,6 +1549,98 @@ const PL_AR_PRAYERS = k => ({zero:`{${k}} صلاة`, one:'صلاة واحدة', 
 const PL_RU_DAYS = d => ({one:`{${d}} день`, few:`{${d}} дня`, many:`{${d}} дней`, other:`{${d}} дня`});
 const PL_RU_PRAYERS = k => ({one:`{${k}} намаз`, few:`{${k}} намаза`, many:`{${k}} намазов`, other:`{${k}} намаза`});
 const PL_RU_RAK = {one:'{n} ракаат', few:'{n} ракаата', many:'{n} ракаатов', other:'{n} ракаата'};
+/* ===== Änderungen vom 17.11.2026: neue und geänderte Texte =====
+   Slogan in allen 16 Sprachen; Kerahat-Erklärung, Asr-Hinweis und Datenschutz-Texte auf Deutsch, Türkisch und Englisch
+   (die übrigen Sprachen zeigen hier noch Englisch bzw. den alten Text). Fachlich und sprachlich ungeprüft. */
+const NEW_1711 = {
+  de:{ob1Title:'Jedes Gebet zur rechten Zeit.',
+    kerahatInfoTitle:'Was sind Verbotszeiten?', kerahatToday:'Heute',
+    kerahatInfoP1:'Verbotszeiten (Kerahat) sind drei kurze Zeitfenster am Tag, in denen man nicht beten soll. Das Gebet ist dann makrūh, also zu meiden.',
+    kerahatInfoL1:'Sonnenaufgang, bis die Sonne etwas höher steht', kerahatInfoL2:'Kurz vor Dhuhr, wenn die Sonne am höchsten steht', kerahatInfoL3:'Vor Sonnenuntergang, wenn das Licht gelb wird',
+    kerahatAsrTitle:'Asr noch nicht gebetet?',
+    kerahatAsrBody:'Hast du Asr bis in die Verbotszeit vor Sonnenuntergang verschoben, bete trotzdem noch das Farḍ von Asr – die Sunna lässt du dann weg. Das Gebet gilt als rechtzeitig verrichtet, nicht als nachgeholt, selbst wenn die Sonne während des Gebets untergeht. Das gilt nur für Asr.',
+    kerahatInfoP2:'Als Grund ist überliefert, dass zu diesen Zeiten die Sonne angebetet wurde.',
+    kerahatInfoFoot:'Nach der hanafitischen Rechtsschule. Die Fenster sind Näherungen: 45 Minuten nach Sonnenaufgang, 10 Minuten vor Dhuhr und 45 Minuten vor Sonnenuntergang.',
+    gAsrKerahat:'In der Verbotszeit vor Sonnenuntergang betest du nur noch das Farḍ – das Gebet gilt trotzdem als rechtzeitig.',
+    alLocBody:'Dein Standort dient nur der Berechnung der Gebetszeiten. Für den Ortsnamen fragt die App Apple Karten.',
+    locFooter:'Die Gebetszeiten berechnet die App auf diesem Gerät. Nur für den Ortsnamen fragt sie Apple Karten.',
+    privacyBody2:'Kein Konto, keine Werbung, keine Analyse-Tools. Die Gebetszeiten berechnet die App auf diesem Gerät. Für den Ortsnamen und die Stadtsuche fragt sie Apple Karten – wir selbst erhalten davon nichts.',
+    ob3Live:'Vor jedem Gebet zeigt {app} außerdem einen Countdown auf dem Sperrbildschirm, die Live-Aktivität. Abschalten kannst du sie jederzeit unter Einstellungen › Live-Aktivität.',
+    ob2Title:'Berechnet auf deinem iPhone', ob2Body:'Die Zeiten werden direkt auf deinem Gerät berechnet. Dein Standort geht an niemanden außer Apple Karten, das den Ortsnamen liefert.'},
+  tr:{ob1Title:'Her namaz vaktinde.',
+    kerahatInfoTitle:'Kerahat vakti nedir?', kerahatToday:'Bugün',
+    kerahatInfoP1:'Kerahat vakitleri, gün içinde namaz kılmanın mekruh olduğu üç kısa zaman dilimidir – haram değildir, ama kaçınılması gerekir.',
+    kerahatInfoL1:'Güneş doğarken, biraz yükselene kadar', kerahatInfoL2:'Öğleden hemen önce, güneş tam tepedeyken', kerahatInfoL3:'Güneş batmadan önce, ışığı sararınca',
+    kerahatAsrTitle:'İkindiyi henüz kılmadın mı?',
+    kerahatAsrBody:'İkindi namazı kerahat vaktine kadar geciktirildiyse yine de kılınır: sünnet terk edilir, yalnızca farz kılınır. Namaz kazaya kalmaz, vaktinde edâ edilmiş sayılır – namazdayken güneş batsa bile. Bu yalnızca ikindi namazına hastır.',
+    kerahatInfoP2:'Rivayete göre sebebi, bu vakitlerde güneşe tapılmasıdır.',
+    kerahatInfoFoot:'Hanefî mezhebine göre. Süreler yaklaşıktır: güneş doğduktan sonra 45 dakika, öğleden önce 10 dakika, güneş batmadan önce 45 dakika.',
+    gAsrKerahat:'Güneş batmadan önceki kerahat vaktinde yalnızca farz kılınır – namaz yine de vaktinde kılınmış sayılır.',
+    alLocBody:'Konumun yalnızca namaz vakitlerini hesaplamak için kullanılır. Yer adı için uygulama Apple Haritalar’a sorar.',
+    locFooter:'Namaz vakitleri bu cihazda hesaplanır. Yalnızca yer adı için Apple Haritalar’a sorulur.',
+    privacyBody2:'Hesap yok, reklam yok, analiz araçları yok. Namaz vakitleri bu cihazda hesaplanır. Yer adı ve şehir araması için Apple Haritalar’a sorulur – biz bunların hiçbirini almayız.',
+    ob3Live:'{app} her namazdan önce kilit ekranında bir geri sayım da gösterir: Canlı Etkinlik. İstediğin zaman Ayarlar › Canlı Etkinlik bölümünden kapatabilirsin.',
+    ob2Title:'iPhone’unda hesaplanır', ob2Body:'Vakitler doğrudan cihazında hesaplanır. Konumun, yer adını veren Apple Haritalar dışında kimseye gönderilmez.'},
+  en:{ob1Title:'Every prayer, on time.',
+    kerahatInfoTitle:'What is makruh time?', kerahatToday:'Today',
+    kerahatInfoP1:'Makruh times are three short windows in the day when praying is makruh – not forbidden, but best avoided.',
+    kerahatInfoL1:'Sunrise, until the sun has risen a little', kerahatInfoL2:'Just before Dhuhr, when the sun is at its highest', kerahatInfoL3:'Before sunset, when the light turns yellow',
+    kerahatAsrTitle:'Haven’t prayed Asr yet?',
+    kerahatAsrBody:'If you have delayed Asr into the makruh time before sunset, still pray the farḍ of Asr and leave out the sunnah. The prayer counts as on time, not as made up – even if the sun sets while you are praying. This applies only to Asr.',
+    kerahatInfoP2:'The reason given in the hadith is that the sun was worshipped at these times.',
+    kerahatInfoFoot:'According to the Hanafi school. The windows are approximate: 45 minutes after sunrise, 10 minutes before Dhuhr and 45 minutes before sunset.',
+    gAsrKerahat:'In the makruh time before sunset, pray only the farḍ – it still counts as on time.',
+    alLocBody:'Your location is only used to calculate prayer times. For the place name, the app asks Apple Maps.',
+    locFooter:'Prayer times are calculated on this device. Only the place name comes from Apple Maps.',
+    privacyBody2:'No account, no ads, no analytics. Prayer times are calculated on this device. For the place name and city search the app asks Apple Maps – we never receive any of it.',
+    ob3Live:'Before each prayer, {app} also shows a countdown on the Lock Screen: the Live Activity. You can turn it off any time in Settings › Live Activity.',
+    ob2Title:'Calculated on your iPhone', ob2Body:'Times are calculated right on your device. Your location goes to no one except Apple Maps, which provides the place name.'},
+  es:{ob1Title:'Cada oración a su hora.'}, fr:{ob1Title:'Chaque prière à son heure.'}, nl:{ob1Title:'Elk gebed op tijd.'},
+  bs:{ob1Title:'Svaki namaz u svoje vrijeme.'}, sq:{ob1Title:'Çdo namaz në kohën e vet.'}, ar:{ob1Title:'كل صلاة في وقتها.'},
+  ur:{ob1Title:'ہر نماز اپنے وقت پر۔'}, id:{ob1Title:'Setiap salat tepat waktu.'}, ms:{ob1Title:'Setiap solat tepat pada waktunya.'},
+  bn:{ob1Title:'প্রতিটি নামাজ সঠিক সময়ে।'}, fa:{ob1Title:'هر نماز در وقت خودش.'}, ru:{ob1Title:'Каждый намаз — вовремя.'},
+  it:{ob1Title:'Ogni preghiera al momento giusto.'}};
+Object.keys(NEW_1711).forEach(k => Object.assign(T[k], NEW_1711[k]));
+/* Änderungen vom 18.11.2026: Wecker zu Fadschr, Nachholen für Mann oder Frau, Zurücksetzen (DE/TR/EN; sonst Englisch). Fachlich ungeprüft. */
+Object.assign(T.de, {
+  kerahatFrom:'Verbotszeit ab {a}', laBegan:'hat begonnen',
+  qcWho:'Für wen?', qcMan:'Mann', qcWoman:'Frau', qcHayz:'Regel pro Monat (Tage)', qcNifas:'Wochenbett insgesamt (Tage)',
+  qcWomanNote:'An den Tagen der Regel und des Wochenbetts entfallen die Gebete – sie werden nicht nachgeholt.',
+  qcResultDetailF:'{d} Tage − {x} Tage Regel und Wochenbett, je {k} Gebete',
+  qadaReset:'Alles zurücksetzen', qadaResetTitle:'Alle Werte zurücksetzen?',
+  qadaResetBody:'Offene Gebete, Plan und die Angaben im Rechner werden auf null gesetzt. Das lässt sich nicht rückgängig machen.',
+  qadaResetConfirm:'Zurücksetzen', qadaResetDone:'Alles zurückgesetzt',
+  alarmRow:'Wecker zu Fadschr', alarmSwitch:'Wecker', alarmWhen:'Weckzeit', alarmModeBefore:'Vor Sonnenaufgang', alarmModeFixed:'Feste Uhrzeit',
+  alarmTime:'Uhrzeit', alarmBefore:'Vor Sonnenaufgang', alarmRings:'Klingelt heute um {t}',
+  alarmToday:'Heute beginnt Fadschr um {f}, die Sonne geht um {s} auf.',
+  alarmFooter:'Der Wecker klingelt jeden Tag, auch im Stummmodus und bei Fokus – wie der Wecker von iOS.',
+  alarmFixedFooter:'Eine feste Uhrzeit bleibt gleich, der Sonnenaufgang wandert übers Jahr. „Vor Sonnenaufgang“ folgt ihm jeden Tag; eine feste Uhrzeit klingelt spätestens 5 Minuten vor Sonnenaufgang.'});
+Object.assign(T.tr, {
+  kerahatFrom:'Kerahat {a} itibarıyla', laBegan:'başladı',
+  qcWho:'Kim için?', qcMan:'Erkek', qcWoman:'Kadın', qcHayz:'Aylık hayız (gün)', qcNifas:'Toplam lohusalık (gün)',
+  qcWomanNote:'Hayız ve lohusalık günlerinde namaz düşer – bunlar kaza edilmez.',
+  qcResultDetailF:'{d} gün − {x} gün hayız ve lohusalık, günde {k} namaz',
+  qadaReset:'Hepsini sıfırla', qadaResetTitle:'Tüm değerler sıfırlansın mı?',
+  qadaResetBody:'Kılınmamış namazlar, plan ve hesaplayıcıdaki bilgiler sıfırlanır. Bu işlem geri alınamaz.',
+  qadaResetConfirm:'Sıfırla', qadaResetDone:'Hepsi sıfırlandı',
+  alarmRow:'Sabah namazı alarmı', alarmSwitch:'Alarm', alarmWhen:'Alarm saati', alarmModeBefore:'Güneş doğmadan önce', alarmModeFixed:'Sabit saat',
+  alarmTime:'Saat', alarmBefore:'Güneş doğmadan önce', alarmRings:'Bugün {t} saatinde çalar',
+  alarmToday:'Bugün imsak {f}, güneş {s}.',
+  alarmFooter:'Alarm her gün çalar; sessiz modda ve odak açıkken de – iOS alarmı gibi.',
+  alarmFixedFooter:'Sabit saat değişmez, güneşin doğuşu ise yıl boyunca değişir. „Güneş doğmadan önce“ her gün ona göre ayarlanır; sabit saat en geç güneş doğmadan 5 dakika önce çalar.'});
+Object.assign(T.en, {
+  kerahatFrom:'Makruh from {a}', laBegan:'has begun',
+  qcWho:'Who is it for?', qcMan:'Man', qcWoman:'Woman', qcHayz:'Period per month (days)', qcNifas:'Postnatal bleeding in total (days)',
+  qcWomanNote:'Prayers are waived on days of menstruation and postnatal bleeding – they are not made up.',
+  qcResultDetailF:'{d} days − {x} days of menstruation and postnatal bleeding, {k} prayers each',
+  qadaReset:'Reset Everything', qadaResetTitle:'Reset all values?',
+  qadaResetBody:'Open prayers, your plan and the calculator entries are set to zero. This can’t be undone.',
+  qadaResetConfirm:'Reset', qadaResetDone:'Everything reset',
+  alarmRow:'Fajr Alarm', alarmSwitch:'Alarm', alarmWhen:'Alarm Time', alarmModeBefore:'Before Sunrise', alarmModeFixed:'Fixed Time',
+  alarmTime:'Time', alarmBefore:'Before Sunrise', alarmRings:'Rings today at {t}',
+  alarmToday:'Today Fajr begins at {f}, sunrise is at {s}.',
+  alarmFooter:'The alarm rings every day, even in silent mode and with a Focus on – like the iOS alarm.',
+  alarmFixedFooter:'A fixed time stays the same while sunrise moves through the year. “Before Sunrise” follows it every day; a fixed time rings no later than 5 minutes before sunrise.'});
 const PLURAL = {
   de: {
     arcPrayers:{text:'{n}', n:{one:'{n} von 5 Gebetszeiten hat heute begonnen', other:'{n} von 5 Gebetszeiten haben heute begonnen'}},
@@ -1663,7 +1794,7 @@ const SOUND_KEY = {system:'soundSystem', adhan:'soundAdhan', silent:'soundSilent
 const AP_KEY = {system:'apSystem', light:'apLight', dark:'apDark'};
 const PAGE_TITLE = {settings:'settings', method:'methodTitle', asr:'asr', hl:'highLat', adjust:'adjustments', perPrayer:'perPrayer',
                     reminder:'reminder', live:'liveAct', sound:'sound', appearance:'appearance', language:'language', privacy:'privacy',
-                    support:'supportTitle'};
+                    support:'supportTitle', alarm:'alarmRow'};
 
 /* =====================================================================
    3) STATE – single source of truth (maps 1:1 to an @Observable model)
@@ -1676,7 +1807,7 @@ const S = {
   clock:{base:0, anchor:0, preset:'live'},
   /* app */
   section:'prayers' /* bottom tabs: 'prayers' | 'verses' | 'qada' */, verseIdx:0, guidePick:null /* null = follow the current prayer */,
-  qada:{years:1, months:6, days:0, witr:false, perDay:5,
+  qada:{years:1, months:6, days:0, witr:false, perDay:5, hayz:7, nifas:0,
         tot:{fajr:545, dhuhr:545, asr:545, maghrib:545, isha:545, witr:0}, open:{fajr:501, dhuhr:523, asr:530, maghrib:512, isha:526, witr:0}},
   walk:null /* Änderung 5: Gebet Schritt für Schritt, {p, i} */, dayOff:0 /* Änderung 10: Tage vor (+) und zurück (−) */,
   onboarded:false, obStep:0, tab:'today' /* 'today' | 'qibla' | 'guide' */, stack:{settings:[]} /* pushed over both pages */, sheet:null, alert:null,
@@ -1684,6 +1815,11 @@ const S = {
   method:null /* null = automatic for country */, asr:'standard', hlRule:'angle', hlDeg:{fajr:15, isha:15} /* Wunsch 12: manuelle Winkel */,
   adj:{fajr:0, sunrise:0, dhuhr:0, asr:0, maghrib:0, isha:0},
   notif:{fajr:'sound', sunrise:'off', dhuhr:'sound', asr:'sound', maghrib:'sound', isha:'silent'},
+  laAlpha:30 /* Änderung vom 17.11.2026, entschieden am 18.11.: Deckkraft der Live-Aktivität 30 % */,
+  wlaAlpha:30 /* Deckkraft des Home-Widgets „Live“, ebenfalls 30 % */,
+  /* Änderungen vom 18.11.2026: Wecker zu Fadschr und Nachholen für Mann oder Frau */
+  alarmOn:false, alarmMode:'before' /* 'before' | 'fixed' */, alarmTime:5*60 + 30 /* Minuten nach Mitternacht */, alarmBefore:45,
+  qadaSex:'m',
   reminder:10, liveAct:30, kerahat:true, sound:'adhan', appearance:'system',
   adhan:{playing:false, pos:0, voice:1, fajr:false},
   qibla:{heading:99, drag:false},
@@ -1954,7 +2090,8 @@ function onboardingHTML(){
   const pages = [
     [appIconImg(120, 'ai-xl'), t('ob1Title'), t('ob1Body')],
     [`<div class="onb-badge">${ic('locFill',48)}</div>`, t('ob2Title'), t('ob2Body')],
-    [`<div class="onb-badge">${ic('bellWave',48)}</div>`, t('ob3Title'), t('ob3Body')],
+    /* Änderung vom 18.11.2026: Hinweis auf die Live-Aktivität und dass sie sich in den Einstellungen abschalten lässt */
+    [`<div class="onb-badge">${ic('bellWave',48)}</div>`, t('ob3Title'), t('ob3Body'), `<p class="ob-live">${ic('info',16)}<span>${t('ob3Live',{app:t('appName')})}</span></p>`],
     [`<div class="onb-badge">${ic('heart',50)}</div>`, t('ob4Title'), t('ob4Body',{app:t('appName')}), free]
   ];
   const b = (cls, act, label, fk) => `<button class="btn ${cls}" data-act="${act}" data-fkey="${fk}">${label}</button>`;
@@ -2051,7 +2188,7 @@ function guidePage(ph){
         <div class="fact"><b>${t('sunna_' + p)}</b><span>${t('sunna')}</span></div>
       </div>
       <div class="rak" role="img" aria-label="${esc(t('rakSeq') + ': ' + r.loud.map((l, i) => (i + 1) + ' ' + t(l ? 'recAloud' : 'recSilent')).join(', '))}">${rak}</div>
-      ${r.n > 2 ? `<p class="g-note">${t('onlyFatiha')}</p>` : ''}
+      ${r.n > 2 ? `<p class="g-note">${t('onlyFatiha')}</p>` : ''}${p === 'asr' && S.kerahat ? `<p class="g-note g-note-k"><i class="k-dot" aria-hidden="true"></i><span>${t('gAsrKerahat')}</span></p>` : ''}
       <button class="btn btn-primary g-walk" data-act="walk-start" data-fkey="g-walk">${ic('play',18)}<span>${t('wkStart')}</span></button>
       <p class="g-walk-sub">${t('wkStartSub',{n:r.n, p:name})}</p>
       ${S.guidePick && S.guidePick !== g.auto ? `<button class="pill-btn g-now" data-act="guide-now" data-fkey="g-now">${ic(PICON[g.auto],18)}${t('guideBack')}</button>` : ''}
@@ -2148,10 +2285,16 @@ function qStepper(k, val, label, min, max, minusLabel, plusLabel){
     <button data-act="qstep" data-k="${k}" data-d="-1" aria-label="${esc(minusLabel || t('stepLess',{x:label}))}" ${val <= min ? 'disabled' : ''} data-fkey="qs-${k}-m">${ic('minus',18)}</button>
     <button data-act="qstep" data-k="${k}" data-d="1" aria-label="${esc(plusLabel || t('stepMore',{x:label}))}" ${val >= max ? 'disabled' : ''} data-fkey="qs-${k}-p">${ic('plus',18)}</button></div>`;
 }
+/* Änderung vom 18.11.2026: Bei Frauen entfallen die Gebete an den Tagen der Regel und des Wochenbetts – sie werden nicht
+   nachgeholt. Abgezogen werden die Tage der Regel je Monat des Zeitraums und die Tage des Wochenbetts insgesamt (fachlich zu prüfen). */
+const alarmAt = () => S.alarmMode === 'fixed' ? Math.min(S.alarmTime, todayTimes().sunrise - 5) : todayTimes().sunrise - S.alarmBefore;
+const qadaSpan = () => S.qada.years*365 + S.qada.months*30 + S.qada.days;
+const qadaOff = () => S.qadaSex === 'f' ? Math.min(qadaSpan(), Math.round(qadaSpan()/30*S.qada.hayz) + S.qada.nifas) : 0;
+const qadaDays = () => Math.max(0, qadaSpan() - qadaOff());
 function qadaPage(){
   const q = S.qada, keys = qadaKeys();
   const open = keys.reduce((n, k) => n + q.open[k], 0), total = keys.reduce((n, k) => n + q.tot[k], 0), done = Math.max(0, total - open);
-  const pct = total ? done/total : 0, days = q.years*365 + q.months*30 + q.days;
+  const pct = total ? done/total : 0, days = qadaDays();
   const pctTxt = iso(new Intl.NumberFormat(LOC[S.lang], {style:'percent', maximumFractionDigits:pct > 0 && pct < .1 ? 1 : 0}).format(pct));
   const fin = new Date(appDate().getTime() + Math.ceil(open/q.perDay)*864e5);
   const finTxt = open ? t('qadaFinish',{date:iso(new Intl.DateTimeFormat(LOC[S.lang], {month:'long', year:'numeric'}).format(fin))}) : t('qadaAllDone');
@@ -2161,15 +2304,20 @@ function qadaPage(){
   const calc = `<article class="card qcalc" aria-labelledby="qc-title">
       <div class="qc-head"><span class="qc-ic">${ic('qada',24)}</span><div><h2 id="qc-title">${t('qcTitle')}</h2><p>${t('qcLead')}</p></div></div>
       <ol class="qc-steps">
-        <li><span class="qc-n" aria-hidden="true">1</span><div class="qc-body"><div class="qc-label">${t('qcStep1')}</div>
+        <li><span class="qc-n" aria-hidden="true">1</span><div class="qc-body"><div class="qc-label" id="qc-who">${t('qcWho')}</div>
+          <div class="seg seg-wide qc-sex" role="radiogroup" aria-labelledby="qc-who">${[['m','qcMan'],['f','qcWoman']].map(([v, k]) =>
+            `<button role="radio" aria-checked="${S.qadaSex === v}" data-act="pick" data-k="qadaSex" data-v="${v}" data-fkey="qc-sex-${v}">${t(k)}</button>`).join('')}</div>
+          ${S.qadaSex === 'f' ? `<div class="qc-fields">${field('hayz', t('qcHayz'), 3, 10)}${field('nifas', t('qcNifas'), 0, 400)}</div><p class="qc-note">${t('qcWomanNote')}</p>` : ''}</div></li>
+        <li><span class="qc-n" aria-hidden="true">2</span><div class="qc-body"><div class="qc-label">${t('qcStep1')}</div>
           <div class="qc-fields">${field('years', t('years'), 0, 60)}${field('months', t('months'), 0, 11)}${field('days', t('days'), 0, 30)}</div></div></li>
-        <li><span class="qc-n" aria-hidden="true">2</span><div class="qc-body qc-witr">${rowSwitch({id:'sw-witr', label:t('witr'), subText:t('witrSub'), on:q.witr, act:'qwitr'})}</div></li>
-        <li><span class="qc-n" aria-hidden="true">3</span><div class="qc-body"><div class="qc-label">${t('qcStep3')}</div>
+        <li><span class="qc-n" aria-hidden="true">3</span><div class="qc-body qc-witr">${rowSwitch({id:'sw-witr', label:t('witr'), subText:t('witrSub'), on:q.witr, act:'qwitr'})}</div></li>
+        <li><span class="qc-n" aria-hidden="true">4</span><div class="qc-body"><div class="qc-label">${t('qcStep3')}</div>
           <div class="qc-result" aria-live="polite"><b class="tabnum">${num(days*keys.length)}</b><span>${t('qcResultUnit',{n:days*keys.length})}</span></div>
-          <div class="qc-detail tabnum">${t('qcResultDetail',{d:num(days), k:keys.length})}</div></div></li>
+          <div class="qc-detail tabnum">${qadaOff() ? t('qcResultDetailF',{d:num(qadaSpan()), x:num(qadaOff()), k:keys.length}) : t('qcResultDetail',{d:num(days), k:keys.length})}</div></div></li>
       </ol>
       <button class="btn btn-primary qc-apply" data-act="qapply" data-fkey="qc-apply" ${days ? '' : 'disabled'}>${ic('check',18)}<span>${t('qadaApply')}</span></button>
-      <p class="qc-foot">${t('qadaApplyFooter')}</p></article>`;
+      <p class="qc-foot">${t('qadaApplyFooter')}</p>
+      <button class="qc-reset" data-act="qreset" data-fkey="qc-reset">${t('qadaReset')}</button></article>`;
   return `<section class="pane-page"><div class="scroll" data-scroll="qada"><div class="cols"><div class="col-a">
     <h1 class="page-title">${t('navQada')}</h1>
     <p class="lede">${t('qadaIntro')}</p>
@@ -2220,7 +2368,12 @@ function arcHTML(ph, gk = 'home', skin = gk){
   /* Änderung 2 (korrigiert am 15.11.): Kerahat ist im Bogen nur eingezeichnet – als deutlicher Abschnitt auf der Spur, ohne Uhrzeiten.
      Die Uhrzeiten stehen wie bisher bei den Zeiten in der Liste. Seit Wunsch 11 gleich in Live-Aktivität und Widgets. */
   const home = gk === 'home', nsMin = nowSec()/60;
-  const kers = S.kerahat ? kerahatWins(ph.t).map(w => { const f0 = fOf(w.a), f1 = fOf(w.b); if (f1 - f0 < .001) return '';
+  /* Änderung vom 17.11.2026: Ein Kerahat-Abschnitt reicht mindestens so weit, dass er sichtbar unter dem Punkt hervorschaut, an dem er
+     liegt (Sonnenaufgang am Anfang, Dhuhr und Maghrib am Ende) – um den Radius des Punkts plus 0,8 Punktradien. Die 10 Minuten vor Dhuhr
+     lagen sonst ganz unter dem Dhuhr-Punkt. Die Länge ist dann nicht mehr maßstäblich (entschieden: „Auf der Spur, länger“). */
+  const kMinF = (g.mc + .8*g.m)/(g.r*(Math.PI - 2*g.a0));
+  const kers = S.kerahat ? kerahatWins(ph.t).map(w => { let f0 = fOf(w.a), f1 = fOf(w.b); if (f1 - f0 < .001) return '';
+      if (w.id === 'sunrise') f1 = Math.min(1, Math.max(f1, f0 + kMinF)); else f0 = Math.max(0, Math.min(f0, f1 - kMinF));
       const now = !!(kNow && kNow.id === w.id), past = !now && nsMin >= w.b;
       const cls = `on-track ${now ? 'is-now' : ''} ${past ? 'is-past' : ''}`, dd = arcPath(f0, f1, g);
       /* Sperrbildschirm (einfarbig): Kerahat gestreift – dunkler Grund, darüber weiße Striche, auf hellem wie dunklem Teil der Spur zu sehen */
@@ -2251,7 +2404,9 @@ function arcHTML(ph, gk = 'home', skin = gk){
 function kerahatSub(p, ph){
   const w = S.kerahat && kerahatWins(ph.t).find(x => x.row === p); if (!w) return '';
   const now = activeKerahat(ph) === null ? false : activeKerahat(ph).id === w.id;
-  return `<span class="prow-sub ${now ? 'is-now' : ''}"><i class="k-dot" aria-hidden="true"></i><span>${now ? t('kerahatNow',{b:`<span class="nw">${fmt(w.b)}</span>`}) : t('kerahatRow',{r:`<span class="nw">${fmt(w.a)}–${fmt(w.b)}</span>`})}</span></span>`;
+  /* Änderung vom 17.11.2026: Die Zeile öffnet die Erklärung „Was ist Kerahat?“ – erkennbar am Infopunkt. Der Asr-Zusatz „Farḍ noch erlaubt“
+     ist nach der Durchsicht am 18.11. wieder weg; das steht in der Erklärung. */
+  return `<button class="prow-sub k-link ${now ? 'is-now' : ''}" data-act="kerahat-info" data-fkey="k-info-${p}" aria-label="${esc(t('kerahatInfoTitle'))}"><i class="k-dot" aria-hidden="true"></i><span>${now ? t('kerahatNow',{b:`<span class="nw">${fmt(w.b)}</span>`}) : t('kerahatRow',{r:`<span class="nw">${fmt(w.a)}–${fmt(w.b)}</span>`})}</span><span class="k-i" aria-hidden="true">${ic('info',13)}</span></button>`;
 }
 function prayerRow(p, ph){
   const cur = !!(ph.current && ph.current.d === 0 && ph.current.p === p);
@@ -2259,7 +2414,7 @@ function prayerRow(p, ph){
   const hl = S.highLat && (p === 'fajr' || p === 'isha');
   return `<li class="prow ${cur ? 'is-current' : ''} ${passed ? 'is-passed' : ''}" ${cur ? 'aria-current="time"' : ''}>
     <span class="prow-ic">${ic(PICON[p],22)}</span>
-    <span class="prow-name">${name}${hl ? `<span class="hl-mark" title="${esc(t('highLatTitle'))}">${ic('info',15)}</span>` : ''}${cur ? `<span class="now-chip">${t('now')}</span>` : ''}${kerahatSub(p, ph)}</span>
+    <span class="prow-name">${name}${p === 'fajr' && S.alarmOn ? `<span class="alarm-mark" aria-label="${esc(t('alarmRings',{t:fmt(alarmAt())}))}">${ic('clock',12)}${fmt(alarmAt())}</span>` : ''}${hl ? `<span class="hl-mark" title="${esc(t('highLatTitle'))}">${ic('info',15)}</span>` : ''}${cur ? `<span class="now-chip">${t('now')}</span>` : ''}${kerahatSub(p, ph)}</span>
     <span class="prow-time">${fmt(ph.t[p])}</span>
     <button class="bell" data-act="bell" data-p="${p}" data-state="${st}" data-fkey="bell-${p}"
       aria-label="${esc(t('bellAria',{p:name, s:t(BELL_LABEL[st])}))}">${ic(BELL_ICON[st],20)}</button></li>`;
@@ -2318,6 +2473,7 @@ const PAGES = {
         rowNav({label:t('perPrayer'), value:t('ofN',{n:nOn}), v:'perPrayer'})
       + rowNav({label:t('reminder'), value:S.reminder ? t('minBefore',{n:S.reminder}) : t('off'), v:'reminder'})
       + rowNav({label:t('liveAct'), value:S.liveAct ? t('minBefore',{n:S.liveAct}) : t('off'), v:'live'})
+      + rowNav({label:t('alarmRow'), value:S.alarmOn ? fmt(alarmAt()) : t('off'), v:'alarm'})
       + rowNav({label:t('sound'), value:t(SOUND_KEY[S.sound]), v:'sound'})
       + rowLink({label:t('previewAdhan'), act:'open-adhan', icon:'waveform'}),
         {header:t('secNotif'), footer:S.notifAllowed === false ? t('notifDeniedFooter') : ''})
@@ -2335,6 +2491,18 @@ const PAGES = {
       + rowValue(t('version'), '1.0 (1)'),
         {header:t('secAbout'), footer:t('disclaimer')})
     + `<p class="tagline">${appIconImg(34, 'ai-tag')}${t('tagline')}</p>`;   // Änderung 1 auch hier: dasselbe App-Symbol
+  },
+  /* Änderung vom 18.11.2026: Wecker zu Fadschr – klingelt vor Sonnenaufgang, auch im Stummmodus (AlarmKit) */
+  alarm(){
+    const tt = todayTimes(), at = alarmAt(), fixed = S.alarmMode === 'fixed';
+    const stepRow = (k, label, value, min, max, v) => `<div class="row"><span class="row-label">${label}</span><span class="row-value tabnum">${value}</span>${qStepper(k, v, label, min, max)}</div>`;
+    return group(rowSwitch({id:'sw-alarm', label:t('alarmSwitch'), subText:S.alarmOn ? t('alarmRings',{t:fmt(at)}) : '', on:S.alarmOn, act:'toggle-alarm'}),
+        {footer:t('alarmFooter')})
+      + (S.alarmOn ? group(rowCheck({label:t('alarmModeBefore'), checked:!fixed, k:'alarmMode', v:'before'}) + rowCheck({label:t('alarmModeFixed'), checked:fixed, k:'alarmMode', v:'fixed'}),
+          {header:t('alarmWhen'), role:'radiogroup', footer:t('alarmFixedFooter')})
+        + group(fixed ? stepRow('alarmTime', t('alarmTime'), fmt(S.alarmTime), 180, tt.sunrise - 5, S.alarmTime)
+                      : stepRow('alarmBefore', t('alarmBefore'), t('minBefore',{n:S.alarmBefore}), 10, 120, S.alarmBefore),
+          {footer:t('alarmToday',{f:fmt(tt.fajr), s:fmt(tt.sunrise)})}) : '');
   },
   support(){
     const items = [['shield','supAcc'],['gear','supCare'],['book','supContent']];
@@ -2478,6 +2646,18 @@ function adhanSheet(){
       ${group(rowSwitch({id:'sw-fajr', label:t('fajrVariant'), on:a.fajr, act:'toggle-fajr'}), {footer:t('fajrVariantFooter')})}
     </div></div>`;
 }
+/* Änderung vom 17.11.2026: Was ist Kerahat? – nach dem Text von Ibrahim Gezer, eigene Formulierung (fachlich zu prüfen) */
+function kerahatSheet(){
+  const ph = phase(nowSec()), ws = kerahatWins(ph.t), lab = {sunrise:'kerahatInfoL1', zenith:'kerahatInfoL2', sunset:'kerahatInfoL3'};
+  const rows = ws.map(w => `<div class="row k-row"><span class="row-ic"><i class="k-dot" aria-hidden="true"></i></span><span class="row-label">${t(lab[w.id])}</span><span class="row-value nw">${fmt(w.a)}–${fmt(w.b)}</span></div>`).join('');
+  return `<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    ${sheetHead(t('kerahatInfoTitle'), '', `<button class="icon-btn" data-act="close-sheet" aria-label="${esc(t('close'))}" data-fkey="sheet-close">${ic('xmark',15)}</button>`)}
+    <div class="sheet-scroll"><div class="k-sheet">
+      <p>${t('kerahatInfoP1')}</p></div>
+      ${group(rows, {header:t('kerahatToday')})}
+      <div class="k-sheet"><h3>${t('kerahatAsrTitle')}</h3><p>${t('kerahatAsrBody')}</p><p>${t('kerahatInfoP2')}</p><p class="k-foot">${t('kerahatInfoFoot')}</p></div>
+    </div></div>`;
+}
 function citySheet(){
   const auto = S.autoLocation && !S.locDenied;
   const cur = `<button class="row" role="radio" aria-checked="${auto}" data-act="use-current" data-fkey="city-current" ${S.locDenied ? 'disabled' : ''}>
@@ -2496,6 +2676,10 @@ function citySheet(){
 
 /* --- System permission alert (iOS-owned UI, shown for flow context) --- */
 function alertHTML(){
+  if (S.alert === 'qreset') return `<div class="alert-backdrop"><div class="alert" role="alertdialog" aria-modal="true" aria-labelledby="al-t" aria-describedby="al-b">
+    <div class="alert-body"><h3 id="al-t">${t('qadaResetTitle')}</h3><p id="al-b">${t('qadaResetBody')}</p></div>
+    <div class="alert-btns row2"><button class="alert-btn" data-act="alert" data-v="cancel" data-fkey="alert-0">${t('cancel')}</button><button class="alert-btn bold destructive" data-act="alert" data-v="reset" data-fkey="alert-1">${t('qadaResetConfirm')}</button></div>
+  </div></div>`;
   const loc = S.alert === 'loc';
   const btns = loc ? [['once',t('alLocOnce')],['while',t('alLocWhile'),1],['deny',t('alLocDeny')]] : [['deny',t('alNotDeny')],['allow',t('alNotAllow'),1]];
   return `<div class="alert-backdrop"><div class="alert" role="alertdialog" aria-modal="true" aria-labelledby="al-t" aria-describedby="al-b">
@@ -2513,7 +2697,7 @@ function appScreenHTML(){
     ${statusBarHTML()}
     <div class="app-layer" ${modal || (S.walk && S.onboarded) ? 'inert' : ''}>${S.onboarded ? mainHTML() : onboardingHTML()}</div>
     ${S.walk && S.onboarded ? walkHTML() : ''}
-    ${sh ? `<div class="sheet-backdrop" data-act="close-sheet" aria-hidden="true"></div>${sh === 'adhan' ? adhanSheet() : citySheet()}` : ''}
+    ${sh ? `<div class="sheet-backdrop" data-act="close-sheet" aria-hidden="true"></div>${sh === 'adhan' ? adhanSheet() : sh === 'kerahat' ? kerahatSheet() : citySheet()}` : ''}
     ${S.alert ? alertHTML() : ''}
     <div class="toast" role="status" aria-live="polite"></div>
     ${dev === 'iphone' ? '<div class="island" aria-hidden="true"></div>' : dev === 'duo-closed' ? '<div class="island island-v" aria-hidden="true"></div>' : '<div class="crease" aria-hidden="true"></div>'}
@@ -2532,14 +2716,31 @@ function galleryScreen(cls, inner, staticTime, island){
    Dynamic Island: compact = symbol + countdown; expanded = next prayer, countdown, bar from the previous event with Kerahat marked. */
 function laLabel(ph){ return t(ph.next.d === 1 ? 'nextInTomorrow' : 'nextIn', {p:t('p_' + ph.next.p)}); }
 function laBanner(ph){
-  const nx = ph.next;
-  return `<div class="la" role="img" aria-label="${esc(laLabel(ph) + ' ' + cdText(ph.remaining))}">
-    <div class="la-head"><span class="la-app">${appIconImg(16, 'ai-la', S.sysTheme)}<span>${t('appName')}</span></span><span class="la-city">${cityName()}</span></div>
+  const nx = ph.next, kNow = activeKerahat(ph);
+  /* Änderung vom 17.11.2026: Hintergrund durchscheinend (--la-pct), in der Kerahat-Zeit orange mit „Kerahat bis …“ statt der Stadt */
+  return `<div class="la ${kNow ? 'is-kerahat' : ''}" style="--la-pct:${S.laAlpha}%" role="img" aria-label="${esc((kNow ? t('kerahatNow',{b:fmt(kNow.b)}) + ', ' : '') + laLabel(ph) + ' ' + cdText(ph.remaining))}">
+    <div class="la-head"><span class="la-app">${appIconImg(16, 'ai-la', S.sysTheme)}<span>${t('appName')}</span></span><span class="la-city">${kNow ? t('kerahatNow',{b:fmt(kNow.b)}) : cityName()}</span></div>
     <div class="la-arc">${arcHTML(ph, 'la')}
       <div class="la-text"><div class="la-name">${t('p_' + nx.p)} · ${fmt(nx.at/60)}</div><div class="la-count" data-tick="cd">${cdDigital(ph.remaining)}</div></div></div></div>`;
 }
+/* Änderung vom 18.11.2026 (Spec § 10.3): Eine Live-Aktivität ändert sich ohne App nur einmal (staleDate). Bei Dhuhr und Maghrib
+   endet die grüne zu Beginn der Verbotszeit und eine orange startet obenauf; jede endet als schmale Zeile, die neueste steht oben
+   (relevanceScore). Kein „Jetzt“ mehr. Die Zeilen bleiben, bis die App sie beim nächsten Öffnen abräumt. */
+function laCompact(p, atMin, right, orange){
+  return `<div class="la la-compact ${orange ? 'is-kerahat' : ''}" style="--la-pct:${S.laAlpha}%" role="img" aria-label="${esc(t('p_' + p) + ' ' + fmt(atMin) + ', ' + right)}">
+    <span class="la-app">${appIconImg(16, 'ai-la', S.sysTheme)}<span>${t('p_' + p)} · ${fmt(atMin)}</span></span><span class="la-city">${right}</span></div>`;
+}
+function laStack(ph){
+  const ns = nowSec(), kNow = activeKerahat(ph), pv = ph.prev, lines = [];
+  if (kNow && kNow.id !== 'sunrise') lines.push(laCompact(ph.next.p, ph.next.at/60, t('kerahatFrom',{a:fmt(kNow.a)}), false));
+  if (pv && FIVE.includes(pv.p) && ns >= pv.at && ns - pv.at < 3*3600){
+    const wasK = kerahatWins(ph.t).some(w => w.id !== 'sunrise' && Math.abs(w.b*60 - pv.at) < 90);
+    lines.push(laCompact(pv.p, pv.at/60, t('laBegan'), wasK));
+  }
+  return `<div class="la-stack">${laBanner(ph)}${lines.join('')}</div>`;
+}
 function diCompact(ph){
-  return `<div class="island di di-compact" role="img" aria-label="${esc(laLabel(ph) + ' ' + cdText(ph.remaining))}">
+  return `<div class="island di di-compact ${activeKerahat(ph) ? 'is-kerahat' : ''}" role="img" aria-label="${esc(laLabel(ph) + ' ' + cdText(ph.remaining))}">
     <span class="di-ic">${ic(PICON[ph.next.p],18)}</span><span class="di-cd" data-tick="cd">${cdDigital(ph.remaining)}</span></div>`;
 }
 function diExpanded(ph){
@@ -2548,7 +2749,7 @@ function diExpanded(ph){
     const x0 = Math.max(w.a*60 + d*86400, a0), x1 = Math.min(w.b*60 + d*86400, a1);
     if (x1 > x0) segs.push([(x0 - a0)/(a1 - a0), (x1 - x0)/(a1 - a0)]);
   }
-  return `<div class="island di di-exp" role="img" aria-label="${esc(laLabel(ph) + ' ' + cdText(ph.remaining))}">
+  return `<div class="island di di-exp ${activeKerahat(ph) ? 'is-kerahat' : ''}" role="img" aria-label="${esc(laLabel(ph) + ' ' + cdText(ph.remaining))}">
     <div class="di-top"><span class="di-lead">${ic(PICON[nx.p],20)}<span>${fmt(nx.at/60)}</span></span><span class="di-trail">${ic('locFill',11)}${cityName()}</span></div>
     <div class="di-cap">${laLabel(ph)}</div><div class="di-big" data-tick="cd">${cdDigital(ph.remaining)}</div>
     <div class="di-bar"><i data-tick="la-bar" style="width:${(prog*100).toFixed(2)}%"></i>${segs.map(([x, w]) => `<b style="inset-inline-start:${(x*100).toFixed(2)}%;width:${(w*100).toFixed(2)}%"></b>`).join('')}</div>
@@ -2575,7 +2776,7 @@ function lockScreenHTML(withNotifs, live){
   return galleryScreen('lock', `<div class="ls-lock">${ic('lock',16)}</div>
     <div class="ls-date">${withNotifs ? dLong : `<span>${dShort}</span><span class="ls-inline">${ic(PICON[nx.p],15)}${nxName} ${nxTime}</span>`}</div>
     <div class="ls-time" ${withNotifs ? '' : 'data-tick="clock"'}>${withNotifs ? dhuhr : fmtClock()}</div>
-    ${withNotifs ? notifs : widgets}${live ? laBanner(ph) : ''}
+    ${withNotifs ? notifs : widgets}${live ? laStack(ph) : ''}
     <div class="ls-btn l">${ic('flashlight',22)}</div><div class="ls-btn r">${ic('camera',22)}</div>`, withNotifs ? dhuhr : null);
 }
 function homeScreenHTML(island){
@@ -2589,7 +2790,7 @@ function homeScreenHTML(island){
       <ul class="wm-list">${list}</ul></div>`;
   const small = `<div class="w w-small" role="img" aria-label="${esc(nxName + ' ' + nxTime)}"><div class="w-top"><span class="w-city">${cityName()}</span>${ic(PICON[nx.p],20,'accent')}</div>
       <div><div class="w-name">${nxName}</div><div class="w-time">${nxTime}</div><div class="w-count" data-tick="wcount">${count}</div></div></div>`;
-  const laWidget = `<div class="w w-la" role="img" aria-label="${esc(laLabel(ph) + ' ' + cdText(ph.remaining))}">
+  const laWidget = `<div class="w w-la" style="--la-pct:${S.wlaAlpha}%" role="img" aria-label="${esc(laLabel(ph) + ' ' + cdText(ph.remaining))}">
       <div class="la-head"><span class="la-app">${appIconImg(16, 'ai-la', S.sysTheme)}<span>${t('appName')}</span></span><span class="la-city">${cityName()}</span></div>
       <div class="la-arc wla-arc">${arcHTML(ph, 'wla', 'la')}
         <div class="la-text"><div class="la-name">${nxName} · ${nxTime}</div><div class="la-count" data-tick="cd">${cdDigital(ph.remaining)}</div></div></div></div>`;
@@ -2613,12 +2814,15 @@ function renderPanel(){
   const swatch = (k, c) => `<button class="swatch" style="background:${c}" data-act="pn-set" data-k="accent" data-v="${k}" aria-pressed="${S.accent === k}" aria-label="Accent ${k}" data-fkey="pn-acc-${k}"></button>`;
   const jump = (v, l) => `<button class="pn-btn" data-act="jump" data-v="${v}" data-fkey="pn-j-${v}">${l}</button>`;
   document.getElementById('panel').innerHTML = `
-    <div class="pn-title">Prayer Times · iOS prototype</div><div class="pn-sub">Design reference for the SwiftUI build · v0.1</div>
-    <section class="pn-sec pn-chg" lang="de"><h3>Änderungen vom 15.11.2026</h3><p class="pn-chg-lead">Zum Ansehen antippen. Alles andere ist wie im bisherigen Prototyp.</p>
-      <ol class="pn-chg-list">${[['icon','App-Symbol im Onboarding'],['kerahat','Kerahat im Bogen'],['home','Einstellungen rechts'],['qibla','Qibla: Toleranz ±40°'],
-        ['walk','Gebet Schritt für Schritt'],['verses','Schönere arabische Schrift'],['qada','Nachholgebete berechnen'],['free','Kostenlos-Seite im Onboarding'],['support','Unterstützen in den Einstellungen'],
-        ['days','Tage vor und zurück'],['lang','16 Sprachen (hier Arabisch)'],['live','Live-Aktivität: gleicher Bogen'],['widgets','Widgets mit Halbkreis'],['hl','Hohe Breiten: manuelle Winkel']]
-        .map(([v, l]) => `<li><button class="pn-btn" data-act="chg" data-v="${v}" data-fkey="pn-chg-${v}">${l}</button></li>`).join('')}</ol></section>
+    <div class="pn-title">Prayer Times · iOS prototype</div><div class="pn-sub">Design reference for the SwiftUI build · Spec v0.9</div>
+    <section class="pn-sec pn-chg" lang="de"><h3>Änderungen vom 17./18.11.2026</h3><p class="pn-chg-lead">Abgenommen am 18.11.2026, Spec v0.9 § 10. Zum Ansehen antippen.</p>
+      <ol class="pn-chg-list">${[['k-arc','Kerahat im Bogen länger (Dhuhr sichtbar)'],['la-orange','Live-Aktivität orange in der Kerahat-Zeit'],['transp','Live-Aktivität 30 % und abgelaufene als Zeile'],['w-transp','Widget „Live“ durchscheinend'],
+        ['k-info','Was sind Verbotszeiten? (Zeile mit ⓘ antippen)'],['k-guide','Anleitung Asr: Hinweis zum Farḍ'],['slogan','Neuer Slogan im Onboarding'],['ob2','Onboarding: Standort-Text'],['ob3','Onboarding: Hinweis Live-Aktivität'],['alarm','Wecker zu Fadschr'],['q-sex','Nachholen: Mann oder Frau'],['q-reset','Nachholen: Alles zurücksetzen'],['privacy','Datenschutz-Texte: Apple Karten']]
+        .map(([v, l]) => `<li><button class="pn-btn" data-act="chg" data-v="${v}" data-fkey="pn-chg-${v}">${l}</button></li>`).join('')}</ol>
+      <div style="height:8px"></div><div class="pn-sub" style="margin:0 0 6px">Deckkraft Live-Aktivität (entschieden: 30 %)</div>
+      ${seg('laAlpha',[['30','30 %'],['20','20 %'],['100','100 % (vorher)']])}
+      <div style="height:8px"></div><div class="pn-sub" style="margin:0 0 6px">Deckkraft Widget „Live“ (entschieden: 30 %)</div>
+      ${seg('wlaAlpha',[['30','30 %'],['85','85 %'],['100','100 % (vorher)']])}</section>
     <section class="pn-sec"><h3>View</h3>${seg('view',[['app','App'],['widgets','Widgets'],['live','Live Activity'],['notifications','Notifications']])}</section>
     <section class="pn-sec"><h3>Device (app view)</h3>${seg('device',[['iphone','iPhone 17'],['duo-closed','Duo closed'],['duo-open','Duo open']])}</section>
     <section class="pn-sec"><h3>System</h3>${seg('sysTheme',[['light','Light'],['dark','Dark']])}<label class="pn-field"><span>Sprache / language</span><select class="pn-select" data-pn="lang" data-fkey="pn-lang">${Object.keys(LANG_NAMES).map(k =>
@@ -2851,6 +3055,9 @@ const ACT = {
   'ob-notif'(){ showAlert('notif'); },
   'ob-free'(){ obGo(3); },                                   // Änderung 8: vor dem Start die Seite „Kostenlos. Ohne Werbung.“
   alert(el){ const v = el.dataset.v, kind = S.alert;
+    if (kind === 'qreset'){ closeAlert(() => { if (v === 'reset'){ const q = S.qada;
+        Object.assign(q, {years:0, months:0, days:0, witr:false, perDay:5, hayz:7, nifas:0}); [...FIVE, 'witr'].forEach(k => { q.open[k] = 0; q.tot[k] = 0; });
+        render(); toast(t('qadaResetDone'), 'check'); } else render(); }); return; }
     closeAlert(() => {
       if (kind === 'loc'){ if (v === 'deny'){ S.locDenied = true; S.autoLocation = false; openSheet('city'); }
                            else { S.locDenied = false; S.autoLocation = true; S.city = S.deviceCity; obGo(2); } }
@@ -2870,7 +3077,20 @@ const ACT = {
     const v = el.dataset.v, tt = todayTimes(); stopAdhan(); S.view = 'app'; S.sheet = null; S.alert = null; S.busy = false; S.walk = null; S.dayOff = 0;
     S.onboarded = true; S.stack.settings = []; S.section = 'prayers'; S.tab = 'today';
     const setMin = m => { S.clock.base = Math.round(m*60); S.clock.anchor = Date.now(); S.clock.preset = 'custom'; };
-    if (v === 'icon'){ S.onboarded = false; S.obStep = 0; }
+    if (v === 'k-arc'){ S.kerahat = true; setMin(tt.dhuhr - 60); }
+    else if (v === 'la-orange'){ S.kerahat = true; S.view = 'live'; setMin(tt.maghrib - 25); }
+    else if (v === 'transp'){ S.view = 'live'; setMin(tt.asr + 26); }
+    else if (v === 'w-transp'){ S.view = 'widgets'; setMin(tt.asr + 26); }
+    else if (v === 'k-info'){ S.kerahat = true; setMin(tt.asr + 26); S.sheet = 'kerahat'; }
+    else if (v === 'k-guide'){ S.kerahat = true; S.tab = 'guide'; S.guidePick = 'asr'; setMin(tt.asr + 26); }
+    else if (v === 'slogan'){ S.onboarded = false; S.obStep = 0; }
+    else if (v === 'ob2'){ S.onboarded = false; S.obStep = 1; }
+    else if (v === 'ob3'){ S.onboarded = false; S.obStep = 2; }
+    else if (v === 'alarm'){ S.alarmOn = true; S.stack.settings = ['settings', 'alarm']; }
+    else if (v === 'q-sex'){ S.section = 'qada'; S.qadaSex = 'f'; S.scrollPos.qada = 9999; }
+    else if (v === 'q-reset'){ S.section = 'qada'; S.scrollPos.qada = 9999; S.alert = 'qreset'; }
+    else if (v === 'privacy') S.stack.settings = ['settings', 'privacy'];
+    else if (v === 'icon'){ S.onboarded = false; S.obStep = 0; }
     else if (v === 'free'){ S.onboarded = false; S.obStep = 3; }
     else if (v === 'kerahat'){ S.kerahat = true; setMin(tt.sunrise + 20); }
     else if (v === 'qibla'){ S.tab = 'qibla'; const q = CITIES[cityId()].qibla; if (q != null) S.qibla.heading = (q - 25 + 360) % 360; }
@@ -2895,10 +3115,13 @@ const ACT = {
   'verse-copy'(){ toast(t('copied'), 'copy'); },
   qstep(el){ const k = el.dataset.k, d = Number(el.dataset.d), q = S.qada;
     if (k.startsWith('open-')){ const p = k.slice(5); if (d < 0){ if (q.open[p] > 0) q.open[p]--; } else { q.open[p]++; q.tot[p]++; } }
-    else { const [lo, hi] = {years:[0,60], months:[0,11], days:[0,30], perDay:[1,20]}[k]; q[k] = Math.max(lo, Math.min(hi, q[k] + d)); }
+    else if (k === 'alarmTime'){ const sr = todayTimes().sunrise; S.alarmTime = Math.max(180, Math.min(sr - 5, S.alarmTime + d*5)); }
+    else if (k === 'alarmBefore') S.alarmBefore = Math.max(10, Math.min(120, S.alarmBefore + d*5));
+    else { const [lo, hi] = {years:[0,60], months:[0,11], days:[0,30], perDay:[1,20], hayz:[3,10], nifas:[0,400]}[k]; q[k] = Math.max(lo, Math.min(hi, q[k] + d*(k === 'nifas' ? 5 : 1))); }
     render(); },
   qwitr(){ S.qada.witr = !S.qada.witr; render(); },
-  qapply(){ const q = S.qada, days = q.years*365 + q.months*30 + q.days;
+  qreset(){ S.alert = 'qreset'; render(); },
+  qapply(){ const q = S.qada, days = qadaDays();
     [...FIVE, 'witr'].forEach(k => { const n = k === 'witr' && !q.witr ? 0 : days; q.open[k] = n; q.tot[k] = n; });
     render(); toast(t('qadaApplied',{n:num(days*qadaKeys().length)}), 'check'); },
   push(el){ push(el.dataset.v); },
@@ -2912,11 +3135,13 @@ const ACT = {
     render(); },
   'toggle-loc'(){ if (S.locDenied) return; S.autoLocation = !S.autoLocation; if (S.autoLocation) S.city = S.deviceCity; render(); },
   'toggle-kerahat'(){ S.kerahat = !S.kerahat; render(); },
+  'toggle-alarm'(){ S.alarmOn = !S.alarmOn; render(); },
   'toggle-fajr'(){ stopAdhan(); S.adhan.fajr = !S.adhan.fajr; S.adhan.pos = 0; render(); },
   step(el){ const p = el.dataset.p; S.adj[p] = Math.max(-30, Math.min(30, S.adj[p] + Number(el.dataset.d))); render(); },
   'adj-reset'(){ PRAYERS.forEach(p => S.adj[p] = 0); S.focusNext = 'st-fajr-p'; render(); },
   'seg-notif'(el){ S.notif[el.dataset.p] = el.dataset.v; render(); },
   'open-city'(){ openSheet('city'); },
+  'kerahat-info'(){ openSheet('kerahat'); },
   'open-adhan'(){ openSheet('adhan'); },
   'close-sheet'(){ closeSheet(); },
   'select-city'(el){ S.city = el.dataset.v; S.autoLocation = false; if (S.highLat && S.city !== 'berlin') S.highLat = false; reapplyPreset();

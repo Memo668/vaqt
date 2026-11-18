@@ -290,3 +290,35 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 - Die Übersetzungen sind KI-Entwürfe: vor dem App Store von Muttersprachlern prüfen lassen (`docs/OPEN-QUESTIONS.md`).
 
 **Danach:** erste Beta über TestFlight, Ablauf in `docs/APP-STORE.md` („Mit dem Konto“); Konto, Team und Kennungen sind seit dem 15.11.2026 eingetragen.
+
+## Phase 16 – Änderungen nach der ersten Beta
+
+*Grundlage: Spec v0.9 § 10.1–10.7 und § 10.9, Prototyp „Änderungen vom 17./18.11.2026“, entschieden am 17./18.11.2026 (`docs/OPEN-QUESTIONS.md`). Danach Build 0.1.0 (3) für TestFlight.*
+
+- **Texte:**
+  - Neue und geänderte Schlüssel in `T`. DE, TR und EN sind entworfen.
+  - ES und die zwölf weiteren Sprachen als KI-Entwurf ergänzen („Needs Review“).
+  - `make strings`, dazu `App/InfoPlist.xcstrings` und der Standorttext in project.yml.
+- **Bogen:** Mindestlänge der Kerahat-Abschnitte in `DayArcLayout` für alle Stile (Home, Live-Aktivität, Widget „Live“, Rechteck), mit Tests.
+- **Verbotszeiten:** Die Kerahat-Zeilen werden zu Knöpfen mit Infopunkt. Dazu das Sheet „Was sind Verbotszeiten?“ und der Hinweis in der Anleitung zu Asr.
+- **Live-Aktivität:**
+  - Deckkraft 30 %, oranger Zustand, auch in der Dynamic Island.
+  - Zwei Aktivitäten bei Dhuhr und Maghrib, im Planer und Lebenszyklus in PrayerCore, mit Tests.
+  - Abgelaufene als schmale Zeile im `isStale`-Zustand, kein „Jetzt“, `relevanceScore` nach Startzeit.
+- **Widget „Live“:** Deckkraft 30 %. Am Gerät prüfen, ob iOS durchscheinen lässt.
+- **Onboarding:** neuer Titel, Schritt 2 mit Apple Karten, Schritt 3 mit Hinweis auf die Live-Aktivität.
+- **Datenschutz:** Texte in der App, dazu `docs/DATENSCHUTZ.md` und `PRIVACY.md` (Apple Karten, Region bei der Stadtsuche, Rundung).
+- **Nachholen:** Mann oder Frau mit Abzug von Regel und Wochenbett (PrayerCore, Tests). „Alles zurücksetzen“ mit Warnung.
+- **Prüfen:**
+  - Referenzbilder der betroffenen Bildschirme neu aus dem Prototyp (`scripts/capture-prototype`) und abgleichen.
+  - System: Live-Aktivität, Dynamic Island und Widgets mit dem UI-Hilfsprojekt.
+  - Am iPhone: Transparenz und die zwei Aktivitäten.
+- **Danach:** Build 0.1.0 (3) archivieren, prüfen (`scripts/check-archive`) und für „Intern“ und „Extern“ hochladen.
+
+## Phase 17 – Wecker zu Fadschr
+
+*Grundlage: Spec v0.9 § 10.8 und der Prototyp (Einstellungen › Wecker zu Fadschr). Danach Build 4.*
+
+- AlarmKit (iOS 26): Erlaubnis beim ersten Einschalten, täglicher Wecker „Vor Sonnenaufgang“ (Minuten) oder zu einer festen Uhrzeit (höchstens 5 Minuten vor Sonnenaufgang). Neu berechnen, wenn sich Zeiten, Ort oder Einstellungen ändern.
+- Einstellungsseite mit Schalter, Auswahl und Stepper. Chip mit Weckzeit in der Fadschr-Zeile.
+- Texte in 16 Sprachen, Tests für die Weckzeit (PrayerCore), Prüfung am Gerät (Stummmodus, Fokus).

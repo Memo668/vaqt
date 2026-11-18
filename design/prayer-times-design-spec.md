@@ -1,4 +1,4 @@
-# Prayer Times (iOS) – Design Spec v0.8
+# Prayer Times (iOS) – Design Spec v0.9
 
 Handoff for building the native SwiftUI app. The visual reference is `prayer-times-prototype.html` (single file, open it in a browser). Design tokens are in its `:root` CSS, every string is in the JS object `T` (16 languages since v0.8, § 9.10), mock data is in `CITIES` / `BERLIN_SUMMER` / `METHODS`, and the app state model is `S`.
 
@@ -274,9 +274,87 @@ Decided by the product owner on 15.11.2026 ("Vaqt als Arbeitsname"): the app is 
 ### 9.14 Sunrise on the arc
 Decided by the product owner on 16.11.2026 ("Gleicher Punkt wie Gebete", "Überall mit Bogen"): sunrise gets a marker on the arc **like the prayers** – same size (Home 30 pt, Live Activity/Live widget/Lock Screen widget their marker size), sunrise symbol, its time next to it where the arc shows times, upcoming tinted and filled once the sun has risen. It is never the current marker (sunrise ends Fajr, no glow, no "now" chip) and does not count in the VoiceOver text of the arc. It sits at the start of the first kerahat segment. Everywhere the day arc appears: Home (today and other days), Live Activity, the medium "Live" widget and the Lock Screen rectangular widget.
 
+
+## 10. Changes after the first beta (v0.9, approved 18.11.2026)
+
+Feedback from the product owner and a tester after build 0.1.0 (2), shown in the prototype on 17./18.11.2026 and approved ("Sonst kann man alles so weit übernehmen", 18.11.2026). The prototype panel lists each change under "Änderungen vom 17./18.11.2026". Where this section and older sections disagree, this section wins. Religious texts (§ 10.2, § 10.7) are drafts and must be reviewed before the App Store.
+
+### 10.1 "Verbotszeit" and longer windows on the arc
+- **German name:** In German the kerahat windows are called **"Verbotszeit"**, plural "Verbotszeiten": "Verbotszeit 07:14–07:59" on the rows, "Verbotszeit bis 16:27", "Verbotszeiten zeigen", "Verbotszeiten: …" for VoiceOver. Other languages keep their term (TR "Kerahat", EN "Makruh" …).
+- **Minimum length on the arc:** Each window drawn on the track reaches at least `r_current + 0.8 × r_marker` along the arc from the marker it touches, so it always shows beside that marker. Before, the 10 minutes before Dhuhr lay completely under the Dhuhr marker.
+  - Home: 17 + 12 = 29 pt. Live Activity and Live widget: 12 + 8.4 = 20.4 pt. Lock Screen widget: 7.5 + 5.2 = 12.7 pt.
+  - Sunrise grows forward, the windows before Dhuhr and Maghrib grow backward.
+  - The drawn length is then no longer to scale. Times on the rows and for VoiceOver stay exact.
+
+### 10.2 What are prohibited times? (info sheet)
+- **Info dot on the rows:** The kerahat subline on the rows (Sunrise, Dhuhr, Asr) becomes a button with a trailing info glyph (13 pt, opacity 0.6).
+- **Sheet:** Tapping it opens a sheet "Was sind Verbotszeiten?" (`kerahatInfoTitle`), with a close button (xmark) in the trailing corner. It contains, in this order:
+  - the intro (`kerahatInfoP1`);
+  - a group "Heute" with three rows: a kerahat dot, the description (`kerahatInfoL1`–`L3`) and today's time range, kept on one line;
+  - the section "Asr noch nicht gebetet?" (`kerahatAsrTitle`, `kerahatAsrBody`): only the farḍ of Asr is still prayed, the sunnah is left out, and the prayer counts as on time (Hanafi);
+  - the reason (`kerahatInfoP2`);
+  - a footnote with the school and the approximations: 45 min after sunrise, 10 min before Dhuhr, 45 min before sunset.
+- **Guide:** The Asr guide gets a note under "Ab der 3. Rakʿa …" with a kerahat dot (`gAsrKerahat`).
+- There is no extra hint on the Asr row; the info dot is enough (decided 18.11.2026).
+
+### 10.3 Live Activity: translucent, orange in prohibited times, ended ones compact
+- **Opacity:** The background gradient is drawn at **30 %**, so the system blur and wallpaper show through.
+- **Orange:** While a prohibited time runs, the activity is orange.
+  - Gradient from `#EC8530`: 80 % with white, the colour itself, 76 % with black.
+  - The header shows "Verbotszeit bis {b}" (`kerahatNow`) instead of the city.
+  - The kerahat segments on the track are `#FFE2BF`, markers and knob are tinted orange.
+  - In the Dynamic Island, symbol, time, countdown and bar are `#F0A257`.
+- **Model:** A Live Activity can change its look only once without the app (`staleDate`).
+  - Dhuhr and Maghrib, whose prohibited window lies inside the activity's span, get **two activities**: a green one from the start until the prohibited time begins (`staleDate` = its start), and an orange one scheduled at that moment until the prayer (`staleDate` = prayer).
+  - If the whole span lies inside the window (Maghrib with a lead of ≤ 45 min), only the orange one is used.
+  - The system limit of five activities counts both.
+- **Ended activities:**
+  - When stale, an activity shrinks to **one line**: app icon, "{p} · {time}", and on the trailing side either "Verbotszeit ab {a}" (`kerahatFrom`, green one at the start of the prohibited time) or "hat begonnen" (`laBegan`, at prayer start). Padding 11/14 pt, radius 20, 13 pt semibold.
+  - There is no "Jetzt" any more.
+  - The app ends old activities whenever it runs, as before.
+- **Order:** The newest activity gets the highest `relevanceScore` (it grows with the start time), so it is on top on the Lock Screen and in the Dynamic Island.
+- Overlap cannot be avoided completely without a server: iOS does not end an activity at a time, and the widget extension does not see the app's activities (tested 18.11.2026).
+
+### 10.4 Live widget translucent
+The Home Screen widget "Live" draws its gradient at **30 %** as well. Whether iOS shows the wallpaper through a translucent `containerBackground` has to be checked on the device; if not, keep the closest look iOS allows and note it.
+
+### 10.5 Onboarding
+- **Step 1:** The title is **"Jedes Gebet zur rechten Zeit."** (`ob1Title`, all 16 languages).
+- **Step 2 (location):** "Berechnet auf deinem iPhone" with a body that names Apple Maps for the place name (`ob2Title`, `ob2Body`, § 10.6).
+- **Step 3 (notifications):** Under the body a note box: info glyph in accent, `fill-3` background, radius 14, footnote. It says that a countdown appears on the Lock Screen before each prayer (Live Activity) and that it can be turned off in Settings › Live-Aktivität (`ob3Live`).
+
+### 10.6 Privacy texts
+The location prompt (`alLocBody`, also `NSLocationWhenInUseUsageDescription`), the location footer (`locFooter`), the privacy page (`privacyBody2`) and onboarding step 2 say what really happens:
+- Prayer times are calculated on the device.
+- For the place name and the city search the app asks Apple Maps.
+- We receive nothing.
+
+The coordinates are rounded to 0.01° before they are stored or sent (in the app since `71e8cd9`). `docs/DATENSCHUTZ.md` and `PRIVACY.md` say the same, including the location as a region hint for the city search.
+
+### 10.7 Qada: man or woman, reset
+- **Step 1 "Für wen?":** a segmented control Mann / Frau.
+  - For "Frau": two steppers, "Regel pro Monat (Tage)" 3–10 (default 7) and "Wochenbett insgesamt (Tage)" 0–400 (step 5), with the note that prayers on those days are waived and not made up.
+  - Owed days = span − round(span ÷ 30 × days per month) − postnatal days, at least 0.
+  - The detail line names the deduction (`qcResultDetailF`).
+- The steps are renumbered 1–4.
+- **Reset:** A red text button "Alles zurücksetzen" sits under the calculator. It opens an alert "Alle Werte zurücksetzen?" with Cancel and a destructive "Zurücksetzen". It sets open counts, totals, the plan (5 per day) and the calculator back, then shows the toast "Alles zurückgesetzt".
+
+### 10.8 Fajr alarm (Phase 17, build 4)
+- **Settings:** In the Notifications group a row "Wecker zu Fadschr" (value: ring time or "Aus") opens a page.
+  - A switch "Wecker".
+  - When on, the choice "Vor Sonnenaufgang" (default; minutes 10–120, step 5, default 45) or "Feste Uhrzeit" (step 5 min, 03:00 to sunrise − 5).
+  - A fixed time rings at most 5 min before sunrise.
+  - The footers explain the daily ring, silent mode and Focus, and how the two modes differ.
+- **Today screen:** The Fajr row shows a small chip with a clock glyph and today's ring time.
+- **Implementation:** AlarmKit (iOS 26). The permission is asked when the alarm is first turned on, and the daily time is recalculated with the prayer times.
+
+### 10.9 Share link
+"App weiterempfehlen" shares the public TestFlight invitation during the beta and the App Store page afterwards (`APP_STORE_URL`, in the app since `71e8cd9`).
+
 ---
 
 ## Changelog
+- **v0.9 (18.11.2026):** Changes after the first beta (§ 10): "Verbotszeit" in German and longer kerahat windows on the arc, info sheet on prohibited times, Live Activity at 30 % with orange prohibited time and compact ended activities (newest on top), Live widget at 30 %, new onboarding title, location and Live Activity hints, honest privacy texts, qada for men and women with reset, Fajr alarm (Phase 17), share link to TestFlight.
 - **v0.8, addendum 4 (16.11.2026):** sunrise as a marker on the day arc, same look as the prayers, everywhere the arc appears (§ 9.14).
 - **v0.8, addendum 3 (15.11.2026):** plural forms for counted texts in `PLURAL`, digits and calendar per locale (§ 9.10).
 - **v0.8, addendum 2 (15.11.2026):** Lock Screen rectangular widget in the Live Activity style – arc centred, markers with symbols, knob with ring, prayer and countdown inside the arc, kerahat striped (§ 9.11).

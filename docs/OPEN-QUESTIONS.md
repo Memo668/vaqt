@@ -33,6 +33,32 @@ Die erste Beta über TestFlight kommt nach Phase 11 – seit dem 15.11.2026 nach
 
 Erledigt ohne Konto am 14.11.2026: `make archive` baut das Release-Archiv ohne Signatur, und `scripts/check-archive` findet es in Ordnung – nur iPhone (vorher iPhone und iPad, unten unter „Annahmen in der Beta-Vorbereitung“), Exportkontrolle `ITSAppUsesNonExemptEncryption = NO`, beide Manifeste, Icon, alle Texte in vier Sprachen, kein Debug-Code. Dazu die Datenschutzerklärung (`docs/DATENSCHUTZ.md`, `docs/PRIVACY.md`) und die Texte für TestFlight (`docs/APP-STORE.md`). Mit Phase 11 kamen das Platzhalter-Icon und die Datenschutz-Manifeste. Die Platzhalter – Übersetzungen der Verse, Adhan-Aufnahmen, Texte der Anleitung, Icon, Link „Quellcode“ – dürfen in der Beta bleiben; „Was testen“ nennt sie.
 
+## Änderungen nach der ersten Beta, entschieden am 17./18.11.2026
+
+Rückmeldungen des Nutzers und von Ibrahim Gezer nach Build 0.1.0 (2). Der Nutzer hat sie im Prototyp angesehen (Artifact „Vaqt Änderungen 17.11.“, Kopie in `docs/vorschlaege/2026-11-17/`, nicht eingecheckt), korrigiert und am 18.11. abgenommen („Sonst kann man alles so weit übernehmen“). Beschreibung in Spec § 10, Bau in Phase 16 (Build 3) und Phase 17 (Wecker, Build 4).
+
+- **Kerahat im Bogen:** „Auf der Spur, länger“ – Mindestlänge, damit kein Fenster unter einem Punkt verschwindet (vorher lag das vor Dhuhr ganz unter dem Dhuhr-Punkt).
+- **Deutsch „Verbotszeit“** statt „Kerahat“ (Wunsch 18.11.).
+- **Infopunkt ⓘ** an den Kerahat-Zeilen öffnet die Erklärung. Ein Zusatz in der Asr-Zeile („Farḍ noch erlaubt“) ist wieder weg, die Erklärung reicht.
+- **Live-Aktivität:**
+  - Deckkraft 30 % (zwischendurch 20 %, am Ende 30 %).
+  - Orange ab Beginn der Verbotszeit (Auswahl „Orange ab Verbotszeit“).
+  - Kein „Jetzt“ mehr, damit es überall gleich ist.
+  - Zwei Aktivitäten bei Dhuhr und Maghrib (Auswahl „Zwei Aktivitäten (Empfohlen)“).
+- **Überlappung:**
+  - „Neueste oben“ und „Alte kompakt“ (beide empfohlen).
+  - Nicht gewählt: Knopf „Ausblenden“ und eigener Server.
+  - Getestet am 18.11. im Simulator: Die Widget-Erweiterung sieht die Aktivitäten der App nicht (`Activity.activities` leer) und kann sie deshalb nicht beenden.
+- **Widget „Live“:** Deckkraft 30 %.
+- **Slogan:** „Jedes Gebet zur rechten Zeit.“ (Auswahl unter vier Vorschlägen).
+- **Onboarding Schritt 3:** Hinweis auf die Live-Aktivität und wo man sie abschaltet (Wunsch 18.11.).
+- **Nachholen:**
+  - Mann oder Frau. Bei Frauen werden Regel und Wochenbett abgezogen.
+  - „Alles zurücksetzen“ mit Warnung. Zurückgesetzt wird alles: Zähler, Plan und Rechner. Diese Auslegung stammt von mir, der Nutzer hat nicht widersprochen.
+- **Wecker zu Fadschr:** „Erst Build 4“, also eigene Phase 17.
+- **Verse:** Die Entscheidung geht ans Sekretariat. Der Entwurf der Anfrage liegt in `docs/vorschlaege/2026-11-17/verse-sekretariat.md`; wer das Sekretariat ist, ist noch offen.
+- **Offen vor dem App Store:** fachliche Prüfung der neuen religiösen Texte, also der Erklärung der Verbotszeiten und der Regel für Frauen beim Nachholen (Ibrahim).
+
 ## Änderungen vor der Beta, entschieden am 15.11.2026
 
 Der Nutzer hat zwölf Änderungen gewünscht, im Prototyp angesehen, korrigiert und mit „Passt, umsetzen“ abgenommen. Beschreibung in Spec § 9, Bau in den Phasen 12–15 (`docs/BUILD-PLAN.md`).
