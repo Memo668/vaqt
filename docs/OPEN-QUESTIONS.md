@@ -30,6 +30,13 @@ Die erste Beta über TestFlight kommt nach Phase 11 – seit dem 15.11.2026 nach
     - Die Commit-Adresse ist jetzt vaqt@m-yilmaz.com, auch rückwirkend.
     - Offen: Die Datenschutztexte in der App (Standort geht für den Ortsnamen an Apple Karten) ändern sich mit Phase 16, nach Abnahme des Prototyps vom 17./18.11.
   - Öffentlicher Link (16.11.2026, Auswahl „Öffentlicher Link“): `https://testflight.apple.com/join/2jTMrhur`, offen für alle, ohne Obergrenze. Beitreten geht erst, wenn Apple einen Build der Gruppe freigegeben hat.
+  - Build 0.1.0 (2) ist für „Extern“ freigegeben (Status „Testing“).
+  - Build 0.1.0 (3) (Phase 16, `c866b7d`) ist am 18.11.2026 hochgeladen und verarbeitet.
+    - „Was testen“ steht auf Deutsch und Englisch drin (`docs/APP-STORE.md`).
+    - Der Build ist den Gruppen „Intern“ und „Extern“ zugeordnet und war sofort ohne erneute Prüfung freigegeben („Testing“).
+  - Rückmeldungen aus TestFlight zu Build 2 (Tester, 17.11.2026), noch zu beheben:
+    - Im Adhan-Sheet ist „Stimme 3“ stumm. Für sie gibt es keine Aufnahme; Stimme 1 und 2 sind Platzhalter von Wikimedia.
+    - Ist der Schalter für die Fadschr-Fassung an, kommt bei keiner Stimme ein Ton.
 
 Erledigt ohne Konto am 14.11.2026: `make archive` baut das Release-Archiv ohne Signatur, und `scripts/check-archive` findet es in Ordnung – nur iPhone (vorher iPhone und iPad, unten unter „Annahmen in der Beta-Vorbereitung“), Exportkontrolle `ITSAppUsesNonExemptEncryption = NO`, beide Manifeste, Icon, alle Texte in vier Sprachen, kein Debug-Code. Dazu die Datenschutzerklärung (`docs/DATENSCHUTZ.md`, `docs/PRIVACY.md`) und die Texte für TestFlight (`docs/APP-STORE.md`). Mit Phase 11 kamen das Platzhalter-Icon und die Datenschutz-Manifeste. Die Platzhalter – Übersetzungen der Verse, Adhan-Aufnahmen, Texte der Anleitung, Icon, Link „Quellcode“ – dürfen in der Beta bleiben; „Was testen“ nennt sie.
 
