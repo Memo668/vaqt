@@ -48,7 +48,7 @@ Nur in DEBUG: Startargumente, mit denen sich jeder Referenz-Screenshot nachstell
 -debugHighLatitude            # Berlin, 21. Juni
 -debugLocationDenied  -debugOffline
 -debugTab today|qibla|guide|verses|qada|settings
-          method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|licenses|support|adhan|city   # Seiten der Einstellungen (PAGES; licenses nur in der App), adhan = Adhan-Sheet, city = Stadt-Sheet
+          method|asr|hl|adjust|perPrayer|reminder|live|alarm|sound|appearance|language|privacy|licenses|support|adhan|city   # Seiten der Einstellungen (PAGES; licenses nur in der App), adhan = Adhan-Sheet, city = Stadt-Sheet
 -debugOnboarding 1|2|3|4      # Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
 -debugDayOffset 1             # Zeiten-Seite zeigt einen anderen Tag, −365 bis 365 (iphone/23)
 -debugWalk dhuhr              # „Gebet Schritt für Schritt“ für dieses Gebet offen, über der Anleitung (iphone/43–49)
@@ -57,6 +57,8 @@ Nur in DEBUG: Startargumente, mit denen sich jeder Referenz-Screenshot nachstell
 -debugQiblaAccuracy 40        # Genauigkeit des Kompasses; über 25° erscheint die Kalibrierungskarte (iphone/30–32)
 -debugNotifications           # echte Mitteilungen auch mit Mock-Zeiten, fragt beim Start nach der Erlaubnis (system/92)
 -debugLiveActivity            # Live-Aktivität zum nächsten Gebet sofort, auch außerhalb des Vorlaufs und mit Mock-Zeiten (system/93–96)
+-debugAlarm before|fixed|denied   # Wecker zu Fadschr an (vor Sonnenaufgang / feste Uhrzeit mit kurzem Adhan) oder Erlaubnis abgelehnt, nur mit -debugFixtureTimes (iphone/24, 84)
+-debugAlarmIn 2               # ein echter Wecker (AlarmKit) so viele Minuten nach dem Start – zum Test von Ton, Stummmodus und Fokus am Gerät
 -debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|widgets|live|all   # Katalog der Bausteine statt der App, für den Abgleich (make compare, make compare-system)
 ```
 

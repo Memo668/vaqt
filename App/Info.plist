@@ -49,6 +49,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSAlarmKitUsageDescription</key>
+	<string>Damit der Wecker zu Fadschr auch im Stummmodus und bei Fokus klingelt.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Dein Standort dient nur der Berechnung der Gebetszeiten. Für den Ortsnamen fragt die App Apple Karten.</string>
 	<key>NSSupportsLiveActivities</key>

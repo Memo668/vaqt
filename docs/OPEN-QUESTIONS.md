@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 18.11.2026, nach der Abnahme von Phase 16 (Änderungen nach der ersten Beta, Spec § 10); als Nächstes Build 0.1.0 (3) und Phase 17 (Wecker).
+Stand: 18.11.2026, Phase 17 (Wecker zu Fadschr) gebaut, noch nicht abgenommen; Build 0.1.0 (3) ist in TestFlight. Danach Build 0.1.0 (4).
 
 ## Für die erste Beta
 
@@ -63,7 +63,11 @@ Rückmeldungen des Nutzers und von Ibrahim Gezer nach Build 0.1.0 (2). Der Nutze
   - Mann oder Frau. Bei Frauen werden Regel und Wochenbett abgezogen.
   - „Alles zurücksetzen“ mit Warnung. Zurückgesetzt wird alles: Zähler, Plan und Rechner. Diese Auslegung stammt von mir, der Nutzer hat nicht widersprochen.
 - **Wecker zu Fadschr:** „Erst Build 4“, also eigene Phase 17.
-- **Verse:** Die Entscheidung geht ans Sekretariat. Der Entwurf der Anfrage liegt in `docs/vorschlaege/2026-11-17/verse-sekretariat.md`; wer das Sekretariat ist, ist noch offen.
+  - Mit dem Plan für Phase 17 am 18.11.2026 entschieden:
+    - Kein Schlummern; die Weckanzeige hat nur den Knopf zum Beenden.
+    - Klang wählbar: Systemton oder kurzer Adhan (Wunsch: „Beides, man soll es sich aussuchen können“). Spec § 10.8 und Prototyp sind ergänzt.
+    - Lehnt man die Erlaubnis ab, bleibt der Schalter aus und gesperrt, darunter „iOS-Einstellungen öffnen“ mit Hinweis.
+- **Verse:** Die Entscheidung geht ans Sekretariat. Der Entwurf der Anfrage liegt in `docs/vorschlaege/2026-11-17/verse-sekretariat.md`. Am 18.11.2026 ist er an das Sekretariat übergeben (eigene Claude-Sitzung „Sekretariat“).
 - **Offen vor dem App Store:** fachliche Prüfung der neuen religiösen Texte, also der Erklärung der Verbotszeiten und der Regel für Frauen beim Nachholen (Ibrahim).
 
 ## Änderungen vor der Beta, entschieden am 15.11.2026
@@ -459,6 +463,31 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 | Ausrichtung | „Ja, so lassen“ | nur Hochformat. Phase 10: Die Info.plist bleibt so; auf dem inneren Display des iPhone Duo zeigt iOS die App trotzdem quer und hoch (siehe „Annahmen in Phase 10“). |
 | Nachholen | „Ja, so lassen“ | Die App startet leer: kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr. `iphone/60` und `61` zeigen die Beispielzahlen des Prototyps; die gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Annahme für Phase 6: Mit `-debugFixtureTimes` zeigt die Seite sie. |
 | JAKIM und Kemenag | „Ja, so lassen“ | reine Winkel 20°/18°. Vor der Veröffentlichung gegen offizielle Tabellen zu prüfen, siehe oben. |
+
+## Annahmen in Phase 17
+
+Gebaut am 18.11.2026 auf `claude/phase-17` (ab `7d15612`). Neue Referenzbilder aus dem Prototyp: `iphone/24` (Chip) und `iphone/84` (Seite in fünf Zuständen).
+
+### Was mit den Referenzbildern übereinstimmt
+- **Seite „Wecker zu Fadschr“** (`iphone/84`, `-fixed`, `-denied`, `-off`): Texte, Gruppen, Häkchen, Stepper und Fußtexte im Simulator geprüft.
+- **Chip in der Fadschr-Zeile** (`iphone/24`): Uhr und Weckzeit 06:29, graue Füllung.
+- **Stepper:** Die Zeile ist wie auf den übrigen Seiten etwas höher als im Prototyp (Systemabstände, seit Phase 7 so).
+
+### Annahmen in der Umsetzung
+- **Wecker für 14 Tage:**
+  - AlarmKit kennt nur feste Uhrzeiten mit Wiederholung je Wochentag oder einzelne Zeitpunkte. Die Weckzeit wandert aber mit dem Sonnenaufgang.
+  - Deshalb meldet die App je Tag einen einzelnen Wecker an, für die nächsten 14 Tage. Neu geplant wird beim Start, wenn die App nach vorn kommt, nach jeder Änderung und bei der Hintergrundaktualisierung.
+  - Öffnet man die App zwei Wochen nicht und weckt iOS sie auch nicht im Hintergrund, endet der Wecker.
+- **Feste Kennungen:** Gleiche Zeit, gleicher Klang und gleiche Sprache ergeben dieselbe Kennung. So meldet die App beim Neuplanen nur Geändertes ab und an. Ein Wecker, der gerade klingelt, bleibt.
+- **Weckanzeige:** Titel „Wecker zu Fadschr“, Akzentfarbe Grün. Ab iOS 26.1 stellt iOS den Knopf zum Beenden selbst, „Stopp“ (`alarmStop`) gilt nur unter iOS 26.0.
+- **Kurzer Adhan als Weckton:** die Aufnahme der Stimme aus dem Adhan-Sheet, wie bei den Mitteilungen. Stimme 3 hat noch keine Aufnahme, dann klingelt der Systemton. Ob iOS den 30-Sekunden-Ausschnitt wiederholt, bis man beendet, zeigt erst das Gerät.
+- **„Klingelt heute um …“ und der Wert der Zeile** zeigen wie im Prototyp die Weckzeit von heute, auch wenn sie schon vorbei ist. Der Chip zeigt die Weckzeit des gezeigten Tages.
+- **Erlaubnis später entzogen:** Die Wahl bleibt gespeichert, die Seite zeigt den gesperrten Schalter, Zeile und Chip zeigen „Aus“ bzw. nichts. Erlaubt man wieder, klingelt der Wecker wieder.
+- **Texte:** vier neue Schlüssel (`alarmSoundFooter`, `alarmDeniedFooter`, `alarmStop`, `alAlarmBody` für `NSAlarmKitUsageDescription`); die 13 Sprachen ab ES sind KI-Entwürfe.
+- **`-debugAlarmIn`:** ein echter Wecker zum Test am Gerät, ohne bis vor Sonnenaufgang zu warten.
+
+### Was sich im Simulator nicht prüfen lässt
+- **Erlaubnis für Wecker:** Im Simulator (iOS 27.2) lehnt iOS jede Anfrage ohne Dialog ab. Im Protokoll von SpringBoard steht, dass dem Dienst `mobiletimerd` die Berechtigung „com.apple.springboard.CFUserNotification“ für den Dialog fehlt. Klingeln, Ton, Stummmodus und Fokus deshalb nur am Gerät prüfen.
 
 ## Annahmen in Phase 16
 

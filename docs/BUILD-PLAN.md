@@ -321,6 +321,8 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 
 *Grundlage: Spec v0.9 § 10.8 und der Prototyp (Einstellungen › Wecker zu Fadschr). Danach Build 4.*
 
+*Gebaut am 18.11.2026 auf `claude/phase-17`, 1058 Tests grün, geprüft im Simulator gegen `iphone/24` und `iphone/84`. Mit dem Plan entschieden: kein Schlummern, Klang wählbar (Systemton oder kurzer Adhan), bei abgelehnter Erlaubnis gesperrter Schalter mit Weg in die iOS-Einstellungen. Annahmen in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 17“). Klingeln am Gerät noch nicht geprüft.*
+
 - AlarmKit (iOS 26): Erlaubnis beim ersten Einschalten, täglicher Wecker „Vor Sonnenaufgang“ (Minuten) oder zu einer festen Uhrzeit (höchstens 5 Minuten vor Sonnenaufgang). Neu berechnen, wenn sich Zeiten, Ort oder Einstellungen ändern.
 - Einstellungsseite mit Schalter, Auswahl und Stepper. Chip mit Weckzeit in der Fadschr-Zeile.
 - Texte in 16 Sprachen, Tests für die Weckzeit (PrayerCore), Prüfung am Gerät (Stummmodus, Fokus).

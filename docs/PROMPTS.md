@@ -106,6 +106,7 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 | `iphone/81` | … `-debugTab privacy` |
 | `iphone/82` | wie `75`, dann „Manuelle Winkel“ antippen (UI-Hilfsprojekt, `scripts/ui-harness/scripts/iphone-82-settings-hl-manual.txt`; seit Phase 12) |
 | `iphone/83` | … `-debugTab support` (seit Phase 12) |
+| `iphone/84` | … `-debugTime 14:25 -debugTab alarm -debugAlarm before` (seit Phase 17); `-fixed` mit `-debugAlarm fixed`, `-denied` mit `-debugAlarm denied`, `-off` ohne `-debugAlarm`, `-dark` wie `84` im dunklen Simulator |
 | `iphone/85` | … `-debugTime 14:25 -debugTab city` (seit Phase 10; vorher ein Tipp auf die Stadt) |
 | `iphone/86` | … `-debugTime 14:25 -debugTab adhan` |
 | `system/92` | `-debugSkipOnboarding -debugFixtureTimes -debugNotifications -debugDate 2026-11-10 -debugTime 11:41`, Systemsprache des Simulators Deutsch, `make statusbar TIME=11:52`; Gerät sperren, gut elf Minuten warten, den Stapel aufklappen, aufnehmen (UI-Hilfsprojekt, `scripts/ui-harness/scripts/system-92.txt`). Die Erinnerung kommt nach einer Minute, Dhuhr nach elf |

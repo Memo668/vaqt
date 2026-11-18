@@ -105,6 +105,8 @@ Nur in DEBUG-Builds. Damit lässt sich jeder Referenz-Screenshot nachstellen:
 -debugQiblaAccuracy 40        Genauigkeit des Kompasses in Grad; über 25 erscheint die Kalibrierungskarte
 -debugNotifications           echte Mitteilungen auch mit Mock-Zeiten; fragt beim Start nach der Erlaubnis
 -debugLiveActivity            Live-Aktivität zum nächsten Gebet sofort, auch außerhalb des Vorlaufs und mit Mock-Zeiten
+-debugAlarm before|fixed|denied   Wecker zu Fadschr an oder Erlaubnis abgelehnt, nur mit -debugFixtureTimes
+-debugAlarmIn 2               ein echter Wecker (AlarmKit) so viele Minuten nach dem Start
 -debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|widgets|live|all   Katalog der Bausteine statt der App, für den Abgleich
 ```
 
@@ -118,6 +120,8 @@ Versteht die App ein Debug-Argument nicht, schreibt sie das beim Start in die Ko
 | `-debugFixtureTimes` | Mock-Zeiten statt echter Rechnung. Dazu: festes Netz, keine Ortssuche und flüchtige Einstellungen mit den Startwerten von `S` im Prototyp (Glocken, die fünf Städte, Erinnerung, Klang, Sprache wie das Gerät) – so sieht jede Aufnahme gleich aus, egal was vorher angetippt wurde. Das Nachholen zeigt die Zahlen des Prototyps (`iphone/60`), ebenfalls nur im Speicher. Die Methode „Automatisch“ ist die der Fixture-Stadt (Berlin → MWL). Mitteilungen gelten als noch nicht erfragt, und vorgemerkt wird keine. |
 | `-debugNotifications` | Erlaubnis und Mitteilungen über das System, auch mit `-debugFixtureTimes`: Die App merkt die Mitteilungen zu den Mock-Zeiten bei iOS vor, gemessen an der Debug-Uhr. Beim Start räumt sie zugestellte Mitteilungen ab und fragt nach der Erlaubnis, falls iOS noch nie gefragt hat. Damit lässt sich `system/92` nachstellen. |
 | `-debugLiveActivity` | Genau eine Live-Aktivität: die zum nächsten Gebet, ab dem Start der App – auch außerhalb des Vorlaufs, auch bei „Aus“ und mit `-debugFixtureTimes`. Damit lassen sich `system/93`–`96` mit denselben Zahlen nachstellen. Mit `-debugFixtureTimes`, aber ohne dieses Argument, plant die App keine Live-Aktivität und beendet, was noch läuft. Die Widgets bekommen Mock-Zeiten und Debug-Uhr in DEBUG immer über die App Group. |
+| `-debugAlarm` | Wecker zu Fadschr im Speicher: `before` an, 45 Min. vor Sonnenaufgang, Systemton; `fixed` an, feste Uhrzeit 05:30, kurzer Adhan; `denied` Erlaubnis abgelehnt. Ohne Dialog des Systems und ohne echte Wecker, nur mit `-debugFixtureTimes` (`iphone/24`, `iphone/84`). |
+| `-debugAlarmIn` | Ein echter Wecker über AlarmKit so viele Minuten (1–120) nach dem Start, auch mit `-debugFixtureTimes`. Er braucht die Erlaubnis: einmal den Schalter unter Einstellungen › Wecker zu Fadschr einschalten. Nur am Gerät – im Simulator lehnt iOS die Erlaubnis ohne Dialog ab (siehe `docs/OPEN-QUESTIONS.md`, „Annahmen in Phase 17“). |
 | `-debugCity`, `-debugHighLatitude` | feste Standortquelle mit dieser Stadt, Standort erlaubt |
 | `-debugLocationDenied` | Standort verweigert: Banner auf der Zeiten-Seite, „Aktueller Standort“ im Stadt-Sheet gesperrt |
 | `-debugOffline` | fest „kein Netz“: Hinweis unter dem Datum, im Stadt-Sheet nur gespeicherte Städte |
