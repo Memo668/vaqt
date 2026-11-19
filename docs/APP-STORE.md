@@ -87,19 +87,17 @@ Vaqt is a non-profit app for the five daily prayers – no ads, no tracking, no 
 This is the first beta. Some content is still a placeholder: the verse translations, the adhan recordings and the app icon. Nobody has reviewed the guide texts for religious accuracy yet, and the languages from French on are drafts that native speakers have yet to review.
 ```
 
-### Was testen – Build 0.1.0 (3)
+### Was testen – Build 0.1.0 (4)
 
-Neu seit Build 2 (Spec § 10). Für jeden weiteren Build anpassen: Was ist neu, was soll geprüft werden?
+Neu seit Build 3 (Spec § 10.8). Für jeden weiteren Build anpassen: Was ist neu, was soll geprüft werden?
 
 Deutsch:
 
 ```text
-Neu in Build 3:
-– Verbotszeiten (Kerahat): im Bogen besser sichtbar, mit ⓘ in der Liste und einer Erklärung.
-– Live-Aktivität durchscheinend, in der Verbotszeit orange; nach Gebetsbeginn schrumpft sie auf eine schmale Zeile, die neueste steht oben.
-– Nachholen: Auswahl Mann oder Frau (Regel und Wochenbett werden abgezogen) und „Alles zurücksetzen“.
-– Ehrlichere Datenschutztexte: Für den Ortsnamen fragt die App Apple Karten.
-Bitte besonders prüfen: Wird die Live-Aktivität in der Verbotszeit orange, und wie schnell schrumpft sie nach Gebetsbeginn? Stören sich mehrere Live-Aktivitäten auf dem Sperrbildschirm?
+Neu in Build 4:
+– Wecker zu Fadschr (Einstellungen › Wecker zu Fadschr): klingelt jeden Tag vor Sonnenaufgang wie der Wecker von iOS, auch im Stummmodus und bei Fokus. Wahlweise einige Minuten vor Sonnenaufgang oder zu einer festen Uhrzeit (spätestens 5 Minuten vor Sonnenaufgang), mit Systemton oder kurzem Adhan. Die Weckzeit steht als kleiner Chip in der Fadschr-Zeile.
+Bitte besonders prüfen: Klingelt der Wecker zuverlässig, auch im Stummmodus, bei Fokus und wenn die App ein paar Tage nicht geöffnet war? Wie ist der kurze Adhan als Weckton?
+Seit Build 3: Verbotszeiten mit Erklärung, Live-Aktivität durchscheinend und in der Verbotszeit orange, Nachholen für Mann oder Frau mit „Alles zurücksetzen“.
 
 Außerdem bitte im Alltag ausprobieren, vor allem:
 – Stimmen die Gebetszeiten für deinen Ort? Vergleiche mit deiner Moschee oder deinem Kalender; Methode und Minuten lassen sich in den Einstellungen ändern.
@@ -114,12 +112,10 @@ Feedback am besten mit Screenshot direkt aus TestFlight.
 Englisch:
 
 ```text
-New in build 3:
-– Makruh times: easier to see on the arc, with ⓘ in the list and an explanation.
-– Live Activity is translucent and turns orange during makruh times; after the prayer begins it shrinks to a slim line, the newest stays on top.
-– Make-up prayers: choose man or woman (menstruation and postnatal days are deducted) and "Reset Everything".
-– More accurate privacy texts: the app asks Apple Maps for the place name.
-Please check in particular: Does the Live Activity turn orange during makruh times, and how quickly does it shrink after the prayer begins? Do several Live Activities on the Lock Screen get in the way?
+New in build 4:
+– Fajr alarm (Settings › Fajr Alarm): rings every day before sunrise like the iOS alarm, even in silent mode and with a Focus on. Either some minutes before sunrise or at a fixed time (no later than 5 minutes before sunrise), with the system sound or the short adhan. The alarm time appears as a small chip in the Fajr row.
+Please check in particular: Does the alarm ring reliably, also in silent mode, with a Focus on and when the app has not been opened for a few days? How is the short adhan as an alarm sound?
+Since build 3: makruh times with an explanation, translucent Live Activity that turns orange during makruh times, make-up prayers for men or women with "Reset Everything".
 
 Also please use it in everyday life and check in particular:
 – Are the prayer times right for your location? Compare with your mosque or calendar; method and minutes can be changed in Settings.
