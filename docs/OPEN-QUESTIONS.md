@@ -486,6 +486,9 @@ Gebaut am 18.11.2026 auf `claude/phase-17` (ab `7d15612`). Neue Referenzbilder a
 - **Texte:** vier neue Schlüssel (`alarmSoundFooter`, `alarmDeniedFooter`, `alarmStop`, `alAlarmBody` für `NSAlarmKitUsageDescription`); die 13 Sprachen ab ES sind KI-Entwürfe.
 - **`-debugAlarmIn`:** ein echter Wecker zum Test am Gerät, ohne bis vor Sonnenaufgang zu warten.
 
+### Am Gerät geprüft
+- **18.11.2026, iPhone Duo (iOS 27.2.1):** Den Schalter eingeschaltet und die Erlaubnis gegeben; der Test-Wecker (`-debugAlarmIn 4`, Systemton) hat geklingelt. Noch offen: Stummmodus und Fokus ausdrücklich, der kurze Adhan als Weckton und ob iOS ihn wiederholt, das iPhone 18 Pro.
+
 ### Was sich im Simulator nicht prüfen lässt
 - **Erlaubnis für Wecker:** Im Simulator (iOS 27.2) lehnt iOS jede Anfrage ohne Dialog ab. Im Protokoll von SpringBoard steht, dass dem Dienst `mobiletimerd` die Berechtigung „com.apple.springboard.CFUserNotification“ für den Dialog fehlt. Klingeln, Ton, Stummmodus und Fokus deshalb nur am Gerät prüfen.
 
