@@ -62,7 +62,14 @@ public struct RootView: View {
             // Die Grundfarbe aus Einstellungen › Stil (Spec § 11.7) für die Bedienelemente des Systems – statt des
             // Assets `AccentColor`, das nur noch für den Start gilt. Dialoge des Systems nehmen die Farbe des Fensters.
             .tint(Palette.accent)
-            .onChange(of: settings.style.accent, initial: true) { _, accent in
+            // Die Fenster erst nach dem ersten Bild umfärben: Beim Aufbau verzögerte das den Stapel der Navigation
+            // um Sekunden (`-debugTab settings` zeigte erst die Zeiten-Seite). Petrol steht ohnehin im Asset.
+            .task {
+                guard settings.style.accent != .standard else { return }
+                try? await Task.sleep(for: .milliseconds(500))
+                WindowTint.apply(settings.style.accent)
+            }
+            .onChange(of: settings.style.accent) { _, accent in
                 WindowTint.apply(accent)
             }
     }
