@@ -67,8 +67,8 @@ extension Verse {
 
     /// Die Übersetzung in der Sprache der App.
     ///
-    /// TODO(placeholder): Die Übersetzungen sind Platzhalter des Prototyps; die lizenzierte Übersetzung
-    /// fehlt noch (Spec § 6.12).
+    /// Ein wörtlicher Ausschnitt der Übersetzung, die `L10n.verseSource` nennt; „…“ steht für ausgelassene
+    /// Teile des Verses (Spec § 11.1). Auf Arabisch leer – der Vers steht darüber.
     public var localizedTranslation: String {
         L10n.verseTranslation(surah: surah, ayah: ayah)
     }

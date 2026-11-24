@@ -95,14 +95,17 @@ struct L10nTests {
         }
     }
 
+    // Seit Phase 18 wörtliche Ausschnitte veröffentlichter Übersetzungen, „…“ für Ausgelassenes, mit geschütztem
+    // Leerzeichen an den Text gebunden (Spec § 11.1).
     @Test("Übersetzung und Sure wie im Prototyp", arguments: [
-        ("de", "Sucht Hilfe in der Geduld und im Gebet.", "Al-Baqara", "Asch-Scharh"),
-        ("tr", "Sabır ve namaz ile yardım dileyin.", "Bakara", "İnşirâh"),
-        ("en", "Seek help through patience and prayer.", "Al-Baqarah", "Ash-Sharh"),
-        ("es", "Buscad ayuda en la paciencia y en la oración.", "Al-Baqara", "Ash-Sharh"),
-        // Ohne eigene Übersetzung: Englisch; Arabisch ohne Übersetzung, der Vers steht ja da (Spec § 9.10).
-        ("fr", "Seek help through patience and prayer.", "Al-Baqarah", "Ash-Sharh"),
-        ("ru", "Seek help through patience and prayer.", "Al-Baqarah", "Ash-Sharh"),
+        ("de", "Und sucht Hilfe in der Standhaftigkeit und im Gebet!\u{00A0}…", "Al-Baqara", "Asch-Scharh"),
+        ("tr", "Sabır ve namaz ile Allah'tan yardım isteyin.\u{00A0}…", "Bakara", "İnşirâh"),
+        ("en", "And seek help through patience and prayer\u{00A0}…", "Al-Baqarah", "Ash-Sharh"),
+        ("es", "Busquen socorro en la paciencia y la oración.\u{00A0}…", "Al-Baqara", "Ash-Sharh"),
+        // Jede Sprache hat ihre eigene Übersetzung; nur der Name der Sure fällt auf Englisch zurück (Spec § 9.10).
+        ("fr", "Et cherchez secours dans l'endurance et la salât\u{00A0}…", "Al-Baqarah", "Ash-Sharh"),
+        ("ru", "Обратитесь за помощью к терпению и намазу.\u{00A0}…", "Al-Baqarah", "Ash-Sharh"),
+        // Arabisch ohne Übersetzung, der Vers steht ja da.
         ("ar", "", "Al-Baqarah", "Ash-Sharh"),
     ])
     func verseTexts(language: String, translation: String, surah2: String, surah94: String) throws {

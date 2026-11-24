@@ -124,7 +124,7 @@ public enum L10n {
     public static var copied: String { text("copied") }
     /// „Öffnet das Teilen-Menü (Prototyp)“
     public static var shareToast: String { text("shareToast") }
-    /// „Übersetzung: Platzhalter – die endgültige, lizenzierte Übersetzung folgt.“
+    /// „Übersetzung: Bubenheim und Elyas“
     public static var verseSource: String { text("verseSource") }
     /// „Heute“
     public static var today: String { text("today") }
@@ -748,8 +748,8 @@ public enum L10n {
 
     /// Name einer Sure aus `SURAH` im Prototyp, z. B. „Al-Baqara“ für 2.
     public static func surahName(_ surah: Int) -> String { text("surah_\(surah)") }
-    /// Übersetzung eines Verses aus `VERSES` im Prototyp, z. B. „Sucht Hilfe in der Geduld und im Gebet.“ für 2:45.
-    /// TODO(placeholder): ein Platzhalter – die lizenzierte Übersetzung fehlt noch (Spec § 6.12).
+    /// Übersetzung eines Verses aus `VERSES` im Prototyp, z. B. „Und sucht Hilfe in der Standhaftigkeit und im Gebet! …“ für 2:45.
+    /// Ein wörtlicher Ausschnitt der Übersetzung, die `verseSource` nennt (Spec § 11.1, docs/THIRD-PARTY.md).
     public static func verseTranslation(surah: Int, ayah: Int) -> String { text("verse_\(surah)_\(ayah)") }
 
     /// Alle Schlüssel des String Catalogs, in der Reihenfolge des Prototyps.

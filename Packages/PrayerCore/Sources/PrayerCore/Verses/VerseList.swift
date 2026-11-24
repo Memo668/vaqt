@@ -6,8 +6,8 @@ extension Verse {
     /// Die Verse der Seite „Verse“ in der Reihenfolge des Prototyps. Übersetzungen und Namen der Suren
     /// stehen im String Catalog (`verse_<Sure>_<Vers>`, `surah_<Sure>`).
     ///
-    /// TODO(placeholder): Welche Verse die App zeigt und woher der arabische Text kommt (z. B. Tanzil,
-    /// Uthmani-Schrift, mit Quellenangabe), ist noch offen – Spec § 6.12.
+    /// Der arabische Text ist jeweils ein Teil des Verses in der Uthmani-Schreibweise von Tanzil
+    /// (docs/THIRD-PARTY.md). Welche Verse die App auf Dauer zeigt, ist noch offen – Spec § 6.12, § 11.1.
     public static let all: [Verse] = [
         Verse(surah: 2, ayah: 45, arabic: "وَٱسْتَعِينُوا۟ بِٱلصَّبْرِ وَٱلصَّلَوٰةِ"),
         Verse(surah: 94, ayah: 5, arabic: "فَإِنَّ مَعَ ٱلْعُسْرِ يُسْرًا"),

@@ -36224,7 +36224,7 @@
       }
     },
     "surah_2" : {
-      "comment" : "Name der Sure 2 aus `SURAH` im Prototyp. Die Sprachen ohne eigenen Text haben den englischen, Arabisch beim Vers keinen (Spec § 9.10).",
+      "comment" : "Name der Sure 2 aus `SURAH` im Prototyp. Die Sprachen ohne eigenen Namen haben den englischen (Spec § 9.10).",
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
@@ -36326,7 +36326,7 @@
       }
     },
     "surah_13" : {
-      "comment" : "Name der Sure 13 aus `SURAH` im Prototyp. Die Sprachen ohne eigenen Text haben den englischen, Arabisch beim Vers keinen (Spec § 9.10).",
+      "comment" : "Name der Sure 13 aus `SURAH` im Prototyp. Die Sprachen ohne eigenen Namen haben den englischen (Spec § 9.10).",
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
@@ -36428,7 +36428,7 @@
       }
     },
     "surah_20" : {
-      "comment" : "Name der Sure 20 aus `SURAH` im Prototyp. Die Sprachen ohne eigenen Text haben den englischen, Arabisch beim Vers keinen (Spec § 9.10).",
+      "comment" : "Name der Sure 20 aus `SURAH` im Prototyp. Die Sprachen ohne eigenen Namen haben den englischen (Spec § 9.10).",
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
@@ -36530,7 +36530,7 @@
       }
     },
     "surah_94" : {
-      "comment" : "Name der Sure 94 aus `SURAH` im Prototyp. Die Sprachen ohne eigenen Text haben den englischen, Arabisch beim Vers keinen (Spec § 9.10).",
+      "comment" : "Name der Sure 94 aus `SURAH` im Prototyp. Die Sprachen ohne eigenen Namen haben den englischen (Spec § 9.10).",
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
@@ -37745,7 +37745,7 @@
       }
     },
     "verse_2_45" : {
-      "comment" : "TODO(placeholder): Übersetzung von 2:45 aus `VERSES` im Prototyp – ein Platzhalter, die lizenzierte Übersetzung fehlt noch (Spec § 6.12). Die Sprachen ohne eigenen Text haben den englischen, Arabisch beim Vers keinen (Spec § 9.10).",
+      "comment" : "Übersetzung von 2:45 aus `VERSES` im Prototyp: wörtlicher Ausschnitt einer veröffentlichten Übersetzung, „…“ steht für ausgelassene Teile des Verses (Spec § 11.1). Nicht umformulieren; Übersetzer und Quelle je Sprache in docs/THIRD-PARTY.md. Arabisch hat keine Übersetzung, der Vers steht darüber.",
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
@@ -37757,97 +37757,97 @@
         "bn" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Seek help through patience and prayer."
+            "value" : "ধৈর্য্যর সাথে সাহায্য প্রার্থনা কর নামাযের মাধ্যমে। …"
           }
         },
         "bs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Seek help through patience and prayer."
+            "value" : "Pomozite sebi strpljenjem i molitvom …"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sucht Hilfe in der Geduld und im Gebet."
+            "value" : "Und sucht Hilfe in der Standhaftigkeit und im Gebet! …"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Seek help through patience and prayer."
+            "value" : "And seek help through patience and prayer …"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Buscad ayuda en la paciencia y en la oración."
+            "value" : "Busquen socorro en la paciencia y la oración. …"
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Seek help through patience and prayer."
+            "value" : "از شكيبايى و نماز يارى جوييد. …"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Seek help through patience and prayer."
+            "value" : "Et cherchez secours dans l'endurance et la salât …"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Seek help through patience and prayer."
+            "value" : "Dan mohonlah pertolongan (kepada Allah) dengan sabar dan salat. …"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Seek help through patience and prayer."
+            "value" : "Cercate aiuto nella pazienza e nell'adorazione …"
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Seek help through patience and prayer."
+            "value" : "Dan mintalah pertolongan (kepada Allah) dengan jalan sabar dan mengerjakan sembahyang …"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Seek help through patience and prayer."
+            "value" : "Neemt jullie toevlucht tot geduld en de salaat. …"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Seek help through patience and prayer."
+            "value" : "Обратитесь за помощью к терпению и намазу. …"
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Seek help through patience and prayer."
+            "value" : "Kërkoni ndihmë (në të gjitha çështjet) me durim dhe me namaz …"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sabır ve namaz ile yardım dileyin."
+            "value" : "Sabır ve namaz ile Allah'tan yardım isteyin. …"
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Seek help through patience and prayer."
+            "value" : "اور (رنج وتکلیف میں) صبر اور نماز سے مدد لیا کرو …"
           }
         }
       }
     },
     "verse_2_152" : {
-      "comment" : "TODO(placeholder): Übersetzung von 2:152 aus `VERSES` im Prototyp – ein Platzhalter, die lizenzierte Übersetzung fehlt noch (Spec § 6.12). Die Sprachen ohne eigenen Text haben den englischen, Arabisch beim Vers keinen (Spec § 9.10).",
+      "comment" : "Übersetzung von 2:152 aus `VERSES` im Prototyp: wörtlicher Ausschnitt einer veröffentlichten Übersetzung, „…“ steht für ausgelassene Teile des Verses (Spec § 11.1). Nicht umformulieren; Übersetzer und Quelle je Sprache in docs/THIRD-PARTY.md. Arabisch hat keine Übersetzung, der Vers steht darüber.",
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
@@ -37859,97 +37859,97 @@
         "bn" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "So remember Me; I will remember you."
+            "value" : "সুতরাং তোমরা আমাকে স্মরণ কর, আমিও তোমাদের স্মরণ রাখবো …"
           }
         },
         "bs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "So remember Me; I will remember you."
+            "value" : "Sjećajte se vi Mene, i Ja ću se vas sjetiti …"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "So gedenkt Meiner, dann gedenke Ich euer."
+            "value" : "Gedenkt Meiner, so gedenke Ich eurer. …"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "So remember Me; I will remember you."
+            "value" : "So remember Me; I will remember you. …"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recordadme y Yo os recordaré."
+            "value" : "Recuérdenme que Yo los recordaré …"
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "So remember Me; I will remember you."
+            "value" : "پس مرا ياد كنيد، [تا] شما را ياد كنم …"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "So remember Me; I will remember you."
+            "value" : "Souvenez-vous de Moi donc. Je vous récompenserai. …"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "So remember Me; I will remember you."
+            "value" : "Maka ingatlah kepada-Ku, Aku pun akan ingat kepadamu. …"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "So remember Me; I will remember you."
+            "value" : "Ricordatevi dunque di Me e Io Mi ricorderò di voi …"
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "So remember Me; I will remember you."
+            "value" : "Oleh itu ingatlah kamu kepadaKu (dengan mematuhi hukum dan undang-undangKu), supaya Aku membalas kamu dengan kebaikan …"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "So remember Me; I will remember you."
+            "value" : "Gedenkt Mij, dan gedenk Ik jullie …"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "So remember Me; I will remember you."
+            "value" : "Поминайте Меня, и Я буду помнить о вас. …"
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "So remember Me; I will remember you."
+            "value" : "Pra më kujtoni Mua, Unë ju kujtoj juve …"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Siz beni anın ki ben de sizi anayım."
+            "value" : "Öyle ise siz beni (ibadetle) anın ki ben de sizi anayım. …"
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "So remember Me; I will remember you."
+            "value" : "سو تم مجھے یاد کرو۔ میں تمہیں یاد کیا کروں گا۔ …"
           }
         }
       }
     },
     "verse_2_286" : {
-      "comment" : "TODO(placeholder): Übersetzung von 2:286 aus `VERSES` im Prototyp – ein Platzhalter, die lizenzierte Übersetzung fehlt noch (Spec § 6.12). Die Sprachen ohne eigenen Text haben den englischen, Arabisch beim Vers keinen (Spec § 9.10).",
+      "comment" : "Übersetzung von 2:286 aus `VERSES` im Prototyp: wörtlicher Ausschnitt einer veröffentlichten Übersetzung, „…“ steht für ausgelassene Teile des Verses (Spec § 11.1). Nicht umformulieren; Übersetzer und Quelle je Sprache in docs/THIRD-PARTY.md. Arabisch hat keine Übersetzung, der Vers steht darüber.",
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
@@ -37961,97 +37961,97 @@
         "bn" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Allah does not burden a soul beyond what it can bear."
+            "value" : "আল্লাহ কাউকে তার সাধ্যাতীত কোন কাজের ভার দেন না …"
           }
         },
         "bs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Allah does not burden a soul beyond what it can bear."
+            "value" : "Allah nikoga ne opterećuje preko mogućnosti njegovih …"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Allah erlegt keiner Seele mehr auf, als sie zu tragen vermag."
+            "value" : "Allah erlegt keiner Seele mehr auf, als sie zu leisten vermag. …"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Allah does not burden a soul beyond what it can bear."
+            "value" : "Allah does not charge a soul except [with that within] its capacity. …"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Allah no impone a ningún alma más de lo que puede soportar."
+            "value" : "Dios no exige a nadie por encima de sus posibilidades …"
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Allah does not burden a soul beyond what it can bear."
+            "value" : "خداوند هيچ كس را جز به قدر توانايى‌اش تكليف نمى‌كند. …"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Allah does not burden a soul beyond what it can bear."
+            "value" : "Allah n'impose à aucune âme une charge supérieure à sa capacité. …"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Allah does not burden a soul beyond what it can bear."
+            "value" : "Allah tidak membebani seseorang melainkan sesuai dengan kesanggupannya. …"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Allah does not burden a soul beyond what it can bear."
+            "value" : "Allah non impone a nessun'anima al di là delle sue capacità. …"
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Allah does not burden a soul beyond what it can bear."
+            "value" : "Allah tidak memberati seseorang melainkan apa yang terdaya olehnya. …"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Allah does not burden a soul beyond what it can bear."
+            "value" : "God legt niemand meer op dan hij kan dragen. …"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Allah does not burden a soul beyond what it can bear."
+            "value" : "Аллах не возлагает на человека сверх его возможностей. …"
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Allah does not burden a soul beyond what it can bear."
+            "value" : "All-llahu nuk ngarkon askë përtej mundësive të veta …"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Allah hiç kimseye gücünün yeteceğinden fazlasını yüklemez."
+            "value" : "Allah her şahsı, ancak gücünün yettiği ölçüde mükellef kılar. …"
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Allah does not burden a soul beyond what it can bear."
+            "value" : "خدا کسی شخص کو اس کی طاقت سے زیادہ تکلیف نہیں دیتا۔ …"
           }
         }
       }
     },
     "verse_13_28" : {
-      "comment" : "TODO(placeholder): Übersetzung von 13:28 aus `VERSES` im Prototyp – ein Platzhalter, die lizenzierte Übersetzung fehlt noch (Spec § 6.12). Die Sprachen ohne eigenen Text haben den englischen, Arabisch beim Vers keinen (Spec § 9.10).",
+      "comment" : "Übersetzung von 13:28 aus `VERSES` im Prototyp: wörtlicher Ausschnitt einer veröffentlichten Übersetzung, „…“ steht für ausgelassene Teile des Verses (Spec § 11.1). Nicht umformulieren; Übersetzer und Quelle je Sprache in docs/THIRD-PARTY.md. Arabisch hat keine Übersetzung, der Vers steht darüber.",
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
@@ -38063,97 +38063,97 @@
         "bn" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Truly, in the remembrance of Allah do hearts find rest."
+            "value" : "… জেনে রাখ, আল্লাহর যিকির দ্বারাই অন্তর সমূহ শান্তি পায়।"
           }
         },
         "bs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Truly, in the remembrance of Allah do hearts find rest."
+            "value" : "… a srca se doista, kad se Allah spomene, smiruju!"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wahrlich, im Gedenken Allahs finden die Herzen Ruhe."
+            "value" : "… Sicherlich, im Gedenken Allahs finden die Herzen Ruhe!"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Truly, in the remembrance of Allah do hearts find rest."
+            "value" : "… Unquestionably, by the remembrance of Allah hearts are assured."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ciertamente, en el recuerdo de Allah encuentran sosiego los corazones."
+            "value" : "… ¿Acaso no es con el recuerdo de Dios que se sosiegan los corazones?"
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Truly, in the remembrance of Allah do hearts find rest."
+            "value" : "… آگاه باش كه با ياد خدا دلها آرامش مى‌يابد."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Truly, in the remembrance of Allah do hearts find rest."
+            "value" : "… Certes, c'est par l'évocation d'Allah que les cœurs se tranquillisent."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Truly, in the remembrance of Allah do hearts find rest."
+            "value" : "… Ingatlah, hanya dengan mengingat Allah hati menjadi tenteram."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Truly, in the remembrance of Allah do hearts find rest."
+            "value" : "… In verità, i cuori si rasserenano al Ricordo di Allah."
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Truly, in the remembrance of Allah do hearts find rest."
+            "value" : "… Ketahuilah dengan \"zikrullah\" itu, tenang tenteramlah hati manusia."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Truly, in the remembrance of Allah do hearts find rest."
+            "value" : "… zeker, door God te gedenken worden de harten gerustgesteld"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Truly, in the remembrance of Allah do hearts find rest."
+            "value" : "… Разве не поминанием Аллаха утешаются сердца?"
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Truly, in the remembrance of Allah do hearts find rest."
+            "value" : "… pra ta dini se me të përmendur All-llahun zemrat stabilizohen."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bilesiniz ki kalpler ancak Allah’ı anmakla huzur bulur."
+            "value" : "… Bilesiniz ki, kalpler ancak Allah'ı anmakla huzur bulur."
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Truly, in the remembrance of Allah do hearts find rest."
+            "value" : "… اور سن رکھو کہ خدا کی یاد سے دل آرام پاتے ہیں"
           }
         }
       }
     },
     "verse_20_14" : {
-      "comment" : "TODO(placeholder): Übersetzung von 20:14 aus `VERSES` im Prototyp – ein Platzhalter, die lizenzierte Übersetzung fehlt noch (Spec § 6.12). Die Sprachen ohne eigenen Text haben den englischen, Arabisch beim Vers keinen (Spec § 9.10).",
+      "comment" : "Übersetzung von 20:14 aus `VERSES` im Prototyp: wörtlicher Ausschnitt einer veröffentlichten Übersetzung, „…“ steht für ausgelassene Teile des Verses (Spec § 11.1). Nicht umformulieren; Übersetzer und Quelle je Sprache in docs/THIRD-PARTY.md. Arabisch hat keine Übersetzung, der Vers steht darüber.",
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
@@ -38165,97 +38165,97 @@
         "bn" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "And establish prayer for My remembrance."
+            "value" : "… এবং আমার স্মরণার্থে নামায কায়েম কর।"
           }
         },
         "bs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "And establish prayer for My remembrance."
+            "value" : "… i molitvu obavljaj – da bih ti uvijek na umu bio!"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Und verrichte das Gebet zu Meinem Gedenken."
+            "value" : "… und verrichte das Gebet zu Meinem Gedenken."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "And establish prayer for My remembrance."
+            "value" : "… and establish prayer for My remembrance."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Y establece la oración para recordarme."
+            "value" : "… y haz la oración para recordarme."
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "And establish prayer for My remembrance."
+            "value" : "… و به ياد من نماز برپا دار."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "And establish prayer for My remembrance."
+            "value" : "… et accomplis la Salât pour te souvenir de Moi."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "And establish prayer for My remembrance."
+            "value" : "… dan laksanakanlah salat untuk mengingat Aku."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "And establish prayer for My remembrance."
+            "value" : "… ed esegui l'orazione per ricordarti di Me."
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "And establish prayer for My remembrance."
+            "value" : "… dan dirikanlah sembahyang untuk mengingati Daku."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "And establish prayer for My remembrance."
+            "value" : "… en verricht de salaat om Mij te gedenken."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "And establish prayer for My remembrance."
+            "value" : "… и совершай намаз, чтобы помнить обо Мне."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "And establish prayer for My remembrance."
+            "value" : "… dhe fal namazin për të më kujtuar Mua."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beni anmak için namaz kıl."
+            "value" : "… beni anmak için namaz kıl."
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "And establish prayer for My remembrance."
+            "value" : "… اور میری یاد کے لئے نماز پڑھا کرو"
           }
         }
       }
     },
     "verse_94_5" : {
-      "comment" : "TODO(placeholder): Übersetzung von 94:5 aus `VERSES` im Prototyp – ein Platzhalter, die lizenzierte Übersetzung fehlt noch (Spec § 6.12). Die Sprachen ohne eigenen Text haben den englischen, Arabisch beim Vers keinen (Spec § 9.10).",
+      "comment" : "Übersetzung von 94:5 aus `VERSES` im Prototyp: wörtlicher Ausschnitt einer veröffentlichten Übersetzung, „…“ steht für ausgelassene Teile des Verses (Spec § 11.1). Nicht umformulieren; Übersetzer und Quelle je Sprache in docs/THIRD-PARTY.md. Arabisch hat keine Übersetzung, der Vers steht darüber.",
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
@@ -38267,91 +38267,91 @@
         "bn" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Indeed, with hardship comes ease."
+            "value" : "নিশ্চয় কষ্টের সাথে স্বস্তি রয়েছে।"
           }
         },
         "bs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Indeed, with hardship comes ease."
+            "value" : "Ta, zaista, s mukom je i last"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wahrlich, mit der Erschwernis kommt Erleichterung."
+            "value" : "Also gewiß, mit der Erschwernis ist Erleichterung"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Indeed, with hardship comes ease."
+            "value" : "For indeed, with hardship [will be] ease."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ciertamente, con la dificultad llega la facilidad."
+            "value" : "Luego de toda dificultad viene la facilidad."
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Indeed, with hardship comes ease."
+            "value" : "پس [بدان كه‌] با دشوارى، آسانى است."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Indeed, with hardship comes ease."
+            "value" : "A côté de la difficulté est, certes, une facilité!"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Indeed, with hardship comes ease."
+            "value" : "Maka sesungguhnya bersama kesulitan ada kemudahan"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Indeed, with hardship comes ease."
+            "value" : "In verità per ogni difficoltà c'è una facilità."
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Indeed, with hardship comes ease."
+            "value" : "Oleh itu, maka (tetapkanlah kepercayaanmu) bahawa sesungguhnya tiap-tiap kesukaran disertai kemudahan"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Indeed, with hardship comes ease."
+            "value" : "Want met het moeilijke hangt het gemakkelijke samen."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Indeed, with hardship comes ease."
+            "value" : "Воистину, за каждой тягостью наступает облегчение."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Indeed, with hardship comes ease."
+            "value" : "E, pa dyshim se pas vështirësisë është lehtësimi."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Şüphesiz zorlukla beraber bir kolaylık vardır."
+            "value" : "Elbette zorluğun yanında bir kolaylık vardır."
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Indeed, with hardship comes ease."
+            "value" : "ہاں ہاں مشکل کے ساتھ آسانی بھی ہے"
           }
         }
       }
@@ -38463,97 +38463,97 @@
         "ar" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "الترجمة: نص مؤقت – ستتوفر لاحقًا الترجمة النهائية المرخّصة."
+            "value" : "نص المصحف بالرسم العثماني من مشروع تنزيل (tanzil.net)"
           }
         },
         "bn" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "অনুবাদ: অস্থায়ী – চূড়ান্ত, লাইসেন্সপ্রাপ্ত অনুবাদ পরে আসবে।"
+            "value" : "অনুবাদ: মুহিউদ্দীন খান"
           }
         },
         "bs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Prijevod: privremeni tekst – konačni, licencirani prijevod slijedi."
+            "value" : "Prijevod: Besim Korkut"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Übersetzung: Platzhalter – die endgültige, lizenzierte Übersetzung folgt."
+            "value" : "Übersetzung: Bubenheim und Elyas"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Translation: placeholder – the final, licensed translation will follow."
+            "value" : "Translation: Saheeh International"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Traducción provisional: la traducción definitiva con licencia llegará más adelante."
+            "value" : "Traducción: Muhammad Isa García"
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "ترجمه: متن موقت – ترجمه نهایی و دارای مجوز به‌زودی اضافه می‌شود."
+            "value" : "ترجمه: محمدمهدی فولادوند"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Traduction : texte provisoire – la traduction définitive, sous licence, suivra."
+            "value" : "Traduction : Muhammad Hamidullah"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Terjemahan: teks sementara – terjemahan final yang berlisensi akan menyusul."
+            "value" : "Terjemahan: Kementerian Agama RI"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Traduzione: segnaposto – seguirà la traduzione definitiva con licenza."
+            "value" : "Traduzione: Hamza Roberto Piccardo"
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Terjemahan: teks sementara – terjemahan muktamad yang berlesen akan menyusul."
+            "value" : "Terjemahan: Abdullah Muhammad Basmeih"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Vertaling: tijdelijke tekst – de definitieve, gelicentieerde vertaling volgt."
+            "value" : "Vertaling: Fred Leemhuis"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Перевод: временный текст – окончательный лицензированный перевод появится позже."
+            "value" : "Перевод: Эльмир Кулиев"
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Përkthimi: tekst provizor – përkthimi përfundimtar me licencë do të shtohet më vonë."
+            "value" : "Përkthimi: Sherif Ahmeti"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Meal: yer tutucu – kesin ve lisanslı meal daha sonra eklenecek."
+            "value" : "Meal: Türkiye Diyanet Vakfı"
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "ترجمہ: عارضی متن – حتمی، لائسنس یافتہ ترجمہ بعد میں آئے گا۔"
+            "value" : "ترجمہ: فتح محمد جالندھری"
           }
         }
       }

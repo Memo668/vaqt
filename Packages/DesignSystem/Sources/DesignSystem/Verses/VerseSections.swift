@@ -24,7 +24,7 @@ public struct VersesOverview: View {
                 .padding(.top, PageTitle.spacingAbove)
                 .padding(.bottom, PageTitle.spacingBelow)
             VerseCard(day, onCopy: onCopy)
-            // TODO(placeholder): „Übersetzung: Platzhalter …“ – bis die lizenzierte Übersetzung da ist.
+            // Nennt die Übersetzung der Sprache, auf Arabisch die Quelle des Verstexts (Spec § 11.1).
             CardFootnote(L10n.verseSource)
                 .padding(.top, VersesLayout.cardBottom)
         }

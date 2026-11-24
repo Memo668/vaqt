@@ -9,8 +9,9 @@
 //   • Packages/PrayerCore/Sources/PrayerCore/Verses/VerseList.swift – Stelle und arabischer Text der Verse
 //
 // Übersetzungen der Verse und Namen der Suren hängen von der Sprache ab und kommen deshalb in den
-// String Catalog (`verse_<Sure>_<Vers>`, `surah_<Sure>`); die Übersetzungen sind Platzhalter und tragen
-// dort den Kommentar `TODO(placeholder)` (entschieden am 12.11.2026, docs/OPEN-QUESTIONS.md).
+// String Catalog (`verse_<Sure>_<Vers>`, `surah_<Sure>`). Seit Phase 18 sind die Übersetzungen wörtliche
+// Ausschnitte veröffentlichter Übersetzungen (Spec § 11.1, Quellen in docs/THIRD-PARTY.md) – eine vorläufige
+// Auswahl, entschieden am 24.11.2026 (docs/OPEN-QUESTIONS.md).
 //
 // Aufruf über den Wrapper:
 //   scripts/import-strings            Dateien neu schreiben
@@ -29,8 +30,9 @@
 //     ohne Eintrag bekommen den Text aus `T` mit `%lld`; fehlt die Zahl dort ganz (z. B. `qcResultUnit`), eine
 //     Variante mit nur `other`.
 //   • Die zwölf Sprachen ab FR sind KI-Entwürfe (15.11.2026): Status `needs_review` („Needs Review“ in Xcode).
-//   • Übersetzungen der Verse und Namen der Suren gibt es nur in DE/TR/EN/ES. Die übrigen Sprachen bekommen den
-//     englischen Platzhalter, Arabisch keine Übersetzung – der Vers selbst steht darüber (Spec § 9.10).
+//   • Namen der Suren gibt es nur in DE/TR/EN/ES; die übrigen Sprachen bekommen den englischen Namen.
+//     Übersetzungen der Verse gibt es in allen Sprachen außer Arabisch – dort steht der Vers selbst
+//     (Spec § 9.10, § 11.1). Fehlt eine, bricht das Skript ab.
 //   • Quellsprache des Katalogs ist Deutsch.
 //   • Die Info.plist braucht jeden ihrer Texte zusätzlich als Grundwert. Der steht in project.yml und
 //     muss dem deutschen Text entsprechen; das Skript prüft das, schreibt project.yml aber nicht um.
@@ -504,7 +506,7 @@ for key in order {
 
 // MARK: - Verse (`SURAH`, `VERSES`)
 
-/// Ein Vers aus `VERSES`: Stelle, arabischer Text und die Platzhalter-Übersetzungen je Sprache.
+/// Ein Vers aus `VERSES`: Stelle, arabischer Text und die Übersetzung je Sprache.
 struct PrototypeVerse {
     let surah: Int
     let ayah: Int
@@ -558,9 +560,9 @@ for (index, object) in verseObjects.enumerated() {
 }
 guard !verses.isEmpty else { fail("`VERSES` ist leer") }
 
-/// Namen der Suren und Übersetzungen der Verse gibt es nur in DE/TR/EN/ES. Die übrigen Sprachen bekommen wie
-/// `verseRef()`/`verseTr()` im Prototyp den englischen Text; Arabisch keine Übersetzung, der Vers steht ja da
-/// (Spec § 9.10, entschieden am 15.11.2026).
+/// Namen der Suren gibt es nur in DE/TR/EN/ES. Die übrigen Sprachen bekommen wie `verseRef()` im Prototyp den
+/// englischen Namen (Spec § 9.10, entschieden am 15.11.2026). Bei den Versen dient der Rückfall nur noch
+/// Arabisch: keine Übersetzung, der Vers steht ja da.
 func withEnglishFallback(_ texts: [String: String], arabic: String? = nil) -> [String: String] {
     guard let english = texts["en"] else { fail("Englischer Text fehlt für den Rückfall: \(texts)") }
     var result = texts
@@ -569,7 +571,7 @@ func withEnglishFallback(_ texts: [String: String], arabic: String? = nil) -> [S
     }
     return result
 }
-let fallbackNote = "Die Sprachen ohne eigenen Text haben den englischen, Arabisch beim Vers keinen (Spec § 9.10)."
+let fallbackNote = "Die Sprachen ohne eigenen Namen haben den englischen (Spec § 9.10)."
 
 for surah in surahNames {
     entries.append(makeEntry(
@@ -578,10 +580,16 @@ for surah in surahNames {
     ))
 }
 for verse in verses {
+    // Seit Phase 18 hat jede Sprache außer Arabisch ihre eigene Übersetzung – kein stiller Rückfall auf Englisch.
+    let missing = languages.filter { $0 != "ar" && verse.translations[$0] == nil }
+    guard missing.isEmpty else {
+        fail("`VERSES`: Für \(verse.surah):\(verse.ayah) fehlt die Übersetzung in \(missing.joined(separator: ", "))")
+    }
     entries.append(makeEntry(
         key: "verse_\(verse.surah)_\(verse.ayah)", perLanguage: withEnglishFallback(verse.translations, arabic: ""),
-        note: "TODO(placeholder): Übersetzung von \(verse.surah):\(verse.ayah) aus `VERSES` im Prototyp – ein Platzhalter, "
-            + "die lizenzierte Übersetzung fehlt noch (Spec § 6.12). " + fallbackNote
+        note: "Übersetzung von \(verse.surah):\(verse.ayah) aus `VERSES` im Prototyp: wörtlicher Ausschnitt einer "
+            + "veröffentlichten Übersetzung, „…“ steht für ausgelassene Teile des Verses (Spec § 11.1). Nicht umformulieren; "
+            + "Übersetzer und Quelle je Sprache in docs/THIRD-PARTY.md. Arabisch hat keine Übersetzung, der Vers steht darüber."
     ))
 }
 
@@ -742,7 +750,7 @@ swift += """
     /// Name einer Sure aus `SURAH` im Prototyp, z. B. „\(comment(firstSurahName))“ für \(firstVerse.surah).
     public static func surahName(_ surah: Int) -> String { text("surah_\\(surah)") }
     /// Übersetzung eines Verses aus `VERSES` im Prototyp, z. B. „\(comment(firstVerse.translations["de"] ?? ""))“ für \(firstVerse.surah):\(firstVerse.ayah).
-    /// TODO(placeholder): ein Platzhalter – die lizenzierte Übersetzung fehlt noch (Spec § 6.12).
+    /// Ein wörtlicher Ausschnitt der Übersetzung, die `verseSource` nennt (Spec § 11.1, docs/THIRD-PARTY.md).
     public static func verseTranslation(surah: Int, ayah: Int) -> String { text("verse_\\(surah)_\\(ayah)") }
 
 """
@@ -765,8 +773,8 @@ extension Verse {
     /// Die Verse der Seite „Verse“ in der Reihenfolge des Prototyps. Übersetzungen und Namen der Suren
     /// stehen im String Catalog (`verse_<Sure>_<Vers>`, `surah_<Sure>`).
     ///
-    /// TODO(placeholder): Welche Verse die App zeigt und woher der arabische Text kommt (z. B. Tanzil,
-    /// Uthmani-Schrift, mit Quellenangabe), ist noch offen – Spec § 6.12.
+    /// Der arabische Text ist jeweils ein Teil des Verses in der Uthmani-Schreibweise von Tanzil
+    /// (docs/THIRD-PARTY.md). Welche Verse die App auf Dauer zeigt, ist noch offen – Spec § 6.12, § 11.1.
     public static let all: [Verse] = [
 
 """
