@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 24.11.2026, Phase 18 (Verse und Adhan, Spec § 11) gebaut, die Abnahme steht aus; danach Build 0.1.0 (5) für die Golden Beta am 26.11.2026.
+Stand: 25.11.2026, Phase 18 (Verse und Adhan, Spec § 11.1–11.2) mit dem Nachtrag (Klang, Stil, Rechtsschule, Onboarding, Spec § 11.3–11.7) gebaut, die Abnahme steht aus; danach Build 0.1.0 (5) für die Golden Beta am 26.11.2026.
 
 ## Für die erste Beta
 
@@ -58,6 +58,77 @@ Offen bleibt:
 - **Welche Verse und wie viele:** Es bleiben die sechs bisherigen. Bei einem Vers am Tag wiederholen sie sich jede Woche (Spec § 6.12).
 - **Rechte an der Aufnahme:** Die Lizenz hat der Kanal DARSA TV gesetzt, der im Video als Produzent genannt ist. Eine eigene Zusage des Muezzins liegt nicht vor.
 - **Fadschr:** Für eine Fassung mit „aṣ-ṣalātu khayrun mina n-nawm“ braucht es eine eigene Aufnahme. Bis dahin spielt Fadschr dieselbe wie die übrigen Gebete.
+
+## Nachtrag zu Phase 18: Stil, Klang und Verbotszeiten nach Rechtsschule, entschieden am 24.11.2026
+
+Im Prototyp „Stil“ (Version 11, https://claude.ai/artifact/RT2pyH3n2NuU5u3DpzQSHo) gezeigt und am 24.11.2026 abgenommen: „Ja, die Farbauswahl ist deutlich besser. Behalten wir so, wird mit in Phase 18 übernommen, so wie im Prototypen.“ und für die Verbotszeiten „Ja, übernehmen“. Go zum Bau am selben Abend („Phase 18 go“). Beschreibung in Spec § 11.3–11.7. Grundlage der Verbotszeiten sind zwei Texte von Ibrahim Gezer vom 24.11.2026, vom Nutzer weitergegeben.
+
+| Frage | Entscheidung des Nutzers (24.11.2026) | Umsetzung |
+|---|---|---|
+| Töne von Apple unter „Systemton“ wählbar? | „Nur iOS-Standard“ | Seite bleibt Systemton / Kurzer Adhan / Lautlos; bei „Systemton“ sagt die Fußzeile, wo man den Ton in iOS wählt (§ 11.3) |
+| Wo steht „Darstellung“? | „die Anpassung der Darstellung hätte ich gerne in den Einstellungen über Berechnung“ | Gruppe direkt unter „Standort“ (§ 11.4) |
+| Stil der App | Grundfarbe wählbar, Live-Aktivität invertiert, reduziert, schwarz-weiß, nur Bogen farbig; Durchsichtigkeit immer gleich | 24 Grundfarben, aufklappbar (zugeklappt die sechs Standardfarben, aufgeklappt 4 × 6, kein sichtbarer Name), sechs Varianten der Live-Aktivität bei 30 % (§ 11.7) |
+| Warme Farben | „Orange, gelb, gold, braun und Sand kannst du ja aber trotzdem einbauen und dann bei diesen Farben die Verbotszeitfarbe abändern“, dann „Ja“ zu drei Farben | Orange, Gold und Sand; Verbotszeit dort violett. Gelb und Braun fehlen, weil sie hell von Gold und Sand nicht zu unterscheiden wären |
+| Andere Rechtsschulen | Neue Einstellung „Rechtsschule“ (statt nur Hanafi) | Hanafi, Maliki, Schafii, Hanbali; ändert die Fenster und die Texte, nicht die Asr-Zeit (§ 11.6) |
+| Zeiten nach dem Fadschr- und dem Asr-Gebet | Nur im Info-Blatt | Abschnitt „Nach dem Fadschr- und dem Asr-Gebet“, nicht im Bogen |
+| Nachholen in Verbotszeiten | Nur im Info-Blatt | Abschnitt „Versäumte Gebete nachholen“ je Schule, kein Hinweis im Tab „Nachholen“ |
+| Quellen | Nur in der Doku | unten, nicht in der App |
+| Dauer der Fenster | „Je Schule“ nach der Recherche | Hanafi 45/10/45, Schafii 25/10/25 (freitags kein Fenster vor Dhuhr), Hanbali 20/10/20, Maliki 20/–/20 |
+| Rechtsschule im Onboarding | Eigene Seite nach dem Standort, als Auswahlmenü („Dropdown“), Hanafi vorgewählt | Seite 3 von 5, `Picker` mit `.pickerStyle(.menu)` (§ 11.5) |
+| Wischen im Onboarding | „für Phase 18“ | Vor und zurück per Wischen, gespiegelt im Arabischen, an den Enden federnd, ohne Erlaubnis-Abfrage; die letzte Seite schließt nur der Knopf |
+| Übersetzungen | „Die restlichen 13 Sprachen kannst du ja selbst übersetzen“ | KI-Entwurf für ES und die zwölf ab FR (69 Schlüssel), Katalog wie bisher (ES „translated“, die zwölf „Needs Review“) |
+
+Offen bleibt:
+
+- **Fachliche Prüfung:** Ibrahim Gezer soll die neuen Texte lesen, vor allem „Versäumte Gebete nachholen“ und die Einleitungen für Maliki, Schafii und Hanbali – vor dem App Store. Fiqh-Aussagen gehen nicht über seine Texte hinaus.
+- **Dauer der Fenster, als Annahme markiert** (Recherche vom 24.11.2026, `docs/vorschlaege/2026-11-24/recherche-dauer-verbotszeiten.md` im Hauptordner):
+  1. Maliki: Es gibt keine belastbaren Minuten; 20 ist eine Annahme in Anlehnung an Hanbali. Unklar ist auch, ob das Fenster vor Sonnenuntergang nur den Untergang selbst meint (ʿAṭiyya Ṣaqr) oder ab dem Gelbwerden gilt (Dar al-Ifta).
+  2. Schafii und Hanbali vor Sonnenuntergang: keine Minuten von Behörden; gespiegelt vom Morgenfenster.
+  3. Hanbali vor Dhuhr: 10 (Ibn ʿUthaymīn) oder 15–20 (Ibn Bāz)?
+  4. Schafii vor Dhuhr: keine Behörde nennt eine Zahl; 10 liegt am unteren Rand der ägyptischen Angaben.
+  5. Hanafi in Südasien weicht stark ab (15–20 / unter 1 / 20–25 Minuten, Deoband). Unter Hanafi bleibt Diyanet (40–50 / etwa 10 / 40–50) der Maßstab; 45/10/45 sind die Mittelwerte.
+  6. Mufti WP (12–15), Ägypten (etwa 15) und Deoband waren nur über Spiegel oder Suchauszüge lesbar.
+- **Mekka:** Die schafiitische Ausnahme für Mekka steht nur im Text; der Ort bestimmt sie nicht genau genug.
+- **Asr bei Hanafi:** Die Rechtsschule ändert die Asr-Berechnung mit Absicht nicht. Der Kalender der Diyanet rechnet nach unserem Wissen mit Standard-Asr; nicht nachgeprüft.
+- **Voreinstellung:** Hanafi für alle; eine Vorauswahl je Land gibt es nicht.
+- **Zweite Quellenliste** in Ibrahims Text ist abgeschnitten („Read more“); laut Nutzer nicht dringend.
+- **Lesbarkeit der Live-Aktivität** hängt vom Hintergrundbild ab: Mit fester Deckkraft sind die normalen Varianten nur auf dunklen Bildern gut lesbar, die invertierten nur auf hellen. Die App kann das Bild nicht erkennen.
+- **Am Gerät:** Wie iOS eine helle oder farblose Fläche mit 30 % zeichnet und wie die Farben auf dem Display wirken.
+
+Annahmen des Prototyps, die mit der Abnahme gelten (aus `LIESMICH.md` des Vorschlags):
+
+1. **Verbotszeit je Stil:** „Farbig“ wird orange wie bisher; bei „Nur Bogen“ wird nur der Bogen orange, dazu „Verbotszeit bis …“ in Orange; „Schwarz-weiß“ bleibt ohne Farbe, die Verbotszeit steht im Text und ist im Bogen gestreift.
+2. **Fehlende Farben:** Gelb, Braun, reines Signalrot, ein mittleres Grau. Bei allen nicht warmen Farben bleibt die Verbotszeit orange.
+3. **Kontrast:** Jede Farbe erreicht 4,5 : 1. Kleinste Werte: hell 5,05 : 1 auf Weiß und 4,52 : 1 auf dem grauen Seitengrund (Grün), dunkel 5,03 : 1 auf der Zelle (Bordeaux), Schrift auf der dunklen Akzentfläche 5,21 : 1 (Bordeaux).
+4. **Rosa, Rot und Gras:** Bei Beere und Bordeaux hebt sich die Verbotszeit dunkel schwächer ab, bei Gras hell in den vergangenen Abschnitten. Die Verbotszeit steht immer auch als Text da.
+5. **Mono:** „Farbig“ und „Nur Bogen“ sehen fast gleich aus; Knöpfe aus Text unterscheiden sich nur durch die Schriftstärke.
+6. **Sechs Varianten:** drei Stufen mal „Invertiert“.
+7. **Widget:** Der Stil gilt auch für das Widget mit dem Bogen („Live“). Der Hinweis spricht vom „Widget mit dem Bogen“, weil das Widget auf dem iPhone „Vaqt“ heißt.
+
+Beim Übernehmen in `design/` ergänzt (25.11.2026): Bei warmen Grundfarben werden auch die Marken der Verbotszeiten unter dem Balken der Dynamic Island violett. Im Vorschlag blieben sie orange (`#E0A84F`), obwohl die Entscheidung „überall“ lautet.
+
+Quellen nach Ibrahim Gezer (24.11.2026), nur in der Doku (Entscheidung des Nutzers):
+
+- Erster Text, „Kurzüberblick“:
+  1. al-Mawsūʿa al-Fiqhiyya al-Kuwaytiyya, 7/180 und 7/181 (Sonnenstandszeiten, malikitische und schafiitische Abweichungen)
+  2. al-Mawsūʿa al-Fiqhiyya al-Kuwaytiyya, 3/244 (nach Fadschr und Asr, die vier Schulen)
+  3. Wahba al-Zuḥaylī, al-Fiqh al-Islāmī wa-Adillatuh, 2/1528 und 2/1529 (Totengebet)
+  4. al-Rīmī, al-Maʿānī al-Badīʿa fī Maʿrifat Ikhtilāf Ahl al-Sharīʿa, 1/194 (Nachholen)
+  5. al-Bayhaqī, al-Khilāfiyyāt (Taḥqīq al-Naḥḥāl), 3/300
+  6. Fayṣal Āl Mubārak, Bustān al-Aḥbār Mukhtaṣar Nayl al-Awṭār, 1/338
+- Zweiter Text, „Klassische Belege und Unterschiede der vier Schulen“ (Liste abgeschnitten):
+  1. Ibn Qudāma, al-Mughnī (Taḥqīq al-Turkī), 2/513 (nach Fadschr und Asr; Nachholen) und 2/524
+  2. Ibn Rushd al-Ḥafīd, Bidāyat al-Mujtahid wa-Nihāyat al-Muqtaṣid, 1/109 (Bericht von ʿUqba ibn ʿĀmir; malikitische und schafiitische Position)
+  3. al-Kāsānī, Badāʾiʿ al-Ṣanāʾiʿ fī Tartīb al-Sharāʾiʿ (Stelle abgeschnitten)
+  4. al-Shāfiʿī, al-Risāla (im Text genannt, Stelle fehlt)
+- Dauer der Fenster (Recherche vom 24.11.2026, die tragenden Angaben selbst nachgelesen):
+  - Diyanet, Fetva „Mekruh vakitler hangileridir …“: 40–50 / etwa 10 / 40–50 Minuten – https://kurul.diyanet.gov.tr/tr/fetva/mekruh-vakitler-hangileridir-hangi-vakitlerde-kaza-ve-hangi-vakitlerde-nafile-namaz-kilinmaz/0193c42d-52b7-7186-d5b4-f1d3c950ad73
+  - TDV İslâm Ansiklopedisi, „Vakit“: 45–50 Minuten nach Sonnenaufgang – https://islamansiklopedisi.org.tr/vakit
+  - JAKIM e-Solat: Dhuha = Syuruk + 25 Minuten – https://www.e-solat.gov.my/
+  - Ibn ʿUthaymīn: 15–20 Minuten nach Sonnenaufgang, etwa 10 vor Zawāl (sekundär, islamqa.info 566728, fiqh.islamonline.net)
+  - Ibn Bāz: 15–20, zur Vorsicht 30 Minuten vor dem Adhan zu Dhuhr – https://binbaz.org.sa/fatwas/12348
+  - Dar al-Ifta (Ägypten): Fenster nur über den Sonnenstand, ohne Minuten – https://www.dar-alifta.org/ar/fatwa/details/11593
+  - Die ganze Liste mit 20 Quellen und dem Stand jeder Angabe: `docs/vorschlaege/2026-11-24/recherche-dauer-verbotszeiten.md` (im Hauptordner, nicht eingecheckt).
 
 ## Änderungen nach der ersten Beta, entschieden am 17./18.11.2026
 

@@ -36,15 +36,19 @@ const hm = (h, m, s = 0) => h * 3600 + m * 60 + s;
 // Qibla: `drag: true` hält den Kurs fest – sonst schwankt er im Prototyp um ±0,9°.
 const home = { onboarded: true, section: 'prayers', tab: 'today' };
 const STATES = [
-  // Onboarding – Phase 7, Änderungen 1 und 8
+  // Onboarding – Phase 7, Änderungen 1 und 8; seit dem Nachtrag zu Phase 18 (Spec § 11.5) fünf Seiten, die Rechtsschule
+  // ist Seite 3 (`obStep` 2). Mitteilungen und „Kostenlos“ rücken eins weiter (05, 06; bis Phase 18 hießen sie 03 und 05).
   { file: 'iphone/01-onboarding-1-welcome', at: hm(14, 25), s: { onboarded: false, obStep: 0 } },
   { file: 'iphone/01-onboarding-1-welcome-dark', dark: true, at: hm(14, 25), s: { onboarded: false, obStep: 0 } },
   { file: 'iphone/02-onboarding-2-location', at: hm(14, 25), s: { onboarded: false, obStep: 1 } },
-  { file: 'iphone/03-onboarding-3-notifications', at: hm(14, 25), s: { onboarded: false, obStep: 2 } },
+  { file: 'iphone/03-onboarding-3-madhab', at: hm(14, 25), s: { onboarded: false, obStep: 2 } },
+  { file: 'iphone/03-onboarding-3-madhab-dark', dark: true, at: hm(14, 25), s: { onboarded: false, obStep: 2 } },
+  { file: 'iphone/03-onboarding-3-madhab-menu', at: hm(14, 25), s: { onboarded: false, obStep: 2, obMenu: true } },
   // Der Dialog des Systems über Schritt 2 – nur Ablauf, iOS zeichnet ihn selbst (seit Phase 14 mit „Vaqt“).
   { file: 'iphone/04-alert-location', at: hm(14, 25), s: { onboarded: false, obStep: 1, alert: 'loc' } },
-  { file: 'iphone/05-onboarding-4-free', at: hm(14, 25), s: { onboarded: false, obStep: 3 } },
-  { file: 'iphone/05-onboarding-4-free-dark', dark: true, at: hm(14, 25), s: { onboarded: false, obStep: 3 } },
+  { file: 'iphone/05-onboarding-4-notifications', at: hm(14, 25), s: { onboarded: false, obStep: 3 } },
+  { file: 'iphone/06-onboarding-5-free', at: hm(14, 25), s: { onboarded: false, obStep: 4 } },
+  { file: 'iphone/06-onboarding-5-free-dark', dark: true, at: hm(14, 25), s: { onboarded: false, obStep: 4 } },
 
   // Zeiten – Phase 2/3, Änderungen 2, 3 und 10
   { file: 'iphone/10-home-asr-active', at: hm(14, 25, 1), s: home },
@@ -63,6 +67,14 @@ const STATES = [
   { file: 'iphone/22-home-jakarta-close-markers', at: hm(17, 57), s: { ...home, city: 'jakarta', deviceCity: 'jakarta' } },
   { file: 'iphone/23-home-next-day', at: hm(14, 25, 1), s: { ...home, dayOff: 1 } },
   { file: 'iphone/23-home-next-day-dark', dark: true, at: hm(14, 25, 1), s: { ...home, dayOff: 1 } },
+  // Nachtrag zu Phase 18: Grundfarbe Orange mit violetter Verbotszeit (§ 11.7), Verbotszeiten nach Rechtsschule (§ 11.6)
+  { file: 'iphone/25-home-accent-orange-kerahat', at: hm(7, 30), s: { ...home, accent: 'orange' } },
+  { file: 'iphone/25-home-accent-orange-kerahat-dark', dark: true, at: hm(7, 30), s: { ...home, accent: 'orange' } },
+  { file: 'iphone/25-home-accent-ocean', at: hm(14, 25, 1), s: { ...home, accent: 'ocean' } },
+  { file: 'iphone/26-home-maliki', at: hm(14, 25, 1), s: { ...home, madhab: 'maliki' } },
+  { file: 'iphone/26-home-shafii-friday', at: hm(14, 25, 1), s: { ...home, madhab: 'shafii', dayOff: 3 } },
+  { file: 'iphone/27-sheet-kerahat', at: hm(14, 25), s: { ...home, sheet: 'kerahat' } },
+  { file: 'iphone/27-sheet-kerahat-maliki', at: hm(14, 25), s: { ...home, madhab: 'maliki', sheet: 'kerahat' } },
 
   // Qibla – Phase 4, Änderung 4 (Qibla Berlin 137°)
   { file: 'iphone/30-qibla', at: hm(14, 25), s: { ...home, tab: 'qibla', qibla: { heading: 98, drag: true } } },
@@ -121,6 +133,15 @@ const STATES = [
   { file: 'iphone/84-settings-alarm-off', at: hm(14, 25), s: { ...home, stack: { settings: ['settings', 'alarm'] } } },
   { file: 'iphone/84-settings-alarm-denied', at: hm(14, 25), s: { ...home, alarmDenied: true, stack: { settings: ['settings', 'alarm'] } } },
 
+  // Nachtrag zu Phase 18 (Spec § 11.3, 11.6, 11.7): Klang mit Systemton, Stil, Rechtsschule
+  { file: 'iphone/80-settings-sound-system', at: hm(14, 25), s: { ...home, sound: 'system', stack: { settings: ['settings', 'sound'] } } },
+  { file: 'iphone/87-settings-style', at: hm(14, 25, 1), s: { ...home, stack: { settings: ['settings', 'style'] } } },
+  { file: 'iphone/87-settings-style-dark', dark: true, at: hm(14, 25, 1), s: { ...home, stack: { settings: ['settings', 'style'] } } },
+  { file: 'iphone/87-settings-style-open', at: hm(14, 25, 1), s: { ...home, accent: 'orange', laStyle: 'arc', laInv: true, stack: { settings: ['settings', 'style'] } } },
+  { file: 'iphone/87-settings-style-open-end', at: hm(14, 25, 1), s: { ...home, accent: 'orange', laStyle: 'arc', laInv: true, stack: { settings: ['settings', 'style'] } }, scroll: { 'pg-style': 'end' } },
+  { file: 'iphone/88-settings-madhab', at: hm(14, 25), s: { ...home, stack: { settings: ['settings', 'madhab'] } } },
+  { file: 'iphone/88-settings-madhab-dark', dark: true, at: hm(14, 25), s: { ...home, madhab: 'shafii', stack: { settings: ['settings', 'madhab'] } } },
+
   // Außerhalb der App – Phase 9, Änderungen 1 und 11 (Phase 14). Die Ansichten `widgets`, `live` und
   // `notifs` zeigen mehrere Bildschirme nebeneinander; `screen` wählt einen davon (0 = der erste).
   { file: 'system/90-lockscreen-widgets', at: hm(14, 25, 1), s: { ...home, view: 'widgets' }, screen: 0 },
@@ -130,6 +151,23 @@ const STATES = [
   { file: 'system/94-live-activity-island-compact', at: hm(14, 25, 1), s: { ...home, view: 'live' }, screen: 1 },
   { file: 'system/95-live-activity-island-expanded', at: hm(14, 25, 1), s: { ...home, view: 'live' }, screen: 2 },
   { file: 'system/96-live-activity-lockscreen-dark', dark: true, at: hm(16, 35), s: { ...home, view: 'live' }, screen: 0 },
+  // Nachtrag zu Phase 18 (Spec § 11.7): die sechs Varianten der Live-Aktivität, auch in der Verbotszeit (16:05) und warm (violett)
+  { file: 'system/97-live-activity-arc', at: hm(14, 25, 1), s: { ...home, view: 'live', laStyle: 'arc' }, screen: 0 },
+  { file: 'system/97-live-activity-mono', at: hm(14, 25, 1), s: { ...home, view: 'live', laStyle: 'mono' }, screen: 0 },
+  { file: 'system/97-live-activity-full-inverted', at: hm(14, 25, 1), s: { ...home, view: 'live', laInv: true }, screen: 0 },
+  { file: 'system/97-live-activity-arc-inverted', at: hm(14, 25, 1), s: { ...home, view: 'live', laStyle: 'arc', laInv: true }, screen: 0 },
+  { file: 'system/97-live-activity-mono-inverted', at: hm(14, 25, 1), s: { ...home, view: 'live', laStyle: 'mono', laInv: true }, screen: 0 },
+  { file: 'system/97-live-activity-ocean', at: hm(14, 25, 1), s: { ...home, view: 'live', accent: 'ocean' }, screen: 0 },
+  { file: 'system/98-live-activity-kerahat', at: hm(16, 5), s: { ...home, view: 'live' }, screen: 0 },
+  { file: 'system/98-live-activity-kerahat-arc', at: hm(16, 5), s: { ...home, view: 'live', laStyle: 'arc' }, screen: 0 },
+  { file: 'system/98-live-activity-kerahat-mono', at: hm(16, 5), s: { ...home, view: 'live', laStyle: 'mono' }, screen: 0 },
+  { file: 'system/98-live-activity-kerahat-full-inverted', at: hm(16, 5), s: { ...home, view: 'live', laInv: true }, screen: 0 },
+  { file: 'system/98-live-activity-kerahat-arc-inverted', at: hm(16, 5), s: { ...home, view: 'live', laStyle: 'arc', laInv: true }, screen: 0 },
+  { file: 'system/98-live-activity-kerahat-warm', at: hm(16, 5), s: { ...home, view: 'live', accent: 'orange' }, screen: 0 },
+  { file: 'system/98-live-activity-island-expanded-kerahat-warm', at: hm(16, 5), s: { ...home, view: 'live', accent: 'orange' }, screen: 2 },
+  { file: 'system/98-live-activity-island-expanded-mono', at: hm(14, 25, 1), s: { ...home, view: 'live', laStyle: 'mono' }, screen: 2 },
+  { file: 'system/99-homescreen-widgets-arc-inverted', at: hm(14, 25, 1), s: { ...home, view: 'widgets', laStyle: 'arc', laInv: true }, screen: 1 },
+  { file: 'system/99-homescreen-widgets-ocean', at: hm(14, 25, 1), s: { ...home, view: 'widgets', accent: 'ocean' }, screen: 1 },
 ];
 
 const only = process.argv.slice(2);
@@ -168,6 +206,8 @@ try {
           stack: { settings: [] }, sheet: null, alert: null, city: 'berlin', deviceCity: 'berlin', autoLocation: true,
           hlRule: 'angle', hlDeg: { fajr: 15, isha: 15 }, kerahat: true, appearance: 'system',
           qibla: { heading: 99, drag: true }, scrollPos: {}, focusNext: null, _focus: null,
+          // Nachtrag zu Phase 18: Grundfarbe, Stil der Live-Aktivität, Rechtsschule, Klang
+          accent: 'teal', laStyle: 'full', laInv: false, palOpen: null, madhab: 'hanafi', obMenu: false, sound: 'adhan',
         }, st.s, lang ? { lang } : {});
         S.clock = { base: st.at, anchor: Date.now(), preset: 'custom' };
         render();

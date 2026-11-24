@@ -60,10 +60,35 @@
   --bar-h:calc(56px*min(var(--ts),1.15));         /* top bar: chips with name + value (grows like a tab bar, capped) */
 }
 /* Accent palettes (light / dark). Default proposal: Pine Teal */
-[data-accent="teal"]  {--accent-l:#1F7A6D; --accent-d:#4CC2AE;}
-[data-accent="green"] {--accent-l:#2E7D4F; --accent-d:#5FCB8A;}
-[data-accent="indigo"]{--accent-l:#4252B5; --accent-d:#8E9BFF;}
-[data-accent="sand"]  {--accent-l:#8F6420; --accent-d:#E2B566;}
+/* Nachtrag zu Phase 18 (Spec § 11.7): Grundfarbe wählbar (Einstellungen › Stil), 24 Farben in vier Reihen zu sechs.
+   Je Farbe: hell, dunkel, Schrift auf der dunklen Akzentfläche. Bei Orange, Gold und Sand ist die Verbotszeit violett (Block „Stil“ unten).
+   Gelb und Braun fehlen (hell nicht von Gold und Sand zu unterscheiden), ebenso reines Signalrot (Fehler, Löschen) und ein mittleres Grau.
+   Geprüft beim Übernehmen: Kontrast ≥ 4,5 : 1 (hell auf Weiß und #F2F2F7, dunkel auf #1C1C1E, Schrift auf der dunklen Akzentfläche),
+   OKLab-Abstand ≥ 0,065 zwischen den Farben ab Reihe 2, ≥ 0,12 zu Verbotszeit und Signalrot, ≥ 0,07 zur grauen Zweitschrift. */
+[data-accent="teal"]{--accent-l:#1F7A6D; --accent-d:#4CC2AE; --on-accent-d:#04221D;}
+[data-accent="green"]{--accent-l:#2E7D4F; --accent-d:#5FCB8A; --on-accent-d:#04220F;}
+[data-accent="blue"]{--accent-l:#1E6BB8; --accent-d:#6DB5FF; --on-accent-d:#031B33;}
+[data-accent="violet"]{--accent-l:#7A4CB5; --accent-d:#C4A2FF; --on-accent-d:#1B0B33;}
+[data-accent="berry"]{--accent-l:#A93466; --accent-d:#FF8FBA; --on-accent-d:#33081B;}
+[data-accent="graphite"]{--accent-l:#48484D; --accent-d:#D6D6DC; --on-accent-d:#111113;}
+[data-accent="cyan"]{--accent-l:#026E89; --accent-d:#28D1FE; --on-accent-d:#001F28;}
+[data-accent="grass"]{--accent-l:#3C6603; --accent-d:#98D75E; --on-accent-d:#111F05;}
+[data-accent="indigo"]{--accent-l:#4646CB; --accent-d:#8997FF; --on-accent-d:#151831;}
+[data-accent="orchid"]{--accent-l:#941C95; --accent-d:#E585E2; --on-accent-d:#271126;}
+[data-accent="orange"]{--accent-l:#A44C03; --accent-d:#FE904D; --on-accent-d:#2C1204;}
+[data-accent="gold"]{--accent-l:#876204; --accent-d:#F5C25F; --on-accent-d:#251801;}
+[data-accent="ocean"]{--accent-l:#024153; --accent-d:#43A9CB; --on-accent-d:#011E28;}
+[data-accent="forest"]{--accent-l:#03472A; --accent-d:#5FA77F; --on-accent-d:#032112;}
+[data-accent="navy"]{--accent-l:#182D6A; --accent-d:#728DCD; --on-accent-d:#101932;}
+[data-accent="plum"]{--accent-l:#50205A; --accent-d:#B47EBE; --on-accent-d:#251228;}
+[data-accent="wine"]{--accent-l:#6D1733; --accent-d:#C37586; --on-accent-d:#2D0F17;}
+[data-accent="mono"]{--accent-l:#1C1C1E; --accent-d:#F2F2F7; --on-accent-d:#1C1C1E;}
+[data-accent="mint"]{--accent-l:#015D54; --accent-d:#9AE9DD; --on-accent-d:#01201C;}
+[data-accent="sage"]{--accent-l:#556345; --accent-d:#BDD4A3; --on-accent-d:#161E0B;}
+[data-accent="ice"]{--accent-l:#455A74; --accent-d:#9FC1EB; --on-accent-d:#131B27;}
+[data-accent="lavender"]{--accent-l:#69639D; --accent-d:#CBC6FF; --on-accent-d:#1A172C;}
+[data-accent="mauve"]{--accent-l:#714967; --accent-d:#CBB7C5; --on-accent-d:#1F181D;}
+[data-accent="sand"]{--accent-l:#6F4D27; --accent-d:#ECCAA7; --on-accent-d:#24180B;}
 
 /* Semantic colors – iOS system values */
 [data-theme="light"]{
@@ -86,7 +111,7 @@
 }
 [data-theme="dark"]{
   color-scheme:dark;
-  --accent:var(--accent-d); --on-accent:#04221D;
+  --accent:var(--accent-d); --on-accent:var(--on-accent-d,#04221D);
   --label:#FFFFFF; --label-2:rgba(235,235,245,.6); --label-3:rgba(235,235,245,.3); --label-4:rgba(235,235,245,.16);
   --bg:#000000; --bg-grouped:#000000; --bg-cell:#1C1C1E;
   --bg-grouped-el:#1C1C1E; --bg-cell-el:#2C2C2E;
@@ -666,23 +691,17 @@ button.row:disabled{color:var(--label-3)}
 .n-caption{position:absolute;left:0;right:0;bottom:92px;text-align:center;font:500 12px var(--font);opacity:.7}
 
 /* Live Activity – Lock Screen banner (accent background, white arc) */
-.la{position:absolute;left:12px;right:12px;bottom:112px;padding:11px 14px 8px;border-radius:24px;color:#fff;text-align:start;
-  background:linear-gradient(160deg,color-mix(in srgb,color-mix(in srgb,var(--accent-l) 82%,#fff) var(--la-pct,100%),transparent) 0%,color-mix(in srgb,var(--accent-l) var(--la-pct,100%),transparent) 50%,color-mix(in srgb,color-mix(in srgb,var(--accent-l) 78%,#000) var(--la-pct,100%),transparent) 100%);
+.la{position:absolute;left:12px;right:12px;bottom:112px;padding:11px 14px 8px;border-radius:24px;color:var(--la-fg,#fff);text-align:start;
+  background:linear-gradient(160deg,color-mix(in srgb,color-mix(in srgb,var(--la-base,var(--accent-l)) var(--la-hi,82%),#fff) var(--la-pct,100%),transparent) 0%,color-mix(in srgb,var(--la-base,var(--accent-l)) var(--la-pct,100%),transparent) 50%,color-mix(in srgb,color-mix(in srgb,var(--la-base,var(--accent-l)) var(--la-lo,78%),#000) var(--la-pct,100%),transparent) 100%);
   -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
   box-shadow:0 8px 26px rgba(0,0,0,.2)}
 /* Änderung vom 17.11.2026: in der Kerahat-Zeit orange – „jetzt nicht beten“ (bei Asr: nur noch das Farḍ) */
-.la.is-kerahat{--k-or:#EC8530;background:linear-gradient(160deg,color-mix(in srgb,color-mix(in srgb,var(--k-or) 80%,#fff) var(--la-pct,100%),transparent) 0%,color-mix(in srgb,var(--k-or) var(--la-pct,100%),transparent) 50%,color-mix(in srgb,color-mix(in srgb,var(--k-or) 76%,#000) var(--la-pct,100%),transparent) 100%)}
+/* Nachtrag zu Phase 18: Das Orange der Verbotszeit kommt über --la-base (Block „Stil“ am Ende der Styles). */
 .la.is-kerahat .la-city{opacity:1;font-weight:600}
 .la-stack{position:absolute;left:12px;right:12px;bottom:112px;display:flex;flex-direction:column;gap:8px}
 .la-stack .la{position:static}
 .la.la-compact{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 14px;border-radius:20px;font:600 13px/16px var(--font);letter-spacing:-.08px}
 .la-compact .la-city{opacity:.72;font-weight:500}
-.la.is-kerahat .arc-la .pm.is-passed,.la.is-kerahat .arc-la .pm.is-current{color:#C4661F}
-.la.is-kerahat .arc-la .pm-c{fill:color-mix(in srgb,#fff 30%,#D9772B)}
-.la.is-kerahat .arc-la .pm.is-passed .pm-c,.la.is-kerahat .arc-la .pm.is-current .pm-c{fill:#fff}
-.la.is-kerahat .arc-la .pm.is-tight .pm-c{stroke:#D9772B}
-.la.is-kerahat .arc-la .arc-now circle{fill:#D9772B}
-.la.is-kerahat .arc-la .arc-k.on-track{stroke:#FFE2BF}
 .di.is-kerahat .di-ic,.di.is-kerahat .di-cd,.di.is-kerahat .di-lead,.di.is-kerahat .di-big{color:#F0A257}
 .di.is-kerahat .di-bar i{background:#F0A257}
 /* Änderung vom 17.11.2026: Kerahat-Zeile als Link zur Erklärung */
@@ -714,19 +733,19 @@ button.row:disabled{color:var(--label-3)}
 .la-text{position:absolute;left:0;right:0;bottom:6px;text-align:center}
 .la-name{font:600 13px/16px var(--font);opacity:.86;font-variant-numeric:tabular-nums}
 .la-count{font:700 30px/1.05 var(--font-rounded);letter-spacing:-.3px;font-variant-numeric:tabular-nums}
-.arc-la .arc-track{stroke:rgba(255,255,255,.28);stroke-width:7}
-.arc-la .arc-done{stroke:#fff;stroke-width:7}
-.arc-la .pm{color:#fff}
-.arc-la .pm-c{fill:color-mix(in srgb,#fff 30%,var(--accent-l))}
-.arc-la .pm.is-passed,.arc-la .pm.is-current{color:var(--accent-l)}
-.arc-la .pm.is-passed .pm-c,.arc-la .pm.is-current .pm-c{fill:#fff}
-.arc-la .pm-glow{fill:#fff;opacity:.22}
-.arc-la .pm.is-tight .pm-c{stroke:var(--accent-l)}
-.arc-la .arc-t{font:600 10.5px var(--font);fill:rgba(255,255,255,.8)}
-.arc-la .arc-t.is-cur{fill:#fff;font-weight:700}
+.arc-la .arc-track{stroke:var(--la-track,rgba(255,255,255,.28));stroke-width:7}
+.arc-la .arc-done{stroke:var(--la-line,#fff);stroke-width:7}
+.arc-la .pm{color:var(--la-dot-ic,#fff)}
+.arc-la .pm-c{fill:var(--la-dot,color-mix(in srgb,#fff 30%,var(--accent-l)))}
+.arc-la .pm.is-passed,.arc-la .pm.is-current{color:var(--la-on-ic,var(--accent-l))}
+.arc-la .pm.is-passed .pm-c,.arc-la .pm.is-current .pm-c{fill:var(--la-on,#fff)}
+.arc-la .pm-glow{fill:var(--la-glow,#fff);opacity:.22}
+.arc-la .pm.is-tight .pm-c{stroke:var(--la-gap,var(--accent-l))}
+.arc-la .arc-t{font:600 10.5px var(--font);fill:var(--la-fg2,rgba(255,255,255,.8))}
+.arc-la .arc-t.is-cur{fill:var(--la-fg,#fff);font-weight:700}
 .arc-la .arc-now{filter:none}
-.arc-la .arc-now circle{fill:var(--accent-l);stroke:#fff;stroke-width:2}
-.arc-la .arc-k{stroke:#F3C979;stroke-width:2;opacity:.75}
+.arc-la .arc-now circle{fill:var(--la-knob,var(--accent-l));stroke:var(--la-knob-ring,#fff);stroke-width:2}
+.arc-la .arc-k{stroke:var(--la-k,#F3C979);stroke-width:2;opacity:.75}
 .arc-la .arc-k.is-now{opacity:1}
 /* Live Activity – Dynamic Island */
 .di{display:flex;align-items:center;justify-content:space-between;color:#fff;text-align:start}
@@ -924,10 +943,10 @@ button.row:disabled{color:var(--label-3)}
 .day-today::after{content:"";position:absolute;inset:-12px -8px}
 .hero:not(.no-arc) .hero-count.hero-day{font-size:calc(40px*min(var(--ts),1.1));font-weight:300;letter-spacing:-.4px;padding-bottom:6px}
 /* 11 · Live-Aktivität und Widgets mit demselben Bogen */
-.arc-la .arc-k.on-track{stroke:#F3C979;stroke-width:7;stroke-linecap:butt;opacity:.95}
+.arc-la .arc-k.on-track{stroke:var(--la-k,#F3C979);stroke-width:7;stroke-linecap:butt;opacity:.95}
 .arc-la .arc-k.on-track.is-past{opacity:.5}
-.w-la{display:block;width:338px;height:158px;padding:9px 12px 0;border-radius:22px;color:#fff;text-align:start;
-  background:linear-gradient(160deg,color-mix(in srgb,color-mix(in srgb,var(--accent-l) 82%,#fff) var(--la-pct,100%),transparent) 0%,color-mix(in srgb,var(--accent-l) var(--la-pct,100%),transparent) 50%,color-mix(in srgb,color-mix(in srgb,var(--accent-l) 78%,#000) var(--la-pct,100%),transparent) 100%);
+.w-la{display:block;width:338px;height:158px;padding:9px 12px 0;border-radius:22px;color:var(--la-fg,#fff);text-align:start;
+  background:linear-gradient(160deg,color-mix(in srgb,color-mix(in srgb,var(--la-base,var(--accent-l)) var(--la-hi,82%),#fff) var(--la-pct,100%),transparent) 0%,color-mix(in srgb,var(--la-base,var(--accent-l)) var(--la-pct,100%),transparent) 50%,color-mix(in srgb,color-mix(in srgb,var(--la-base,var(--accent-l)) var(--la-lo,78%),#000) var(--la-pct,100%),transparent) 100%);
   -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4)}
 .w-la .wla-arc{width:314px;height:116px;margin:2px auto 0}
 .acc-arcw{display:block;position:relative;padding:0}
@@ -959,6 +978,123 @@ button.row:disabled{color:var(--label-3)}
 .pn-chg-list li{counter-increment:chg}
 .pn-chg-list .pn-btn{width:100%;display:flex;gap:8px;background:var(--bg-cell)}
 .pn-chg-list .pn-btn::before{content:counter(chg);min-width:12px;font-weight:700;color:var(--accent)}
+
+/* =====================================================================
+   NACHTRAG ZU PHASE 18 (24.11.2026, Spec § 11.7): EINSTELLUNGEN › STIL
+   Grundfarbe der App wählbar. Live-Aktivität in drei Stufen – farbig, nur Bogen, schwarz-weiß – und jede auch invertiert.
+   Die Deckkraft bleibt bei allen Varianten gleich (--la-pct, 30 %).
+   ===================================================================== */
+/* Farben der Live-Aktivität je Stil. Standard „farbig“ = Stand Spec v0.9 (§ 10.3). */
+[data-la]{--la-base:var(--accent-l);--la-hi:82%;--la-lo:78%;--la-fg:#fff;--la-fg2:rgba(255,255,255,.8);--la-track:rgba(255,255,255,.28);--la-line:#fff;
+  --la-dot:color-mix(in srgb,#fff 30%,var(--accent-l));--la-dot-ic:#fff;--la-on:#fff;--la-on-ic:var(--accent-l);--la-glow:#fff;--la-gap:var(--accent-l);
+  --la-knob:var(--accent-l);--la-knob-ring:#fff;--la-k:#F3C979}
+[data-la="full"][data-inv="0"].is-kerahat{--la-base:#EC8530;--la-hi:80%;--la-lo:76%;--la-dot:color-mix(in srgb,#fff 30%,#D9772B);--la-on-ic:#C4661F;--la-gap:#D9772B;--la-knob:#D9772B;--la-k:#FFE2BF}
+/* Farbig, invertiert: heller Grund, Bogen und Schrift in der Grundfarbe */
+[data-la="full"][data-inv="1"]{--la-base:#fff;--la-fg:color-mix(in srgb,var(--accent-l) 80%,#000);--la-fg2:color-mix(in srgb,var(--accent-l) 80%,#000);
+  --la-track:color-mix(in srgb,var(--accent-l) 26%,transparent);--la-line:var(--accent-l);--la-dot:color-mix(in srgb,var(--accent-l) 24%,#fff);--la-dot-ic:var(--accent-l);
+  --la-on:var(--accent-l);--la-on-ic:#fff;--la-glow:var(--accent-l);--la-gap:#fff;--la-knob:#fff;--la-knob-ring:var(--accent-l);--la-k:#C7862A}
+[data-la="full"][data-inv="1"].is-kerahat{--la-fg:#8A4409;--la-fg2:#8A4409;--la-track:rgba(184,92,18,.26);--la-line:#B85C12;--la-dot:#F1DCCB;--la-dot-ic:#B85C12;
+  --la-on:#B85C12;--la-glow:#B85C12;--la-knob-ring:#B85C12;--la-k:#EDA35C}
+/* Nur Bogen und Schwarz-weiß: Grund ohne Farbe */
+[data-la="arc"],[data-la="mono"]{--la-base:#2E2E33;--la-dot:#6A6A70;--la-gap:#2E2E33}
+[data-la="arc"]{--la-track:rgba(255,255,255,.26);--la-line:var(--accent-d);--la-on:var(--accent-d);--la-on-ic:var(--on-accent-d,#04221D);--la-glow:var(--accent-d);
+  --la-knob:#fff;--la-knob-ring:var(--accent-d)}
+[data-la="arc"][data-inv="0"].is-kerahat{--la-line:#F0A257;--la-on:#F0A257;--la-on-ic:#3A1D05;--la-glow:#F0A257;--la-knob-ring:#F0A257;--la-k:#FFE2BF;--la-warn:#F8B877}
+[data-la="mono"]{--la-on-ic:#2E2E33;--la-knob:#2E2E33;--la-k:#fff}
+[data-la="arc"][data-inv="1"],[data-la="mono"][data-inv="1"]{--la-base:#fff;--la-fg:#1C1C1E;--la-fg2:rgba(0,0,0,.62);--la-track:rgba(0,0,0,.16);--la-dot:#D6D6DB;--la-dot-ic:rgba(0,0,0,.6);
+  --la-gap:#fff;--la-knob:#fff}
+[data-la="arc"][data-inv="1"]{--la-line:var(--accent-l);--la-on:var(--accent-l);--la-on-ic:#fff;--la-glow:var(--accent-l);--la-knob-ring:var(--accent-l);--la-k:#C7862A}
+[data-la="arc"][data-inv="1"].is-kerahat{--la-line:#B85C12;--la-on:#B85C12;--la-glow:#B85C12;--la-knob-ring:#B85C12;--la-k:#EDA35C;--la-warn:#9A4D0E}
+[data-la="mono"][data-inv="1"]{--la-line:#1C1C1E;--la-on:#1C1C1E;--la-on-ic:#fff;--la-glow:#000;--la-knob-ring:#1C1C1E}
+.la.is-kerahat:not(.la-compact) .la-city{color:var(--la-warn,inherit)}
+/* Auf einer farbigen Linie braucht ein abgelaufener Abschnitt mehr Deckkraft, sonst mischt er sich zu Grau */
+[data-la="arc"] .arc-la .arc-k.on-track.is-past,[data-la="full"][data-inv="1"] .arc-la .arc-k.on-track.is-past{opacity:.85}
+/* Schwarz-weiß: Verbotszeiten gestreift wie im Sperrbildschirm-Widget, das App-Symbol ohne Farbe */
+.arc-la .arc-k-base{display:none}
+[data-la="mono"] .arc-la .arc-k-base{display:block;fill:none;stroke:rgba(0,0,0,.5);stroke-width:7;stroke-linecap:butt}
+[data-la="mono"] .arc-la .arc-k-base.is-past{opacity:.5}
+[data-la="mono"] .arc-la .arc-k.on-track{stroke-dasharray:2.4 2.2}
+[data-la="mono"] .ai-la{filter:grayscale(1)}
+.di[data-la="mono"] .di-ic,.di[data-la="mono"] .di-cd,.di[data-la="mono"] .di-lead,.di[data-la="mono"] .di-big{color:#fff}
+.di[data-la="mono"] .di-bar i{background:#fff}
+.di[data-la="mono"] .di-bar b{background:#fff;opacity:.6}
+
+/* Seite „Stil“: Vorschau */
+.group-wrap.st-wrap{margin-bottom:var(--sp-5)}
+.st-preview{position:relative;display:flex;justify-content:center;padding:12px 0;border-radius:var(--r-group);overflow:hidden}
+.st-preview .la{position:relative;left:auto;right:auto;bottom:auto;flex:none;width:366px}
+.st-preview .la{zoom:.94}
+.app-screen[data-theme="dark"] :is(.st-preview,.st-thumb) .wall{filter:brightness(.55) saturate(1.1)}
+/* Grundfarbe: 24 Kreise in vier Reihen nach Farbfamilie (Tippziel 48 pt); gewählt = Ring und Haken (nie nur die Farbe),
+   der Name der gewählten Farbe steht darunter. Jeder Kreis trägt seinen Namen für VoiceOver. */
+.st-colors{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));row-gap:4px;padding:12px 8px 2px}
+.st-color{display:grid;place-items:center;min-width:0;height:48px;padding:0;border:0;border-radius:12px;background:none}
+.st-color i{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--sw-l);color:#fff}
+.st-color[aria-checked="true"] i{box-shadow:0 0 0 2.5px var(--bg-cell),0 0 0 5px var(--sw-l)}
+.screen[data-theme="dark"] .st-color i{background:var(--sw-d);color:var(--sw-on-d)}
+.screen[data-theme="dark"] .st-color[aria-checked="true"] i{box-shadow:0 0 0 2.5px var(--bg-cell),0 0 0 5px var(--sw-d)}
+/* Aufklappen (Rückmeldungen vom 24.11.2026): zugeklappt nur die Standardreihe, aufgeklappt das Raster 4 × 6. Dezent: nur ein kleiner Pfeil
+   unter den Kreisen, kein Name der Farbe. Ist eine weitere Farbe gewählt, steht zugeklappt ein kleiner Punkt in ihrer Farbe neben dem Pfeil. */
+.st-more{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;height:40px;margin:0;padding:0 0 4px;border:0;background:none;color:var(--label-3);touch-action:manipulation}
+.st-more:active{color:var(--label-2)}
+.st-more .chev{color:inherit;transform:rotate(90deg);transition:transform .25s var(--ease-bounce)}
+.st-more[aria-expanded="true"] .chev{transform:rotate(-90deg)}
+.st-more-dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--sw-l)}
+.screen[data-theme="dark"] .st-more-dot{background:var(--sw-d)}
+/* Live-Aktivität: drei Kacheln mit kleiner Vorschau, darunter der Schalter „Invertiert“ */
+.st-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:14px 12px 12px}
+.st-tile{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:7px;min-width:0;padding:0 0 2px;border:0;border-radius:14px;background:none;color:var(--label);
+  font:400 var(--fs-footnote)/1.25 var(--font);letter-spacing:-.08px;text-align:center}
+.st-tile .st-radio{margin-top:auto}
+.st-tile[aria-checked="true"] .st-tile-name{font-weight:600}
+.st-thumb{position:relative;display:block;width:100%;height:62px;border-radius:13px;overflow:hidden;box-shadow:0 0 0 .5px var(--separator)}
+.st-tile[aria-checked="true"] .st-thumb{box-shadow:0 0 0 2.5px var(--bg-cell),0 0 0 4.5px var(--accent)}
+.la-mini{position:absolute;inset:8px 7px;display:block;border-radius:10px;-webkit-backdrop-filter:blur(6px) saturate(1.4);backdrop-filter:blur(6px) saturate(1.4);
+  background:linear-gradient(160deg,color-mix(in srgb,color-mix(in srgb,var(--la-base,var(--accent-l)) var(--la-hi,82%),#fff) var(--la-pct,100%),transparent) 0%,color-mix(in srgb,var(--la-base,var(--accent-l)) var(--la-pct,100%),transparent) 50%,color-mix(in srgb,color-mix(in srgb,var(--la-base,var(--accent-l)) var(--la-lo,78%),#000) var(--la-pct,100%),transparent) 100%)}
+.la-mini svg{position:absolute;left:0;top:0;width:100%;height:100%}
+.arc-la.arc-mini .arc-track,.arc-la.arc-mini .arc-done{stroke-width:3.4}
+.arc-mini .mini-t{fill:var(--la-fg,#fff)}
+.st-radio{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px var(--label-3);color:var(--on-accent)}
+.st-tile[aria-checked="true"] .st-radio{background:var(--accent);box-shadow:none}
+.st-tiles+.row::before{content:"";position:absolute;top:0;inset-inline-start:16px;inset-inline-end:0;height:.5px;background:var(--separator)}
+
+/* Hintergrundbild der Vorschau und der Kacheln: neutral, damit jede Grundfarbe unverfälscht erscheint */
+.wall-neutral{background:radial-gradient(120% 70% at 15% 0%,#AEB6C2 0%,transparent 58%),radial-gradient(110% 80% at 100% 100%,#C7B3A4 0%,transparent 55%),linear-gradient(180deg,#6A7280 0%,#434A57 46%,#2F3442 100%)}
+.pn-chg .swatches{gap:6px;flex-wrap:wrap}
+
+/* Wunsch des Nutzers vom 24.11.2026: Bei den warmen Grundfarben Orange, Gold und Sand ist die Verbotszeit violett statt orange.
+   Jeder Orangeton des Prototyps ist auf Violett gedreht (OKLCH, gleiche Helligkeit und Buntheit), damit die Abstufungen gleich bleiben. */
+:is([data-accent="orange"],[data-accent="gold"],[data-accent="sand"])[data-theme="light"],:is([data-accent="orange"],[data-accent="gold"],[data-accent="sand"]) [data-theme="light"]{--kerahat:#A282D9; --kerahat-text:#7B5FA8}
+:is([data-accent="orange"],[data-accent="gold"],[data-accent="sand"])[data-theme="dark"],:is([data-accent="orange"],[data-accent="gold"],[data-accent="sand"]) [data-theme="dark"]{--kerahat:#B89AED; --kerahat-text:#C6ADF6}
+:is([data-accent="orange"],[data-accent="gold"],[data-accent="sand"]) [data-la]:not([data-la="mono"]){--la-k:#D8C4FF}
+:is([data-accent="orange"],[data-accent="gold"],[data-accent="sand"]) [data-la="full"][data-inv="1"],:is([data-accent="orange"],[data-accent="gold"],[data-accent="sand"]) [data-la="arc"][data-inv="1"]{--la-k:#A282D9}
+:is([data-accent="orange"],[data-accent="gold"],[data-accent="sand"]) [data-la="full"][data-inv="0"].is-kerahat{--la-base:#B38AF6;--la-dot:color-mix(in srgb,#fff 30%,#A37DE1);--la-on-ic:#916CCB;--la-gap:#A37DE1;--la-knob:#A37DE1;--la-k:#EBE2FF}
+:is([data-accent="orange"],[data-accent="gold"],[data-accent="sand"]) [data-la="full"][data-inv="1"].is-kerahat{--la-fg:#644990;--la-fg2:#644990;--la-track:rgba(135,98,191,.26);--la-line:#8762BF;--la-dot:#E3DCF3;--la-dot-ic:#8762BF;
+  --la-on:#8762BF;--la-glow:#8762BF;--la-knob-ring:#8762BF;--la-k:#C2A3F9}
+:is([data-accent="orange"],[data-accent="gold"],[data-accent="sand"]) [data-la="arc"][data-inv="0"].is-kerahat{--la-line:#C3A2FC;--la-on:#C3A2FC;--la-on-ic:#2A1E3D;--la-glow:#C3A2FC;--la-knob-ring:#C3A2FC;--la-k:#EBE2FF;--la-warn:#D0B8FF}
+:is([data-accent="orange"],[data-accent="gold"],[data-accent="sand"]) [data-la="arc"][data-inv="1"].is-kerahat{--la-line:#8762BF;--la-on:#8762BF;--la-glow:#8762BF;--la-knob-ring:#8762BF;--la-k:#C2A3F9;--la-warn:#7152A0}
+:is([data-accent="orange"],[data-accent="gold"],[data-accent="sand"]) .di.is-kerahat:not([data-la="mono"]) :is(.di-ic,.di-cd,.di-lead,.di-big){color:#C3A2FC}
+:is([data-accent="orange"],[data-accent="gold"],[data-accent="sand"]) .di.is-kerahat:not([data-la="mono"]) .di-bar i{background:#C3A2FC}
+/* Beim Übernehmen in design/ ergänzt (25.11.2026): auch die Marken der Verbotszeiten unter dem Balken der Dynamic Island werden violett,
+   wie es die Entscheidung „überall“ verlangt – im Vorschlag blieben sie orange (#E0A84F). */
+:is([data-accent="orange"],[data-accent="gold"],[data-accent="sand"]) .di:not([data-la="mono"]) .di-bar b{background:#C0A1F7}
+
+/* Nachtrag zu Phase 18: Auswahl der Rechtsschule im Onboarding als Menü (Wunsch vom 24.11.2026) */
+.onb-page .ob-madhab{position:relative;margin:26px 0 0}
+.ob-pick{display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:0 18px 0 20px;border:0;border-radius:var(--r-pill);background:var(--fill-3);color:var(--label);
+  font:600 var(--fs-body)/1.2 var(--font);letter-spacing:-.41px}
+.ob-pick:active{background:var(--fill-2)}
+.ob-pick svg{flex:none;color:var(--label-2)}
+.onb-page{position:relative}
+.ob-menu-backdrop{position:absolute;inset:0;z-index:20}
+.ob-menu{position:absolute;z-index:21;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);min-width:220px;padding:6px;border-radius:16px;text-align:start;
+  background:var(--alert-bg);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);box-shadow:var(--shadow-float)}
+.ob-menu-item{display:flex;align-items:center;gap:6px;width:100%;min-height:44px;padding:0 14px 0 8px;border:0;border-radius:10px;background:none;color:var(--label);
+  font:400 var(--fs-body)/1.2 var(--font);letter-spacing:-.41px;white-space:nowrap}
+.ob-menu-item:active{background:var(--fill-3)}
+.ob-menu-check{flex:none;width:22px;display:grid;place-items:center;color:var(--label)}
+.onb-viewport{touch-action:pan-y;-webkit-user-select:none;user-select:none}   /* Wischen im Onboarding: waagrecht übernimmt die Seite */
+.onb-viewport img{-webkit-user-drag:none}   /* sonst zieht der Browser das App-Symbol statt zu wischen */
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
@@ -1706,6 +1842,141 @@ Object.assign(T.bn, {"alarmSoundFooter": "সংক্ষিপ্ত আজা�
 Object.assign(T.fa, {"alarmSoundFooter": "اذان کوتاه با صدایی پخش می‌شود که در «شنیدن اذان» انتخاب کرده‌اید.", "alarmDeniedFooter": "زنگ‌های هشدار مجاز نیستند. آن‌ها را در تنظیمات iOS مجاز کنید.", "alarmStop": "توقف", "alAlarmBody": "تا زنگ هشدار صبح حتی در حالت بی‌صدا و با تمرکز روشن به صدا درآید."});
 Object.assign(T.ru, {"alarmSoundFooter": "Короткий азан звучит голосом, который вы выбрали в «Прослушать азан».", "alarmDeniedFooter": "Будильники не разрешены. Разрешите их в Настройках iOS.", "alarmStop": "Стоп", "alAlarmBody": "Чтобы будильник на Фаджр звонил даже в бесшумном режиме и при включённом фокусировании."});
 Object.assign(T.it, {"alarmSoundFooter": "L’adhan breve usa la voce scelta in “Anteprima adhan”.", "alarmDeniedFooter": "Le sveglie non sono consentite. Consentile nelle Impostazioni di iOS.", "alarmStop": "Interrompi", "alAlarmBody": "Perché la sveglia per Fajr suoni anche in modalità silenziosa e con una modalità Full immersion attiva."});
+/* ===== Nachtrag zu Phase 18 (24.11.2026, Spec § 11.3 und § 11.7): Einstellungen › Stil, Klang =====
+   Deutsch, Türkisch und Englisch; die 13 weiteren Sprachen stehen unten als KI-Entwurf (vor dem App Store prüfen). */
+const NEW_2411 = {
+  de:{style:'Stil', styleColor:'Grundfarbe',
+    col_teal:'Petrol', col_green:'Grün', col_blue:'Blau', col_violet:'Violett', col_berry:'Beere', col_graphite:'Graphit',
+    col_cyan:'Türkis', col_grass:'Gras', col_indigo:'Indigo', col_orchid:'Orchidee', col_orange:'Orange', col_gold:'Gold',
+    col_ocean:'Ozean', col_forest:'Tanne', col_navy:'Nachtblau', col_plum:'Aubergine', col_wine:'Bordeaux', col_mono:'Mono',
+    col_mint:'Mint', col_sage:'Salbei', col_ice:'Taubenblau', col_lavender:'Lavendel', col_mauve:'Malve', col_sand:'Sand',
+    styleColorFooter:'Gilt für die App, die Widgets und die Live-Aktivität. Bei Orange, Gold und Sand sind die Verbotszeiten violett statt orange.',
+    laFull:'Farbig', laArc:'Nur Bogen', laMono:'Schwarz-weiß',
+    laInvert:'Invertiert', laInvertSub:'Heller Hintergrund, dunkle Schrift. Für helle Hintergrundbilder.',
+    styleLiveFooter:'Gilt auch für das Widget mit dem Bogen auf dem Home-Bildschirm. Die Durchsichtigkeit ist bei allen Varianten gleich.',
+    styleReset:'Standard wiederherstellen', styleMoreColors:'Weitere Farben', styleLessColors:'Weniger Farben',
+    soundSystemFooter:'Welcher Ton das ist, wählst du in den iOS-Einstellungen unter „Töne & Haptik“. Die Töne von Apple kann eine App nicht selbst zur Auswahl anbieten.'},
+  tr:{style:'Stil', styleColor:'Ana renk',
+    col_teal:'Petrol', col_green:'Yeşil', col_blue:'Mavi', col_violet:'Mor', col_berry:'Vişne', col_graphite:'Grafit',
+    col_cyan:'Turkuaz', col_grass:'Çimen', col_indigo:'İndigo', col_orchid:'Orkide', col_orange:'Turuncu', col_gold:'Altın',
+    col_ocean:'Okyanus', col_forest:'Çam', col_navy:'Lacivert', col_plum:'Patlıcan', col_wine:'Bordo', col_mono:'Mono',
+    col_mint:'Nane', col_sage:'Adaçayı', col_ice:'Güvercin mavisi', col_lavender:'Lavanta', col_mauve:'Ebegümeci', col_sand:'Kum',
+    styleColorFooter:'Uygulama, widget’lar ve Canlı Etkinlik için geçerlidir. Turuncu, altın ve kum renginde kerahat vakitleri turuncu yerine mor gösterilir.',
+    laFull:'Renkli', laArc:'Yalnızca kemer', laMono:'Siyah beyaz',
+    laInvert:'Ters çevrilmiş', laInvertSub:'Açık arka plan, koyu yazı. Açık duvar kâğıtları için.',
+    styleLiveFooter:'Ana ekrandaki yaylı widget için de geçerlidir. Saydamlık bütün seçeneklerde aynıdır.',
+    styleReset:'Varsayılana dön', styleMoreColors:'Diğer renkler', styleLessColors:'Daha az renk',
+    soundSystemFooter:'Hangi ses olduğunu iOS Ayarları’ndan seçersin. Apple’ın seslerini bir uygulama kendisi seçenek olarak sunamaz.'},
+  en:{style:'Style', styleColor:'Accent Color',
+    col_teal:'Teal', col_green:'Green', col_blue:'Blue', col_violet:'Violet', col_berry:'Berry', col_graphite:'Graphite',
+    col_cyan:'Turquoise', col_grass:'Grass', col_indigo:'Indigo', col_orchid:'Orchid', col_orange:'Orange', col_gold:'Gold',
+    col_ocean:'Ocean', col_forest:'Forest', col_navy:'Navy', col_plum:'Aubergine', col_wine:'Burgundy', col_mono:'Mono',
+    col_mint:'Mint', col_sage:'Sage', col_ice:'Dusty Blue', col_lavender:'Lavender', col_mauve:'Mauve', col_sand:'Sand',
+    styleColorFooter:'Applies to the app, the widgets and the Live Activity. With Orange, Gold and Sand, makruh times are shown in violet instead of orange.',
+    laFull:'Color', laArc:'Arc Only', laMono:'Black & White',
+    laInvert:'Inverted', laInvertSub:'Light background, dark text. For light wallpapers.',
+    styleLiveFooter:'Also applies to the Home Screen widget with the arc. Transparency is the same in every variant.',
+    styleReset:'Restore Defaults', styleMoreColors:'More Colors', styleLessColors:'Fewer Colors',
+    soundSystemFooter:'You choose which sound this is in iOS Settings under “Sounds & Haptics”. An app cannot offer Apple’s tones itself.'}
+};
+Object.keys(NEW_2411).forEach(k => Object.assign(T[k], NEW_2411[k]));
+/* ===== Nachtrag zu Phase 18: Verbotszeiten nach Rechtsschule (nach Ibrahim Gezer, 24.11.2026) =====
+   Die hanafitischen Texte bleiben wie bisher. Deutsch, Türkisch und Englisch als Entwurf, fachlich zu prüfen. */
+const MADHABS = ['hanafi', 'maliki', 'shafii', 'hanbali'];
+/* Dauer der Fenster je Schule in Minuten (Entscheidung vom 24.11.2026; Recherche in recherche-dauer-verbotszeiten.md):
+   Hanafi nach Diyanet (40–50 / ~10 / 40–50); Schafii 25 nach JAKIM (Dhuha = Sonnenaufgang + 25), vor Sonnenuntergang gespiegelt (Annahme);
+   Hanbali 20 nach Ibn ʿUthaymīn (15–20) und ~10 vor Dhuhr, vor Sonnenuntergang gespiegelt (Annahme); Maliki 20 (Annahme), kein Fenster vor Dhuhr. */
+const KERAHAT_MIN_BY = {hanafi:{sunrise:45, zenith:10, sunset:45}, shafii:{sunrise:25, zenith:10, sunset:25}, hanbali:{sunrise:20, zenith:10, sunset:20}, maliki:{sunrise:20, zenith:0, sunset:20}};
+const MADHAB_2411 = {
+  de:{madhab:'Rechtsschule', madhab_hanafi:'Hanafi', madhab_maliki:'Maliki', madhab_shafii:'Schafii', madhab_hanbali:'Hanbali',
+    madhabAdj_hanafi:'hanafitischer', madhabAdj_maliki:'malikitischer', madhabAdj_shafii:'schafiitischer', madhabAdj_hanbali:'hanbalitischer',
+    madhabSub_hanafi:'Verbotszeiten bei Sonnenaufgang, vor Dhuhr und vor Sonnenuntergang',
+    madhabSub_maliki:'Verbotszeiten bei Sonnenaufgang und vor Sonnenuntergang',
+    madhabSub_shafii:'Verbotszeiten bei Sonnenaufgang, vor Dhuhr (nicht am Freitag) und vor Sonnenuntergang',
+    madhabSub_hanbali:'Verbotszeiten bei Sonnenaufgang, vor Dhuhr und vor Sonnenuntergang',
+    madhabFooter:'Bestimmt, welche Verbotszeiten die App zeigt und wie sie sie erklärt. Die Asr-Zeit stellst du getrennt unter „{asr}“ ein.',
+    kerahatFooter_maliki:'Dezent markiert im Bogen und bei den Zeiten: etwa 20 Min. nach Sonnenaufgang und 20 Min. vor Maghrib. Nach malikitischer Lehre werden dann keine freiwilligen Gebete verrichtet.',
+    kerahatFooter_shafii:'Dezent markiert im Bogen und bei den Zeiten: etwa 25 Min. nach Sonnenaufgang, 10 Min. vor Dhuhr (nicht am Freitag) und 25 Min. vor Maghrib. Nach schafiitischer Lehre werden dann keine freiwilligen Gebete verrichtet.',
+    kerahatFooter_hanbali:'Dezent markiert im Bogen und bei den Zeiten: etwa 20 Min. nach Sonnenaufgang, 10 Min. vor Dhuhr und 20 Min. vor Maghrib. Nach hanbalitischer Lehre werden dann keine freiwilligen Gebete verrichtet.',
+    kerahatP1_maliki:'Verbotszeiten (Kerahat) sind nach malikitischer Lehre zwei kurze Zeitfenster am Tag, in denen man keine freiwilligen Gebete verrichtet: beim Sonnenaufgang und vor Sonnenuntergang. Den Mittag, wenn die Sonne am höchsten steht, zählt die malikitische Schule nicht dazu.',
+    kerahatP1_shafii:'Verbotszeiten (Kerahat) sind drei kurze Zeitfenster am Tag, in denen man keine freiwilligen Gebete verrichtet. Nach schafiitischer Lehre gilt das Fenster vor Dhuhr am Freitag nicht; für Mekka macht die Schule eine weitere Ausnahme.',
+    kerahatP1_hanbali:'Verbotszeiten (Kerahat) sind drei kurze Zeitfenster am Tag, in denen man keine freiwilligen Gebete verrichtet.',
+    kerahatAfterTitle:'Nach dem Fadschr- und dem Asr-Gebet',
+    kerahatAfterBody:'Nach dem Fadschr-Gebet bis zum Sonnenaufgang und nach dem Asr-Gebet bis zum Sonnenuntergang betet man keine freiwilligen Gebete. Darin sind sich alle vier Rechtsschulen einig. Weil diese Zeiten mit deinem eigenen Gebet beginnen, zeigt die App sie nicht im Bogen.',
+    kerahatQadaTitle:'Versäumte Gebete nachholen',
+    kerahatQadaHanafi:'Nach hanafitischer Lehre holst du ein versäumtes Gebet nicht in diesen drei Zeitfenstern nach – nur das Asr desselben Tages betest du vor Sonnenuntergang noch. Nach dem Fadschr- und dem Asr-Gebet darfst du nachholen.',
+    kerahatQadaOther:'Ein versäumtes Pflichtgebet darfst du nach {school} Lehre auch in den Verbotszeiten nachholen. Die Verbote betreffen vor allem freiwillige Gebete.',
+    kerahatOtherTitle:'Andere Gebete',
+    kerahatOtherBody:'Beim Totengebet und bei Gebeten mit besonderem Anlass, etwa dem Begrüßungsgebet in der Moschee, unterscheiden sich die Rechtsschulen. Frag im Zweifel einen Imam deiner Rechtsschule.',
+    kerahatFoot_maliki:'Nach der malikitischen Rechtsschule (Einstellungen › Rechtsschule). Die Fenster sind Näherungen: 20 Minuten nach Sonnenaufgang und 20 Minuten vor Sonnenuntergang.',
+    kerahatFoot_shafii:'Nach der schafiitischen Rechtsschule (Einstellungen › Rechtsschule). Die Fenster sind Näherungen: 25 Minuten nach Sonnenaufgang, 10 Minuten vor Dhuhr und 25 Minuten vor Sonnenuntergang.',
+    kerahatFoot_hanbali:'Nach der hanbalitischen Rechtsschule (Einstellungen › Rechtsschule). Die Fenster sind Näherungen: 20 Minuten nach Sonnenaufgang, 10 Minuten vor Dhuhr und 20 Minuten vor Sonnenuntergang.'},
+  tr:{madhab:'Mezhep', madhab_hanafi:'Hanefî', madhab_maliki:'Mâlikî', madhab_shafii:'Şâfiî', madhab_hanbali:'Hanbelî',
+    madhabAdj_hanafi:'Hanefî', madhabAdj_maliki:'Mâlikî', madhabAdj_shafii:'Şâfiî', madhabAdj_hanbali:'Hanbelî',
+    madhabSub_hanafi:'Güneş doğarken, öğleden önce ve güneş batmadan önce kerahat',
+    madhabSub_maliki:'Güneş doğarken ve güneş batmadan önce kerahat',
+    madhabSub_shafii:'Güneş doğarken, öğleden önce (cuma hariç) ve güneş batmadan önce kerahat',
+    madhabSub_hanbali:'Güneş doğarken, öğleden önce ve güneş batmadan önce kerahat',
+    madhabFooter:'Uygulamanın hangi kerahat vakitlerini gösterdiğini ve nasıl açıkladığını belirler. İkindi vaktini ayrıca “{asr}” ayarından seçersin.',
+    kerahatFooter_maliki:'Yayda ve vakitlerde hafifçe işaretlenir: güneş doğduktan sonra yaklaşık 20 dk. ve akşamdan önce 20 dk. Mâlikî mezhebine göre bu vakitlerde nafile namaz kılınmaz.',
+    kerahatFooter_shafii:'Yayda ve vakitlerde hafifçe işaretlenir: güneş doğduktan sonra yaklaşık 25 dk., öğleden önce 10 dk. (cuma hariç) ve akşamdan önce 25 dk. Şâfiî mezhebine göre bu vakitlerde nafile namaz kılınmaz.',
+    kerahatFooter_hanbali:'Yayda ve vakitlerde hafifçe işaretlenir: güneş doğduktan sonra yaklaşık 20 dk., öğleden önce 10 dk. ve akşamdan önce 20 dk. Hanbelî mezhebine göre bu vakitlerde nafile namaz kılınmaz.',
+    kerahatP1_maliki:'Mâlikî mezhebine göre kerahat vakitleri, nafile namaz kılınmayan iki kısa zaman dilimidir: güneş doğarken ve güneş batmadan önce. Güneşin tam tepede olduğu öğle vaktini Mâlikî mezhebi bunlara saymaz.',
+    kerahatP1_shafii:'Kerahat vakitleri, nafile namaz kılınmayan üç kısa zaman dilimidir. Şâfiî mezhebine göre öğleden önceki vakit cuma günü geçerli değildir; Mekke için de ayrı bir istisna vardır.',
+    kerahatP1_hanbali:'Kerahat vakitleri, nafile namaz kılınmayan üç kısa zaman dilimidir.',
+    kerahatAfterTitle:'Sabah ve ikindi namazından sonra',
+    kerahatAfterBody:'Sabah namazından sonra güneş doğana kadar ve ikindi namazından sonra güneş batana kadar nafile namaz kılınmaz. Dört mezhep bunda birleşir. Bu vakitler senin kıldığın namazla başladığı için uygulama onları yayda göstermez.',
+    kerahatQadaTitle:'Kaza namazı',
+    kerahatQadaHanafi:'Hanefî mezhebine göre kaza namazı bu üç vakitte kılınmaz – yalnızca o günün ikindisi güneş batmadan önce kılınabilir. Sabah ve ikindi namazından sonra kaza kılmak caizdir.',
+    kerahatQadaOther:'{school} mezhebine göre kaçırılan farz namazlar kerahat vakitlerinde de kaza edilebilir. Yasak daha çok nafile namazlarla ilgilidir.',
+    kerahatOtherTitle:'Diğer namazlar',
+    kerahatOtherBody:'Cenaze namazı ve tahiyyetü’l-mescid gibi bir sebebe bağlı namazlarda mezhepler farklı hükümler verir. Emin değilsen mezhebinden bir imama danış.',
+    kerahatFoot_maliki:'Mâlikî mezhebine göre (Ayarlar › Mezhep). Süreler yaklaşıktır: güneş doğduktan sonra 20 dakika ve güneş batmadan önce 20 dakika.',
+    kerahatFoot_shafii:'Şâfiî mezhebine göre (Ayarlar › Mezhep). Süreler yaklaşıktır: güneş doğduktan sonra 25 dakika, öğleden önce 10 dakika ve güneş batmadan önce 25 dakika.',
+    kerahatFoot_hanbali:'Hanbelî mezhebine göre (Ayarlar › Mezhep). Süreler yaklaşıktır: güneş doğduktan sonra 20 dakika, öğleden önce 10 dakika ve güneş batmadan önce 20 dakika.'},
+  en:{madhab:'Madhhab', madhab_hanafi:'Hanafi', madhab_maliki:'Maliki', madhab_shafii:'Shafi‘i', madhab_hanbali:'Hanbali',
+    madhabAdj_hanafi:'Hanafi', madhabAdj_maliki:'Maliki', madhabAdj_shafii:'Shafi‘i', madhabAdj_hanbali:'Hanbali',
+    madhabSub_hanafi:'Makruh times at sunrise, before Dhuhr and before sunset',
+    madhabSub_maliki:'Makruh times at sunrise and before sunset',
+    madhabSub_shafii:'Makruh times at sunrise, before Dhuhr (not on Friday) and before sunset',
+    madhabSub_hanbali:'Makruh times at sunrise, before Dhuhr and before sunset',
+    madhabFooter:'Sets which makruh times the app shows and how it explains them. You set the Asr time separately under “{asr}”.',
+    kerahatFooter_maliki:'Subtly marked on the arc and on the times: about 20 min after sunrise and 20 min before Maghrib. According to the Maliki school, no voluntary prayers are performed then.',
+    kerahatFooter_shafii:'Subtly marked on the arc and on the times: about 25 min after sunrise, 10 min before Dhuhr (not on Friday) and 25 min before Maghrib. According to the Shafi‘i school, no voluntary prayers are performed then.',
+    kerahatFooter_hanbali:'Subtly marked on the arc and on the times: about 20 min after sunrise, 10 min before Dhuhr and 20 min before Maghrib. According to the Hanbali school, no voluntary prayers are performed then.',
+    kerahatP1_maliki:'According to the Maliki school, makruh times are two short windows in the day without voluntary prayers: at sunrise and before sunset. The Maliki school does not count noon, when the sun is at its highest.',
+    kerahatP1_shafii:'Makruh times are three short windows in the day without voluntary prayers. According to the Shafi‘i school, the window before Dhuhr does not apply on Friday, and Mecca is a further exception.',
+    kerahatP1_hanbali:'Makruh times are three short windows in the day without voluntary prayers.',
+    kerahatAfterTitle:'After Fajr and Asr',
+    kerahatAfterBody:'After the Fajr prayer until sunrise and after the Asr prayer until sunset, no voluntary prayers are performed. All four schools agree on this. Because these times begin with your own prayer, the app does not show them on the arc.',
+    kerahatQadaTitle:'Making up missed prayers',
+    kerahatQadaHanafi:'According to the Hanafi school, missed prayers are not made up in these three windows – only the same day’s Asr may still be prayed before sunset. Making up prayers after Fajr and Asr is permitted.',
+    kerahatQadaOther:'According to the {school} school, a missed obligatory prayer may also be made up in the makruh times. The prohibition mainly concerns voluntary prayers.',
+    kerahatOtherTitle:'Other prayers',
+    kerahatOtherBody:'For the funeral prayer and prayers with a particular reason, such as greeting the mosque, the schools differ. If in doubt, ask an imam of your school.',
+    kerahatFoot_maliki:'According to the Maliki school (Settings › Madhhab). The windows are approximate: 20 minutes after sunrise and 20 minutes before sunset.',
+    kerahatFoot_shafii:'According to the Shafi‘i school (Settings › Madhhab). The windows are approximate: 25 minutes after sunrise, 10 minutes before Dhuhr and 25 minutes before sunset.',
+    kerahatFoot_hanbali:'According to the Hanbali school (Settings › Madhhab). The windows are approximate: 20 minutes after sunrise, 10 minutes before Dhuhr and 20 minutes before sunset.'}
+};
+Object.keys(MADHAB_2411).forEach(k => Object.assign(T[k], MADHAB_2411[k]));
+/* Nachtrag zu Phase 18 (Spec § 11.5): Onboarding-Seite „Rechtsschule“ */
+Object.assign(T.de, {obMadhabTitle:'Deine Rechtsschule', obMadhabBody:'Danach richten sich die Verbotszeiten und ihre Erklärung. Du kannst sie später in den Einstellungen ändern.'});
+Object.assign(T.tr, {obMadhabTitle:'Mezhebin', obMadhabBody:'Kerahat vakitleri ve açıklamaları buna göre belirlenir. Daha sonra Ayarlar’dan değiştirebilirsin.'});
+Object.assign(T.en, {obMadhabTitle:'Your Madhhab', obMadhabBody:'This sets the makruh times and how they are explained. You can change it later in Settings.'});
+/* ===== Nachtrag zu Phase 18 (24.11.2026) in den übrigen 13 Sprachen: KI-Entwurf, vor dem App Store von Muttersprachlern prüfen ===== */
+Object.assign(T.es, {"style": "Estilo", "styleColor": "Color principal", "col_teal": "Petróleo", "col_green": "Verde", "col_blue": "Azul", "col_violet": "Violeta", "col_berry": "Frambuesa", "col_graphite": "Grafito", "col_cyan": "Turquesa", "col_grass": "Hierba", "col_indigo": "Índigo", "col_orchid": "Orquídea", "col_orange": "Naranja", "col_gold": "Oro", "col_ocean": "Océano", "col_forest": "Abeto", "col_navy": "Azul marino", "col_plum": "Berenjena", "col_wine": "Burdeos", "col_mono": "Mono", "col_mint": "Menta", "col_sage": "Salvia", "col_ice": "Azul grisáceo", "col_lavender": "Lavanda", "col_mauve": "Malva", "col_sand": "Arena", "styleColorFooter": "Se aplica a la app, los widgets y la Actividad en directo. Con Naranja, Oro y Arena, los tiempos makruh se muestran en violeta en lugar de naranja.", "laFull": "En color", "laArc": "Solo el arco", "laMono": "Blanco y negro", "laInvert": "Invertido", "laInvertSub": "Fondo claro, texto oscuro. Para fondos de pantalla claros.", "styleLiveFooter": "También se aplica al widget con el arco en la pantalla de inicio. La transparencia es igual en todas las variantes.", "styleReset": "Restaurar valores por defecto", "styleMoreColors": "Más colores", "styleLessColors": "Menos colores", "soundSystemFooter": "El tono concreto lo eliges en Ajustes de iOS, en “Sonidos y vibraciones”. Una app no puede ofrecer por sí misma los tonos de Apple para elegir.", "madhab": "Escuela jurídica", "madhab_hanafi": "Hanafí", "madhab_maliki": "Malikí", "madhab_shafii": "Shafií", "madhab_hanbali": "Hanbalí", "madhabAdj_hanafi": "hanafí", "madhabAdj_maliki": "malikí", "madhabAdj_shafii": "shafií", "madhabAdj_hanbali": "hanbalí", "madhabSub_hanafi": "Tiempos makruh al amanecer, antes de Dhuhr y antes de la puesta del sol", "madhabSub_maliki": "Tiempos makruh al amanecer y antes de la puesta del sol", "madhabSub_shafii": "Tiempos makruh al amanecer, antes de Dhuhr (no los viernes) y antes de la puesta del sol", "madhabSub_hanbali": "Tiempos makruh al amanecer, antes de Dhuhr y antes de la puesta del sol", "madhabFooter": "Determina qué tiempos makruh muestra la app y cómo los explica. La hora del Asr la ajustas aparte en “{asr}”.", "kerahatFooter_maliki": "Marcados con discreción en el arco y en los horarios: unos 20 min tras la salida del sol y 20 min antes de Magrib. Según la escuela malikí, en ellos no se rezan oraciones voluntarias.", "kerahatFooter_shafii": "Marcados con discreción en el arco y en los horarios: unos 25 min tras la salida del sol, 10 min antes de Dhuhr (no los viernes) y 25 min antes de Magrib. Según la escuela shafií, en ellos no se rezan oraciones voluntarias.", "kerahatFooter_hanbali": "Marcados con discreción en el arco y en los horarios: unos 20 min tras la salida del sol, 10 min antes de Dhuhr y 20 min antes de Magrib. Según la escuela hanbalí, en ellos no se rezan oraciones voluntarias.", "kerahatP1_maliki": "Según la escuela malikí, los tiempos makruh son dos breves franjas del día en las que no se rezan oraciones voluntarias: al amanecer y antes de la puesta del sol. La escuela malikí no incluye el mediodía, cuando el sol está en lo más alto.", "kerahatP1_shafii": "Los tiempos makruh son tres breves franjas del día en las que no se rezan oraciones voluntarias. Según la escuela shafií, la franja antes de Dhuhr no se aplica los viernes; para La Meca, la escuela hace otra excepción.", "kerahatP1_hanbali": "Los tiempos makruh son tres breves franjas del día en las que no se rezan oraciones voluntarias.", "kerahatAfterTitle": "Tras las oraciones del Fajr y del Asr", "kerahatAfterBody": "Después de la oración del Fajr hasta la salida del sol y después de la oración del Asr hasta la puesta del sol no se rezan oraciones voluntarias. En esto coinciden las cuatro escuelas jurídicas. Como estos tiempos empiezan con tu propia oración, la app no los muestra en el arco.", "kerahatQadaTitle": "Recuperar oraciones perdidas", "kerahatQadaHanafi": "Según la escuela hanafí, no recuperas una oración perdida en estas tres franjas – solo el Asr del mismo día lo rezas todavía antes de la puesta del sol. Después de las oraciones del Fajr y del Asr sí puedes recuperarla.", "kerahatQadaOther": "Según la escuela {school}, puedes recuperar una oración obligatoria perdida también en los tiempos makruh. Las prohibiciones afectan sobre todo a las oraciones voluntarias.", "kerahatOtherTitle": "Otras oraciones", "kerahatOtherBody": "En la oración fúnebre y en las oraciones con un motivo especial, como la oración de saludo a la mezquita, las escuelas jurídicas difieren. Si tienes dudas, consulta a un imán de tu escuela jurídica.", "kerahatFoot_maliki": "Según la escuela malikí (Ajustes › Escuela jurídica). Las franjas son aproximadas: 20 minutos tras la salida del sol y 20 minutos antes de la puesta del sol.", "kerahatFoot_shafii": "Según la escuela shafií (Ajustes › Escuela jurídica). Las franjas son aproximadas: 25 minutos tras la salida del sol, 10 minutos antes de Dhuhr y 25 minutos antes de la puesta del sol.", "kerahatFoot_hanbali": "Según la escuela hanbalí (Ajustes › Escuela jurídica). Las franjas son aproximadas: 20 minutos tras la salida del sol, 10 minutos antes de Dhuhr y 20 minutos antes de la puesta del sol.", "obMadhabTitle": "Tu escuela jurídica", "obMadhabBody": "De ella dependen los tiempos makruh y su explicación. Puedes cambiarla más tarde en Ajustes."});
+Object.assign(T.fr, {"style": "Style", "styleColor": "Couleur principale", "col_teal": "Pétrole", "col_green": "Vert", "col_blue": "Bleu", "col_violet": "Violet", "col_berry": "Framboise", "col_graphite": "Graphite", "col_cyan": "Turquoise", "col_grass": "Herbe", "col_indigo": "Indigo", "col_orchid": "Orchidée", "col_orange": "Orange", "col_gold": "Or", "col_ocean": "Océan", "col_forest": "Sapin", "col_navy": "Bleu nuit", "col_plum": "Aubergine", "col_wine": "Bordeaux", "col_mono": "Mono", "col_mint": "Menthe", "col_sage": "Sauge", "col_ice": "Bleu pigeon", "col_lavender": "Lavande", "col_mauve": "Mauve", "col_sand": "Sable", "styleColorFooter": "S’applique à l’app, aux widgets et à l’Activité en direct. Avec Orange, Or et Sable, les heures makrouh sont en violet au lieu d’orange.", "laFull": "En couleur", "laArc": "Arc seul", "laMono": "Noir et blanc", "laInvert": "Inversé", "laInvertSub": "Fond clair, texte foncé. Pour les fonds d’écran clairs.", "styleLiveFooter": "S’applique aussi au widget avec l’arc sur l’écran d’accueil. La transparence est la même pour toutes les variantes.", "styleReset": "Rétablir par défaut", "styleMoreColors": "Plus de couleurs", "styleLessColors": "Moins de couleurs", "soundSystemFooter": "Vous choisissez ce son dans les Réglages d’iOS, sous « Sons et vibrations ». Une app ne peut pas proposer elle-même le choix des sons d’Apple.", "madhab": "École juridique", "madhab_hanafi": "Hanafite", "madhab_maliki": "Malikite", "madhab_shafii": "Chaféite", "madhab_hanbali": "Hanbalite", "madhabAdj_hanafi": "hanafite", "madhabAdj_maliki": "malikite", "madhabAdj_shafii": "chaféite", "madhabAdj_hanbali": "hanbalite", "madhabSub_hanafi": "Heures makrouh au lever du soleil, avant le Dohr et avant le coucher du soleil", "madhabSub_maliki": "Heures makrouh au lever du soleil et avant le coucher du soleil", "madhabSub_shafii": "Heures makrouh au lever du soleil, avant le Dohr (sauf le vendredi) et avant le coucher du soleil", "madhabSub_hanbali": "Heures makrouh au lever du soleil, avant le Dohr et avant le coucher du soleil", "madhabFooter": "Détermine les heures makrouh affichées par l’app et la façon dont elle les explique. Vous réglez l’heure de l’Asr séparément dans « {asr} ».", "kerahatFooter_maliki": "Indiquées discrètement sur l’arc et à côté des heures de prière : environ 20 min après le lever du soleil et 20 min avant le Maghreb. Selon l’école malikite, on n’accomplit pas de prières facultatives pendant ces moments.", "kerahatFooter_shafii": "Indiquées discrètement sur l’arc et à côté des heures de prière : environ 25 min après le lever du soleil, 10 min avant le Dohr (sauf le vendredi) et 25 min avant le Maghreb. Selon l’école chaféite, on n’accomplit pas de prières facultatives pendant ces moments.", "kerahatFooter_hanbali": "Indiquées discrètement sur l’arc et à côté des heures de prière : environ 20 min après le lever du soleil, 10 min avant le Dohr et 20 min avant le Maghreb. Selon l’école hanbalite, on n’accomplit pas de prières facultatives pendant ces moments.", "kerahatP1_maliki": "Selon l’école malikite, les heures makrouh sont deux courts moments de la journée où l’on n’accomplit pas de prières facultatives : au lever du soleil et avant le coucher du soleil. L’école malikite n’y inclut pas midi, quand le soleil est au plus haut.", "kerahatP1_shafii": "Les heures makrouh sont trois courts moments de la journée où l’on n’accomplit pas de prières facultatives. Selon l’école chaféite, le moment avant le Dohr ne s’applique pas le vendredi ; pour La Mecque, l’école fait une autre exception.", "kerahatP1_hanbali": "Les heures makrouh sont trois courts moments de la journée où l’on n’accomplit pas de prières facultatives.", "kerahatAfterTitle": "Après les prières du Fajr et de l’Asr", "kerahatAfterBody": "Après la prière du Fajr jusqu’au lever du soleil et après la prière de l’Asr jusqu’au coucher du soleil, on n’accomplit pas de prières facultatives. Les quatre écoles juridiques sont d’accord sur ce point. Comme ces moments commencent avec votre propre prière, l’app ne les affiche pas sur l’arc.", "kerahatQadaTitle": "Rattraper les prières manquées", "kerahatQadaHanafi": "Selon l’école hanafite, vous ne rattrapez pas de prière manquée pendant ces trois moments – seul l’Asr du jour même se prie encore avant le coucher du soleil. Après les prières du Fajr et de l’Asr, le rattrapage est permis.", "kerahatQadaOther": "Selon l’école {school}, vous pouvez rattraper une prière obligatoire manquée même pendant les heures makrouh. Les interdictions concernent surtout les prières facultatives.", "kerahatOtherTitle": "Autres prières", "kerahatOtherBody": "Pour la prière funéraire et les prières liées à une occasion particulière, comme la prière de salutation de la mosquée, les écoles juridiques divergent. En cas de doute, demandez à un imam de votre école juridique.", "kerahatFoot_maliki": "Selon l’école malikite (Réglages › École juridique). Les durées sont approximatives : 20 minutes après le lever du soleil et 20 minutes avant le coucher du soleil.", "kerahatFoot_shafii": "Selon l’école chaféite (Réglages › École juridique). Les durées sont approximatives : 25 minutes après le lever du soleil, 10 minutes avant le Dohr et 25 minutes avant le coucher du soleil.", "kerahatFoot_hanbali": "Selon l’école hanbalite (Réglages › École juridique). Les durées sont approximatives : 20 minutes après le lever du soleil, 10 minutes avant le Dohr et 20 minutes avant le coucher du soleil.", "obMadhabTitle": "Votre école juridique", "obMadhabBody": "Elle détermine les heures makrouh et leur explication. Vous pouvez la modifier plus tard dans les Réglages."});
+Object.assign(T.nl, {"style": "Stijl", "styleColor": "Hoofdkleur", "col_teal": "Petrol", "col_green": "Groen", "col_blue": "Blauw", "col_violet": "Violet", "col_berry": "Framboos", "col_graphite": "Grafiet", "col_cyan": "Turquoise", "col_grass": "Gras", "col_indigo": "Indigo", "col_orchid": "Orchidee", "col_orange": "Oranje", "col_gold": "Goud", "col_ocean": "Oceaan", "col_forest": "Dennengroen", "col_navy": "Nachtblauw", "col_plum": "Aubergine", "col_wine": "Bordeaux", "col_mono": "Mono", "col_mint": "Mint", "col_sage": "Salie", "col_ice": "Duifblauw", "col_lavender": "Lavendel", "col_mauve": "Mauve", "col_sand": "Zand", "styleColorFooter": "Geldt voor de app, de widgets en de Live-activiteit. Bij Oranje, Goud en Zand zijn de makroeh-tijden violet in plaats van oranje.", "laFull": "In kleur", "laArc": "Alleen boog", "laMono": "Zwart-wit", "laInvert": "Omgekeerd", "laInvertSub": "Lichte achtergrond, donkere tekst. Voor lichte achtergronden.", "styleLiveFooter": "Geldt ook voor de widget met de boog op het beginscherm. De transparantie is bij alle varianten gelijk.", "styleReset": "Herstel standaard", "styleMoreColors": "Meer kleuren", "styleLessColors": "Minder kleuren", "soundSystemFooter": "Welk geluid dat is, kies je in de iOS-instellingen bij ‘Geluiden en voelbare feedback’. Een app kan de geluiden van Apple niet zelf ter keuze aanbieden.", "madhab": "Rechtsschool", "madhab_hanafi": "Hanafi", "madhab_maliki": "Maliki", "madhab_shafii": "Sjafi’i", "madhab_hanbali": "Hanbali", "madhabAdj_hanafi": "hanafitische", "madhabAdj_maliki": "malikitische", "madhabAdj_shafii": "sjafiitische", "madhabAdj_hanbali": "hanbalitische", "madhabSub_hanafi": "Makroeh-tijden bij zonsopgang, vóór Dhuhr en vóór zonsondergang", "madhabSub_maliki": "Makroeh-tijden bij zonsopgang en vóór zonsondergang", "madhabSub_shafii": "Makroeh-tijden bij zonsopgang, vóór Dhuhr (niet op vrijdag) en vóór zonsondergang", "madhabSub_hanbali": "Makroeh-tijden bij zonsopgang, vóór Dhuhr en vóór zonsondergang", "madhabFooter": "Bepaalt welke makroeh-tijden de app toont en hoe die worden uitgelegd. De Asr-tijd stel je apart in bij ‘{asr}’.", "kerahatFooter_maliki": "Subtiel aangegeven op de boog en bij de tijden: ongeveer 20 min na zonsopgang en 20 min vóór Maghrib. Volgens de malikitische school worden er dan geen vrijwillige gebeden verricht.", "kerahatFooter_shafii": "Subtiel aangegeven op de boog en bij de tijden: ongeveer 25 min na zonsopgang, 10 min vóór Dhuhr (niet op vrijdag) en 25 min vóór Maghrib. Volgens de sjafiitische school worden er dan geen vrijwillige gebeden verricht.", "kerahatFooter_hanbali": "Subtiel aangegeven op de boog en bij de tijden: ongeveer 20 min na zonsopgang, 10 min vóór Dhuhr en 20 min vóór Maghrib. Volgens de hanbalitische school worden er dan geen vrijwillige gebeden verricht.", "kerahatP1_maliki": "Volgens de malikitische school zijn makroeh-tijden twee korte momenten op de dag waarop geen vrijwillige gebeden worden verricht: bij zonsopgang en vóór zonsondergang. Het middaguur, als de zon het hoogst staat, rekent de malikitische school er niet toe.", "kerahatP1_shafii": "Makroeh-tijden zijn drie korte momenten op de dag waarop geen vrijwillige gebeden worden verricht. Volgens de sjafiitische school geldt het moment vóór Dhuhr niet op vrijdag; voor Mekka maakt de school nog een uitzondering.", "kerahatP1_hanbali": "Makroeh-tijden zijn drie korte momenten op de dag waarop geen vrijwillige gebeden worden verricht.", "kerahatAfterTitle": "Na het Fajr- en het Asr-gebed", "kerahatAfterBody": "Na het Fajr-gebed tot zonsopgang en na het Asr-gebed tot zonsondergang worden geen vrijwillige gebeden verricht. Daarover zijn alle vier de rechtsscholen het eens. Omdat deze tijden met je eigen gebed beginnen, toont de app ze niet op de boog.", "kerahatQadaTitle": "Gemiste gebeden inhalen", "kerahatQadaHanafi": "Volgens de hanafitische school haal je een gemist gebed niet in tijdens deze drie momenten – alleen het Asr-gebed van dezelfde dag bid je nog vóór zonsondergang. Na het Fajr- en het Asr-gebed mag je het wel inhalen.", "kerahatQadaOther": "Volgens de {school} school mag je een gemist verplicht gebed ook in de makroeh-tijden inhalen. De verboden gelden vooral voor vrijwillige gebeden.", "kerahatOtherTitle": "Andere gebeden", "kerahatOtherBody": "Bij het dodengebed en bij gebeden met een bijzondere aanleiding, zoals het begroetingsgebed in de moskee, verschillen de rechtsscholen. Vraag het bij twijfel aan een imam van je rechtsschool.", "kerahatFoot_maliki": "Volgens de malikitische school (Instellingen › Rechtsschool). De tijden zijn bij benadering: 20 minuten na zonsopgang en 20 minuten vóór zonsondergang.", "kerahatFoot_shafii": "Volgens de sjafiitische school (Instellingen › Rechtsschool). De tijden zijn bij benadering: 25 minuten na zonsopgang, 10 minuten vóór Dhuhr en 25 minuten vóór zonsondergang.", "kerahatFoot_hanbali": "Volgens de hanbalitische school (Instellingen › Rechtsschool). De tijden zijn bij benadering: 20 minuten na zonsopgang, 10 minuten vóór Dhuhr en 20 minuten vóór zonsondergang.", "obMadhabTitle": "Je rechtsschool", "obMadhabBody": "Hiervan hangen de makroeh-tijden en de uitleg ervan af. Je kunt die later wijzigen in Instellingen."});
+Object.assign(T.bs, {"style": "Stil", "styleColor": "Osnovna boja", "col_teal": "Petrolej", "col_green": "Zelena", "col_blue": "Plava", "col_violet": "Ljubičasta", "col_berry": "Malina", "col_graphite": "Grafit", "col_cyan": "Tirkizna", "col_grass": "Trava", "col_indigo": "Indigo", "col_orchid": "Orhideja", "col_orange": "Narandžasta", "col_gold": "Zlatna", "col_ocean": "Okean", "col_forest": "Jela", "col_navy": "Tamnoplava", "col_plum": "Patlidžan", "col_wine": "Bordo", "col_mono": "Mono", "col_mint": "Menta", "col_sage": "Žalfija", "col_ice": "Sivoplava", "col_lavender": "Lavanda", "col_mauve": "Sljez", "col_sand": "Pješčana", "styleColorFooter": "Važi za aplikaciju, widgete i Aktivnost uživo. Kod narandžaste, zlatne i pješčane boje mekruh vakti su ljubičasti, a ne narandžasti.", "laFull": "U boji", "laArc": "Samo luk", "laMono": "Crno-bijelo", "laInvert": "Invertovano", "laInvertSub": "Svijetla pozadina, tamni tekst. Za svijetle pozadinske slike.", "styleLiveFooter": "Važi i za widget s lukom na početnom ekranu. Prozirnost je ista u svim varijantama.", "styleReset": "Vrati standardno", "styleMoreColors": "Više boja", "styleLessColors": "Manje boja", "soundSystemFooter": "Koji je to zvuk, birate u postavkama iOS-a pod „Zvukovi i haptika“. Aplikacija ne može sama ponuditi Appleove tonove za odabir.", "madhab": "Mezheb", "madhab_hanafi": "Hanefijski", "madhab_maliki": "Malikijski", "madhab_shafii": "Šafijski", "madhab_hanbali": "Hanbelijski", "madhabAdj_hanafi": "hanefijskom", "madhabAdj_maliki": "malikijskom", "madhabAdj_shafii": "šafijskom", "madhabAdj_hanbali": "hanbelijskom", "madhabSub_hanafi": "Mekruh vakti pri izlasku sunca, prije podneva i prije zalaska sunca", "madhabSub_maliki": "Mekruh vakti pri izlasku sunca i prije zalaska sunca", "madhabSub_shafii": "Mekruh vakti pri izlasku sunca, prije podneva (ne petkom) i prije zalaska sunca", "madhabSub_hanbali": "Mekruh vakti pri izlasku sunca, prije podneva i prije zalaska sunca", "madhabFooter": "Određuje koje mekruh vakte aplikacija prikazuje i kako ih objašnjava. Vakat ikindije podešavate posebno pod „{asr}“.", "kerahatFooter_maliki": "Diskretno označeni na luku i uz namaske vakte: oko 20 min nakon izlaska sunca i 20 min prije akšama. Po malikijskom mezhebu tada se ne klanjaju dobrovoljni namazi.", "kerahatFooter_shafii": "Diskretno označeni na luku i uz namaske vakte: oko 25 min nakon izlaska sunca, 10 min prije podneva (ne petkom) i 25 min prije akšama. Po šafijskom mezhebu tada se ne klanjaju dobrovoljni namazi.", "kerahatFooter_hanbali": "Diskretno označeni na luku i uz namaske vakte: oko 20 min nakon izlaska sunca, 10 min prije podneva i 20 min prije akšama. Po hanbelijskom mezhebu tada se ne klanjaju dobrovoljni namazi.", "kerahatP1_maliki": "Po malikijskom mezhebu mekruh vakti su dva kratka perioda u toku dana kada se ne klanjaju dobrovoljni namazi: pri izlasku sunca i prije zalaska sunca. Podne, kada je sunce najviše, malikijski mezheb ne ubraja među njih.", "kerahatP1_shafii": "Mekruh vakti su tri kratka perioda u toku dana kada se ne klanjaju dobrovoljni namazi. Po šafijskom mezhebu period prije podneva ne važi petkom; za Mekku ovaj mezheb pravi još jedan izuzetak.", "kerahatP1_hanbali": "Mekruh vakti su tri kratka perioda u toku dana kada se ne klanjaju dobrovoljni namazi.", "kerahatAfterTitle": "Nakon sabaha i ikindije", "kerahatAfterBody": "Nakon klanjanja sabaha do izlaska sunca i nakon klanjanja ikindije do zalaska sunca ne klanjaju se dobrovoljni namazi. U tome su saglasna sva četiri mezheba. Budući da ova vremena počinju vašim vlastitim namazom, aplikacija ih ne prikazuje na luku.", "kerahatQadaTitle": "Naklanjavanje propuštenih namaza", "kerahatQadaHanafi": "Po hanefijskom mezhebu propušteni namaz ne naklanjate u ova tri perioda – samo ikindiju istog dana još klanjate prije zalaska sunca. Nakon klanjanja sabaha i ikindije smijete naklanjati.", "kerahatQadaOther": "Po {school} mezhebu propušteni farz namaz smijete naklanjati i u mekruh vaktima. Zabrane se prije svega odnose na dobrovoljne namaze.", "kerahatOtherTitle": "Drugi namazi", "kerahatOtherBody": "Kod dženaze-namaza i namaza s posebnim povodom, kao što je namaz pozdrava džamiji, mezhebi se razlikuju. Ako niste sigurni, pitajte imama svog mezheba.", "kerahatFoot_maliki": "Prema malikijskom mezhebu (Postavke › Mezheb). Vremena su približna: 20 minuta nakon izlaska sunca i 20 minuta prije zalaska sunca.", "kerahatFoot_shafii": "Prema šafijskom mezhebu (Postavke › Mezheb). Vremena su približna: 25 minuta nakon izlaska sunca, 10 minuta prije podneva i 25 minuta prije zalaska sunca.", "kerahatFoot_hanbali": "Prema hanbelijskom mezhebu (Postavke › Mezheb). Vremena su približna: 20 minuta nakon izlaska sunca, 10 minuta prije podneva i 20 minuta prije zalaska sunca.", "obMadhabTitle": "Vaš mezheb", "obMadhabBody": "Prema njemu se određuju mekruh vakti i njihovo objašnjenje. Možete ga kasnije promijeniti u Postavkama."});
+Object.assign(T.sq, {"style": "Stili", "styleColor": "Ngjyra bazë", "col_teal": "Petrol", "col_green": "E gjelbër", "col_blue": "Blu", "col_violet": "Vjollcë", "col_berry": "Mjedër", "col_graphite": "Grafit", "col_cyan": "Bruz", "col_grass": "Bar", "col_indigo": "Indigo", "col_orchid": "Orkide", "col_orange": "Portokalli", "col_gold": "Ari", "col_ocean": "Oqean", "col_forest": "Bredh", "col_navy": "Blu e errët", "col_plum": "Patëllxhan", "col_wine": "Bordo", "col_mono": "Mono", "col_mint": "Mente", "col_sage": "Sherebelë", "col_ice": "Blu e hirtë", "col_lavender": "Livando", "col_mauve": "Mëllagë", "col_sand": "Rërë", "styleColorFooter": "Vlen për aplikacionin, widget-et dhe Aktivitetin live. Me ngjyrat portokalli, ari dhe rërë, kohët mekruh janë vjollcë në vend të portokalli.", "laFull": "Me ngjyra", "laArc": "Vetëm harku", "laMono": "Bardh e zi", "laInvert": "I invertuar", "laInvertSub": "Sfond i çelët, shkrim i errët. Për imazhe sfondi të çelëta.", "styleLiveFooter": "Vlen edhe për widgetin me hark në ekranin bazë. Tejdukshmëria është e njëjtë në të gjitha variantet.", "styleReset": "Rikthe standardin", "styleMoreColors": "Më shumë ngjyra", "styleLessColors": "Më pak ngjyra", "soundSystemFooter": "Tingullin e zgjidhni te Cilësimet e iOS, nën „Sounds & Haptics“. Një aplikacion nuk mund t’i ofrojë vetë tingujt e Apple-it për zgjedhje.", "madhab": "Medhhebi", "madhab_hanafi": "Hanefi", "madhab_maliki": "Maliki", "madhab_shafii": "Shafi’i", "madhab_hanbali": "Hanbeli", "madhabAdj_hanafi": "hanefi", "madhabAdj_maliki": "maliki", "madhabAdj_shafii": "shafi’i", "madhabAdj_hanbali": "hanbeli", "madhabSub_hanafi": "Kohët mekruh gjatë lindjes së diellit, para drekës dhe para perëndimit të diellit", "madhabSub_maliki": "Kohët mekruh gjatë lindjes së diellit dhe para perëndimit të diellit", "madhabSub_shafii": "Kohët mekruh gjatë lindjes së diellit, para drekës (jo të premten) dhe para perëndimit të diellit", "madhabSub_hanbali": "Kohët mekruh gjatë lindjes së diellit, para drekës dhe para perëndimit të diellit", "madhabFooter": "Përcakton cilat kohë mekruh shfaq aplikacioni dhe si i shpjegon ato. Kohën e ikindisë e caktoni veçmas te „{asr}“.", "kerahatFooter_maliki": "Shënohen lehtë në hark dhe pranë vakteve: rreth 20 min pas lindjes së diellit dhe 20 min para akshamit. Sipas medhhebit maliki atëherë nuk falen namaze vullnetare.", "kerahatFooter_shafii": "Shënohen lehtë në hark dhe pranë vakteve: rreth 25 min pas lindjes së diellit, 10 min para drekës (jo të premten) dhe 25 min para akshamit. Sipas medhhebit shafi’i atëherë nuk falen namaze vullnetare.", "kerahatFooter_hanbali": "Shënohen lehtë në hark dhe pranë vakteve: rreth 20 min pas lindjes së diellit, 10 min para drekës dhe 20 min para akshamit. Sipas medhhebit hanbeli atëherë nuk falen namaze vullnetare.", "kerahatP1_maliki": "Sipas medhhebit maliki, kohët mekruh janë dy periudha të shkurtra gjatë ditës kur nuk falen namaze vullnetare: gjatë lindjes së diellit dhe para perëndimit të diellit. Mesditën, kur dielli është në pikën më të lartë, medhhebi maliki nuk e llogarit ndër to.", "kerahatP1_shafii": "Kohët mekruh janë tri periudha të shkurtra gjatë ditës kur nuk falen namaze vullnetare. Sipas medhhebit shafi’i, periudha para drekës nuk vlen të premten; për Mekën ky medhheb bën edhe një përjashtim tjetër.", "kerahatP1_hanbali": "Kohët mekruh janë tri periudha të shkurtra gjatë ditës kur nuk falen namaze vullnetare.", "kerahatAfterTitle": "Pas namazit të sabahut dhe të ikindisë", "kerahatAfterBody": "Pas namazit të sabahut deri në lindjen e diellit dhe pas namazit të ikindisë deri në perëndimin e diellit nuk falen namaze vullnetare. Për këtë pajtohen të katër medhhebet. Meqë këto kohë fillojnë me vetë namazin tuaj, aplikacioni nuk i shfaq në hark.", "kerahatQadaTitle": "Kaza e namazeve të humbura", "kerahatQadaHanafi": "Sipas medhhebit hanefi, namazin e humbur nuk e falni kaza në këto tri periudha – vetëm ikindinë e së njëjtës ditë e falni ende para perëndimit të diellit. Pas namazit të sabahut dhe të ikindisë mund të falni kaza.", "kerahatQadaOther": "Sipas medhhebit {school}, një namaz farz të humbur mund ta falni kaza edhe në kohët mekruh. Ndalimet kanë të bëjnë kryesisht me namazet vullnetare.", "kerahatOtherTitle": "Namaze të tjera", "kerahatOtherBody": "Për namazin e xhenazes dhe namazet me shkak të veçantë, si namazi i përshëndetjes së xhamisë, medhhebet ndryshojnë. Nëse nuk jeni të sigurt, pyetni një imam të medhhebit tuaj.", "kerahatFoot_maliki": "Sipas medhhebit maliki (Cilësimet › Medhhebi). Kohët janë të përafërta: 20 minuta pas lindjes së diellit dhe 20 minuta para perëndimit të diellit.", "kerahatFoot_shafii": "Sipas medhhebit shafi’i (Cilësimet › Medhhebi). Kohët janë të përafërta: 25 minuta pas lindjes së diellit, 10 minuta para drekës dhe 25 minuta para perëndimit të diellit.", "kerahatFoot_hanbali": "Sipas medhhebit hanbeli (Cilësimet › Medhhebi). Kohët janë të përafërta: 20 minuta pas lindjes së diellit, 10 minuta para drekës dhe 20 minuta para perëndimit të diellit.", "obMadhabTitle": "Medhhebi juaj", "obMadhabBody": "Sipas tij përcaktohen kohët mekruh dhe shpjegimi i tyre. Mund ta ndryshoni më vonë te Cilësimet."});
+Object.assign(T.ar, {"style": "النمط", "styleColor": "اللون الأساسي", "col_teal": "بترولي", "col_green": "أخضر", "col_blue": "أزرق", "col_violet": "بنفسجي", "col_berry": "توتي", "col_graphite": "جرافيت", "col_cyan": "فيروزي", "col_grass": "عشبي", "col_indigo": "نيلي", "col_orchid": "أوركيدي", "col_orange": "برتقالي", "col_gold": "ذهبي", "col_ocean": "محيطي", "col_forest": "صنوبري", "col_navy": "كحلي", "col_plum": "باذنجاني", "col_wine": "عنابي", "col_mono": "أحادي", "col_mint": "نعناعي", "col_sage": "مريمي", "col_ice": "أزرق رمادي", "col_lavender": "خزامي", "col_mauve": "موف", "col_sand": "رملي", "styleColorFooter": "يسري على التطبيق والأدوات والنشاط المباشر. مع البرتقالي والذهبي والرملي تظهر أوقات الكراهة بالبنفسجي بدل البرتقالي.", "laFull": "ملوّن", "laArc": "القوس فقط", "laMono": "أبيض وأسود", "laInvert": "معكوس", "laInvertSub": "خلفية فاتحة وخط داكن. لصور الخلفية الفاتحة.", "styleLiveFooter": "يسري أيضًا على الأداة ذات القوس في الشاشة الرئيسية. والشفافية واحدة في جميع الخيارات.", "styleReset": "استعادة الافتراضي", "styleMoreColors": "مزيد من الألوان", "styleLessColors": "ألوان أقل", "soundSystemFooter": "تختار هذه النغمة في إعدادات iOS ضمن «الأصوات والحس اللمسي». ولا يستطيع التطبيق أن يعرض نغمات Apple للاختيار بنفسه.", "madhab": "المذهب", "madhab_hanafi": "الحنفي", "madhab_maliki": "المالكي", "madhab_shafii": "الشافعي", "madhab_hanbali": "الحنبلي", "madhabAdj_hanafi": "الحنفي", "madhabAdj_maliki": "المالكي", "madhabAdj_shafii": "الشافعي", "madhabAdj_hanbali": "الحنبلي", "madhabSub_hanafi": "أوقات الكراهة عند الشروق وقبل الظهر وقبل الغروب", "madhabSub_maliki": "أوقات الكراهة عند الشروق وقبل الغروب", "madhabSub_shafii": "أوقات الكراهة عند الشروق وقبل الظهر (إلا يوم الجمعة) وقبل الغروب", "madhabSub_hanbali": "أوقات الكراهة عند الشروق وقبل الظهر وقبل الغروب", "madhabFooter": "يحدّد أوقات الكراهة التي يعرضها التطبيق وكيف يشرحها. أما وقت العصر فتضبطه منفصلًا من «{asr}».", "kerahatFooter_maliki": "مُعلَّمة بخفّة على القوس وعند المواقيت: نحو 20 دقيقة بعد الشروق، و20 دقيقة قبل المغرب. وفي المذهب المالكي لا تُؤدّى فيها صلوات التطوّع.", "kerahatFooter_shafii": "مُعلَّمة بخفّة على القوس وعند المواقيت: نحو 25 دقيقة بعد الشروق، و10 دقائق قبل الظهر (إلا يوم الجمعة)، و25 دقيقة قبل المغرب. وفي المذهب الشافعي لا تُؤدّى فيها صلوات التطوّع.", "kerahatFooter_hanbali": "مُعلَّمة بخفّة على القوس وعند المواقيت: نحو 20 دقيقة بعد الشروق، و10 دقائق قبل الظهر، و20 دقيقة قبل المغرب. وفي المذهب الحنبلي لا تُؤدّى فيها صلوات التطوّع.", "kerahatP1_maliki": "أوقات الكراهة في المذهب المالكي فترتان قصيرتان في اليوم لا تُؤدّى فيهما صلوات التطوّع: عند الشروق وقبل الغروب. ولا يعدّ المذهب المالكي منها وقتَ منتصف النهار، حين تكون الشمس في كبد السماء.", "kerahatP1_shafii": "أوقات الكراهة ثلاث فترات قصيرة في اليوم لا تُؤدّى فيها صلوات التطوّع. وفي المذهب الشافعي لا تسري فترة ما قبل الظهر يوم الجمعة؛ ويجعل المذهب لمكة المكرمة استثناءً آخر.", "kerahatP1_hanbali": "أوقات الكراهة ثلاث فترات قصيرة في اليوم لا تُؤدّى فيها صلوات التطوّع.", "kerahatAfterTitle": "بعد صلاتي الفجر والعصر", "kerahatAfterBody": "بعد صلاة الفجر حتى الشروق، وبعد صلاة العصر حتى الغروب، لا تُؤدّى صلوات التطوّع. وعلى هذا تتفق المذاهب الأربعة. ولأن هذه الأوقات تبدأ بصلاتك أنت، لا يعرضها التطبيق على القوس.", "kerahatQadaTitle": "قضاء الصلوات الفائتة", "kerahatQadaHanafi": "في المذهب الحنفي لا تقضي صلاةً فائتة في هذه الفترات الثلاث – وإنما تصلّي عصر اليوم نفسه قبل الغروب. وبعد صلاتي الفجر والعصر يجوز لك القضاء.", "kerahatQadaOther": "في المذهب {school} يجوز لك أن تقضي الفريضة الفائتة في أوقات الكراهة أيضًا. والنهي يتعلّق أساسًا بصلوات التطوّع.", "kerahatOtherTitle": "صلوات أخرى", "kerahatOtherBody": "في صلاة الجنازة والصلوات التي لها سبب، مثل تحية المسجد، تختلف المذاهب. إن كنت في شك فاسأل إمامًا من مذهبك.", "kerahatFoot_maliki": "وفق المذهب المالكي (الإعدادات › المذهب). الفترات تقريبية: 20 دقيقة بعد الشروق، و20 دقيقة قبل الغروب.", "kerahatFoot_shafii": "وفق المذهب الشافعي (الإعدادات › المذهب). الفترات تقريبية: 25 دقيقة بعد الشروق، و10 دقائق قبل الظهر، و25 دقيقة قبل الغروب.", "kerahatFoot_hanbali": "وفق المذهب الحنبلي (الإعدادات › المذهب). الفترات تقريبية: 20 دقيقة بعد الشروق، و10 دقائق قبل الظهر، و20 دقيقة قبل الغروب.", "obMadhabTitle": "مذهبك", "obMadhabBody": "بحسبه تُحدَّد أوقات الكراهة وشرحها. ويمكنك تغييره لاحقًا في الإعدادات."});
+Object.assign(T.ur, {"style": "اسٹائل", "styleColor": "بنیادی رنگ", "col_teal": "ٹیل", "col_green": "سبز", "col_blue": "نیلا", "col_violet": "بنفشی", "col_berry": "شہتوتی", "col_graphite": "گریفائٹ", "col_cyan": "فیروزی", "col_grass": "گھاس", "col_indigo": "انڈیگو", "col_orchid": "آرکڈ", "col_orange": "نارنجی", "col_gold": "سنہری", "col_ocean": "سمندری", "col_forest": "صنوبری", "col_navy": "گہرا نیلا", "col_plum": "بینگنی", "col_wine": "عنابی", "col_mono": "مونو", "col_mint": "پودینہ", "col_sage": "سیج", "col_ice": "سرمئی نیلا", "col_lavender": "لیونڈر", "col_mauve": "موو", "col_sand": "ریتیلا", "styleColorFooter": "ایپ، وجیٹس اور لائیو ایکٹیویٹی پر لاگو ہوتا ہے۔ نارنجی، سنہری اور ریتیلے رنگ میں مکروہ اوقات نارنجی کے بجائے بنفشی ہوتے ہیں۔", "laFull": "رنگین", "laArc": "صرف قوس", "laMono": "سیاہ و سفید", "laInvert": "معکوس", "laInvertSub": "ہلکا پس منظر، گہرا متن۔ ہلکے وال پیپرز کے لیے۔", "styleLiveFooter": "ہوم اسکرین پر قوس والے ویجٹ پر بھی لاگو ہوتا ہے۔ شفافیت سب اقسام میں ایک جیسی ہے۔", "styleReset": "ڈیفالٹ بحال کریں", "styleMoreColors": "مزید رنگ", "styleLessColors": "کم رنگ", "soundSystemFooter": "یہ کون سی ٹون ہو، یہ آپ iOS سیٹنگز میں “آوازیں اور ہیپٹکس” کے تحت چنتے ہیں۔ کوئی ایپ Apple کی ٹونز خود انتخاب کے لیے پیش نہیں کر سکتی۔", "madhab": "مسلک", "madhab_hanafi": "حنفی", "madhab_maliki": "مالکی", "madhab_shafii": "شافعی", "madhab_hanbali": "حنبلی", "madhabAdj_hanafi": "حنفی", "madhabAdj_maliki": "مالکی", "madhabAdj_shafii": "شافعی", "madhabAdj_hanbali": "حنبلی", "madhabSub_hanafi": "طلوعِ آفتاب کے وقت، ظہر سے پہلے اور غروبِ آفتاب سے پہلے مکروہ اوقات", "madhabSub_maliki": "طلوعِ آفتاب کے وقت اور غروبِ آفتاب سے پہلے مکروہ اوقات", "madhabSub_shafii": "طلوعِ آفتاب کے وقت، ظہر سے پہلے (جمعہ کے سوا) اور غروبِ آفتاب سے پہلے مکروہ اوقات", "madhabSub_hanbali": "طلوعِ آفتاب کے وقت، ظہر سے پہلے اور غروبِ آفتاب سے پہلے مکروہ اوقات", "madhabFooter": "طے کرتا ہے کہ ایپ کون سے مکروہ اوقات دکھائے اور انہیں کیسے سمجھائے۔ عصر کا وقت آپ الگ سے “{asr}” میں سیٹ کرتے ہیں۔", "kerahatFooter_maliki": "قوس پر اور اوقات کے ساتھ ہلکے سے نشان زد: طلوعِ آفتاب کے تقریباً 20 منٹ بعد اور مغرب سے 20 منٹ پہلے۔ مالکی مسلک کے مطابق ان اوقات میں نفل نمازیں نہیں پڑھی جاتیں۔", "kerahatFooter_shafii": "قوس پر اور اوقات کے ساتھ ہلکے سے نشان زد: طلوعِ آفتاب کے تقریباً 25 منٹ بعد، ظہر سے 10 منٹ پہلے (جمعہ کے سوا) اور مغرب سے 25 منٹ پہلے۔ شافعی مسلک کے مطابق ان اوقات میں نفل نمازیں نہیں پڑھی جاتیں۔", "kerahatFooter_hanbali": "قوس پر اور اوقات کے ساتھ ہلکے سے نشان زد: طلوعِ آفتاب کے تقریباً 20 منٹ بعد، ظہر سے 10 منٹ پہلے اور مغرب سے 20 منٹ پہلے۔ حنبلی مسلک کے مطابق ان اوقات میں نفل نمازیں نہیں پڑھی جاتیں۔", "kerahatP1_maliki": "مالکی مسلک کے مطابق مکروہ اوقات دن کے دو مختصر وقفے ہیں جن میں نفل نمازیں نہیں پڑھی جاتیں: طلوعِ آفتاب کے وقت اور غروبِ آفتاب سے پہلے۔ دوپہر کے وقت کو، جب سورج عین سر پر ہو، مالکی مسلک ان میں شمار نہیں کرتا۔", "kerahatP1_shafii": "مکروہ اوقات دن کے تین مختصر وقفے ہیں جن میں نفل نمازیں نہیں پڑھی جاتیں۔ شافعی مسلک کے مطابق جمعہ کے دن ظہر سے پہلے کا وقفہ لاگو نہیں ہوتا؛ مکہ کے لیے یہ مسلک ایک اور استثنا رکھتا ہے۔", "kerahatP1_hanbali": "مکروہ اوقات دن کے تین مختصر وقفے ہیں جن میں نفل نمازیں نہیں پڑھی جاتیں۔", "kerahatAfterTitle": "فجر اور عصر کی نماز کے بعد", "kerahatAfterBody": "فجر کی نماز کے بعد طلوعِ آفتاب تک اور عصر کی نماز کے بعد غروبِ آفتاب تک نفل نمازیں نہیں پڑھی جاتیں۔ اس پر چاروں مسالک متفق ہیں۔ چونکہ یہ اوقات آپ کی اپنی نماز سے شروع ہوتے ہیں، اس لیے ایپ انہیں قوس پر نہیں دکھاتی۔", "kerahatQadaTitle": "چھوٹی ہوئی نمازوں کی قضا", "kerahatQadaHanafi": "حنفی مسلک کے مطابق آپ چھوٹی ہوئی نماز کی قضا ان تین وقفوں میں نہیں کرتے – صرف اسی دن کی عصر آپ غروبِ آفتاب سے پہلے پھر بھی پڑھ لیتے ہیں۔ فجر اور عصر کی نماز کے بعد آپ قضا کر سکتے ہیں۔", "kerahatQadaOther": "{school} مسلک کے مطابق آپ چھوٹی ہوئی فرض نماز کی قضا مکروہ اوقات میں بھی کر سکتے ہیں۔ یہ ممانعت بنیادی طور پر نفل نمازوں سے متعلق ہے۔", "kerahatOtherTitle": "دیگر نمازیں", "kerahatOtherBody": "نمازِ جنازہ اور کسی خاص سبب والی نمازوں، جیسے تحیۃ المسجد، میں مسالک کی رائے مختلف ہے۔ شک ہو تو اپنے مسلک کے کسی امام سے پوچھیں۔", "kerahatFoot_maliki": "مالکی مسلک کے مطابق (سیٹنگز › مسلک)۔ اوقات تقریبی ہیں: طلوعِ آفتاب کے بعد 20 منٹ اور غروبِ آفتاب سے پہلے 20 منٹ۔", "kerahatFoot_shafii": "شافعی مسلک کے مطابق (سیٹنگز › مسلک)۔ اوقات تقریبی ہیں: طلوعِ آفتاب کے بعد 25 منٹ، ظہر سے پہلے 10 منٹ اور غروبِ آفتاب سے پہلے 25 منٹ۔", "kerahatFoot_hanbali": "حنبلی مسلک کے مطابق (سیٹنگز › مسلک)۔ اوقات تقریبی ہیں: طلوعِ آفتاب کے بعد 20 منٹ، ظہر سے پہلے 10 منٹ اور غروبِ آفتاب سے پہلے 20 منٹ۔", "obMadhabTitle": "آپ کا مسلک", "obMadhabBody": "مکروہ اوقات اور ان کی وضاحت اسی کے مطابق ہوتی ہے۔ آپ اسے بعد میں سیٹنگز میں بدل سکتے ہیں۔"});
+Object.assign(T.id, {"style": "Gaya", "styleColor": "Warna Utama", "col_teal": "Teal", "col_green": "Hijau", "col_blue": "Biru", "col_violet": "Ungu", "col_berry": "Beri", "col_graphite": "Grafit", "col_cyan": "Toska", "col_grass": "Rumput", "col_indigo": "Indigo", "col_orchid": "Anggrek", "col_orange": "Oranye", "col_gold": "Emas", "col_ocean": "Samudra", "col_forest": "Cemara", "col_navy": "Biru Dongker", "col_plum": "Terong", "col_wine": "Merah Anggur", "col_mono": "Mono", "col_mint": "Mint", "col_sage": "Sage", "col_ice": "Biru Kelabu", "col_lavender": "Lavender", "col_mauve": "Mauve", "col_sand": "Pasir", "styleColorFooter": "Berlaku untuk app, widget, dan Aktivitas Langsung. Pada Oranye, Emas, dan Pasir, waktu makruh berwarna ungu, bukan oranye.", "laFull": "Berwarna", "laArc": "Busur Saja", "laMono": "Hitam Putih", "laInvert": "Terbalik", "laInvertSub": "Latar belakang terang, tulisan gelap. Untuk wallpaper terang.", "styleLiveFooter": "Juga berlaku untuk widget dengan busur di Layar Utama. Transparansinya sama di semua varian.", "styleReset": "Kembalikan ke Standar", "styleMoreColors": "Warna Lainnya", "styleLessColors": "Lebih Sedikit Warna", "soundSystemFooter": "Nada yang dipakai Anda pilih di Pengaturan iOS, pada “Suara & Haptik”. Sebuah app tidak dapat menawarkan sendiri nada Apple untuk dipilih.", "madhab": "Mazhab", "madhab_hanafi": "Hanafi", "madhab_maliki": "Maliki", "madhab_shafii": "Syafi’i", "madhab_hanbali": "Hanbali", "madhabAdj_hanafi": "Hanafi", "madhabAdj_maliki": "Maliki", "madhabAdj_shafii": "Syafi’i", "madhabAdj_hanbali": "Hanbali", "madhabSub_hanafi": "Waktu makruh saat matahari terbit, sebelum Dzuhur, dan sebelum matahari terbenam", "madhabSub_maliki": "Waktu makruh saat matahari terbit dan sebelum matahari terbenam", "madhabSub_shafii": "Waktu makruh saat matahari terbit, sebelum Dzuhur (kecuali Jumat), dan sebelum matahari terbenam", "madhabSub_hanbali": "Waktu makruh saat matahari terbit, sebelum Dzuhur, dan sebelum matahari terbenam", "madhabFooter": "Menentukan waktu makruh mana yang ditampilkan app dan cara menjelaskannya. Waktu Ashar Anda atur secara terpisah di “{asr}”.", "kerahatFooter_maliki": "Ditandai secara halus pada busur dan di samping waktu salat: sekitar 20 mnt setelah matahari terbit dan 20 mnt sebelum Maghrib. Menurut mazhab Maliki, salat sunah tidak dikerjakan pada waktu tersebut.", "kerahatFooter_shafii": "Ditandai secara halus pada busur dan di samping waktu salat: sekitar 25 mnt setelah matahari terbit, 10 mnt sebelum Dzuhur (kecuali Jumat), dan 25 mnt sebelum Maghrib. Menurut mazhab Syafi’i, salat sunah tidak dikerjakan pada waktu tersebut.", "kerahatFooter_hanbali": "Ditandai secara halus pada busur dan di samping waktu salat: sekitar 20 mnt setelah matahari terbit, 10 mnt sebelum Dzuhur, dan 20 mnt sebelum Maghrib. Menurut mazhab Hanbali, salat sunah tidak dikerjakan pada waktu tersebut.", "kerahatP1_maliki": "Menurut mazhab Maliki, waktu makruh adalah dua rentang waktu singkat dalam sehari ketika salat sunah tidak dikerjakan: saat matahari terbit dan sebelum matahari terbenam. Mazhab Maliki tidak memasukkan tengah hari, saat matahari berada di titik tertinggi.", "kerahatP1_shafii": "Waktu makruh adalah tiga rentang waktu singkat dalam sehari ketika salat sunah tidak dikerjakan. Menurut mazhab Syafi’i, rentang sebelum Dzuhur tidak berlaku pada hari Jumat; untuk Mekah, mazhab ini memberi satu pengecualian lagi.", "kerahatP1_hanbali": "Waktu makruh adalah tiga rentang waktu singkat dalam sehari ketika salat sunah tidak dikerjakan.", "kerahatAfterTitle": "Setelah salat Subuh dan Ashar", "kerahatAfterBody": "Setelah salat Subuh hingga matahari terbit dan setelah salat Ashar hingga matahari terbenam, salat sunah tidak dikerjakan. Keempat mazhab sepakat dalam hal ini. Karena waktu ini dimulai dengan salat Anda sendiri, app tidak menampilkannya pada busur.", "kerahatQadaTitle": "Mengqadha salat yang terlewat", "kerahatQadaHanafi": "Menurut mazhab Hanafi, Anda tidak mengqadha salat yang terlewat pada tiga rentang waktu ini – hanya Ashar hari itu yang masih Anda kerjakan sebelum matahari terbenam. Setelah salat Subuh dan Ashar, Anda boleh mengqadha.", "kerahatQadaOther": "Menurut mazhab {school}, Anda juga boleh mengqadha salat fardu yang terlewat pada waktu makruh. Larangannya terutama berlaku untuk salat sunah.", "kerahatOtherTitle": "Salat lainnya", "kerahatOtherBody": "Untuk salat jenazah dan salat yang memiliki sebab khusus, misalnya tahiyatul masjid, mazhab-mazhab berbeda pendapat. Jika ragu, tanyakan kepada imam dari mazhab Anda.", "kerahatFoot_maliki": "Menurut mazhab Maliki (Pengaturan › Mazhab). Rentang waktunya merupakan perkiraan: 20 menit setelah matahari terbit dan 20 menit sebelum matahari terbenam.", "kerahatFoot_shafii": "Menurut mazhab Syafi’i (Pengaturan › Mazhab). Rentang waktunya merupakan perkiraan: 25 menit setelah matahari terbit, 10 menit sebelum Dzuhur, dan 25 menit sebelum matahari terbenam.", "kerahatFoot_hanbali": "Menurut mazhab Hanbali (Pengaturan › Mazhab). Rentang waktunya merupakan perkiraan: 20 menit setelah matahari terbit, 10 menit sebelum Dzuhur, dan 20 menit sebelum matahari terbenam.", "obMadhabTitle": "Mazhab Anda", "obMadhabBody": "Waktu makruh dan penjelasannya mengikuti pilihan ini. Anda dapat mengubahnya nanti di Pengaturan."});
+Object.assign(T.ms, {"style": "Gaya", "styleColor": "Warna Utama", "col_teal": "Teal", "col_green": "Hijau", "col_blue": "Biru", "col_violet": "Ungu", "col_berry": "Beri", "col_graphite": "Grafit", "col_cyan": "Firus", "col_grass": "Rumput", "col_indigo": "Indigo", "col_orchid": "Orkid", "col_orange": "Oren", "col_gold": "Emas", "col_ocean": "Lautan", "col_forest": "Cemara", "col_navy": "Biru Tua", "col_plum": "Terung", "col_wine": "Merah Anggur", "col_mono": "Mono", "col_mint": "Pudina", "col_sage": "Sage", "col_ice": "Biru Kelabu", "col_lavender": "Lavender", "col_mauve": "Mauve", "col_sand": "Pasir", "styleColorFooter": "Terpakai pada app, widget dan Aktiviti Langsung. Bagi Oren, Emas dan Pasir, waktu makruh berwarna ungu, bukan oren.", "laFull": "Berwarna", "laArc": "Lengkung Sahaja", "laMono": "Hitam Putih", "laInvert": "Songsang", "laInvertSub": "Latar belakang cerah, tulisan gelap. Untuk hiasan latar yang cerah.", "styleLiveFooter": "Juga terpakai pada widget dengan lengkok di Skrin Utama. Ketelusan adalah sama bagi semua varian.", "styleReset": "Pulihkan Lalai", "styleMoreColors": "Warna Lain", "styleLessColors": "Kurang Warna", "soundSystemFooter": "Anda memilih bunyi ini dalam Seting iOS di bawah “Bunyi & Haptik”. Sesebuah app tidak boleh menawarkan sendiri bunyi Apple untuk dipilih.", "madhab": "Mazhab", "madhab_hanafi": "Hanafi", "madhab_maliki": "Maliki", "madhab_shafii": "Syafi’i", "madhab_hanbali": "Hanbali", "madhabAdj_hanafi": "Hanafi", "madhabAdj_maliki": "Maliki", "madhabAdj_shafii": "Syafi’i", "madhabAdj_hanbali": "Hanbali", "madhabSub_hanafi": "Waktu makruh ketika matahari terbit, sebelum Zohor dan sebelum matahari terbenam", "madhabSub_maliki": "Waktu makruh ketika matahari terbit dan sebelum matahari terbenam", "madhabSub_shafii": "Waktu makruh ketika matahari terbit, sebelum Zohor (kecuali Jumaat) dan sebelum matahari terbenam", "madhabSub_hanbali": "Waktu makruh ketika matahari terbit, sebelum Zohor dan sebelum matahari terbenam", "madhabFooter": "Menentukan waktu makruh yang dipaparkan oleh app dan cara ia diterangkan. Anda menetapkan waktu Asar secara berasingan di bawah “{asr}”.", "kerahatFooter_maliki": "Ditanda secara halus pada lengkung dan di sebelah waktu solat: kira-kira 20 min selepas matahari terbit dan 20 min sebelum Maghrib. Menurut mazhab Maliki, solat sunat tidak didirikan pada waktu itu.", "kerahatFooter_shafii": "Ditanda secara halus pada lengkung dan di sebelah waktu solat: kira-kira 25 min selepas matahari terbit, 10 min sebelum Zohor (kecuali Jumaat) dan 25 min sebelum Maghrib. Menurut mazhab Syafi’i, solat sunat tidak didirikan pada waktu itu.", "kerahatFooter_hanbali": "Ditanda secara halus pada lengkung dan di sebelah waktu solat: kira-kira 20 min selepas matahari terbit, 10 min sebelum Zohor dan 20 min sebelum Maghrib. Menurut mazhab Hanbali, solat sunat tidak didirikan pada waktu itu.", "kerahatP1_maliki": "Menurut mazhab Maliki, waktu makruh ialah dua tempoh singkat dalam sehari ketika solat sunat tidak didirikan: ketika matahari terbit dan sebelum matahari terbenam. Mazhab Maliki tidak memasukkan waktu tengah hari, ketika matahari berada di titik tertinggi.", "kerahatP1_shafii": "Waktu makruh ialah tiga tempoh singkat dalam sehari ketika solat sunat tidak didirikan. Menurut mazhab Syafi’i, tempoh sebelum Zohor tidak terpakai pada hari Jumaat; bagi Makkah, mazhab ini membuat satu lagi pengecualian.", "kerahatP1_hanbali": "Waktu makruh ialah tiga tempoh singkat dalam sehari ketika solat sunat tidak didirikan.", "kerahatAfterTitle": "Selepas solat Subuh dan Asar", "kerahatAfterBody": "Selepas solat Subuh hingga matahari terbit dan selepas solat Asar hingga matahari terbenam, solat sunat tidak didirikan. Keempat-empat mazhab bersepakat tentang perkara ini. Oleh sebab waktu ini bermula dengan solat anda sendiri, app tidak memaparkannya pada lengkung.", "kerahatQadaTitle": "Mengqada solat yang tertinggal", "kerahatQadaHanafi": "Menurut mazhab Hanafi, anda tidak mengqada solat yang tertinggal dalam tiga tempoh ini – hanya Asar hari yang sama masih anda tunaikan sebelum matahari terbenam. Selepas solat Subuh dan Asar, anda boleh mengqada.", "kerahatQadaOther": "Menurut mazhab {school}, anda juga boleh mengqada solat fardu yang tertinggal pada waktu makruh. Larangan ini terutamanya berkaitan dengan solat sunat.", "kerahatOtherTitle": "Solat lain", "kerahatOtherBody": "Bagi solat jenazah dan solat yang mempunyai sebab tertentu, seperti tahiyatul masjid, pendapat mazhab berbeza. Jika ragu, tanya imam daripada mazhab anda.", "kerahatFoot_maliki": "Menurut mazhab Maliki (Seting › Mazhab). Tempoh ini ialah anggaran: 20 minit selepas matahari terbit dan 20 minit sebelum matahari terbenam.", "kerahatFoot_shafii": "Menurut mazhab Syafi’i (Seting › Mazhab). Tempoh ini ialah anggaran: 25 minit selepas matahari terbit, 10 minit sebelum Zohor dan 25 minit sebelum matahari terbenam.", "kerahatFoot_hanbali": "Menurut mazhab Hanbali (Seting › Mazhab). Tempoh ini ialah anggaran: 20 minit selepas matahari terbit, 10 minit sebelum Zohor dan 20 minit sebelum matahari terbenam.", "obMadhabTitle": "Mazhab anda", "obMadhabBody": "Waktu makruh dan penerangannya mengikut pilihan ini. Anda boleh menukarnya kemudian dalam Seting."});
+Object.assign(T.bn, {"style": "স্টাইল", "styleColor": "মূল রং", "col_teal": "টিল", "col_green": "সবুজ", "col_blue": "নীল", "col_violet": "বেগুনি", "col_berry": "বেরি", "col_graphite": "গ্রাফাইট", "col_cyan": "ফিরোজা", "col_grass": "ঘাস", "col_indigo": "ইন্ডিগো", "col_orchid": "অর্কিড", "col_orange": "কমলা", "col_gold": "সোনালি", "col_ocean": "সমুদ্র", "col_forest": "দেবদারু", "col_navy": "গাঢ় নীল", "col_plum": "জাম", "col_wine": "মেরুন", "col_mono": "মনো", "col_mint": "পুদিনা", "col_sage": "সেজ", "col_ice": "ধূসর নীল", "col_lavender": "ল্যাভেন্ডার", "col_mauve": "মভ", "col_sand": "বালি", "styleColorFooter": "অ্যাপ, উইজেট ও লাইভ অ্যাক্টিভিটিতে প্রযোজ্য। কমলা, সোনালি ও বালি রঙে মাকরুহ সময় কমলার বদলে বেগুনি দেখায়।", "laFull": "রঙিন", "laArc": "শুধু বৃত্তচাপ", "laMono": "সাদা-কালো", "laInvert": "উল্টানো", "laInvertSub": "হালকা ব্যাকগ্রাউন্ড, গাঢ় লেখা। হালকা ওয়ালপেপারের জন্য।", "styleLiveFooter": "হোম স্ক্রিনে বৃত্তচাপ-সহ উইজেটেও প্রযোজ্য। সব ধরনে স্বচ্ছতা একই থাকে।", "styleReset": "ডিফল্ট ফিরিয়ে আনুন", "styleMoreColors": "আরও রং", "styleLessColors": "কম রং", "soundSystemFooter": "কোন টোনটি বাজবে, তা আপনি iOS সেটিংসের “সাউন্ড ও হ্যাপটিক্স” থেকে বেছে নেন। কোনো অ্যাপ নিজে Apple-এর টোনগুলো বেছে নেওয়ার জন্য দিতে পারে না।", "madhab": "মাযহাব", "madhab_hanafi": "হানাফি", "madhab_maliki": "মালিকি", "madhab_shafii": "শাফেয়ি", "madhab_hanbali": "হাম্বলি", "madhabAdj_hanafi": "হানাফি", "madhabAdj_maliki": "মালিকি", "madhabAdj_shafii": "শাফেয়ি", "madhabAdj_hanbali": "হাম্বলি", "madhabSub_hanafi": "সূর্যোদয়ে, যোহরের আগে ও সূর্যাস্তের আগে মাকরুহ সময়", "madhabSub_maliki": "সূর্যোদয়ে ও সূর্যাস্তের আগে মাকরুহ সময়", "madhabSub_shafii": "সূর্যোদয়ে, যোহরের আগে (শুক্রবার ছাড়া) ও সূর্যাস্তের আগে মাকরুহ সময়", "madhabSub_hanbali": "সূর্যোদয়ে, যোহরের আগে ও সূর্যাস্তের আগে মাকরুহ সময়", "madhabFooter": "অ্যাপ কোন মাকরুহ সময় দেখাবে এবং কীভাবে ব্যাখ্যা করবে, তা ঠিক করে। আসরের সময় আলাদাভাবে “{asr}” সেটিংয়ে ঠিক করুন।", "kerahatFooter_maliki": "বৃত্তচাপে ও নামাজের সময়ের পাশে হালকাভাবে চিহ্নিত: সূর্যোদয়ের প্রায় 20 মিনিট পর এবং মাগরিবের 20 মিনিট আগে। মালিকি মাযহাব অনুযায়ী তখন নফল নামাজ পড়া হয় না।", "kerahatFooter_shafii": "বৃত্তচাপে ও নামাজের সময়ের পাশে হালকাভাবে চিহ্নিত: সূর্যোদয়ের প্রায় 25 মিনিট পর, যোহরের 10 মিনিট আগে (শুক্রবার ছাড়া) এবং মাগরিবের 25 মিনিট আগে। শাফেয়ি মাযহাব অনুযায়ী তখন নফল নামাজ পড়া হয় না।", "kerahatFooter_hanbali": "বৃত্তচাপে ও নামাজের সময়ের পাশে হালকাভাবে চিহ্নিত: সূর্যোদয়ের প্রায় 20 মিনিট পর, যোহরের 10 মিনিট আগে এবং মাগরিবের 20 মিনিট আগে। হাম্বলি মাযহাব অনুযায়ী তখন নফল নামাজ পড়া হয় না।", "kerahatP1_maliki": "মালিকি মাযহাব অনুযায়ী মাকরুহ সময় হলো দিনের দুটি ছোট সময়, যখন নফল নামাজ পড়া হয় না: সূর্যোদয়ের সময় এবং সূর্যাস্তের আগে। সূর্য যখন ঠিক মাথার ওপরে থাকে, সেই দুপুরকে মালিকি মাযহাব এর মধ্যে ধরে না।", "kerahatP1_shafii": "মাকরুহ সময় হলো দিনের তিনটি ছোট সময়, যখন নফল নামাজ পড়া হয় না। শাফেয়ি মাযহাব অনুযায়ী শুক্রবারে যোহরের আগের সময়টি প্রযোজ্য নয়; মক্কার জন্য এই মাযহাব আরও একটি ব্যতিক্রম রাখে।", "kerahatP1_hanbali": "মাকরুহ সময় হলো দিনের তিনটি ছোট সময়, যখন নফল নামাজ পড়া হয় না।", "kerahatAfterTitle": "ফজর ও আসরের নামাজের পর", "kerahatAfterBody": "ফজরের নামাজের পর সূর্যোদয় পর্যন্ত এবং আসরের নামাজের পর সূর্যাস্ত পর্যন্ত নফল নামাজ পড়া হয় না। এ বিষয়ে চার মাযহাবই একমত। এই সময়গুলো আপনার নিজের নামাজ দিয়ে শুরু হয় বলে অ্যাপ এগুলো বৃত্তচাপে দেখায় না।", "kerahatQadaTitle": "ছুটে যাওয়া নামাজের কাযা", "kerahatQadaHanafi": "হানাফি মাযহাব অনুযায়ী এই তিনটি সময়ে ছুটে যাওয়া নামাজের কাযা আদায় করবেন না – শুধু সেদিনের আসর সূর্যাস্তের আগে তখনও পড়ে নেবেন। ফজর ও আসরের নামাজের পর কাযা আদায় করতে পারেন।", "kerahatQadaOther": "{school} মাযহাব অনুযায়ী ছুটে যাওয়া ফরজ নামাজের কাযা মাকরুহ সময়েও আদায় করতে পারেন। নিষেধ মূলত নফল নামাজের ক্ষেত্রে।", "kerahatOtherTitle": "অন্যান্য নামাজ", "kerahatOtherBody": "জানাজার নামাজ এবং বিশেষ কারণে পড়া নামাজে, যেমন তাহিয়্যাতুল মসজিদ, মাযহাবগুলোর মত ভিন্ন। সন্দেহ থাকলে আপনার মাযহাবের কোনো ইমামকে জিজ্ঞেস করুন।", "kerahatFoot_maliki": "মালিকি মাযহাব অনুযায়ী (সেটিংস › মাযহাব)। সময়গুলো আনুমানিক: সূর্যোদয়ের পর 20 মিনিট এবং সূর্যাস্তের আগে 20 মিনিট।", "kerahatFoot_shafii": "শাফেয়ি মাযহাব অনুযায়ী (সেটিংস › মাযহাব)। সময়গুলো আনুমানিক: সূর্যোদয়ের পর 25 মিনিট, যোহরের আগে 10 মিনিট এবং সূর্যাস্তের আগে 25 মিনিট।", "kerahatFoot_hanbali": "হাম্বলি মাযহাব অনুযায়ী (সেটিংস › মাযহাব)। সময়গুলো আনুমানিক: সূর্যোদয়ের পর 20 মিনিট, যোহরের আগে 10 মিনিট এবং সূর্যাস্তের আগে 20 মিনিট।", "obMadhabTitle": "আপনার মাযহাব", "obMadhabBody": "মাকরুহ সময় ও তার ব্যাখ্যা এর ওপর নির্ভর করে। পরে সেটিংসে এটি বদলাতে পারবেন।"});
+Object.assign(T.fa, {"style": "سبک", "styleColor": "رنگ اصلی", "col_teal": "نفتی", "col_green": "سبز", "col_blue": "آبی", "col_violet": "بنفش", "col_berry": "تمشکی", "col_graphite": "گرافیتی", "col_cyan": "فیروزه‌ای", "col_grass": "چمنی", "col_indigo": "نیلی", "col_orchid": "ارکیده‌ای", "col_orange": "نارنجی", "col_gold": "طلایی", "col_ocean": "اقیانوسی", "col_forest": "کاجی", "col_navy": "سرمه‌ای", "col_plum": "بادمجانی", "col_wine": "زرشکی", "col_mono": "تک‌رنگ", "col_mint": "نعنایی", "col_sage": "مریم‌گلی", "col_ice": "آبی غباری", "col_lavender": "اسطوخودوسی", "col_mauve": "یاسی", "col_sand": "شنی", "styleColorFooter": "برای برنامه، ابزارک‌ها و فعالیت زنده اعمال می‌شود. با نارنجی، طلایی و شنی، اوقات مکروه به‌جای نارنجی، بنفش نشان داده می‌شوند.", "laFull": "رنگی", "laArc": "فقط کمان", "laMono": "سیاه و سفید", "laInvert": "معکوس", "laInvertSub": "پس‌زمینه روشن، نوشته تیره. برای تصویرهای زمینه روشن.", "styleLiveFooter": "برای ابزارک دارای کمان در صفحهٔ اصلی هم اعمال می‌شود. شفافیت در همه حالت‌ها یکسان است.", "styleReset": "بازگرداندن پیش‌فرض", "styleMoreColors": "رنگ‌های بیشتر", "styleLessColors": "رنگ‌های کمتر", "soundSystemFooter": "اینکه این کدام صدا باشد را در تنظیمات iOS، در بخش «صداها و بازخورد لمسی» انتخاب می‌کنید. یک برنامه نمی‌تواند صداهای Apple را خودش برای انتخاب عرضه کند.", "madhab": "مذهب", "madhab_hanafi": "حنفی", "madhab_maliki": "مالکی", "madhab_shafii": "شافعی", "madhab_hanbali": "حنبلی", "madhabAdj_hanafi": "حنفی", "madhabAdj_maliki": "مالکی", "madhabAdj_shafii": "شافعی", "madhabAdj_hanbali": "حنبلی", "madhabSub_hanafi": "اوقات مکروه هنگام طلوع آفتاب، پیش از ظهر و پیش از غروب آفتاب", "madhabSub_maliki": "اوقات مکروه هنگام طلوع آفتاب و پیش از غروب آفتاب", "madhabSub_shafii": "اوقات مکروه هنگام طلوع آفتاب، پیش از ظهر (جز روز جمعه) و پیش از غروب آفتاب", "madhabSub_hanbali": "اوقات مکروه هنگام طلوع آفتاب، پیش از ظهر و پیش از غروب آفتاب", "madhabFooter": "تعیین می‌کند برنامه کدام اوقات مکروه را نشان دهد و چگونه آن‌ها را توضیح دهد. وقت عصر را جداگانه در «{asr}» تنظیم می‌کنید.", "kerahatFooter_maliki": "با علامتی کم‌رنگ روی کمان و کنار اوقات مشخص شده‌اند: حدود 20 دقیقه پس از طلوع آفتاب و 20 دقیقه پیش از مغرب. بر اساس مذهب مالکی در این اوقات نماز نفل خوانده نمی‌شود.", "kerahatFooter_shafii": "با علامتی کم‌رنگ روی کمان و کنار اوقات مشخص شده‌اند: حدود 25 دقیقه پس از طلوع آفتاب، 10 دقیقه پیش از ظهر (جز روز جمعه) و 25 دقیقه پیش از مغرب. بر اساس مذهب شافعی در این اوقات نماز نفل خوانده نمی‌شود.", "kerahatFooter_hanbali": "با علامتی کم‌رنگ روی کمان و کنار اوقات مشخص شده‌اند: حدود 20 دقیقه پس از طلوع آفتاب، 10 دقیقه پیش از ظهر و 20 دقیقه پیش از مغرب. بر اساس مذهب حنبلی در این اوقات نماز نفل خوانده نمی‌شود.", "kerahatP1_maliki": "اوقات مکروه بر اساس مذهب مالکی دو بازه کوتاه در روز است که در آن‌ها نماز نفل خوانده نمی‌شود: هنگام طلوع آفتاب و پیش از غروب آفتاب. مذهب مالکی نیمروز را، وقتی خورشید در بالاترین نقطه است، جزو آن‌ها نمی‌شمارد.", "kerahatP1_shafii": "اوقات مکروه سه بازه کوتاه در روز است که در آن‌ها نماز نفل خوانده نمی‌شود. بر اساس مذهب شافعی، بازه پیش از ظهر در روز جمعه اعمال نمی‌شود؛ این مذهب برای مکه استثنای دیگری هم قائل است.", "kerahatP1_hanbali": "اوقات مکروه سه بازه کوتاه در روز است که در آن‌ها نماز نفل خوانده نمی‌شود.", "kerahatAfterTitle": "پس از نماز صبح و نماز عصر", "kerahatAfterBody": "پس از نماز صبح تا طلوع آفتاب و پس از نماز عصر تا غروب آفتاب نماز نفل خوانده نمی‌شود. هر چهار مذهب در این باره هم‌نظرند. چون این اوقات با نماز خود شما آغاز می‌شوند، برنامه آن‌ها را روی کمان نشان نمی‌دهد.", "kerahatQadaTitle": "قضای نمازهای فوت‌شده", "kerahatQadaHanafi": "بر اساس مذهب حنفی، نماز فوت‌شده را در این سه بازه قضا نمی‌کنید – فقط عصر همان روز را پیش از غروب آفتاب باز هم می‌خوانید. پس از نماز صبح و نماز عصر می‌توانید قضا کنید.", "kerahatQadaOther": "بر اساس مذهب {school} می‌توانید نماز فرض فوت‌شده را در اوقات مکروه هم قضا کنید. این نهی بیشتر به نمازهای نفل مربوط است.", "kerahatOtherTitle": "نمازهای دیگر", "kerahatOtherBody": "درباره نماز جنازه و نمازهایی که سبب خاصی دارند، مانند تحیت مسجد، مذاهب نظرهای متفاوتی دارند. در صورت تردید از امامی از مذهب خود بپرسید.", "kerahatFoot_maliki": "بر اساس مذهب مالکی (تنظیمات › مذهب). بازه‌ها تقریبی‌اند: 20 دقیقه پس از طلوع آفتاب و 20 دقیقه پیش از غروب آفتاب.", "kerahatFoot_shafii": "بر اساس مذهب شافعی (تنظیمات › مذهب). بازه‌ها تقریبی‌اند: 25 دقیقه پس از طلوع آفتاب، 10 دقیقه پیش از ظهر و 25 دقیقه پیش از غروب آفتاب.", "kerahatFoot_hanbali": "بر اساس مذهب حنبلی (تنظیمات › مذهب). بازه‌ها تقریبی‌اند: 20 دقیقه پس از طلوع آفتاب، 10 دقیقه پیش از ظهر و 20 دقیقه پیش از غروب آفتاب.", "obMadhabTitle": "مذهب شما", "obMadhabBody": "اوقات مکروه و توضیح آن‌ها بر این اساس تعیین می‌شوند. بعداً می‌توانید آن را در تنظیمات تغییر دهید."});
+Object.assign(T.ru, {"style": "Стиль", "styleColor": "Основной цвет", "col_teal": "Морская волна", "col_green": "Зелёный", "col_blue": "Синий", "col_violet": "Фиолетовый", "col_berry": "Ягодный", "col_graphite": "Графитовый", "col_cyan": "Бирюзовый", "col_grass": "Травяной", "col_indigo": "Индиго", "col_orchid": "Орхидея", "col_orange": "Оранжевый", "col_gold": "Золотой", "col_ocean": "Океан", "col_forest": "Хвойный", "col_navy": "Тёмно-синий", "col_plum": "Баклажановый", "col_wine": "Бордовый", "col_mono": "Моно", "col_mint": "Мятный", "col_sage": "Шалфей", "col_ice": "Сизый", "col_lavender": "Лавандовый", "col_mauve": "Мальвовый", "col_sand": "Песочный", "styleColorFooter": "Действует для приложения, виджетов и Live Activity. При оранжевом, золотом и песочном цвете время макрух отмечается фиолетовым, а не оранжевым.", "laFull": "Цветной", "laArc": "Только дуга", "laMono": "Чёрно-белый", "laInvert": "Инвертированный", "laInvertSub": "Светлый фон, тёмный текст. Для светлых обоев.", "styleLiveFooter": "Действует и для виджета с дугой на экране «Домой». Прозрачность во всех вариантах одинаковая.", "styleReset": "Восстановить по умолчанию", "styleMoreColors": "Больше цветов", "styleLessColors": "Меньше цветов", "soundSystemFooter": "Какой это звук, вы выбираете в Настройках iOS в разделе «Звуки, тактильные сигналы». Приложение не может само предложить звуки Apple на выбор.", "madhab": "Мазхаб", "madhab_hanafi": "Ханафитский", "madhab_maliki": "Маликитский", "madhab_shafii": "Шафиитский", "madhab_hanbali": "Ханбалитский", "madhabAdj_hanafi": "ханафитскому", "madhabAdj_maliki": "маликитскому", "madhabAdj_shafii": "шафиитскому", "madhabAdj_hanbali": "ханбалитскому", "madhabSub_hanafi": "Время макрух при восходе, перед Зухром и перед закатом", "madhabSub_maliki": "Время макрух при восходе и перед закатом", "madhabSub_shafii": "Время макрух при восходе, перед Зухром (не в пятницу) и перед закатом", "madhabSub_hanbali": "Время макрух при восходе, перед Зухром и перед закатом", "madhabFooter": "Определяет, какое время макрух показывает приложение и как его объясняет. Время Асра вы задаёте отдельно в разделе «{asr}».", "kerahatFooter_maliki": "Неброско отмечено на дуге и рядом со временем намазов: примерно 20 мин после восхода и 20 мин до Магриба. По маликитскому мазхабу в это время не совершают добровольных намазов.", "kerahatFooter_shafii": "Неброско отмечено на дуге и рядом со временем намазов: примерно 25 мин после восхода, 10 мин до Зухра (не в пятницу) и 25 мин до Магриба. По шафиитскому мазхабу в это время не совершают добровольных намазов.", "kerahatFooter_hanbali": "Неброско отмечено на дуге и рядом со временем намазов: примерно 20 мин после восхода, 10 мин до Зухра и 20 мин до Магриба. По ханбалитскому мазхабу в это время не совершают добровольных намазов.", "kerahatP1_maliki": "По маликитскому мазхабу время макрух – это два коротких промежутка в течение дня, когда не совершают добровольных намазов: при восходе и перед закатом. Полдень, когда солнце в зените, маликитский мазхаб к ним не относит.", "kerahatP1_shafii": "Время макрух – это три коротких промежутка в течение дня, когда не совершают добровольных намазов. По шафиитскому мазхабу промежуток перед Зухром в пятницу не действует; для Мекки этот мазхаб делает ещё одно исключение.", "kerahatP1_hanbali": "Время макрух – это три коротких промежутка в течение дня, когда не совершают добровольных намазов.", "kerahatAfterTitle": "После намазов Фаджр и Аср", "kerahatAfterBody": "После намаза Фаджр до восхода и после намаза Аср до заката не совершают добровольных намазов. В этом согласны все четыре мазхаба. Поскольку это время начинается с вашего собственного намаза, приложение не показывает его на дуге.", "kerahatQadaTitle": "Восполнение пропущенных намазов", "kerahatQadaHanafi": "По ханафитскому мазхабу пропущенный намаз не восполняют в эти три промежутка – только Аср того же дня ещё совершают перед закатом. После намазов Фаджр и Аср восполнять можно.", "kerahatQadaOther": "По {school} мазхабу пропущенный обязательный намаз можно восполнить и во время макрух. Запреты касаются прежде всего добровольных намазов.", "kerahatOtherTitle": "Другие намазы", "kerahatOtherBody": "В отношении джаназа-намаза и намазов по особому поводу, например намаза приветствия мечети, мазхабы расходятся. Если сомневаетесь, спросите имама своего мазхаба.", "kerahatFoot_maliki": "По маликитскому мазхабу (Настройки › Мазхаб). Время указано приблизительно: 20 минут после восхода и 20 минут до заката.", "kerahatFoot_shafii": "По шафиитскому мазхабу (Настройки › Мазхаб). Время указано приблизительно: 25 минут после восхода, 10 минут до Зухра и 25 минут до заката.", "kerahatFoot_hanbali": "По ханбалитскому мазхабу (Настройки › Мазхаб). Время указано приблизительно: 20 минут после восхода, 10 минут до Зухра и 20 минут до заката.", "obMadhabTitle": "Ваш мазхаб", "obMadhabBody": "От него зависят время макрух и то, как оно объясняется. Вы можете изменить его позже в Настройках."});
+Object.assign(T.it, {"style": "Stile", "styleColor": "Colore principale", "col_teal": "Petrolio", "col_green": "Verde", "col_blue": "Blu", "col_violet": "Viola", "col_berry": "Lampone", "col_graphite": "Grafite", "col_cyan": "Turchese", "col_grass": "Erba", "col_indigo": "Indaco", "col_orchid": "Orchidea", "col_orange": "Arancione", "col_gold": "Oro", "col_ocean": "Oceano", "col_forest": "Abete", "col_navy": "Blu notte", "col_plum": "Melanzana", "col_wine": "Bordeaux", "col_mono": "Mono", "col_mint": "Menta", "col_sage": "Salvia", "col_ice": "Blu polvere", "col_lavender": "Lavanda", "col_mauve": "Malva", "col_sand": "Sabbia", "styleColorFooter": "Vale per l’app, i widget e l’Attività in tempo reale. Con Arancione, Oro e Sabbia, i momenti makruh sono viola anziché arancioni.", "laFull": "A colori", "laArc": "Solo arco", "laMono": "Bianco e nero", "laInvert": "Invertito", "laInvertSub": "Sfondo chiaro, testo scuro. Per sfondi chiari.", "styleLiveFooter": "Vale anche per il widget con l’arco nella schermata Home. La trasparenza è uguale in tutte le varianti.", "styleReset": "Ripristina predefiniti", "styleMoreColors": "Altri colori", "styleLessColors": "Meno colori", "soundSystemFooter": "Il suono preciso lo scegli nelle Impostazioni di iOS, in “Suoni e feedback aptico”. Un’app non può offrire da sola la scelta dei suoni di Apple.", "madhab": "Scuola giuridica", "madhab_hanafi": "Hanafita", "madhab_maliki": "Malikita", "madhab_shafii": "Shafiita", "madhab_hanbali": "Hanbalita", "madhabAdj_hanafi": "hanafita", "madhabAdj_maliki": "malikita", "madhabAdj_shafii": "shafiita", "madhabAdj_hanbali": "hanbalita", "madhabSub_hanafi": "Momenti makruh all’alba, prima di Dhuhr e prima del tramonto", "madhabSub_maliki": "Momenti makruh all’alba e prima del tramonto", "madhabSub_shafii": "Momenti makruh all’alba, prima di Dhuhr (non il venerdì) e prima del tramonto", "madhabSub_hanbali": "Momenti makruh all’alba, prima di Dhuhr e prima del tramonto", "madhabFooter": "Stabilisce quali momenti makruh mostra l’app e come li spiega. L’orario dell’Asr lo imposti a parte in “{asr}”.", "kerahatFooter_maliki": "Segnati con discrezione sull’arco e accanto agli orari: circa 20 min dopo l’alba e 20 min prima di Maghrib. Secondo la scuola malikita, in questi momenti non si compiono preghiere facoltative.", "kerahatFooter_shafii": "Segnati con discrezione sull’arco e accanto agli orari: circa 25 min dopo l’alba, 10 min prima di Dhuhr (non il venerdì) e 25 min prima di Maghrib. Secondo la scuola shafiita, in questi momenti non si compiono preghiere facoltative.", "kerahatFooter_hanbali": "Segnati con discrezione sull’arco e accanto agli orari: circa 20 min dopo l’alba, 10 min prima di Dhuhr e 20 min prima di Maghrib. Secondo la scuola hanbalita, in questi momenti non si compiono preghiere facoltative.", "kerahatP1_maliki": "Secondo la scuola malikita, i momenti makruh sono due brevi fasce della giornata in cui non si compiono preghiere facoltative: all’alba e prima del tramonto. La scuola malikita non vi include il mezzogiorno, quando il sole è al punto più alto.", "kerahatP1_shafii": "I momenti makruh sono tre brevi fasce della giornata in cui non si compiono preghiere facoltative. Secondo la scuola shafiita, la fascia prima di Dhuhr non vale il venerdì; per la Mecca la scuola fa un’altra eccezione.", "kerahatP1_hanbali": "I momenti makruh sono tre brevi fasce della giornata in cui non si compiono preghiere facoltative.", "kerahatAfterTitle": "Dopo le preghiere del Fajr e dell’Asr", "kerahatAfterBody": "Dopo la preghiera del Fajr fino al sorgere del sole e dopo la preghiera dell’Asr fino al tramonto non si compiono preghiere facoltative. Su questo concordano tutte e quattro le scuole giuridiche. Poiché questi momenti iniziano con la tua preghiera, l’app non li mostra sull’arco.", "kerahatQadaTitle": "Recuperare le preghiere mancate", "kerahatQadaHanafi": "Secondo la scuola hanafita, non recuperi una preghiera mancata in queste tre fasce – solo l’Asr dello stesso giorno lo preghi ancora prima del tramonto. Dopo le preghiere del Fajr e dell’Asr puoi recuperarla.", "kerahatQadaOther": "Secondo la scuola {school}, puoi recuperare una preghiera obbligatoria mancata anche nei momenti makruh. I divieti riguardano soprattutto le preghiere facoltative.", "kerahatOtherTitle": "Altre preghiere", "kerahatOtherBody": "Per la preghiera funebre e per le preghiere legate a un’occasione particolare, come la preghiera di saluto alla moschea, le scuole giuridiche differiscono. Nel dubbio, chiedi a un imam della tua scuola giuridica.", "kerahatFoot_maliki": "Secondo la scuola malikita (Impostazioni › Scuola giuridica). Gli intervalli sono approssimativi: 20 minuti dopo l’alba e 20 minuti prima del tramonto.", "kerahatFoot_shafii": "Secondo la scuola shafiita (Impostazioni › Scuola giuridica). Gli intervalli sono approssimativi: 25 minuti dopo l’alba, 10 minuti prima di Dhuhr e 25 minuti prima del tramonto.", "kerahatFoot_hanbali": "Secondo la scuola hanbalita (Impostazioni › Scuola giuridica). Gli intervalli sono approssimativi: 20 minuti dopo l’alba, 10 minuti prima di Dhuhr e 20 minuti prima del tramonto.", "obMadhabTitle": "La tua scuola giuridica", "obMadhabBody": "Da essa dipendono i momenti makruh e la loro spiegazione. Puoi cambiarla in seguito nelle Impostazioni."});
 const PLURAL = {
   de: {
     arcPrayers:{text:'{n}', n:{one:'{n} von 5 Gebetszeiten hat heute begonnen', other:'{n} von 5 Gebetszeiten haben heute begonnen'}},
@@ -1859,10 +2130,14 @@ const LIVE_OPTS = [0,30,60];
 /* Kerahat (makruh) windows in minutes, Hanafi / Diyanet practice: after sunrise, before Dhuhr (zenith), before Maghrib.
    Each window is shown on the row where it sits: Sunrise, Dhuhr and Asr (the last one falls at the end of Asr time). */
 const KERAHAT_MIN = {sunrise:45, zenith:10, sunset:45};
-function kerahatWins(tt){ return [
-  {id:'sunrise', a:tt.sunrise, b:tt.sunrise + KERAHAT_MIN.sunrise, row:'sunrise'},
-  {id:'zenith',  a:tt.dhuhr - KERAHAT_MIN.zenith, b:tt.dhuhr, row:'dhuhr'},
-  {id:'sunset',  a:tt.maghrib - KERAHAT_MIN.sunset, b:tt.maghrib, row:'asr'}]; }
+/* Nachtrag zu Phase 18: Die Fenster hängen von der Rechtsschule ab. Maliki: kein Fenster vor Dhuhr; Schafii: freitags keins. */
+function kerahatWins(tt){
+  const day = tt.day != null ? tt.day : appDate().getDay(), m = KERAHAT_MIN_BY[S.madhab] || KERAHAT_MIN;   // Dauer je Schule
+  const zenith = S.madhab !== 'maliki' && !(S.madhab === 'shafii' && day === 5);
+  return [
+  {id:'sunrise', a:tt.sunrise, b:tt.sunrise + m.sunrise, row:'sunrise'},
+  ...(zenith ? [{id:'zenith',  a:tt.dhuhr - m.zenith, b:tt.dhuhr, row:'dhuhr'}] : []),
+  {id:'sunset',  a:tt.maghrib - m.sunset, b:tt.maghrib, row:'asr'}]; }
 function activeKerahat(ph){ if (!S.kerahat) return null; const m = ph.ns/60; return kerahatWins(ph.t).find(w => m >= w.a && m < w.b) || null; }
 const PICON = {fajr:'fajr', sunrise:'sunrise', dhuhr:'dhuhr', asr:'asr', maghrib:'sunset', isha:'isha', witr:'isha'};
 const BELL_ORDER = ['sound','silent','off'];
@@ -1871,9 +2146,21 @@ const BELL_LABEL = {sound:'bellSound', silent:'bellSilent', off:'bellOff'};
 const HL_KEY = {angle:'hlAngle', seventh:'hlSeventh', middle:'hlMiddle', manual:'hlManual'};
 const SOUND_KEY = {system:'soundSystem', adhan:'soundAdhan', silent:'soundSilent'};
 const AP_KEY = {system:'apSystem', light:'apLight', dark:'apDark'};
+/* Nachtrag zu Phase 18: Grundfarben (hell, dunkel, Schrift auf der dunklen Akzentfläche) in der Reihenfolge des Rasters, und Stile der Live-Aktivität */
+const ACCENTS = [{id:'teal', l:'#1F7A6D', d:'#4CC2AE', on:'#04221D'}, {id:'green', l:'#2E7D4F', d:'#5FCB8A', on:'#04220F'}, {id:'blue', l:'#1E6BB8', d:'#6DB5FF', on:'#031B33'},
+  {id:'violet', l:'#7A4CB5', d:'#C4A2FF', on:'#1B0B33'}, {id:'berry', l:'#A93466', d:'#FF8FBA', on:'#33081B'}, {id:'graphite', l:'#48484D', d:'#D6D6DC', on:'#111113'},
+  {id:'cyan', l:'#026E89', d:'#28D1FE', on:'#001F28'}, {id:'grass', l:'#3C6603', d:'#98D75E', on:'#111F05'}, {id:'indigo', l:'#4646CB', d:'#8997FF', on:'#151831'},
+  {id:'orchid', l:'#941C95', d:'#E585E2', on:'#271126'}, {id:'orange', l:'#A44C03', d:'#FE904D', on:'#2C1204'}, {id:'gold', l:'#876204', d:'#F5C25F', on:'#251801'},
+  {id:'ocean', l:'#024153', d:'#43A9CB', on:'#011E28'}, {id:'forest', l:'#03472A', d:'#5FA77F', on:'#032112'}, {id:'navy', l:'#182D6A', d:'#728DCD', on:'#101932'},
+  {id:'plum', l:'#50205A', d:'#B47EBE', on:'#251228'}, {id:'wine', l:'#6D1733', d:'#C37586', on:'#2D0F17'}, {id:'mono', l:'#1C1C1E', d:'#F2F2F7', on:'#1C1C1E'},
+  {id:'mint', l:'#015D54', d:'#9AE9DD', on:'#01201C'}, {id:'sage', l:'#556345', d:'#BDD4A3', on:'#161E0B'}, {id:'ice', l:'#455A74', d:'#9FC1EB', on:'#131B27'},
+  {id:'lavender', l:'#69639D', d:'#CBC6FF', on:'#1A172C'}, {id:'mauve', l:'#714967', d:'#CBB7C5', on:'#1F181D'}, {id:'sand', l:'#6F4D27', d:'#ECCAA7', on:'#24180B'}];
+const ACCENT_STD = 6;   // die ersten sechs sind die Standardfarben, immer sichtbar
+const LA_STYLES = ['full', 'arc', 'mono'];
+const LA_KEY = {full:'laFull', arc:'laArc', mono:'laMono'};
 const PAGE_TITLE = {settings:'settings', method:'methodTitle', asr:'asr', hl:'highLat', adjust:'adjustments', perPrayer:'perPrayer',
                     reminder:'reminder', live:'liveAct', sound:'sound', appearance:'appearance', language:'language', privacy:'privacy',
-                    support:'supportTitle', alarm:'alarmRow'};
+                    support:'supportTitle', alarm:'alarmRow', style:'style', madhab:'madhab'};
 
 /* =====================================================================
    3) STATE – single source of truth (maps 1:1 to an @Observable model)
@@ -1901,6 +2188,10 @@ const S = {
   alarmSound:'system' /* Nachtrag Phase 17: 'system' | 'adhan' */, alarmDenied:false /* Erlaubnis für Wecker abgelehnt */,
   qadaSex:'m',
   reminder:10, liveAct:30, kerahat:true, sound:'adhan', appearance:'system',
+  madhab:'hanafi' /* Nachtrag zu Phase 18: Rechtsschule für die Verbotszeiten – 'hanafi' | 'maliki' | 'shafii' | 'hanbali' */, obMenu:false /* Auswahlmenü im Onboarding offen */,
+  /* Nachtrag zu Phase 18: Stil der Live-Aktivität ('full' farbig | 'arc' nur Bogen | 'mono' schwarz-weiß), invertiert; `accent` steht oben beim Panel */
+  palOpen:null /* Farbraster aufgeklappt; null = von der Wahl abhängig (aufgeklappt, wenn eine weitere Farbe gewählt ist) */,
+  laStyle:'full', laInv:false,
   adhan:{playing:false, pos:0},
   qibla:{heading:99, drag:false},
   search:{method:'', city:''},
@@ -1972,6 +2263,7 @@ function todayTimes(){
   const raw = {fajr:man ? man.fajr : pick(d.fajr), sunrise:d.sunrise, dhuhr:d.dhuhr, asr:S.asr === 'hanafi' ? d.asrHanafi : d.asr, maghrib:d.maghrib, isha:man ? man.isha : pick(d.isha)};
   const out = {}; let prev = -Infinity;
   for (const p of PRAYERS){ let m = toMin(raw[p]) + (S.adj[p] || 0); if (p === 'isha' && m < prev) m += 1440; out[p] = m; prev = m; }
+  Object.defineProperty(out, 'day', {value:viewDate(0).getDay()});   // Nachtrag zu Phase 18: Wochentag für die Verbotszeiten
   return out;
 }
 /* Änderung 10 (15.11.2026): Tage vor und zurück. Ein anderer Tag = die Zeiten von heute (Fixture) plus die Verschiebung,
@@ -2011,6 +2303,7 @@ function dayTimes(off = S.dayOff){
   const base = todayTimes(); if (!off) return base;
   const id = S.highLat ? 'berlin' : S.city, a = sunTimes(viewDate(0), id), b = sunTimes(viewDate(off), id), out = {};
   for (const p of PRAYERS){ const dl = b[p] - a[p]; out[p] = base[p] + (Number.isFinite(dl) ? Math.round(dl) : 0); }
+  Object.defineProperty(out, 'day', {value:viewDate(off).getDay()});
   return out;
 }
 const relDayText = off => { try { const s = new Intl.RelativeTimeFormat(LOC[S.lang], {numeric:'auto'}).format(off, 'day'); return s.charAt(0).toLocaleUpperCase(LOC[S.lang]) + s.slice(1); } catch(e){ return ''; } };
@@ -2165,11 +2458,19 @@ const obX = step => `translateX(calc(${-step*100}% * var(--dx)))`;
 /* Änderung 1: das echte App-Symbol statt der Mondsichel. Änderung 8: vierte Seite „Kostenlos. Ohne Werbung.“ */
 const appIconImg = (size, cls = '', theme = appTheme()) => `<img class="app-icon-img ${cls}" src="${APP_ICON[theme === 'dark' ? 'dark' : 'light']}" width="${size}" height="${size}" alt="">`;
 function onboardingHTML(){
-  const s = S.obStep, N = 4;
+  const s = S.obStep, N = 5;
   const free = `<ul class="ob-free">${['ob4P1','ob4P2','ob4P3'].map(k => `<li>${ic('check',16)}<span>${t(k)}</span></li>`).join('')}</ul>`;
   const pages = [
     [appIconImg(120, 'ai-xl'), t('ob1Title'), t('ob1Body')],
     [`<div class="onb-badge">${ic('locFill',48)}</div>`, t('ob2Title'), t('ob2Body')],
+    /* Nachtrag zu Phase 18: Rechtsschule wählen (Standard Hanafi), später änderbar unter Einstellungen › Rechtsschule */
+    [`<div class="onb-badge">${ic('book',46)}</div>`, t('obMadhabTitle'), t('obMadhabBody'),
+      /* Wunsch vom 24.11.2026: Auswahlmenü statt Liste – in der App ein Picker im Menüstil (.pickerStyle(.menu)) */
+      `${S.obMenu ? '<div class="ob-menu-backdrop" data-act="ob-menu" aria-hidden="true"></div>' : ''}<div class="ob-madhab"><button class="ob-pick" data-act="ob-menu" data-fkey="ob-menu" aria-haspopup="menu" aria-expanded="${!!S.obMenu}"
+          aria-label="${esc(t('madhab') + ': ' + t('madhab_' + S.madhab))}"><span>${t('madhab_' + S.madhab)}</span>
+          <svg width="12" height="16" viewBox="0 0 12 16" aria-hidden="true" focusable="false"><path d="M2.5 6L6 2.5 9.5 6M2.5 10L6 13.5 9.5 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        ${S.obMenu ? `<div class="ob-menu" role="menu" aria-label="${esc(t('madhab'))}">${MADHABS.map(k => `<button class="ob-menu-item" role="menuitemradio" aria-checked="${S.madhab === k}"
+          data-act="ob-menu-pick" data-v="${k}" data-fkey="ob-menu-${k}"><span class="ob-menu-check">${S.madhab === k ? ic('check',16) : ''}</span><span>${t('madhab_' + k)}</span></button>`).join('')}</div>` : ''}</div>`],
     /* Änderung vom 18.11.2026: Hinweis auf die Live-Aktivität und dass sie sich in den Einstellungen abschalten lässt */
     [`<div class="onb-badge">${ic('bellWave',48)}</div>`, t('ob3Title'), t('ob3Body'), `<p class="ob-live">${ic('info',16)}<span>${t('ob3Live',{app:t('appName')})}</span></p>`],
     [`<div class="onb-badge">${ic('heart',50)}</div>`, t('ob4Title'), t('ob4Body',{app:t('appName')}), free]
@@ -2177,14 +2478,15 @@ function onboardingHTML(){
   const b = (cls, act, label, fk) => `<button class="btn ${cls}" data-act="${act}" data-fkey="${fk}">${label}</button>`;
   const actions = s === 0 ? b('btn-primary','ob-next',t('obContinue'),'ob-p0')
     : s === 1 ? b('btn-primary','ob-loc',t('ob2Allow'),'ob-p1') + b('btn-plain','ob-manual',t('ob2Manual'),'ob-s1')
-    : s === 2 ? b('btn-primary','ob-notif',t('ob3Allow'),'ob-p2') + b('btn-plain','ob-free',t('ob3Later'),'ob-s2')
-    : b('btn-primary','ob-finish',t('ob4Start'),'ob-p3');
+    : s === 2 ? b('btn-primary','ob-madhab',t('obContinue'),'ob-p2')
+    : s === 3 ? b('btn-primary','ob-notif',t('ob3Allow'),'ob-p3') + b('btn-plain','ob-free',t('ob3Later'),'ob-s3')
+    : b('btn-primary','ob-finish',t('ob4Start'),'ob-p4');
   return `<div class="onb">
     <div class="onb-top">${s < N - 1 ? `<button class="link-btn" data-act="ob-free" data-fkey="ob-skip">${t('obSkip')}</button>` : ''}</div>
     <div class="onb-viewport"><div class="onb-track" style="transform:${obX(s)}">
       ${pages.map(([icon,title,body,extra], i) => `<section class="onb-page" aria-hidden="${i !== s}" ${i !== s ? 'inert' : ''}>${icon}<h1>${title}</h1><p>${body}</p>${extra || ''}</section>`).join('')}
     </div></div>
-    <div class="onb-dots" role="img" aria-label="${s+1} / ${N}">${[0,1,2,3].map(i => `<span class="dot ${i === s ? 'on' : ''}"></span>`).join('')}</div>
+    <div class="onb-dots" role="img" aria-label="${s+1} / ${N}">${[0,1,2,3,4].map(i => `<span class="dot ${i === s ? 'on' : ''}"></span>`).join('')}</div>
     <div class="onb-actions">${actions}</div></div>`;
 }
 
@@ -2268,7 +2570,7 @@ function guidePage(ph){
         <div class="fact"><b>${t('sunna_' + p)}</b><span>${t('sunna')}</span></div>
       </div>
       <div class="rak" role="img" aria-label="${esc(t('rakSeq') + ': ' + r.loud.map((l, i) => (i + 1) + ' ' + t(l ? 'recAloud' : 'recSilent')).join(', '))}">${rak}</div>
-      ${r.n > 2 ? `<p class="g-note">${t('onlyFatiha')}</p>` : ''}${p === 'asr' && S.kerahat ? `<p class="g-note g-note-k"><i class="k-dot" aria-hidden="true"></i><span>${t('gAsrKerahat')}</span></p>` : ''}
+      ${r.n > 2 ? `<p class="g-note">${t('onlyFatiha')}</p>` : ''}${p === 'asr' && S.kerahat && S.madhab === 'hanafi' ? `<p class="g-note g-note-k"><i class="k-dot" aria-hidden="true"></i><span>${t('gAsrKerahat')}</span></p>` : ''}
       <button class="btn btn-primary g-walk" data-act="walk-start" data-fkey="g-walk">${ic('play',18)}<span>${t('wkStart')}</span></button>
       <p class="g-walk-sub">${t('wkStartSub',{n:r.n, p:name})}</p>
       ${S.guidePick && S.guidePick !== g.auto ? `<button class="pill-btn g-now" data-act="guide-now" data-fkey="g-now">${ic(PICON[g.auto],18)}${t('guideBack')}</button>` : ''}
@@ -2457,7 +2759,7 @@ function arcHTML(ph, gk = 'home', skin = gk){
       const now = !!(kNow && kNow.id === w.id), past = !now && nsMin >= w.b;
       const cls = `on-track ${now ? 'is-now' : ''} ${past ? 'is-past' : ''}`, dd = arcPath(f0, f1, g);
       /* Sperrbildschirm (einfarbig): Kerahat gestreift – dunkler Grund, darüber weiße Striche, auf hellem wie dunklem Teil der Spur zu sehen */
-      return (g.kBase ? `<path class="arc-k-base ${cls}" d="${dd}"/>` : '') + `<path class="arc-k ${cls}" d="${dd}"/>`; }).join('') : '';
+      return (g.kBase || skin === 'la' ? `<path class="arc-k-base ${cls}" d="${dd}"/>` : '') + `<path class="arc-k ${cls}" d="${dd}"/>`; }).join('') : '';
   let marks = '', labels = '', prev = null;
   /* Nachtrag 16.11.2026: Der Sonnenaufgang steht als sechster Punkt im Bogen, gleich groß wie die Gebete (Spec § 9.14).
      Er ist nie das laufende Gebet (`phase()`), wird aber gefüllt, sobald die Sonne aufgegangen ist. */
@@ -2543,9 +2845,17 @@ const PAGES = {
       + rowNav({label:t('city'), value:cityName(), act:'open-city', fkey:'row-city'})
       + (S.locDenied ? rowLink({label:t('openIosSettings'), act:'ios-settings', icon:'arrowUpRight'}) : ''),
         {header:t('secLocation'), footer:S.locDenied ? t('locDeniedFooter') : t('locFooter')})
+    /* Wunsch vom 24.11.2026: Darstellung über Berechnung */
+    + group(
+        rowNav({label:t('appearance'), value:t(AP_KEY[S.appearance]), v:'appearance'})
+      + rowNav({label:t('style'), value:t('col_' + S.accent), v:'style'})   // Nachtrag zu Phase 18
+      + rowNav({label:t('language'), value:LANG_NAMES[S.lang], v:'language'})
+      + rowSwitch({id:'sw-kerahat', label:t('showKerahat'), on:S.kerahat, act:'toggle-kerahat'}),
+        {header:t('secAppearance'), footer:t(S.madhab === 'hanafi' ? 'kerahatFooter' : 'kerahatFooter_' + S.madhab)})
     + group(
         rowNav({label:t('method'), subText:auto ? t('autoFor',{country:countryName()}) : '', value:m.short, v:'method'})
       + rowNav({label:t('asr'), value:S.asr === 'hanafi' ? t('asrHanafi') : t('asrStd'), v:'asr'})
+      + rowNav({label:t('madhab'), value:t('madhab_' + S.madhab), v:'madhab'})   // Nachtrag zu Phase 18
       + rowNav({label:t('highLat'), value:t(HL_KEY[S.hlRule]), v:'hl'})
       + rowNav({label:t('adjustments'), value:nAdj ? t('adjChanged',{n:nAdj}) : t('adjNone'), v:'adjust'}),
         {header:t('secCalc'), footer:t('calcFooter')})
@@ -2557,11 +2867,6 @@ const PAGES = {
       + rowNav({label:t('sound'), value:t(SOUND_KEY[S.sound]), v:'sound'})
       + rowLink({label:t('previewAdhan'), act:'open-adhan', icon:'waveform'}),
         {header:t('secNotif'), footer:S.notifAllowed === false ? t('notifDeniedFooter') : ''})
-    + group(
-        rowNav({label:t('appearance'), value:t(AP_KEY[S.appearance]), v:'appearance'})
-      + rowNav({label:t('language'), value:LANG_NAMES[S.lang], v:'language'})
-      + rowSwitch({id:'sw-kerahat', label:t('showKerahat'), on:S.kerahat, act:'toggle-kerahat'}),
-        {header:t('secAppearance'), footer:t('kerahatFooter')})
     /* Änderung 8: Unterstützen auch nach dem Onboarding */
     + group(`<button class="row support-row" data-act="push" data-v="support" data-fkey="nav-support"><span class="row-ic">${ic('heart',20)}</span>
         <span class="row-label">${t('supportRow',{app:t('appName')})}${sub(t('supportRowSub'))}</span>${ic('chevronRight',14,'chev flip-rtl')}</button>`)
@@ -2608,6 +2913,11 @@ const PAGES = {
               filter:'method', name:(m.name + ' ' + m.short).toLowerCase()})).join('') + noResults('method'),
               {header:t('allMethods'), role:'radiogroup'});
   },
+  /* Nachtrag zu Phase 18: Rechtsschule – bestimmt die Verbotszeiten und ihre Erklärung, nicht die Asr-Zeit */
+  madhab(){
+    return group(MADHABS.map(k => rowCheck({label:t('madhab_' + k), subText:t('madhabSub_' + k), checked:S.madhab === k, k:'madhab', v:k})).join(''),
+                 {role:'radiogroup', footer:t('madhabFooter', {asr:t('asr')})});
+  },
   asr(){
     return group(rowCheck({label:t('asrStd'), subText:t('asrStdSub'), checked:S.asr === 'standard', k:'asr', v:'standard'})
                + rowCheck({label:t('asrHanafi'), subText:t('asrHanafiSub'), checked:S.asr === 'hanafi', k:'asr', v:'hanafi'}), {role:'radiogroup'});
@@ -2645,10 +2955,35 @@ const PAGES = {
   reminder(){
     return group(REMINDERS.map(n => rowCheck({label:n ? t('minBefore',{n}) : t('off'), checked:S.reminder === n, k:'reminder', v:n})).join(''), {role:'radiogroup'});
   },
+  /* Nachtrag zu Phase 18 (24.11.2026): nur der Standardton von iOS, keine eigene Auswahl. Bei „Systemton“ steht in der Fußzeile,
+     wo man ihn ändert – die Töne von Apple darf eine App nicht selbst anbieten. */
   sound(){
     return group(['system','adhan','silent'].map(k => rowCheck({label:t(SOUND_KEY[k]), checked:S.sound === k, k:'sound', v:k})).join(''),
-                 {role:'radiogroup', footer:t('soundFooter')})
+                 {role:'radiogroup', footer:t('soundFooter') + (S.sound === 'system' ? ' ' + t('soundSystemFooter') : '')})
       + group(rowLink({label:t('previewAdhan'), act:'open-adhan', icon:'waveform'}));
+  },
+  /* Nachtrag zu Phase 18: Stil – Grundfarbe der App und Aussehen der Live-Aktivität. Oben die Vorschau, darunter die Auswahl. */
+  style(){
+    const ph = phase(nowSec()), changed = S.accent !== 'teal' || S.laStyle !== 'full' || S.laInv;
+    /* 24 Farben: Kreise ohne Beschriftung, der Name steht je Kreis nur für VoiceOver bereit (Wunsch vom 24.11.2026: kein sichtbarer Name).
+       Zugeklappt nur die sechs Standardfarben; der kleine Pfeil darunter klappt das Raster 4 × 6 auf. */
+    const std = ACCENTS.slice(0, ACCENT_STD), isStd = std.some(a => a.id === S.accent);
+    /* Beim Öffnen der Seite gilt: aufgeklappt, wenn eine weitere Farbe gewählt ist. Danach wechselt es nur über „Weitere Farben“,
+       sonst klappte das Raster beim Antippen einer Standardfarbe unter dem Finger zu. */
+    if (S.palOpen === null) S.palOpen = !isStd;
+    const open = S.palOpen, cur = ACCENTS.find(a => a.id === S.accent);
+    const color = a => `<button class="st-color" role="radio" aria-checked="${S.accent === a.id}" aria-label="${esc(t('col_' + a.id))}" title="${esc(t('col_' + a.id))}"
+        data-act="pick" data-k="accent" data-v="${a.id}" data-fkey="st-c-${a.id}"
+        style="--sw-l:${a.l};--sw-d:${a.d};--sw-on-d:${a.on}"><i aria-hidden="true">${S.accent === a.id ? ic('check',18) : ''}</i></button>`;
+    const tile = k => `<button class="st-tile" role="radio" aria-checked="${S.laStyle === k}" data-act="pick" data-k="laStyle" data-v="${k}" data-fkey="st-la-${k}">
+        ${laThumb(k, S.laInv)}<span class="st-tile-name">${t(LA_KEY[k])}</span><span class="st-radio" aria-hidden="true">${S.laStyle === k ? ic('check',14) : ''}</span></button>`;
+    return `<div class="group-wrap st-wrap"><div class="st-preview"><div class="wall wall-neutral"></div>${laBanner(ph)}</div></div>`
+      + group(`<div class="st-colors" id="st-colors" role="radiogroup" aria-label="${esc(t('styleColor'))}">${(open ? ACCENTS : std).map(color).join('')}</div>
+          <button class="st-more" aria-expanded="${open}" aria-controls="st-colors" aria-label="${esc(t(open ? 'styleLessColors' : 'styleMoreColors'))}"
+            data-act="toggle-pal" data-fkey="st-pal">${!open && !isStd ? `<i class="st-more-dot" style="--sw-l:${cur.l};--sw-d:${cur.d}" aria-hidden="true"></i>` : ''}${ic('chevronRight',15,'chev')}</button>`, {header:t('styleColor'), footer:t('styleColorFooter')})
+      + group(`<div class="st-tiles" role="radiogroup" aria-label="${esc(t('liveAct'))}">${LA_STYLES.map(tile).join('')}</div>`
+          + rowSwitch({id:'sw-inv', label:t('laInvert'), subText:t('laInvertSub'), on:S.laInv, act:'toggle-inv'}), {header:t('liveAct'), footer:t('styleLiveFooter')})
+      + (changed ? group(rowLink({label:t('styleReset'), act:'style-reset'})) : '');
   },
   appearance(){
     return group(['system','light','dark'].map(k => rowCheck({label:t(AP_KEY[k]), checked:S.appearance === k, k:'appearance', v:k})).join(''), {role:'radiogroup'});
@@ -2737,9 +3072,13 @@ function kerahatSheet(){
   return `<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
     ${sheetHead(t('kerahatInfoTitle'), '', `<button class="icon-btn" data-act="close-sheet" aria-label="${esc(t('close'))}" data-fkey="sheet-close">${ic('xmark',15)}</button>`)}
     <div class="sheet-scroll"><div class="k-sheet">
-      <p>${t('kerahatInfoP1')}</p></div>
+      <p>${t(S.madhab === 'hanafi' ? 'kerahatInfoP1' : 'kerahatP1_' + S.madhab)}</p></div>
       ${group(rows, {header:t('kerahatToday')})}
-      <div class="k-sheet"><h3>${t('kerahatAsrTitle')}</h3><p>${t('kerahatAsrBody')}</p><p>${t('kerahatInfoP2')}</p><p class="k-foot">${t('kerahatInfoFoot')}</p></div>
+      <div class="k-sheet">${S.madhab === 'hanafi' ? `<h3>${t('kerahatAsrTitle')}</h3><p>${t('kerahatAsrBody')}</p>` : ''}
+        <h3>${t('kerahatAfterTitle')}</h3><p>${t('kerahatAfterBody')}</p>
+        <h3>${t('kerahatQadaTitle')}</h3><p>${t(S.madhab === 'hanafi' ? 'kerahatQadaHanafi' : 'kerahatQadaOther', {school:t('madhabAdj_' + S.madhab)})}</p>
+        <h3>${t('kerahatOtherTitle')}</h3><p>${t('kerahatOtherBody')}</p>
+        <p>${t('kerahatInfoP2')}</p><p class="k-foot">${t(S.madhab === 'hanafi' ? 'kerahatInfoFoot' : 'kerahatFoot_' + S.madhab)}</p></div>
     </div></div>`;
 }
 function citySheet(){
@@ -2798,11 +3137,24 @@ function galleryScreen(cls, inner, staticTime, island){
 }
 /* Live Activity (ActivityKit). Lock Screen: the day arc on an accent background (≤ 160 pt high).
    Dynamic Island: compact = symbol + countdown; expanded = next prayer, countdown, bar from the previous event with Kerahat marked. */
+/* Nachtrag zu Phase 18: Stil der Live-Aktivität als Attribute – die Farben stehen im Style-Block „Stil“. */
+const laAttr = (st = S.laStyle, inv = S.laInv) => `data-la="${st}" data-inv="${inv ? 1 : 0}"`;
+/* Kleine Vorschau eines Stils für die Kacheln: Fläche, Bogen, fünf Punkte und zwei Striche für Gebet und Countdown. */
+const MINI = {w:90, h:46, cx:45, cy:55, r:42.4, a0:.6};
+function laThumb(st, inv){
+  const g = MINI, d = arcPath(0, 1, g);
+  const dot = (f, cls, r) => { const [x, y] = arcPoint(f, g); return `<g class="pm ${cls}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle class="pm-c" r="${r}"/></g>`; };
+  /* Die Kachel ist ein Zeichen für den Stil, keine Vorschau: die Fläche deckt hier stärker (75 %), damit man die drei unterscheiden kann. */
+  return `<span class="st-thumb"><span class="wall wall-neutral"></span><span class="la-mini" ${laAttr(st, inv)} style="--la-pct:75%">
+    <svg class="arc arc-la arc-mini" viewBox="0 0 ${g.w} ${g.h}" aria-hidden="true" focusable="false"><path class="arc-track" d="${d}"/><path class="arc-done" d="${d}" pathLength="1" stroke-dasharray=".6 2"/>
+      ${dot(0, 'is-passed', 3.6)}${dot(.3, 'is-passed', 3.6)}${dot(.6, 'is-current', 4.6)}${dot(.82, '', 3.6)}${dot(1, '', 3.6)}
+      <rect class="mini-t" x="36.5" y="24" width="17" height="2.6" rx="1.3" opacity=".7"/><rect class="mini-t" x="33" y="29.5" width="24" height="5" rx="2.5"/></svg></span></span>`;
+}
 function laLabel(ph){ return t(ph.next.d === 1 ? 'nextInTomorrow' : 'nextIn', {p:t('p_' + ph.next.p)}); }
-function laBanner(ph){
+function laBanner(ph, st = S.laStyle, inv = S.laInv){
   const nx = ph.next, kNow = activeKerahat(ph);
   /* Änderung vom 17.11.2026: Hintergrund durchscheinend (--la-pct), in der Kerahat-Zeit orange mit „Kerahat bis …“ statt der Stadt */
-  return `<div class="la ${kNow ? 'is-kerahat' : ''}" style="--la-pct:${S.laAlpha}%" role="img" aria-label="${esc((kNow ? t('kerahatNow',{b:fmt(kNow.b)}) + ', ' : '') + laLabel(ph) + ' ' + cdText(ph.remaining))}">
+  return `<div class="la ${kNow ? 'is-kerahat' : ''}" ${laAttr(st, inv)} style="--la-pct:${S.laAlpha}%" role="img" aria-label="${esc((kNow ? t('kerahatNow',{b:fmt(kNow.b)}) + ', ' : '') + laLabel(ph) + ' ' + cdText(ph.remaining))}">
     <div class="la-head"><span class="la-app">${appIconImg(16, 'ai-la', S.sysTheme)}<span>${t('appName')}</span></span><span class="la-city">${kNow ? t('kerahatNow',{b:fmt(kNow.b)}) : cityName()}</span></div>
     <div class="la-arc">${arcHTML(ph, 'la')}
       <div class="la-text"><div class="la-name">${t('p_' + nx.p)} · ${fmt(nx.at/60)}</div><div class="la-count" data-tick="cd">${cdDigital(ph.remaining)}</div></div></div></div>`;
@@ -2811,7 +3163,7 @@ function laBanner(ph){
    endet die grüne zu Beginn der Verbotszeit und eine orange startet obenauf; jede endet als schmale Zeile, die neueste steht oben
    (relevanceScore). Kein „Jetzt“ mehr. Die Zeilen bleiben, bis die App sie beim nächsten Öffnen abräumt. */
 function laCompact(p, atMin, right, orange){
-  return `<div class="la la-compact ${orange ? 'is-kerahat' : ''}" style="--la-pct:${S.laAlpha}%" role="img" aria-label="${esc(t('p_' + p) + ' ' + fmt(atMin) + ', ' + right)}">
+  return `<div class="la la-compact ${orange ? 'is-kerahat' : ''}" ${laAttr()} style="--la-pct:${S.laAlpha}%" role="img" aria-label="${esc(t('p_' + p) + ' ' + fmt(atMin) + ', ' + right)}">
     <span class="la-app">${appIconImg(16, 'ai-la', S.sysTheme)}<span>${t('p_' + p)} · ${fmt(atMin)}</span></span><span class="la-city">${right}</span></div>`;
 }
 function laStack(ph){
@@ -2824,7 +3176,7 @@ function laStack(ph){
   return `<div class="la-stack">${laBanner(ph)}${lines.join('')}</div>`;
 }
 function diCompact(ph){
-  return `<div class="island di di-compact ${activeKerahat(ph) ? 'is-kerahat' : ''}" role="img" aria-label="${esc(laLabel(ph) + ' ' + cdText(ph.remaining))}">
+  return `<div class="island di di-compact ${activeKerahat(ph) ? 'is-kerahat' : ''}" ${laAttr()} role="img" aria-label="${esc(laLabel(ph) + ' ' + cdText(ph.remaining))}">
     <span class="di-ic">${ic(PICON[ph.next.p],18)}</span><span class="di-cd" data-tick="cd">${cdDigital(ph.remaining)}</span></div>`;
 }
 function diExpanded(ph){
@@ -2833,7 +3185,7 @@ function diExpanded(ph){
     const x0 = Math.max(w.a*60 + d*86400, a0), x1 = Math.min(w.b*60 + d*86400, a1);
     if (x1 > x0) segs.push([(x0 - a0)/(a1 - a0), (x1 - x0)/(a1 - a0)]);
   }
-  return `<div class="island di di-exp ${activeKerahat(ph) ? 'is-kerahat' : ''}" role="img" aria-label="${esc(laLabel(ph) + ' ' + cdText(ph.remaining))}">
+  return `<div class="island di di-exp ${activeKerahat(ph) ? 'is-kerahat' : ''}" ${laAttr()} role="img" aria-label="${esc(laLabel(ph) + ' ' + cdText(ph.remaining))}">
     <div class="di-top"><span class="di-lead">${ic(PICON[nx.p],20)}<span>${fmt(nx.at/60)}</span></span><span class="di-trail">${ic('locFill',11)}${cityName()}</span></div>
     <div class="di-cap">${laLabel(ph)}</div><div class="di-big" data-tick="cd">${cdDigital(ph.remaining)}</div>
     <div class="di-bar"><i data-tick="la-bar" style="width:${(prog*100).toFixed(2)}%"></i>${segs.map(([x, w]) => `<b style="inset-inline-start:${(x*100).toFixed(2)}%;width:${(w*100).toFixed(2)}%"></b>`).join('')}</div>
@@ -2874,7 +3226,7 @@ function homeScreenHTML(island){
       <ul class="wm-list">${list}</ul></div>`;
   const small = `<div class="w w-small" role="img" aria-label="${esc(nxName + ' ' + nxTime)}"><div class="w-top"><span class="w-city">${cityName()}</span>${ic(PICON[nx.p],20,'accent')}</div>
       <div><div class="w-name">${nxName}</div><div class="w-time">${nxTime}</div><div class="w-count" data-tick="wcount">${count}</div></div></div>`;
-  const laWidget = `<div class="w w-la" style="--la-pct:${S.wlaAlpha}%" role="img" aria-label="${esc(laLabel(ph) + ' ' + cdText(ph.remaining))}">
+  const laWidget = `<div class="w w-la" ${laAttr()} style="--la-pct:${S.wlaAlpha}%" role="img" aria-label="${esc(laLabel(ph) + ' ' + cdText(ph.remaining))}">
       <div class="la-head"><span class="la-app">${appIconImg(16, 'ai-la', S.sysTheme)}<span>${t('appName')}</span></span><span class="la-city">${cityName()}</span></div>
       <div class="la-arc wla-arc">${arcHTML(ph, 'wla', 'la')}
         <div class="la-text"><div class="la-name">${nxName} · ${nxTime}</div><div class="la-count" data-tick="cd">${cdDigital(ph.remaining)}</div></div></div></div>`;
@@ -2898,7 +3250,18 @@ function renderPanel(){
   const swatch = (k, c) => `<button class="swatch" style="background:${c}" data-act="pn-set" data-k="accent" data-v="${k}" aria-pressed="${S.accent === k}" aria-label="Accent ${k}" data-fkey="pn-acc-${k}"></button>`;
   const jump = (v, l) => `<button class="pn-btn" data-act="jump" data-v="${v}" data-fkey="pn-j-${v}">${l}</button>`;
   document.getElementById('panel').innerHTML = `
-    <div class="pn-title">Prayer Times · iOS prototype</div><div class="pn-sub">Design reference for the SwiftUI build · Spec v0.9</div>
+    <div class="pn-title" lang="de">Vaqt · Vorschlag für den Nachtrag zu Phase 18: Stil, Klang und Verbotszeiten</div><div class="pn-sub" lang="de">Prototyp vom 24.11.2026 auf Basis von Spec v0.10 (Phase 18). Noch nichts beschlossen.</div>
+    <section class="pn-sec pn-chg" lang="de"><h3>Nachtrag zu Phase 18 (24.11.2026)</h3><p class="pn-chg-lead">Abgenommen am 24.11.2026, Spec v0.11 § 11.3–11.7: Stil, Klang, „Darstellung“ über „Berechnung“, Verbotszeiten nach Rechtsschule, Onboarding. Zum Ansehen antippen.</p>
+      <ol class="pn-chg-list">${[['settings','Einstellungen: „Darstellung“ über „Berechnung“'],['page','Seite „Stil“ in den Einstellungen'],['page-open','Seite „Stil“ mit allen 24 Farben'],['sound','Seite „Klang“: Systemton mit Hinweis'],['ob-madhab','Onboarding: Rechtsschule wählen'],['madhab','Einstellungen › Rechtsschule'],['ksheet','Blatt „Was sind Verbotszeiten?“'],['ksheet-maliki','Dasselbe nach malikitischer Lehre'],['fri','Schafii an einem Freitag: kein Fenster vor Dhuhr'],['home','Zeiten-Seite in der Grundfarbe'],['live','Live-Aktivität und Dynamic Island'],['live-k','Dasselbe in der Verbotszeit'],
+        ['widgets','Widgets']]
+        .map(([v, l]) => `<li><button class="pn-btn" data-act="stil" data-v="${v}" data-fkey="pn-stil-${v}">${l}</button></li>`).join('')}</ol>
+      <div style="height:10px"></div><div class="pn-sub" style="margin:0 0 6px">Grundfarbe</div>
+      <div class="swatches" role="group" aria-label="Grundfarbe">${ACCENTS.map(a => swatch(a.id, a.l)).join('')}</div>
+      <div style="height:10px"></div><div class="pn-sub" style="margin:0 0 6px">Live-Aktivität</div>
+      ${seg('laStyle',[['full','Farbig'],['arc','Nur Bogen'],['mono','Schwarz-weiß']])}
+      ${sw('laInv','Invertiert','Heller Hintergrund, dunkle Schrift')}
+      <div class="pn-sub" style="margin:4px 0 6px">Rechtsschule (Verbotszeiten)</div>
+      ${seg('madhab',[['hanafi','Hanafi'],['maliki','Maliki'],['shafii','Schafii'],['hanbali','Hanbali']])}</section>
     <section class="pn-sec pn-chg" lang="de"><h3>Änderungen vom 17./18.11.2026</h3><p class="pn-chg-lead">Abgenommen am 18.11.2026, Spec v0.9 § 10. Zum Ansehen antippen.</p>
       <ol class="pn-chg-list">${[['k-arc','Kerahat im Bogen länger (Dhuhr sichtbar)'],['la-orange','Live-Aktivität orange in der Kerahat-Zeit'],['transp','Live-Aktivität 30 % und abgelaufene als Zeile'],['w-transp','Widget „Live“ durchscheinend'],
         ['k-info','Was sind Verbotszeiten? (Zeile mit ⓘ antippen)'],['k-guide','Anleitung Asr: Hinweis zum Farḍ'],['slogan','Neuer Slogan im Onboarding'],['ob2','Onboarding: Standort-Text'],['ob3','Onboarding: Hinweis Live-Aktivität'],['alarm','Wecker zu Fadschr'],['q-sex','Nachholen: Mann oder Frau'],['q-reset','Nachholen: Alles zurücksetzen'],['privacy','Datenschutz-Texte: Apple Karten']]
@@ -2922,8 +3285,6 @@ function renderPanel(){
       ${sw('locDenied','Location permission denied','Shows manual city fallback')}${sw('alarmDenied','Alarm permission denied','Fajr alarm stays off')}${sw('offline','Offline')}
       ${sw('highLat','High latitude case','Berlin, 21 June · Fajr/Isha estimated')}${sw('bigType','Large Dynamic Type','≈ xxxLarge (×1.35)')}${sw('rtl','RTL preview','Mirrored layout for later Arabic')}</section>
     <section class="pn-sec"><h3>Design variants</h3>
-      <div class="swatches" role="group" aria-label="Accent">${swatch('teal','#1F7A6D')}${swatch('green','#2E7D4F')}${swatch('indigo','#4252B5')}${swatch('sand','#8F6420')}</div>
-      <div style="height:10px"></div>
       ${seg('showArc',[['true','Day arc'],['false','No arc']])}${seg('cdStyle',[['digital','1:17:23'],['text','1 h 17 min']])}${seg('density',[['regular','Regular rows'],['compact','Compact rows']])}${seg('chipStyle',[['label','Chips: label'],['value','Chips: label + value']])}</section>
     <section class="pn-sec"><h3>Jump to</h3><div class="pn-btns">
       ${jump('onboarding','Onboarding')}${jump('home','Home')}${jump('settings','Settings')}${jump('method','Calc. method')}
@@ -3001,7 +3362,7 @@ function runAnims(){
     } else if (a.type === 'sheet-in'){ scr.classList.add('opening'); void scr.offsetWidth; scr.classList.remove('opening'); }
     else if (a.type === 'alert-in'){ scr.classList.add('alert-opening'); void scr.offsetWidth; scr.classList.remove('alert-opening'); }
     else if (a.type === 'ob'){ const tr = scr.querySelector('.onb-track'); if (!tr) continue;
-      tr.style.transition = 'none'; tr.style.transform = obX(a.from); void tr.offsetWidth; tr.style.transition = ''; tr.style.transform = obX(S.obStep); }
+      tr.style.transition = 'none'; tr.style.transform = a.px != null ? `translateX(calc(${-a.from*100}% * var(--dx) + ${a.px}px))` : obX(a.from); void tr.offsetWidth; tr.style.transition = ''; tr.style.transform = obX(S.obStep); }
     else if (a.type === 'pane'){ const pg = scr.querySelector('.pager'); if (!pg) continue;
       pg.style.transition = 'none'; pg.style.transform = a.from; void pg.offsetWidth; pg.style.transition = ''; pg.style.transform = paneX(PANES.indexOf(S.tab)); }
     else if (a.type === 'bell'){ const b = scr.querySelector(`.bell[data-p="${a.p}"]`); if (b) b.classList.add('pop'); }
@@ -3137,7 +3498,10 @@ const ACT = {
   'ob-loc'(){ if (S.locDenied) openSheet('city'); else showAlert('loc'); },  // iOS prompts only once
   'ob-manual'(){ openSheet('city'); },
   'ob-notif'(){ showAlert('notif'); },
-  'ob-free'(){ obGo(3); },                                   // Änderung 8: vor dem Start die Seite „Kostenlos. Ohne Werbung.“
+  'ob-free'(){ S.obMenu = false; obGo(4); },
+  'ob-madhab'(){ S.obMenu = false; obGo(3); },   // Nachtrag zu Phase 18: weiter nach der Rechtsschule
+  'ob-menu'(){ S.obMenu = !S.obMenu; S.focusNext = S.obMenu ? 'ob-menu-' + S.madhab : 'ob-menu'; render(); },
+  'ob-menu-pick'(el){ S.madhab = el.dataset.v; S.obMenu = false; S.focusNext = 'ob-menu'; render(); },                                   // Änderung 8: vor dem Start die Seite „Kostenlos. Ohne Werbung.“
   alert(el){ const v = el.dataset.v, kind = S.alert;
     if (kind === 'qreset'){ closeAlert(() => { if (v === 'reset'){ const q = S.qada;
         Object.assign(q, {years:0, months:0, days:0, witr:false, perDay:5, hayz:7, nifas:0}); [...FIVE, 'witr'].forEach(k => { q.open[k] = 0; q.tot[k] = 0; });
@@ -3145,7 +3509,7 @@ const ACT = {
     closeAlert(() => {
       if (kind === 'loc'){ if (v === 'deny'){ S.locDenied = true; S.autoLocation = false; openSheet('city'); }
                            else { S.locDenied = false; S.autoLocation = true; S.city = S.deviceCity; obGo(2); } }
-      else { S.notifAllowed = v === 'allow'; obGo(3); } }); },
+      else { S.notifAllowed = v === 'allow'; obGo(4); } }); },
   /* Änderung 5: Gebet Schritt für Schritt */
   'walk-start'(){ S.walk = {p:guideState(phase(nowSec())).p, i:0, dir:1}; S.focusNext = 'wk-next'; render(); },
   'walk-next'(){ const n = walkSteps(S.walk.p).length; if (S.walk.i < n - 1){ S.walk.i++; S.walk.dir = 1; } S.focusNext = 'wk-next'; render(); },
@@ -3169,13 +3533,13 @@ const ACT = {
     else if (v === 'k-guide'){ S.kerahat = true; S.tab = 'guide'; S.guidePick = 'asr'; setMin(tt.asr + 26); }
     else if (v === 'slogan'){ S.onboarded = false; S.obStep = 0; }
     else if (v === 'ob2'){ S.onboarded = false; S.obStep = 1; }
-    else if (v === 'ob3'){ S.onboarded = false; S.obStep = 2; }
+    else if (v === 'ob3'){ S.onboarded = false; S.obStep = 3; }
     else if (v === 'alarm'){ S.alarmOn = true; S.stack.settings = ['settings', 'alarm']; }
     else if (v === 'q-sex'){ S.section = 'qada'; S.qadaSex = 'f'; S.scrollPos.qada = 9999; }
     else if (v === 'q-reset'){ S.section = 'qada'; S.scrollPos.qada = 9999; S.alert = 'qreset'; }
     else if (v === 'privacy') S.stack.settings = ['settings', 'privacy'];
     else if (v === 'icon'){ S.onboarded = false; S.obStep = 0; }
-    else if (v === 'free'){ S.onboarded = false; S.obStep = 3; }
+    else if (v === 'free'){ S.onboarded = false; S.obStep = 4; }
     else if (v === 'kerahat'){ S.kerahat = true; setMin(tt.sunrise + 20); }
     else if (v === 'qibla'){ S.tab = 'qibla'; const q = CITIES[cityId()].qibla; if (q != null) S.qibla.heading = (q - 25 + 360) % 360; }
     else if (v === 'walk'){ S.tab = 'guide'; S.guidePick = null; S.walk = {p:'dhuhr', i:0, dir:1}; }
@@ -3189,6 +3553,27 @@ const ACT = {
     else if (v === 'lang') S.lang = 'ar';
     render();
   },
+  /* Nachtrag zu Phase 18: Stil – Sprünge aus dem Panel, Schalter, Zurücksetzen, Auswahl in der Übersicht */
+  stil(el){
+    const v = el.dataset.v, tt = todayTimes(); stopAdhan(); S.view = 'app'; S.sheet = null; S.alert = null; S.busy = false; S.walk = null; S.dayOff = 0;
+    S.onboarded = true; S.stack.settings = []; S.section = 'prayers'; S.tab = 'today'; S.kerahat = true; S.palOpen = null;
+    const setMin = m => { S.clock.base = Math.round(m*60); S.clock.anchor = Date.now(); S.clock.preset = 'custom'; };
+    setMin(v.endsWith('-k') ? tt.maghrib - 25 : tt.asr + 26);
+    if (v === 'page') S.stack.settings = ['settings', 'style'];
+    else if (v === 'page-open'){ S.stack.settings = ['settings', 'style']; S.palOpen = true; }
+    else if (v === 'settings') S.stack.settings = ['settings'];
+    else if (v === 'sound'){ S.stack.settings = ['settings', 'sound']; S.sound = 'system'; }
+    else if (v === 'madhab') S.stack.settings = ['settings', 'madhab'];
+    else if (v === 'ob-madhab'){ S.onboarded = false; S.obStep = 2; }
+    else if (v === 'ksheet' || v === 'ksheet-maliki'){ if (v === 'ksheet-maliki') S.madhab = 'maliki'; S.sheet = 'kerahat'; }
+    else if (v === 'fri'){ S.madhab = 'shafii'; S.dayOff = (5 - appDate().getDay() + 7) % 7 || 7; }
+    else if (v === 'live' || v === 'live-k') S.view = 'live';
+    else if (v === 'widgets') S.view = 'widgets';
+    render();
+  },
+  'toggle-inv'(){ S.laInv = !S.laInv; render(); },
+  'toggle-pal'(){ S.palOpen = !S.palOpen; S.focusNext = 'st-pal'; render(); },
+  'style-reset'(){ S.accent = 'teal'; S.laStyle = 'full'; S.laInv = false; S.focusNext = 'st-c-teal'; render(); },
   tab(el){ const v = el.dataset.v; if (S.tab === v) return; goPane(v, paneX(PANES.indexOf(S.tab))); },
   'guide-pick'(el){ const v = el.dataset.v; S.guidePick = v === guideState(phase(nowSec())).auto ? null : v; render(); },
   'guide-now'(){ S.guidePick = null; S.focusNext = 'gp-' + guideState(phase(nowSec())).auto; render(); },
@@ -3208,7 +3593,7 @@ const ACT = {
   qapply(){ const q = S.qada, days = qadaDays();
     [...FIVE, 'witr'].forEach(k => { const n = k === 'witr' && !q.witr ? 0 : days; q.open[k] = n; q.tot[k] = n; });
     render(); toast(t('qadaApplied',{n:num(days*qadaKeys().length)}), 'check'); },
-  push(el){ push(el.dataset.v); },
+  push(el){ if (el.dataset.v === 'style') S.palOpen = null; push(el.dataset.v); },
   back(){ pop(); },
   bell(el){ const p = el.dataset.p; S.notif[p] = BELL_ORDER[(BELL_ORDER.indexOf(S.notif[p]) + 1) % 3]; S.anim.push({type:'bell', p}); render();
     toast(t('bellToast',{p:t('p_' + p), s:t(BELL_LABEL[S.notif[p]])}), BELL_ICON[S.notif[p]]); },
@@ -3291,6 +3676,34 @@ document.addEventListener('pointerdown', e => {
 });
 /* Swipe between "Zeiten" and "Qibla" (as the pages of Projekt-Health "Heute"); rubber band at the ends */
 let swallowClick = false;
+/* Nachtrag zu Phase 18 (Spec § 11.5): Auswahlmenü der Rechtsschule mit Escape schließen; Wischen im Onboarding */
+document.addEventListener('keydown', ev => { if (ev['key'] === 'Escape' && S.obMenu){ ev.preventDefault(); S.obMenu = false; S.focusNext = 'ob-menu'; render(); } });
+/* Wunsch vom 24.11.2026 (für Phase 18): Im Onboarding wischt man nach links und rechts vor und zurück, auch über die Seiten mit Erlaubnis-Abfrage –
+   wie „Überspringen“ fragt das Wischen nichts ab. Am Anfang und am Ende federt es zurück; die letzte Seite schließt nur der Knopf.
+   In der App: Geste auf der Seitenleiste des Onboardings (oder TabView mit .page-Stil). */
+document.addEventListener('pointerdown', ev => {
+  const vp = ev.target.closest && ev.target.closest('.onb-viewport');
+  if (!vp || ev.button > 0 || S.onboarded || S.alert || S.sheet || S.busy || ev.target.closest('.ob-menu, .ob-pick')) return;
+  const tr = vp.querySelector('.onb-track'), s0 = S.obStep, last = 4, x0 = ev.clientX, y0 = ev.clientY;
+  const scale = vp.getBoundingClientRect().width / vp.offsetWidth, dir = getComputedStyle(vp).direction === 'rtl' ? -1 : 1;
+  let mode = null, dx = 0;
+  const move = e2 => {
+    const mx = e2.clientX - x0, my = e2.clientY - y0;
+    if (!mode){ if (Math.abs(mx) < 8 && Math.abs(my) < 8) return; mode = Math.abs(mx) > Math.abs(my)*1.2 ? 'h' : 'v'; if (mode === 'h'){ vp.setPointerCapture(e2.pointerId); tr.style.transition = 'none'; } }
+    if (mode !== 'h') return;
+    dx = mx/scale; if ((s0 === 0 && dx*dir > 0) || (s0 === last && dx*dir < 0)) dx *= .35;   // federt an den Enden
+    tr.style.transform = `translateX(calc(${-s0*100}% * var(--dx) + ${dx}px))`;
+  };
+  const up = () => {
+    vp.removeEventListener('pointermove', move); vp.removeEventListener('pointerup', up); vp.removeEventListener('pointercancel', up);
+    if (mode !== 'h') return;
+    swallowClick = true; setTimeout(() => { swallowClick = false; }, 0);
+    const w = vp.offsetWidth, n = dx*dir < -Math.min(70, w*.18) ? Math.min(last, s0 + 1) : dx*dir > Math.min(70, w*.18) ? Math.max(0, s0 - 1) : s0;
+    tr.style.transition = ''; S.obMenu = false;
+    S.anim.push({type:'ob', from:s0, px:dx}); S.obStep = n; S.focusNext = n === s0 ? null : 'ob-p' + n; render();
+  };
+  vp.addEventListener('pointermove', move); vp.addEventListener('pointerup', up); vp.addEventListener('pointercancel', up);
+});
 document.addEventListener('click', e => { if (swallowClick){ e.stopPropagation(); e.preventDefault(); swallowClick = false; } }, true);
 document.addEventListener('pointerdown', e => {
   const pager = e.target.closest('.pager');

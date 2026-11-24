@@ -96,8 +96,12 @@ Nur in DEBUG-Builds. Damit lässt sich jeder Referenz-Screenshot nachstellen:
 -debugHighLatitude            Berlin, 21. Juni 2027
 -debugLocationDenied  -debugOffline
 -debugTab today|qibla|guide|verses|qada|settings
-          method|asr|hl|adjust|perPrayer|reminder|live|sound|appearance|language|privacy|licenses|support|adhan|city
--debugOnboarding 1|2|3|4      Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
+          method|asr|madhab|hl|adjust|perPrayer|reminder|live|alarm|sound|appearance|style|language|privacy|licenses|support|adhan|city|kerahat
+-debugOnboarding 1|2|3|4|5    Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist (3 = Rechtsschule)
+-debugMadhab hanafi|maliki|shafii|hanbali   Rechtsschule für die Verbotszeiten
+-debugAccent teal|green|…|sand   Grundfarbe (Kennungen wie ACCENTS im Prototyp)
+-debugLiveStyle full|arc|mono  -debugLiveInverted   Stil der Live-Aktivität
+-debugSound system|adhan|silent   Klang der Mitteilungen
 -debugDayOffset 1             Zeiten-Seite zeigt einen anderen Tag, −365 bis 365
 -debugWalk dhuhr              „Gebet Schritt für Schritt“ für dieses Gebet offen, über der Anleitung
 -debugWalkStep 9              Seite des Durchlaufs wie S.walk.i im Prototyp: 0 = Start, die letzte = „Gebet beendet“
@@ -125,8 +129,11 @@ Versteht die App ein Debug-Argument nicht, schreibt sie das beim Start in die Ko
 | `-debugCity`, `-debugHighLatitude` | feste Standortquelle mit dieser Stadt, Standort erlaubt |
 | `-debugLocationDenied` | Standort verweigert: Banner auf der Zeiten-Seite, „Aktueller Standort“ im Stadt-Sheet gesperrt |
 | `-debugOffline` | fest „kein Netz“: Hinweis unter dem Datum, im Stadt-Sheet nur gespeicherte Städte |
-| `-debugTab` | `verses` und `qada` wählen den Tab; `qibla` und `guide` die Seite im Tab „Gebete“; `settings` öffnet dort die Einstellungen, die Kennungen aus `PAGES` im Prototyp (`method`, `asr`, `hl`, `adjust`, `perPrayer`, `reminder`, `live`, `sound`, `appearance`, `language`, `privacy`, `support`) und `licenses` (nur in der App, Spec § 9.7) eine ihrer Seiten darüber; `adhan` öffnet das Adhan-Sheet über den Einstellungen, `city` das Stadt-Sheet über der Zeiten-Seite |
-| `-debugOnboarding` | zeigt das Onboarding ab Schritt 1, 2, 3 oder 4, auch wenn es schon durchlaufen ist; geht vor `-debugSkipOnboarding` |
+| `-debugTab` | `verses` und `qada` wählen den Tab; `qibla` und `guide` die Seite im Tab „Gebete“; `settings` öffnet dort die Einstellungen, die Kennungen aus `PAGES` im Prototyp (`method`, `asr`, `madhab`, `hl`, `adjust`, `perPrayer`, `reminder`, `live`, `alarm`, `sound`, `appearance`, `style`, `language`, `privacy`, `support`) und `licenses` (nur in der App, Spec § 9.7) eine ihrer Seiten darüber; `adhan` öffnet das Adhan-Sheet über den Einstellungen, `city` das Stadt-Sheet und `kerahat` das Blatt „Was sind Verbotszeiten?“ über der Zeiten-Seite |
+| `-debugOnboarding` | zeigt das Onboarding ab Schritt 1 bis 5, auch wenn es schon durchlaufen ist; geht vor `-debugSkipOnboarding`. Seit dem Nachtrag zu Phase 18 ist Schritt 3 die Rechtsschule, Mitteilungen und „Kostenlos“ sind 4 und 5 (Spec § 11.5) |
+| `-debugMadhab` | Rechtsschule (`hanafi`, `maliki`, `shafii`, `hanbali`; Spec § 11.6) im Speicher, nur mit `-debugFixtureTimes` |
+| `-debugAccent`, `-debugLiveStyle`, `-debugLiveInverted` | Grundfarbe (24 Kennungen wie `ACCENTS` im Prototyp) und Stil der Live-Aktivität (`full`, `arc`, `mono`, dazu invertiert) im Speicher, nur mit `-debugFixtureTimes` (Spec § 11.7). Widgets und Live-Aktivität bekommen sie über die App Group und den Inhalt der Aktivität |
+| `-debugSound` | Klang der Mitteilungen (`system`, `adhan`, `silent`) im Speicher, nur mit `-debugFixtureTimes` (`iphone/80-settings-sound-system`) |
 | `-debugDayOffset` | die Zeiten-Seite zeigt beim Start den Tag mit diesem Abstand zu heute, −365 bis 365 (Spec § 9.4); Mitteilungen, Widgets und Countdown bleiben bei heute. Mit `-debugFixtureTimes` verschiebt das Sonnenmodell des Prototyps die Mock-Zeiten wie `dayTimes()` |
 | `-debugWalk`, `-debugWalkStep` | öffnet beim Start den Durchlauf „Gebet Schritt für Schritt“ (Spec § 9.6) für `fajr`, `dhuhr`, `asr`, `maghrib` oder `isha` auf dieser Seite (0 = Start; zu große Werte zeigen „Gebet beendet“), über der Anleitung – ohne `-debugTab` ist sie die Seite darunter. Die Zustände von `iphone/43`–`49` |
 | `-debugQiblaHeading` | fester Kompasskurs statt des Kompasses des Geräts. Mit `-debugFixtureTimes` gilt ohne Angabe 99°, der Startwert des Prototyps (`S.qibla.heading`) |

@@ -4,14 +4,14 @@ Gemeinnützige Gebetszeiten-App: werbefrei, ohne Tracking, ohne Konto. Name unte
 
 ## Quellen der Wahrheit
 
-1. `design/prayer-times-design-spec.md` – Design Spec v0.10: Tokens, Komponenten, Verhalten, Zustände, iPhone Duo (§ 8), offene Fragen (§ 6), Varianten (§ 7), Änderungen vor der Beta (§ 9), nach der ersten Beta (§ 10) und vor der Golden Beta (§ 11).
+1. `design/prayer-times-design-spec.md` – Design Spec v0.11: Tokens, Komponenten, Verhalten, Zustände, iPhone Duo (§ 8), offene Fragen (§ 6), Varianten (§ 7), Änderungen vor der Beta (§ 9), nach der ersten Beta (§ 10) und vor der Golden Beta (§ 11, mit dem Nachtrag § 11.3–11.7: Klang, Stil, Rechtsschule, Onboarding).
 2. `design/screenshots/` – Referenzbilder je Bildschirm und Zustand. Übersicht: `design/screenshots/INDEX.md`. Seit Spec v0.8 nimmt `scripts/capture-prototype` sie aus dem Prototyp auf.
 3. `design/prayer-times-prototype.html` – Quelltext des Prototyps (~2 400 Zeilen, nicht komplett einlesen, gezielt suchen):
    - Tokens: `:root`-CSS am Anfang (Farben hell/dunkel, Abstände, Radien, Schriftgrößen)
    - alle Texte, 16 Sprachen (Spec § 9.10): JS-Objekt `T`
    - Logik: `todayTimes()`, `phase()`, `phaseKey()`, `kerahatWins()`, `activeKerahat()`, `guideState()`, `dayProgress()`, `ARCS` + `arcHTML()`, `qadaPage()`
-   - Daten: `METHODS`, `RAKAH`, `GUIDE_STEPS`, `FORMULA`, `VERSES`, `KERAHAT_MIN`
-   - Seiten: `homePage()`, `prayerRow()`, `topBarHTML()`, `qiblaPage()`, `guidePage()`, `versesPage()`, `qadaPage()`, `PAGES` (Einstellungen), `laBanner()`/`diExpanded()` (Live-Aktivität)
+   - Daten: `METHODS`, `RAKAH`, `GUIDE_STEPS`, `FORMULA`, `VERSES`, `KERAHAT_MIN`, `KERAHAT_MIN_BY` und `MADHABS` (Verbotszeiten je Rechtsschule), `ACCENTS` (24 Grundfarben), `LA_STYLES` (Stile der Live-Aktivität)
+   - Seiten: `homePage()`, `prayerRow()`, `topBarHTML()`, `qiblaPage()`, `guidePage()`, `versesPage()`, `qadaPage()`, `PAGES` (Einstellungen, darin `style()` und `madhab()`), `laBanner()`/`diExpanded()` (Live-Aktivität, Stil über `laAttr()` und die Variablen `--la-*` im Block „Stil“)
 
 Werte und Formeln von dort übernehmen, nicht schätzen. Bei Widerspruch gilt: Spec > Screenshot > HTML. Ist etwas unklar, frag nach oder trag es in `docs/OPEN-QUESTIONS.md` ein – nicht raten.
 
@@ -48,8 +48,12 @@ Nur in DEBUG: Startargumente, mit denen sich jeder Referenz-Screenshot nachstell
 -debugHighLatitude            # Berlin, 21. Juni
 -debugLocationDenied  -debugOffline
 -debugTab today|qibla|guide|verses|qada|settings
-          method|asr|hl|adjust|perPrayer|reminder|live|alarm|sound|appearance|language|privacy|licenses|support|adhan|city   # Seiten der Einstellungen (PAGES; licenses nur in der App), adhan = Adhan-Sheet, city = Stadt-Sheet
--debugOnboarding 1|2|3|4      # Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist
+          method|asr|madhab|hl|adjust|perPrayer|reminder|live|alarm|sound|appearance|style|language|privacy|licenses|support|adhan|city|kerahat   # Seiten der Einstellungen (PAGES; licenses nur in der App), adhan = Adhan-Sheet, city = Stadt-Sheet, kerahat = Blatt „Was sind Verbotszeiten?“
+-debugOnboarding 1|2|3|4|5    # Onboarding ab diesem Schritt, auch wenn es schon durchlaufen ist (3 = Rechtsschule, seit dem Nachtrag zu Phase 18)
+-debugMadhab hanafi|maliki|shafii|hanbali   # Rechtsschule für die Verbotszeiten (Spec § 11.6)
+-debugAccent teal|green|…|sand   # Grundfarbe, Kennungen wie ACCENTS im Prototyp (Spec § 11.7)
+-debugLiveStyle full|arc|mono  -debugLiveInverted   # Stil der Live-Aktivität und des Widgets mit dem Bogen (system/97–99)
+-debugSound system|adhan|silent   # Klang der Mitteilungen (iphone/80-settings-sound-system)
 -debugDayOffset 1             # Zeiten-Seite zeigt einen anderen Tag, −365 bis 365 (iphone/23)
 -debugWalk dhuhr              # „Gebet Schritt für Schritt“ für dieses Gebet offen, über der Anleitung (iphone/43–49)
 -debugWalkStep 9              # Seite des Durchlaufs wie S.walk.i: 0 = Start, die letzte = „Gebet beendet“

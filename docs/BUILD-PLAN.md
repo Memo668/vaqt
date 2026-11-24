@@ -337,3 +337,12 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 - Adhan: eine Aufnahme (Ustadh Mmanga Muharram, DARSA TV, CC BY) statt dreier Platzhalter-Stimmen, als Ausschnitt von 29,5 Sekunden für Mitteilungen, Wecker und Player. Stimmenliste, Schalter „Fadschr-Variante“ und die Einstellung `voice` entfallen (`AdhanRecording` in PrayerCore).
 - Lizenzseite: Aufnahme, arabischer Verstext (Tanzil) und Übersetzungen mit Quelle und Bedingungen. Alles dazu steht in `docs/THIRD-PARTY.md`.
 - Referenzbilder `iphone/50`, `51` und `86` neu aus dem Prototyp, `86` jetzt auch dunkel.
+
+**Nachtrag zu Phase 18** (*Spec v0.11 § 11.3–11.7, abgenommen am 24.11.2026 im Prototyp „Stil“, Version 11; Go zum Bau am 24.11.2026. Gebaut auf demselben Zweig, Ergebnis unten unter „Annahmen im Nachtrag zu Phase 18“ in `docs/OPEN-QUESTIONS.md`.*)
+
+- Klang: nur Systemton, kurzer Adhan oder lautlos; bei „Systemton“ der Hinweis `soundSystemFooter`.
+- Einstellungen: Gruppe „Darstellung“ unter „Standort“ und über „Berechnung“, neue Zeilen „Stil“ und „Rechtsschule“.
+- Onboarding: fünf Seiten mit der Rechtsschule als Seite 3 (`Picker` mit `.pickerStyle(.menu)`, Hanafi vorgewählt), Wischen vor und zurück, im Arabischen gespiegelt, an den Enden federnd, ohne Erlaubnis-Abfrage.
+- Verbotszeiten nach Rechtsschule in PrayerCore (`Madhab`, Dauer je Schule, Maliki ohne Fenster vor Dhuhr, Schafii freitags ohne), überall: Bogen, Zeilen, Info-Blatt mit neuen Abschnitten, Anleitung, Widgets, Live-Aktivität und Dynamic Island. Unit-Tests.
+- Stil: 24 Grundfarben im DesignSystem umschaltbar (statt des Assets `AccentColor`), violette Verbotszeit bei Orange, Gold und Sand, sechs Varianten der Live-Aktivität (auch für das Widget mit dem Bogen), „Standard wiederherstellen“. Widgets und Live-Aktivität lesen Farbe und Stil aus der App Group bzw. dem Inhalt der Aktivität; geplante Aktivitäten entstehen nach einer Änderung neu. Unit-Tests für Kontrast und Abstände der Farben.
+- Texte (69 neue Schlüssel) in 16 Sprachen, die 13 ab ES als KI-Entwurf. Referenzbilder neu aus dem Prototyp (Onboarding, Einstellungen, Stil, Rechtsschule, Klang, Verbotszeiten-Blatt, `system/97`–`99`).

@@ -1,4 +1,4 @@
-# Prayer Times (iOS) – Design Spec v0.10
+# Prayer Times (iOS) – Design Spec v0.11
 
 Handoff for building the native SwiftUI app. The visual reference is `prayer-times-prototype.html` (single file, open it in a browser). Design tokens are in its `:root` CSS, every string is in the JS object `T` (16 languages since v0.8, § 9.10), mock data is in `CITIES` / `BERLIN_SUMMER` / `METHODS`, and the app state model is `S`.
 
@@ -356,9 +356,9 @@ The coordinates are rounded to 0.01° before they are stored or sent (in the app
 
 ---
 
-## 11. Changes before the Golden Beta (v0.10, decided 24.11.2026)
+## 11. Changes before the Golden Beta (v0.10 and v0.11, decided 24.11.2026)
 
-Decided by the product owner on 24.11.2026, built in Phase 18.
+Decided by the product owner on 24.11.2026, built in Phase 18. § 11.3–11.7 are an addendum (v0.11): shown in the prototype "Stil" on 24.11.2026 and approved the same evening ("Ja, die Farbauswahl ist deutlich besser. Behalten wir so, wird mit in Phase 18 übernommen, so wie im Prototypen." and "Ja, übernehmen" for the prohibited times). The prototype panel lists them under "Nachtrag zu Phase 18". The religious texts of § 11.6 follow two texts by Ibrahim Gezer (24.11.2026) and must be reviewed by him before the App Store.
 
 ### 11.1 Verses: excerpts of published translations
 - **Arabic text:** unchanged. Each of the six verses shows a part of the verse in the Uthmani spelling of the Tanzil project (tanzil.net).
@@ -380,9 +380,92 @@ Decided by the product owner on 24.11.2026, built in Phase 18.
 - **Licences page:** the recording is listed with title, source, licence and the changes made.
 - Reference: `iphone/86-sheet-adhan`, `iphone/86-sheet-adhan-dark`. Source, licence and the cut: `docs/THIRD-PARTY.md`.
 
+### 11.3 Sound: only the iOS default
+- Settings › Klang stays **Systemton / Kurzer Adhan / Lautlos** (decided 24.11.2026: "Nur iOS-Standard"). There is no list of tones: an app cannot offer Apple's tones itself (`UNNotificationSound` knows only the default sound or the app's own files).
+- When "Systemton" is selected, the footer adds `soundSystemFooter`: the sound is chosen in the iOS Settings under "Töne & Haptik".
+- Reference: `iphone/80-settings-sound-system`.
+
+### 11.4 Settings: "Darstellung" above "Berechnung"
+- The whole group **Darstellung** (Erscheinungsbild, Stil, Sprache, Verbotszeiten zeigen, with its footer) moves directly under **Standort** and above **Berechnung** (wish of 24.11.2026).
+- New row **Stil** under Erscheinungsbild; its value is the name of the accent colour (§ 11.7).
+- New row **Rechtsschule** in Berechnung, under Asr; its value is the school (§ 11.6).
+- Reference: `iphone/70`, `71`, `72`.
+
+### 11.5 Onboarding: madhab page and swipe
+- **Five pages:** Willkommen, Standort, **Rechtsschule** (new), Mitteilungen, Unterstützen. The page dots show five.
+- **Rechtsschule:** badge with the book glyph, title `obMadhabTitle` ("Deine Rechtsschule"), body `obMadhabBody`. Under the body a capsule button (fill-3, 44 pt high, semibold body) shows the chosen school and an up/down chevron; tapping it opens a menu with the four schools (checkmark at the chosen one). In the app this is a `Picker` with `.pickerStyle(.menu)`. Hanafi is preselected. "Weiter" (`obContinue`) goes on; "Überspringen" keeps Hanafi. The choice can be changed later in Settings › Rechtsschule.
+- **Swipe:** a horizontal swipe goes one page on (to the left) or back (to the right), mirrored in RTL. Swiping never asks for a permission – like "Überspringen". At the first and the last page the swipe rubber-bands back; the last page closes only with its button. Vertical drags are left to the page.
+- Debug: `-debugOnboarding 1…5`.
+- Reference: `iphone/03-onboarding-3-madhab` (+ `-dark`, `-menu`); notifications and support move to `iphone/05-onboarding-4-notifications` and `iphone/06-onboarding-5-free` (+ `-dark`).
+
+### 11.6 Prohibited times by madhab
+- **Setting:** Settings › Berechnung › **Rechtsschule**: Hanafi (default), Maliki, Schafii, Hanbali. Each option has a subline naming its windows (`madhabSub_*`); the footer (`madhabFooter`) says that the Asr time is set separately. The madhab does **not** change the Asr calculation.
+- **Windows and lengths** (minutes; decided 24.11.2026, research in `docs/OPEN-QUESTIONS.md`):
+
+| School | after sunrise | before Dhuhr | before Maghrib |
+|---|---|---|---|
+| Hanafi | 45 | 10 | 45 |
+| Schafii | 25 | 10, none on Friday | 25 |
+| Hanbali | 20 | 10 | 20 |
+| Maliki | 20 | – (no window) | 20 |
+
+  - Friday is the weekday of the day the times belong to (in the place's time zone).
+  - The windows apply everywhere: arc, rows, VoiceOver, info sheet, Live Activity (two activities only where a window exists), Dynamic Island, widgets.
+- **Texts per school:** Hanafi keeps all texts of § 10.1–10.2 verbatim. For the other schools:
+  - the Darstellung footer is `kerahatFooter_<school>` (instead of `kerahatFooter`);
+  - the info sheet intro is `kerahatP1_<school>` and its footnote `kerahatFoot_<school>`.
+- **Info sheet "Was sind Verbotszeiten?"** in this order: intro; group "Heute" with two or three windows; "Asr noch nicht gebetet?" (**Hanafi only**); new "Nach dem Fadschr- und dem Asr-Gebet" (`kerahatAfterTitle`/`Body`, all schools); new "Versäumte Gebete nachholen" (`kerahatQadaTitle`, `kerahatQadaHanafi` or `kerahatQadaOther` with the school adjective `madhabAdj_<school>`); new "Andere Gebete" (`kerahatOtherTitle`/`Body`); the reason (`kerahatInfoP2`); the footnote.
+- **Guide:** the Asr note `gAsrKerahat` (§ 10.2) appears only for Hanafi.
+- Not in the app (decided 24.11.2026): the times after Fajr and Asr on the arc (they begin with one's own prayer), a hint in the Qada tab, the sources (they are in `docs/OPEN-QUESTIONS.md`).
+- Reference: `iphone/88-settings-madhab` (+ `-dark` with Schafii), `iphone/26-home-maliki`, `iphone/26-home-shafii-friday`, `iphone/27-sheet-kerahat`, `iphone/27-sheet-kerahat-maliki`.
+
+### 11.7 Style: accent colour and Live Activity look
+- **Page:** Settings › Darstellung › **Stil** (title `style`). From top to bottom:
+  - a preview of the Live Activity on a neutral wallpaper (the current state, at 94 %);
+  - group **Grundfarbe** (`styleColor`) with footer `styleColorFooter`;
+  - group **Live-Aktivität** (`liveAct`): three tiles Farbig / Nur Bogen / Schwarz-weiß (`laFull`, `laArc`, `laMono`) with a small sign of the style and a radio circle, then a switch **Invertiert** (`laInvert`, subline `laInvertSub`); footer `styleLiveFooter`;
+  - **Standard wiederherstellen** (`styleReset`), only when something differs from the default (Petrol, Farbig, not inverted).
+- **Accent colours:** 24 circles in rows of six (36 pt circle, 48 pt tap target, selected = ring and checkmark, never colour alone). No visible name; VoiceOver reads the name (`col_<id>`).
+  - **Collapsed:** only the standard row, under it a small grey chevron (VoiceOver `styleMoreColors`/`styleLessColors`). If another colour is selected, a small dot in that colour stands beside the chevron.
+  - **Expanded:** the grid 4 × 6. When the page opens with a colour outside the standard row, it opens expanded; afterwards only the chevron changes it.
+
+| Row | Colours (id: light / dark / text on the dark accent) |
+|---|---|
+| Standard | teal Petrol `#1F7A6D`/`#4CC2AE`/`#04221D` · green Grün `#2E7D4F`/`#5FCB8A`/`#04220F` · blue Blau `#1E6BB8`/`#6DB5FF`/`#031B33` · violet Violett `#7A4CB5`/`#C4A2FF`/`#1B0B33` · berry Beere `#A93466`/`#FF8FBA`/`#33081B` · graphite Graphit `#48484D`/`#D6D6DC`/`#111113` |
+| kräftig | cyan Türkis `#026E89`/`#28D1FE`/`#001F28` · grass Gras `#3C6603`/`#98D75E`/`#111F05` · indigo Indigo `#4646CB`/`#8997FF`/`#151831` · orchid Orchidee `#941C95`/`#E585E2`/`#271126` · orange Orange `#A44C03`/`#FE904D`/`#2C1204` · gold Gold `#876204`/`#F5C25F`/`#251801` |
+| tief | ocean Ozean `#024153`/`#43A9CB`/`#011E28` · forest Tanne `#03472A`/`#5FA77F`/`#032112` · navy Nachtblau `#182D6A`/`#728DCD`/`#101932` · plum Aubergine `#50205A`/`#B47EBE`/`#251228` · wine Bordeaux `#6D1733`/`#C37586`/`#2D0F17` · mono Mono `#1C1C1E`/`#F2F2F7`/`#1C1C1E` |
+| gedeckt | mint Mint `#015D54`/`#9AE9DD`/`#01201C` · sage Salbei `#556345`/`#BDD4A3`/`#161E0B` · ice Taubenblau `#455A74`/`#9FC1EB`/`#131B27` · lavender Lavendel `#69639D`/`#CBC6FF`/`#1A172C` · mauve Malve `#714967`/`#CBB7C5`/`#1F181D` · sand Sand `#6F4D27`/`#ECCAA7`/`#24180B` |
+
+  - Every colour reaches 4.5 : 1: light on white and on `#F2F2F7`, dark on `#1C1C1E`, the text colour on the dark accent. The colours from row 2 on keep an OKLab distance of at least 0.065 to every other colour, 0.12 to the kerahat colours and to signal red, and 0.07 to the grey secondary text. Unit tests check this.
+  - The accent applies to the whole app (everything that was `--accent`, and what is mixed from it), the widgets, the Live Activity and the Dynamic Island. The app icon stays. In dark mode `--on-accent` is the text colour of the row.
+- **Warm colours** Orange, Gold, Sand: the prohibited time is **violet instead of orange** everywhere – arc, rows, info dot, Live Activity in every style except black and white, Dynamic Island (including the marks under the bar). Each orange tone is turned to OKLCH hue 300 with the same lightness and chroma:
+
+| Orange | Violet | Use |
+|---|---|---|
+| `#C7862A` / `#D9A04E` | `#A282D9` / `#B89AED` | `--kerahat` light / dark |
+| `#9A6212` / `#E3B36B` | `#7B5FA8` / `#C6ADF6` | `--kerahat-text` light / dark |
+| `#F3C979` | `#D8C4FF` | kerahat segments in the Live Activity |
+| `#EC8530`, `#D9772B`, `#C4661F`, `#FFE2BF` | `#B38AF6`, `#A37DE1`, `#916CCB`, `#EBE2FF` | Live Activity "Farbig" in the prohibited time |
+| `#8A4409`, `#B85C12`, `#F1DCCB`, `#EDA35C`, `#9A4D0E` | `#644990`, `#8762BF`, `#E3DCF3`, `#C2A3F9`, `#7152A0` | inverted styles in the prohibited time |
+| `#F0A257`, `#3A1D05`, `#F8B877` | `#C3A2FC`, `#2A1E3D`, `#D0B8FF` | "Nur Bogen" and Dynamic Island in the prohibited time |
+| `#E0A84F` | `#C0A1F7` | marks under the bar of the Dynamic Island |
+
+- **Live Activity styles** (also for the Home Screen widget with the arc, "Live"). The opacity of the surface is always 30 %. Variables as in the prototype (`[data-la]`, block "Stil"):
+  - **Farbig** (default, § 10.3): gradient of the accent; orange in the prohibited time.
+  - **Farbig, invertiert:** white surface, text 80 % accent + 20 % black, track accent at 26 %, line and passed markers in the accent, knob white with accent ring, kerahat `#C7862A`. In the prohibited time text and line `#8A4409`/`#B85C12`.
+  - **Nur Bogen:** colourless surface `#2E2E33`, white text, line and passed markers in the dark accent, knob white with accent ring. In the prohibited time the line `#F0A257` and "Verbotszeit bis …" in `#F8B877`.
+  - **Nur Bogen, invertiert:** white surface, text `#1C1C1E`, line in the light accent, track black at 16 %. In the prohibited time `#B85C12`, text "Verbotszeit bis …" `#9A4D0E`.
+  - **Schwarz-weiß:** `#2E2E33` without colour, app icon grey. Prohibited times are striped (white dashes on black 50 %) and named in the text; no orange.
+  - **Schwarz-weiß, invertiert:** white surface, line `#1C1C1E`, stripes as above.
+  - **Dynamic Island:** always black. Symbol, time, countdown and bar in the dark accent; in the prohibited time `#F0A257`; with Schwarz-weiß all white (kerahat marks white at 60 %).
+- **Changes reach the outside:** widgets reload; running Live Activities are updated and scheduled ones are requested again with the new look.
+- Debug: `-debugAccent <id>`, `-debugLiveStyle full|arc|mono`, `-debugLiveInverted`, `-debugTab style`.
+- Reference: `iphone/87-settings-style` (+ `-dark`, `-open` with Orange and "Nur Bogen, invertiert", `-open-end`), `iphone/25-home-accent-ocean`, `iphone/25-home-accent-orange-kerahat` (+ `-dark`), `system/97-*` (six styles and Ozean), `system/98-*` (prohibited time, also warm), `system/99-*` (widget "Live").
+
 ---
 
 ## Changelog
+- **v0.11 (24./25.11.2026):** Addendum to the changes before the Golden Beta (§ 11.3–11.7): sound only with the iOS default and a hint where to choose it; group "Darstellung" above "Berechnung"; onboarding with five pages (madhab as a menu) and swipe; prohibited times by madhab (Hanafi, Maliki, Schafii, Hanbali) with their own lengths, texts and info sheet sections; Settings › Stil with 24 accent colours (violet prohibited time for Orange, Gold, Sand) and six Live Activity styles at 30 %.
 - **v0.10 (24.11.2026):** Changes before the Golden Beta (§ 11): verse translations as verbatim excerpts of published translations in 15 languages, with the translation named under the card; one adhan recording (Ustadh Mmanga Muharram, DARSA TV, CC BY) instead of three placeholder voices, no Fajr variant switch.
 - **v0.9 (18.11.2026):** Changes after the first beta (§ 10): "Verbotszeit" in German and longer kerahat windows on the arc, info sheet on prohibited times, Live Activity at 30 % with orange prohibited time and compact ended activities (newest on top), Live widget at 30 %, new onboarding title, location and Live Activity hints, honest privacy texts, qada for men and women with reset, Fajr alarm (Phase 17), share link to TestFlight.
   - *Addendum 18.11.2026 (Phase 17 plan):* the alarm sound is a choice of system sound or short adhan; denied permission keeps the switch off with a link to iOS Settings; the alert has only "Stopp", no snooze (§ 10.8).

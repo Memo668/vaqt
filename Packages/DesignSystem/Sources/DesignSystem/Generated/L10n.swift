@@ -743,6 +743,144 @@ public enum L10n {
     public static var alarmStop: String { text("alarmStop") }
     /// „Damit der Wecker zu Fadschr auch im Stummmodus und bei Fokus klingelt.“
     public static var alAlarmBody: String { text("alAlarmBody") }
+    /// „Stil“
+    public static var style: String { text("style") }
+    /// „Grundfarbe“
+    public static var styleColor: String { text("styleColor") }
+    /// „Petrol“
+    public static var col_teal: String { text("col_teal") }
+    /// „Grün“
+    public static var col_green: String { text("col_green") }
+    /// „Blau“
+    public static var col_blue: String { text("col_blue") }
+    /// „Violett“
+    public static var col_violet: String { text("col_violet") }
+    /// „Beere“
+    public static var col_berry: String { text("col_berry") }
+    /// „Graphit“
+    public static var col_graphite: String { text("col_graphite") }
+    /// „Türkis“
+    public static var col_cyan: String { text("col_cyan") }
+    /// „Gras“
+    public static var col_grass: String { text("col_grass") }
+    /// „Indigo“
+    public static var col_indigo: String { text("col_indigo") }
+    /// „Orchidee“
+    public static var col_orchid: String { text("col_orchid") }
+    /// „Orange“
+    public static var col_orange: String { text("col_orange") }
+    /// „Gold“
+    public static var col_gold: String { text("col_gold") }
+    /// „Ozean“
+    public static var col_ocean: String { text("col_ocean") }
+    /// „Tanne“
+    public static var col_forest: String { text("col_forest") }
+    /// „Nachtblau“
+    public static var col_navy: String { text("col_navy") }
+    /// „Aubergine“
+    public static var col_plum: String { text("col_plum") }
+    /// „Bordeaux“
+    public static var col_wine: String { text("col_wine") }
+    /// „Mono“
+    public static var col_mono: String { text("col_mono") }
+    /// „Mint“
+    public static var col_mint: String { text("col_mint") }
+    /// „Salbei“
+    public static var col_sage: String { text("col_sage") }
+    /// „Taubenblau“
+    public static var col_ice: String { text("col_ice") }
+    /// „Lavendel“
+    public static var col_lavender: String { text("col_lavender") }
+    /// „Malve“
+    public static var col_mauve: String { text("col_mauve") }
+    /// „Sand“
+    public static var col_sand: String { text("col_sand") }
+    /// „Gilt für die App, die Widgets und die Live-Aktivität. Bei Orange, Gold und Sand sind die Verbotszeiten violett statt orange.“
+    public static var styleColorFooter: String { text("styleColorFooter") }
+    /// „Farbig“
+    public static var laFull: String { text("laFull") }
+    /// „Nur Bogen“
+    public static var laArc: String { text("laArc") }
+    /// „Schwarz-weiß“
+    public static var laMono: String { text("laMono") }
+    /// „Invertiert“
+    public static var laInvert: String { text("laInvert") }
+    /// „Heller Hintergrund, dunkle Schrift. Für helle Hintergrundbilder.“
+    public static var laInvertSub: String { text("laInvertSub") }
+    /// „Gilt auch für das Widget mit dem Bogen auf dem Home-Bildschirm. Die Durchsichtigkeit ist bei allen Varianten gleich.“
+    public static var styleLiveFooter: String { text("styleLiveFooter") }
+    /// „Standard wiederherstellen“
+    public static var styleReset: String { text("styleReset") }
+    /// „Weitere Farben“
+    public static var styleMoreColors: String { text("styleMoreColors") }
+    /// „Weniger Farben“
+    public static var styleLessColors: String { text("styleLessColors") }
+    /// „Welcher Ton das ist, wählst du in den iOS-Einstellungen unter „Töne & Haptik“. Die Töne von Apple kann eine App nicht selbst zur Auswahl anbieten.“
+    public static var soundSystemFooter: String { text("soundSystemFooter") }
+    /// „Rechtsschule“
+    public static var madhab: String { text("madhab") }
+    /// „Hanafi“
+    public static var madhab_hanafi: String { text("madhab_hanafi") }
+    /// „Maliki“
+    public static var madhab_maliki: String { text("madhab_maliki") }
+    /// „Schafii“
+    public static var madhab_shafii: String { text("madhab_shafii") }
+    /// „Hanbali“
+    public static var madhab_hanbali: String { text("madhab_hanbali") }
+    /// „hanafitischer“
+    public static var madhabAdj_hanafi: String { text("madhabAdj_hanafi") }
+    /// „malikitischer“
+    public static var madhabAdj_maliki: String { text("madhabAdj_maliki") }
+    /// „schafiitischer“
+    public static var madhabAdj_shafii: String { text("madhabAdj_shafii") }
+    /// „hanbalitischer“
+    public static var madhabAdj_hanbali: String { text("madhabAdj_hanbali") }
+    /// „Verbotszeiten bei Sonnenaufgang, vor Dhuhr und vor Sonnenuntergang“
+    public static var madhabSub_hanafi: String { text("madhabSub_hanafi") }
+    /// „Verbotszeiten bei Sonnenaufgang und vor Sonnenuntergang“
+    public static var madhabSub_maliki: String { text("madhabSub_maliki") }
+    /// „Verbotszeiten bei Sonnenaufgang, vor Dhuhr (nicht am Freitag) und vor Sonnenuntergang“
+    public static var madhabSub_shafii: String { text("madhabSub_shafii") }
+    /// „Verbotszeiten bei Sonnenaufgang, vor Dhuhr und vor Sonnenuntergang“
+    public static var madhabSub_hanbali: String { text("madhabSub_hanbali") }
+    /// „Bestimmt, welche Verbotszeiten die App zeigt und wie sie sie erklärt. Die Asr-Zeit stellst du getrennt unter „{asr}“ ein.“
+    public static func madhabFooter(asr: String) -> String { text("madhabFooter", asr) }
+    /// „Dezent markiert im Bogen und bei den Zeiten: etwa 20 Min. nach Sonnenaufgang und 20 Min. vor Maghrib. Nach malikitischer Lehre werden dann keine freiwilligen Gebete verrichtet.“
+    public static var kerahatFooter_maliki: String { text("kerahatFooter_maliki") }
+    /// „Dezent markiert im Bogen und bei den Zeiten: etwa 25 Min. nach Sonnenaufgang, 10 Min. vor Dhuhr (nicht am Freitag) und 25 Min. vor Maghrib. Nach schafiitischer Lehre werden dann keine freiwilligen Gebete verrichtet.“
+    public static var kerahatFooter_shafii: String { text("kerahatFooter_shafii") }
+    /// „Dezent markiert im Bogen und bei den Zeiten: etwa 20 Min. nach Sonnenaufgang, 10 Min. vor Dhuhr und 20 Min. vor Maghrib. Nach hanbalitischer Lehre werden dann keine freiwilligen Gebete verrichtet.“
+    public static var kerahatFooter_hanbali: String { text("kerahatFooter_hanbali") }
+    /// „Verbotszeiten (Kerahat) sind nach malikitischer Lehre zwei kurze Zeitfenster am Tag, in denen man keine freiwilligen Gebete verrichtet: beim Sonnenaufgang und vor Sonnenuntergang. Den Mittag, wenn die Sonne am höchsten steht, zählt die malikitische Schule nicht dazu.“
+    public static var kerahatP1_maliki: String { text("kerahatP1_maliki") }
+    /// „Verbotszeiten (Kerahat) sind drei kurze Zeitfenster am Tag, in denen man keine freiwilligen Gebete verrichtet. Nach schafiitischer Lehre gilt das Fenster vor Dhuhr am Freitag nicht; für Mekka macht die Schule eine weitere Ausnahme.“
+    public static var kerahatP1_shafii: String { text("kerahatP1_shafii") }
+    /// „Verbotszeiten (Kerahat) sind drei kurze Zeitfenster am Tag, in denen man keine freiwilligen Gebete verrichtet.“
+    public static var kerahatP1_hanbali: String { text("kerahatP1_hanbali") }
+    /// „Nach dem Fadschr- und dem Asr-Gebet“
+    public static var kerahatAfterTitle: String { text("kerahatAfterTitle") }
+    /// „Nach dem Fadschr-Gebet bis zum Sonnenaufgang und nach dem Asr-Gebet bis zum Sonnenuntergang betet man keine freiwilligen Gebete. Darin sind sich alle vier Rechtsschulen einig. Weil diese Zeiten mit deinem eigenen Gebet beginnen, zeigt die App sie nicht im Bogen.“
+    public static var kerahatAfterBody: String { text("kerahatAfterBody") }
+    /// „Versäumte Gebete nachholen“
+    public static var kerahatQadaTitle: String { text("kerahatQadaTitle") }
+    /// „Nach hanafitischer Lehre holst du ein versäumtes Gebet nicht in diesen drei Zeitfenstern nach – nur das Asr desselben Tages betest du vor Sonnenuntergang noch. Nach dem Fadschr- und dem Asr-Gebet darfst du nachholen.“
+    public static var kerahatQadaHanafi: String { text("kerahatQadaHanafi") }
+    /// „Ein versäumtes Pflichtgebet darfst du nach {school} Lehre auch in den Verbotszeiten nachholen. Die Verbote betreffen vor allem freiwillige Gebete.“
+    public static func kerahatQadaOther(school: String) -> String { text("kerahatQadaOther", school) }
+    /// „Andere Gebete“
+    public static var kerahatOtherTitle: String { text("kerahatOtherTitle") }
+    /// „Beim Totengebet und bei Gebeten mit besonderem Anlass, etwa dem Begrüßungsgebet in der Moschee, unterscheiden sich die Rechtsschulen. Frag im Zweifel einen Imam deiner Rechtsschule.“
+    public static var kerahatOtherBody: String { text("kerahatOtherBody") }
+    /// „Nach der malikitischen Rechtsschule (Einstellungen › Rechtsschule). Die Fenster sind Näherungen: 20 Minuten nach Sonnenaufgang und 20 Minuten vor Sonnenuntergang.“
+    public static var kerahatFoot_maliki: String { text("kerahatFoot_maliki") }
+    /// „Nach der schafiitischen Rechtsschule (Einstellungen › Rechtsschule). Die Fenster sind Näherungen: 25 Minuten nach Sonnenaufgang, 10 Minuten vor Dhuhr und 25 Minuten vor Sonnenuntergang.“
+    public static var kerahatFoot_shafii: String { text("kerahatFoot_shafii") }
+    /// „Nach der hanbalitischen Rechtsschule (Einstellungen › Rechtsschule). Die Fenster sind Näherungen: 20 Minuten nach Sonnenaufgang, 10 Minuten vor Dhuhr und 20 Minuten vor Sonnenuntergang.“
+    public static var kerahatFoot_hanbali: String { text("kerahatFoot_hanbali") }
+    /// „Deine Rechtsschule“
+    public static var obMadhabTitle: String { text("obMadhabTitle") }
+    /// „Danach richten sich die Verbotszeiten und ihre Erklärung. Du kannst sie später in den Einstellungen ändern.“
+    public static var obMadhabBody: String { text("obMadhabBody") }
 
     /// Name einer Sure aus `SURAH` im Prototyp, z. B. „Al-Baqara“ für 2.
     public static func surahName(_ surah: Int) -> String { text("surah_\(surah)") }
@@ -1119,6 +1257,75 @@ public enum L10n {
         "alarmDeniedFooter",
         "alarmStop",
         "alAlarmBody",
+        "style",
+        "styleColor",
+        "col_teal",
+        "col_green",
+        "col_blue",
+        "col_violet",
+        "col_berry",
+        "col_graphite",
+        "col_cyan",
+        "col_grass",
+        "col_indigo",
+        "col_orchid",
+        "col_orange",
+        "col_gold",
+        "col_ocean",
+        "col_forest",
+        "col_navy",
+        "col_plum",
+        "col_wine",
+        "col_mono",
+        "col_mint",
+        "col_sage",
+        "col_ice",
+        "col_lavender",
+        "col_mauve",
+        "col_sand",
+        "styleColorFooter",
+        "laFull",
+        "laArc",
+        "laMono",
+        "laInvert",
+        "laInvertSub",
+        "styleLiveFooter",
+        "styleReset",
+        "styleMoreColors",
+        "styleLessColors",
+        "soundSystemFooter",
+        "madhab",
+        "madhab_hanafi",
+        "madhab_maliki",
+        "madhab_shafii",
+        "madhab_hanbali",
+        "madhabAdj_hanafi",
+        "madhabAdj_maliki",
+        "madhabAdj_shafii",
+        "madhabAdj_hanbali",
+        "madhabSub_hanafi",
+        "madhabSub_maliki",
+        "madhabSub_shafii",
+        "madhabSub_hanbali",
+        "madhabFooter",
+        "kerahatFooter_maliki",
+        "kerahatFooter_shafii",
+        "kerahatFooter_hanbali",
+        "kerahatP1_maliki",
+        "kerahatP1_shafii",
+        "kerahatP1_hanbali",
+        "kerahatAfterTitle",
+        "kerahatAfterBody",
+        "kerahatQadaTitle",
+        "kerahatQadaHanafi",
+        "kerahatQadaOther",
+        "kerahatOtherTitle",
+        "kerahatOtherBody",
+        "kerahatFoot_maliki",
+        "kerahatFoot_shafii",
+        "kerahatFoot_hanbali",
+        "obMadhabTitle",
+        "obMadhabBody",
         "surah_2",
         "surah_13",
         "surah_20",
