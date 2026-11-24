@@ -178,7 +178,9 @@ public struct LiveActivityStyleTile: View {
 
     public var body: some View {
         Button(action: action) {
-            VStack(spacing: StyleMetrics.tileGap) {
+            // `.st-tile { gap: 7px }`, der Radioknopf mit `margin-top: auto` unten – deshalb ohne Abstand im Stapel,
+            // sonst käme um den Spacer noch zweimal der Abstand dazu.
+            VStack(spacing: 0) {
                 LiveActivityThumbnail(look: LiveActivityLook(style: AppStyle(accent: accent, liveActivity: style, isInverted: isInverted)))
                     .frame(height: StyleMetrics.thumbHeight)
                     .clipShape(.rect(cornerRadius: StyleMetrics.thumbRadius, style: .continuous))
@@ -206,7 +208,8 @@ public struct LiveActivityStyleTile: View {
                     .foregroundStyle(Palette.label)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
-                Spacer(minLength: 0)
+                    .padding(.top, StyleMetrics.tileGap)
+                Spacer(minLength: StyleMetrics.tileGap)
                 ZStack {
                     if isSelected {
                         Circle().fill(Palette.accent)

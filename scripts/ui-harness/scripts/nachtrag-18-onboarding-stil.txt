@@ -1,0 +1,59 @@
+# Nachtrag zu Phase 18 (Spec § 11.5, § 11.7): Wischen im Onboarding, Menü der Rechtsschule, Grundfarben auf- und
+# zuklappen. Mit Mock-Zeiten; die Einstellungen gelten nur für diesen Lauf.
+#
+# 1. Wischen nach links geht eine Seite vor, nach rechts zurück; auf der ersten Seite federt es zurück.
+launch -AppleLanguages (de) -AppleLocale de_DE -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25 -debugOnboarding 1
+wait 3
+shot {OUT}/ob-1-start.png
+drag 340 430 60 430
+wait 1.5
+shot {OUT}/ob-2-swiped-left.png
+drag 340 430 60 430
+wait 1.5
+shot {OUT}/ob-3-swiped-left-again.png
+drag 60 430 340 430
+wait 1.5
+shot {OUT}/ob-4-swiped-right.png
+drag 60 430 340 430
+wait 1.5
+drag 60 430 340 430
+wait 1.5
+shot {OUT}/ob-5-first-page-bounce.png
+# 2. Auf der letzten Seite federt das Wischen zurück; nur „Los geht’s“ schließt das Onboarding.
+launch -AppleLanguages (de) -AppleLocale de_DE -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25 -debugOnboarding 5
+wait 3
+drag 340 430 60 430
+wait 1.5
+shot {OUT}/ob-6-last-page-bounce.png
+# 3. Arabisch: gespiegelt – nach rechts wischen geht vor.
+launch -AppleLanguages (ar) -AppleLocale ar -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25 -debugOnboarding 1
+wait 3
+drag 60 430 340 430
+wait 1.5
+shot {OUT}/ob-7-rtl-swiped-right.png
+# 4. Rechtsschule: Menü öffnen, Maliki wählen.
+launch -AppleLanguages (de) -AppleLocale de_DE -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25 -debugOnboarding 3
+wait 3
+taplabel Rechtsschule
+wait 1.5
+shot {OUT}/ob-8-madhab-menu.png
+taplabel Maliki
+wait 1.5
+shot {OUT}/ob-9-madhab-maliki.png
+dump {OUT}/ob-9-tree.txt
+# 5. Stil: aufklappen, eine weitere Farbe wählen (das Raster bleibt offen), zuklappen (Punkt in der Farbe).
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25 -debugTab style
+wait 3
+taplabel Weitere Farben
+wait 1.5
+shot {OUT}/st-1-open.png
+taplabel Ozean
+wait 1.5
+shot {OUT}/st-2-ocean.png
+taplabel Weniger Farben
+wait 1.5
+shot {OUT}/st-3-closed-dot.png
+taplabel Nur Bogen
+wait 1.5
+shot {OUT}/st-4-arc.png
+dump {OUT}/st-4-tree.txt
