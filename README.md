@@ -171,8 +171,8 @@ docs/                   Bauplan, Prompts, offene Fragen
 |---|---|
 | `CalculationMethod`, `CalculationSettings` | die elf Methoden aus `METHODS`, automatische Methode je Land, Asr, hohe Breiten, Minutenkorrekturen ±30 |
 | `PrayerTimesSource` | Zeiten eines Tages: `AdhanTimesSource` rechnet echt, `FixtureTimesSource` liefert die Mock-Zeiten des Prototyps (nur DEBUG); dazu die Methode „Automatisch“ für einen Ort (`automaticMethod(for:)`) |
-| `NotificationPreferences`, `NotificationSound`, `AdhanVoice` | Vorab-Erinnerung (`REMINDERS`), Vorlauf der Live-Aktivität (`LIVE_OPTS`), Klang, Stimme des Adhan (`VOICES`, Platzhalter) und der Name ihrer Aufnahme |
-| `NotificationPlanner`, `PrayerNotification`, `NotificationTone`, `NotificationWording` | welche Mitteilungen die App vormerkt: die nächsten 64 ab jetzt, je Ereignis nach seiner Glocke zur Gebetszeit und als Vorab-Erinnerung, mit Texten und Ton (Adhan der Stimme, Systemton oder keiner) |
+| `NotificationPreferences`, `NotificationSound`, `AdhanRecording` | Vorab-Erinnerung (`REMINDERS`), Vorlauf der Live-Aktivität (`LIVE_OPTS`) und Klang; dazu die eine Aufnahme des Adhan mit Muezzin, Datei und Länge (`ADHAN_VOICE`, Spec § 11.2) |
+| `NotificationPlanner`, `PrayerNotification`, `NotificationTone`, `NotificationWording` | welche Mitteilungen die App vormerkt: die nächsten 64 ab jetzt, je Ereignis nach seiner Glocke zur Gebetszeit und als Vorab-Erinnerung, mit Texten und Ton (der kurze Adhan, Systemton oder keiner) |
 | `PrayerTimeline`, `DayPhase` | Zeitstrahl über drei Tage; laufendes und nächstes Ereignis, Restzeit, Tagesfortschritt, Schlüssel für den Neuaufbau |
 | `Kerahat` | die drei Kerahat-Fenster eines Tages |
 | `BellState` | Stand der Mitteilung je Ereignis: Ton, Lautlos, Aus |
@@ -264,9 +264,9 @@ DayArc(phase: phase, showKerahat: settings.showKerahat) {
 | `SettingsBar` | die obere Leiste der Tabs Verse und Nachholen: nur der Einstellungskreis; er öffnet die Einstellungen im Stapel des Tabs |
 | `SettingsModel`, `SettingsRoute`, `SettingsDestination` | Einstellungen (`PAGES`): Startseite und elf Unterseiten als Liste des Systems, Methode durchsuchbar; jede Änderung wirkt sofort auf Zeiten, Bogen, Karten und Anleitung |
 | `OnboardingModel`, `OnboardingView`, `OnboardingStep` | Onboarding beim ersten Start: Willkommen, Standort und Mitteilungen erst nach dem jeweiligen Vorab-Bildschirm, „Überspringen“ auf Schritt 1 und 2 |
-| `AdhanPlayerModel`, `AdhanSheet`, `AdhanClips`, `AdhanPlayback` | Adhan-Sheet: Stimme (gespeichert), Fadschr-Variante als Vorschau, Abspielen über `AVAudioPlayer` oder stumm, wo es keine Aufnahme gibt |
+| `AdhanPlayerModel`, `AdhanSheet`, `AdhanClips`, `AdhanPlayback` | Adhan-Sheet: die eine Aufnahme mit dem Muezzin als Titel, Vorschau und der Zeile zu Quelle und Lizenz; Abspielen über `AVAudioPlayer`, stumm, wo die Datei fehlt |
 | `NotificationAuthorizing` | Erlaubnis für Mitteilungen lesen und erfragen (`UNUserNotificationCenter`; fest in Tests und mit `-debugFixtureTimes`) |
-| `NotificationModel`, `NotificationPlanning` | plant die Mitteilungen für den Ort, der gilt – nur mit Erlaubnis; neu beim Start, wenn die App nach vorn kommt, und nach jeder Änderung an Ort, Rechnung, Glocken, Erinnerung, Klang, Stimme und Sprache. Nach „Später“ im Onboarding fragt die erste Änderung an Glocke oder Mitteilungen |
+| `NotificationModel`, `NotificationPlanning` | plant die Mitteilungen für den Ort, der gilt – nur mit Erlaubnis; neu beim Start, wenn die App nach vorn kommt, und nach jeder Änderung an Ort, Rechnung, Glocken, Erinnerung, Klang und Sprache. Nach „Später“ im Onboarding fragt die erste Änderung an Glocke oder Mitteilungen |
 | `NotificationScheduling`, `SystemNotificationScheduler` | merkt die Mitteilungen bei iOS vor: ersetzt alle ausstehenden, Auslöser nach Zeitabstand von der App-Uhr, Ton nach Glocke und Klang; mit `-debugFixtureTimes` merkt `NoNotificationScheduler` nichts vor |
 | `BackgroundRefresh`, `NotificationPresenter` | Hintergrundaktualisierung (`BGAppRefreshTask`, etwa einmal am Tag) plant neu; bei offener App erscheint eine Mitteilung als Banner mit Ton |
 | `VersesModel`, `VersesTab`, `VersesPage` | Seite „Verse“: Vers des Tages (wechselt um Mitternacht am Ort), Antippen eines Eintrags zeigt ihn oben und springt nach oben, Teilen über `ShareLink`, Kopieren mit Toast |
@@ -293,7 +293,7 @@ Die Einstellungen schieben sich im Stapel des Tabs über die Seite, aus dem der 
 
 Die Sprache wählt man in der App (Einstellungen › Sprache, 16 Sprachen seit Phase 15). Ohne eigene Wahl gilt die, die iOS für die App wählt. Nach einer Wahl liest `L10n` die Texte aus dem Teil-Bundle dieser Sprache; die Seiten bauen sich neu auf, man bleibt dort, wo man war. Arabisch, Urdu und Persisch laufen von rechts nach links, auch wenn das Gerät eine andere Sprache spricht – `RootView`, Widgets und Live-Aktivität setzen die Leserichtung aus der Sprache der App (`L10n.layoutDirection`). Texte des Systems – die Dialoge für Standort und Mitteilungen, das Teilen-Menü – erscheinen weiter in der Sprache des Geräts.
 
-Der Adhan-Player spielt die Ausschnitte in `App/Sounds/` über `AVAudioPlayer`. TODO(placeholder): Stimme 1 und 2 sind freie Aufnahmen von Wikimedia Commons (CC0 bzw. gemeinfrei, Quellen im Kopf von `scripts/adhan-clip.swift`), Stimme 3 und die Fadschr-Variante haben keine Aufnahme und laufen stumm wie im Prototyp. Die Ausschnitte sind kürzer als 30 Sekunden und liegen in einem Format, das iOS auch für Mitteilungstöne annimmt (IMA4 in CAF). Hat der Simulator kein Ausgabegerät, bleibt der Player beim Abspielen einer Aufnahme stehen.
+Der Adhan-Player spielt `App/Sounds/adhan.caf` über `AVAudioPlayer`: seit Phase 18 die eine Aufnahme der App, der Adhan von Ustadh Mmanga Muharram (DARSA TV, CC BY; Spec § 11.2). Quelle, Lizenz, Schnitt und Prüfsumme stehen in `docs/THIRD-PARTY.md`, der Schnitt entsteht mit `scripts/adhan-clip.swift`. Der Ausschnitt ist 29,5 Sekunden lang und liegt in einem Format, das iOS auch für Mitteilungstöne annimmt (IMA4 in CAF, unter 30 Sekunden); dieselbe Datei spielen Mitteilungen und der Wecker. Eine Wahl der Stimme und eine Fadschr-Fassung gibt es nicht. Hat der Simulator kein Ausgabegerät, bleibt der Player beim Abspielen stehen.
 
 ### Abgleich mit den Referenzbildern
 
@@ -373,7 +373,7 @@ Die App merkt lokale Mitteilungen bei iOS vor, ohne Server. Je Ereignis gibt es 
 
 | Glocke | Mitteilung zur Gebetszeit | Erinnerung |
 |---|---|---|
-| Ton | Klang „Kurzer Adhan“: die Aufnahme der gewählten Stimme (`App/Sounds`), zu Fadschr die Fadschr-Variante, sobald es sie gibt; Stimme 3 ohne Aufnahme und der Sonnenaufgang: Systemton. Klang „Systemton“: Systemton. Klang „Lautlos“: ohne Ton | Systemton, beim Klang „Lautlos“ ohne Ton |
+| Ton | Klang „Kurzer Adhan“: die Aufnahme der App (`App/Sounds/adhan.caf`), zu allen fünf Gebeten dieselbe; der Sonnenaufgang: Systemton. Klang „Systemton“: Systemton. Klang „Lautlos“: ohne Ton | Systemton, beim Klang „Lautlos“ ohne Ton |
 | Lautlos | ohne Ton | ohne Ton |
 | Aus | keine | keine |
 
@@ -476,7 +476,7 @@ Alle Texte stehen im Prototyp im Objekt `T`, seit Phase 15 in 16 Sprachen (DE, T
 
 **Ziffern und Kalender** (Phase 15, entschieden mit dem Plan): Die App schreibt Zahlen wie das System – Persisch ۰–۹, Arabisch ٠–٩ dort, wo die Region es tut (z. B. `ar_SA`), sonst 0–9; das gilt für Uhrzeiten (`L10n.time`), Countdown, Zahlen und die Ziffern in den Texten (`LocalizedDigits`). Das Datum steht im Kalender der Region (Persisch: persisch); ist er selbst islamisch, bleibt die erste Zeile gregorianisch (`L10n.displayCalendar`). Zeitspannen beginnen von rechts nach links rechts (`L10n.timeRange`).
 
-Die Verse kommen aus `VERSES` und `SURAH` im Prototyp: Übersetzungen und Namen der Suren als `verse_<Sure>_<Vers>` und `surah_<Sure>` in den String Catalog (`L10n.verseTranslation(surah:ayah:)`, `L10n.surahName(_:)`), Stelle und arabischer Text nach `Packages/PrayerCore/Sources/PrayerCore/Verses/VerseList.swift`. Die Übersetzungen sind Platzhalter und tragen im Katalog den Kommentar `TODO(placeholder)` (Spec § 6.12). Es gibt sie nur in DE/TR/EN/ES; die übrigen Sprachen zeigen den englischen Platzhalter und den englischen Namen der Sure, Arabisch keine Übersetzung – der Vers selbst steht darüber (Spec § 9.10).
+Die Verse kommen aus `VERSES` und `SURAH` im Prototyp: Übersetzungen und Namen der Suren als `verse_<Sure>_<Vers>` und `surah_<Sure>` in den String Catalog (`L10n.verseTranslation(surah:ayah:)`, `L10n.surahName(_:)`), Stelle und arabischer Text nach `Packages/PrayerCore/Sources/PrayerCore/Verses/VerseList.swift`. Seit Phase 18 sind die Übersetzungen wörtliche Ausschnitte veröffentlichter Übersetzungen, in jeder Sprache außer Arabisch; „…“ steht für ausgelassene Teile des Verses (Spec § 11.1). Nicht umformulieren – Übersetzer, Quellen und Bedingungen stehen in `docs/THIRD-PARTY.md`. Fehlt bei einem Vers eine Sprache, bricht `scripts/import-strings` ab. Arabisch zeigt keine Übersetzung, der Vers selbst steht darüber. Die Namen der Suren gibt es nur in DE/TR/EN/ES; die übrigen Sprachen zeigen den englischen Namen (Spec § 9.10).
 
 `App/InfoPlist.xcstrings` enthält die Begründung der Standortabfrage im System-Dialog (`NSLocationWhenInUseUsageDescription`) – der Text `alLocBody` aus `T`. Die Info.plist braucht ihn zusätzlich als Grundwert; der steht in `project.yml`, und `make check-strings` prüft, dass er dem deutschen Text entspricht.
 

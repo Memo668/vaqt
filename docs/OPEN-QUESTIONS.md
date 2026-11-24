@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 19.11.2026, nach der Abnahme von Phase 17 (Wecker zu Fadschr, Spec § 10.8); als Nächstes Build 0.1.0 (4) und die Adhan-Fehler aus TestFlight.
+Stand: 24.11.2026, Phase 18 (Verse und Adhan, Spec § 11) gebaut, die Abnahme steht aus; danach Build 0.1.0 (5) für die Golden Beta am 26.11.2026.
 
 ## Für die erste Beta
 
@@ -39,6 +39,25 @@ Die erste Beta über TestFlight kommt nach Phase 11 – seit dem 15.11.2026 nach
     - Ist der Schalter für die Fadschr-Fassung an, kommt bei keiner Stimme ein Ton.
 
 Erledigt ohne Konto am 14.11.2026: `make archive` baut das Release-Archiv ohne Signatur, und `scripts/check-archive` findet es in Ordnung – nur iPhone (vorher iPhone und iPad, unten unter „Annahmen in der Beta-Vorbereitung“), Exportkontrolle `ITSAppUsesNonExemptEncryption = NO`, beide Manifeste, Icon, alle Texte in vier Sprachen, kein Debug-Code. Dazu die Datenschutzerklärung (`docs/DATENSCHUTZ.md`, `docs/PRIVACY.md`) und die Texte für TestFlight (`docs/APP-STORE.md`). Mit Phase 11 kamen das Platzhalter-Icon und die Datenschutz-Manifeste. Die Platzhalter – Übersetzungen der Verse, Adhan-Aufnahmen, Texte der Anleitung, Icon, Link „Quellcode“ – dürfen in der Beta bleiben; „Was testen“ nennt sie.
+
+## Änderungen vor der Golden Beta, entschieden am 24.11.2026
+
+Der Nutzer hat am 24.11.2026 entschieden, woher die Übersetzungen der Verse und der Adhan kommen. Beschreibung in Spec § 11, Bau in Phase 18.
+
+| Frage | Antwort des Nutzers | Umsetzung |
+|---|---|---|
+| Woher kommen die Übersetzungen der Verse? | „Für Übersetzung erstmal“ das Repo fawazahmed0/quran-api | Auswahl je Sprache aus dem Repo, Wortlaut mit den Quellen des Repos abgeglichen (`docs/THIRD-PARTY.md`) |
+| Ganze Verse oder Ausschnitte? | „Kurze Ausschnitte wie bisher“ | Wörtliche Ausschnitte, die dem gezeigten arabischen Teil entsprechen; „…“ steht für Ausgelassenes |
+| Welche Übersetzungen? | „Vorschlag nehmen“ | Liste in Spec § 11.1. Niederländisch weicht vom Vorschlag ab: Leemhuis statt Siregar, weil dessen Text in der Quelle Tippfehler hat |
+| Welche Adhan-Aufnahme? | Die Aufnahme von Ustadh Mmanga Muharram, „von Youtube bezogen und ist als Freilizensiert gekenzeicnet“ | Das Video von DARSA TV trägt auf YouTube die Lizenz „Creative Commons Attribution license (reuse allowed)“ (nachgesehen am 24.11.2026). Eine Aufnahme statt dreier Platzhalter-Stimmen, kein Schalter „Fadschr-Variante“ |
+
+Offen bleibt:
+
+- **Rechte an den Übersetzungen:** Die Übersetzungen gehören den Übersetzern und Verlagen. Tanzil, über das die meisten kommen, erlaubt nur nicht kommerzielle Nutzung. Für eine kostenlose App ohne Werbung passt das. Bevor „Unterstützen“ Geld annimmt, muss es geklärt sein.
+- **Durchsicht:** Die Ausschnitte sind per Skript und von zwei Hilfsagenten geprüft. Niemand mit der jeweiligen Muttersprache hat sie gelesen.
+- **Welche Verse und wie viele:** Es bleiben die sechs bisherigen. Bei einem Vers am Tag wiederholen sie sich jede Woche (Spec § 6.12).
+- **Rechte an der Aufnahme:** Die Lizenz hat der Kanal DARSA TV gesetzt, der im Video als Produzent genannt ist. Eine eigene Zusage des Muezzins liegt nicht vor.
+- **Fadschr:** Für eine Fassung mit „aṣ-ṣalātu khayrun mina n-nawm“ braucht es eine eigene Aufnahme. Bis dahin spielt Fadschr dieselbe wie die übrigen Gebete.
 
 ## Änderungen nach der ersten Beta, entschieden am 17./18.11.2026
 
@@ -101,8 +120,8 @@ Offen bzw. Annahmen:
 **Inhalte und Rechte**
 
 - **Die zwölf neuen Sprachen** (Phase 15, Spec § 9.10): FR, NL, BS, SQ, AR, UR, ID, MS, BN, FA, RU, IT sind KI-Entwürfe vom 15.11.2026. Vor dem App Store liest je Sprache jemand mit Muttersprache alle Texte durch – besonders die religiösen Begriffe, die Anleitung (`TODO(review)`), die Mehrzahlformen in `PLURAL` und die Texte, die die App selbst zusammensetzt (Zeitspannen, Countdown, „Rakʿa 1 von 4“). Im String Catalog tragen sie den Status „Needs Review“ (`needs_review`); nach der Durchsicht wird er im Prototyp-Import auf `translated` gesetzt (`draftLanguages` in `scripts/import-strings.swift`). Dazu die Store-Texte und die Datenschutzerklärung, falls die App in diesen Sprachen im Store erscheinen soll.
-- **Übersetzungen der Verse** (Phase 6, Spec § 6.12): Platzhalter mit `TODO(placeholder)` im String Catalog. Offen sind Übersetzungen mit Lizenz, die Quelle des arabischen Textes und die Auswahl der Verse.
-- **Adhan-Aufnahmen** (Phase 7, Spec § 6.5): Stimme 1 und 2 sind freie Aufnahmen von Wikimedia Commons; die Lizenzangaben (CC0 1.0, gemeinfrei) stammen von den Hochladenden. Herkunft und Rechte prüfen oder durch die endgültigen Aufnahmen ersetzen; Stimme 3 und die Fadschr-Variante fehlen.
+- **Übersetzungen der Verse** (Phase 18, Spec § 11.1): Seit dem 24.11.2026 wörtliche Ausschnitte veröffentlichter Übersetzungen, eine vorläufige Auswahl. Vor dem App Store: die Rechte klären, sobald die App Geld annimmt (Tanzil: nur nicht kommerziell), die Ausschnitte von Menschen mit Muttersprache lesen lassen und entscheiden, welche und wie viele Verse die App zeigt. Der arabische Text entspricht dem von Tanzil (CC BY 3.0, Hinweis auf der Lizenzseite).
+- **Adhan-Aufnahme** (Phase 18, Spec § 11.2): Seit dem 24.11.2026 eine Aufnahme, der Adhan von Ustadh Mmanga Muharram (DARSA TV, auf YouTube unter CC BY). Vor dem App Store: festhalten, wer die Rechte an der Aufnahme hält – am besten eine kurze schriftliche Zusage von DARSA TV oder dem Muezzin –, und entscheiden, ob es eine Fadschr-Fassung geben soll. Den Schnitt (welcher Teil des Adhan in 30 Sekunden passt) sollte jemand fachlich ansehen.
 - **Texte der Anleitung** (Phase 5, Spec § 6.14): Niemand hat sie fachlich geprüft (Imam oder Gelehrter je Sprache). Offen sind auch eine neutrale Fassung oder Varianten je Rechtsschule und für Frauen, echte Illustrationen und Audio für die Formeln. Seit Phase 13 gehören die Texte von „Gebet Schritt für Schritt“ dazu (Spec § 9.6: Start, Stehen in Rakʿa 1–2, „Sprich dreimal“, kurzes Sitzen, zweite Niederwerfung, erstes und letztes Sitzen, Schluss). Im String Catalog tragen alle 43 Texte den Kommentar `TODO(review)`; `scripts/import-strings` setzt ihn (`walkReviewKeys`, `guideReviewKeys`).
 - **Icon** (Spec § 6.9): Das Icon ist ein Platzhalter (Phase 11). Seit Phase 12 zeigen Onboarding und Tagline das App-Symbol selbst, seit Phase 14 auch Live-Aktivität und Widgets (Spec § 9.1, Bildsatz `AppMark` im DesignSystem); ändert sich das Icon, den Bildsatz neu erzeugen (Kommentar in `AppMark.swift`).
 - **Name** (Spec § 9.13): „Vaqt“ ist ein Arbeitsname (entschieden am 15.11.2026, „Vaqt als Arbeitsname (Empfohlen)“); den endgültigen Namen vor dem App Store festlegen. Im App Store gibt es schon:
@@ -464,6 +483,34 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 | Ausrichtung | „Ja, so lassen“ | nur Hochformat. Phase 10: Die Info.plist bleibt so; auf dem inneren Display des iPhone Duo zeigt iOS die App trotzdem quer und hoch (siehe „Annahmen in Phase 10“). |
 | Nachholen | „Ja, so lassen“ | Die App startet leer: kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr. `iphone/60` und `61` zeigen die Beispielzahlen des Prototyps; die gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Annahme für Phase 6: Mit `-debugFixtureTimes` zeigt die Seite sie. |
 | JAKIM und Kemenag | „Ja, so lassen“ | reine Winkel 20°/18°. Vor der Veröffentlichung gegen offizielle Tabellen zu prüfen, siehe oben. |
+
+## Annahmen in Phase 18
+
+Gebaut am 24.11.2026 auf `claude/phase-18` (ab `3733033`). Neue Referenzbilder aus dem Prototyp: `iphone/50` und `51` (Verse), `iphone/86` und `86-dark` (Adhan-Fenster).
+
+### Was mit den Referenzbildern übereinstimmt
+- **Vers-Seite** (`iphone/50`, `51`): Karte, Zeile zur Übersetzung und „Letzte Tage“ mit den neuen Texten, hell und dunkel, im Simulator neben die Referenz gelegt (`make compare-verses`). Die Zeilen brechen wie im Prototyp um.
+- **Andere Sprachen:** Auf Urdu steht „…“ am richtigen Ende der Zeile, auf Arabisch steht unter der Karte die Quelle des Verstexts und keine Übersetzung. Türkisch angesehen. Die übrigen Sprachen sind im Simulator nicht einzeln angesehen.
+- **Adhan-Fenster** (`iphone/86`): Titel, Untertitel, „0:00“ und „−0:29“ und die Zeile unter der Karte; „CC BY“ bleibt zusammen (`scripts/compare-settings 86`). Dunkel nicht eigens verglichen.
+- **Lizenzseite** (nur in der App, ohne Referenzbild): fünf Gruppen, die drei neuen sehen aus wie die bisherigen.
+
+### Annahmen in der Umsetzung
+- **Auslassungspunkte:** Der Nutzer wollte „kurze Ausschnitte wie bisher“. Damit ein Ausschnitt als solcher zu erkennen ist und am Wortlaut nichts geändert werden muss, steht „…“ für jeden ausgelassenen Teil des Verses. Großschreibung und Satzzeichen bleiben wie in der Übersetzung. Ein Ausschnitt kann deshalb klein beginnen („… und verrichte das Gebet zu Meinem Gedenken.“) oder ohne Punkt enden.
+- **Satzende:** Das Repo schneidet es ab; es stammt aus der Quelle, die das Repo nennt. Ein Komma, Semikolon, Doppelpunkt, Gedankenstrich oder Anführungszeichen direkt am Schnitt fällt weg.
+- **Niederländisch:** Leemhuis statt Siregar, weil dessen Text in der Quelle Tippfehler hat (`docs/THIRD-PARTY.md`).
+- **Status im Katalog:** Die Verse der zwölf Sprachen ab FR tragen wie alle Texte dieser Sprachen „Needs Review“, obwohl sie keine KI-Entwürfe sind. Der Kommentar am Eintrag sagt, dass sie nicht umformuliert werden.
+- **Namen der Suren** gibt es weiter nur in DE/TR/EN/ES; die übrigen Sprachen zeigen den englischen Namen.
+- **Zeile unter der Vers-Karte:** Sie nennt nur die Übersetzung der Sprache. Die ganze Quellenangabe steht auf der Lizenzseite.
+- **Adhan-Fenster:** Die Gruppe „Stimme“ entfällt, weil es nichts zu wählen gibt. Der Name steht als Titel im Player, darunter die Zeile zu Quelle und Lizenz. Das Fenster bleibt in voller Höhe.
+- **Länge:** Der Ausschnitt ist 29,5 Sekunden lang. Der Player zeigt „0:29“, abgerundet wie `fmtDur()` im Prototyp.
+- **Gespeicherte Stimme:** Die Einstellung `voice` entfällt. Ein gespeicherter Wert aus Build 4 wird beim Lesen übergangen.
+- **Wer Stimme 3 gewählt hatte,** bekam als „kurzen Adhan“ bisher den Systemton. Jetzt spielt auch dort die Aufnahme.
+- **Vorgemerkte Mitteilungen und Wecker aus Build 4** nennen noch `adhan-voice1.caf` oder `adhan-voice2.caf`. Bis die neue Fassung einmal gestartet wurde oder im Hintergrund neu plant, spielt iOS dafür voraussichtlich seinen Standardton. Das ist nicht getestet.
+- **Lizenzseite:** drei neue Einträge (Aufnahme, arabischer Text, Übersetzungen), je mit einem Hinweis im englischen Original. Dazu drei neue Texte in 16 Sprachen, die 13 ab ES als KI-Entwurf. Die Fußzeile der Seite nennt jetzt auch die Aufnahme und die Texte.
+- **Abstand unter dem Player:** `AdhanPlayerMetrics.marginBottom` ist 10 statt 30 pt, wie `.player` im Prototyp. Im Katalog (`-debugCatalog adhan`) stehen die beiden Beispielkarten deshalb enger.
+
+### Was sich im Simulator nicht prüfen lässt
+- **Ton:** Der Simulator hat hier kein Ausgabegerät. Wie der Ausschnitt klingt, wo er endet und wie laut er als Mitteilung und als Wecker ist, zeigt nur das Gerät.
 
 ## Annahmen in Phase 17
 

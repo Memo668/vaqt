@@ -11,7 +11,7 @@ Elf Phasen, jede für sich abnehmbar. Pro Phase stehen hier Ziel, Inhalt, die pa
 | Rechenbibliothek | Adhan Swift (MIT) | § 6.3 |
 | Automatische Methode | DE, AT und TR → Diyanet, ES → MWL, SA → Umm al-Qura, ID → Kemenag, US und CA → ISNA, EG → Egyptian, PK, IN, BD und AF → Karachi, MY → JAKIM, SG → Singapore, IR → Tehran, alle übrigen Länder MWL (entschieden am 10.11.2026) | § 5, § 6.1 |
 | Kerahat-Dauern | 45 / 10 / 45 Min. als Konstanten in `PrayerCore` | § 6.15 |
-| Vers-Übersetzungen, Adhan-Aufnahmen | Platzhalter, markiert mit `TODO(placeholder)` | § 6.5, § 6.12 |
+| Vers-Übersetzungen, Adhan-Aufnahme | Bis Phase 17 Platzhalter. Seit Phase 18 Ausschnitte veröffentlichter Übersetzungen (vorläufige Auswahl) und eine Aufnahme unter CC BY; Quellen in `docs/THIRD-PARTY.md` | § 6.5, § 6.12, § 11 |
 | Varianten | jeweils die erste Option aus § 7 | § 7 |
 
 ---
@@ -326,3 +326,14 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 - AlarmKit (iOS 26): Erlaubnis beim ersten Einschalten, täglicher Wecker „Vor Sonnenaufgang“ (Minuten) oder zu einer festen Uhrzeit (höchstens 5 Minuten vor Sonnenaufgang). Neu berechnen, wenn sich Zeiten, Ort oder Einstellungen ändern.
 - Einstellungsseite mit Schalter, Auswahl und Stepper. Chip mit Weckzeit in der Fadschr-Zeile.
 - Texte in 16 Sprachen, Tests für die Weckzeit (PrayerCore), Prüfung am Gerät (Stummmodus, Fokus).
+
+## Phase 18 – Verse und Adhan
+
+*Grundlage: Spec v0.10 § 11, entschieden am 24.11.2026 (`docs/OPEN-QUESTIONS.md`, „Änderungen vor der Golden Beta“). Danach Build 0.1.0 (5) für die Golden Beta am 26.11.2026.*
+
+*Gebaut am 24.11.2026 auf `claude/phase-18`, 1059 Tests grün, geprüft im Simulator gegen `iphone/50`, `51` und `86`. Annahmen in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 18“). Die Abnahme und die Hörprobe am Gerät stehen aus.*
+
+- Verse: je Sprache ein wörtlicher Ausschnitt einer veröffentlichten Übersetzung statt der Platzhalter. Die Auswahl kommt aus fawazahmed0/quran-api, der Wortlaut ist mit Tanzil und QuranEnc abgeglichen. Unter der Karte steht der Name der Übersetzung. `scripts/import-strings` bricht ab, wenn einem Vers eine Sprache fehlt.
+- Adhan: eine Aufnahme (Ustadh Mmanga Muharram, DARSA TV, CC BY) statt dreier Platzhalter-Stimmen, als Ausschnitt von 29,5 Sekunden für Mitteilungen, Wecker und Player. Stimmenliste, Schalter „Fadschr-Variante“ und die Einstellung `voice` entfallen (`AdhanRecording` in PrayerCore).
+- Lizenzseite: Aufnahme, arabischer Verstext (Tanzil) und Übersetzungen mit Quelle und Bedingungen. Alles dazu steht in `docs/THIRD-PARTY.md`.
+- Referenzbilder `iphone/50`, `51` und `86` neu aus dem Prototyp, `86` jetzt auch dunkel.

@@ -4,7 +4,7 @@ Gemeinnützige Gebetszeiten-App: werbefrei, ohne Tracking, ohne Konto. Name unte
 
 ## Quellen der Wahrheit
 
-1. `design/prayer-times-design-spec.md` – Design Spec v0.9: Tokens, Komponenten, Verhalten, Zustände, iPhone Duo (§ 8), offene Fragen (§ 6), Varianten (§ 7), Änderungen vor der Beta (§ 9) und nach der ersten Beta (§ 10).
+1. `design/prayer-times-design-spec.md` – Design Spec v0.10: Tokens, Komponenten, Verhalten, Zustände, iPhone Duo (§ 8), offene Fragen (§ 6), Varianten (§ 7), Änderungen vor der Beta (§ 9), nach der ersten Beta (§ 10) und vor der Golden Beta (§ 11).
 2. `design/screenshots/` – Referenzbilder je Bildschirm und Zustand. Übersicht: `design/screenshots/INDEX.md`. Seit Spec v0.8 nimmt `scripts/capture-prototype` sie aus dem Prototyp auf.
 3. `design/prayer-times-prototype.html` – Quelltext des Prototyps (~2 400 Zeilen, nicht komplett einlesen, gezielt suchen):
    - Tokens: `:root`-CSS am Anfang (Farben hell/dunkel, Abstände, Radien, Schriftgrößen)
@@ -20,7 +20,7 @@ Werte und Formeln von dort übernehmen, nicht schätzen. Bei Widerspruch gilt: S
 - Das Prototyp-Panel links (Simulation, Varianten-Schalter) ist nur Werkzeug. Von den Varianten gilt immer die Standardwahl aus Spec § 7.
 - Die Mock-Zeiten (`CITIES`, `BERLIN_SUMMER`) – die App rechnet echt. Die Mock-Zeiten dienen nur als Test-Fixture (siehe Debug).
 - CSS-Nachbauten von Systemelementen (Statusleiste, Dynamic Island, Liquid Glass, Alerts, Sheets) – dafür echte iOS-APIs.
-- Platzhalter-Übersetzungen der Verse und Adhan-Stimmen bleiben als `TODO(placeholder)` markiert und gehen so nicht in den App Store.
+- Die Übersetzungen der Verse sind seit Phase 18 wörtliche Ausschnitte veröffentlichter Übersetzungen (Spec § 11.1): nicht umformulieren, nicht kürzen, keine eigenen Übersetzungen ergänzen. Neue Verse brauchen denselben Abgleich mit der Quelle (`docs/THIRD-PARTY.md`).
 
 ## Technik
 
@@ -29,9 +29,9 @@ Werte und Formeln von dort übernehmen, nicht schätzen. Bei Widerspruch gilt: S
   - `PrayerCore` – reine Logik ohne UI: Berechnung, Tagesphase, Kerahat, Qibla, Hijri, Nachholen, Daten der Anleitung. Unit-Tests sind Pflicht.
   - `DesignSystem` – Tokens (Palette, Layout, Typography), Glass-Bausteine, `DayArc`, Karten.
   - `Features` – Bildschirme: Today, Qibla, Guide, Verses, Qada, Settings, Onboarding.
-- Einzige Fremdabhängigkeit: **Adhan Swift** (MIT) für die Gebetszeiten. Dazu eingebettet die Schriften **Amiri** und **Amiri Quran** (SIL OFL 1.1, seit Phase 13); Herkunft, Versionen und Prüfsummen in `docs/THIRD-PARTY.md`, Lizenzen in der App unter Einstellungen › Über › Lizenzen. Keine Analytics, keine Crash-Reporter von Dritten, kein eigener Server. Netzwerk nur über Apple-Dienste (Ortssuche, Geocoding).
+- Einzige Fremdabhängigkeit: **Adhan Swift** (MIT) für die Gebetszeiten. Dazu eingebettet die Schriften **Amiri** und **Amiri Quran** (SIL OFL 1.1, seit Phase 13); Seit Phase 18 kommen fremde Inhalte dazu (Spec § 11): die Adhan-Aufnahme von DARSA TV (CC BY), der arabische Verstext nach Tanzil (CC BY 3.0) und die Ausschnitte der Vers-Übersetzungen (vorläufige Auswahl, bei Tanzil nur für nicht kommerzielle Zwecke). Herkunft, Versionen, Bedingungen und Prüfsummen in `docs/THIRD-PARTY.md`, Lizenzen und Hinweise in der App unter Einstellungen › Über › Lizenzen. Keine Analytics, keine Crash-Reporter von Dritten, kein eigener Server. Netzwerk nur über Apple-Dienste (Ortssuche, Geocoding).
 - Daten bleiben auf dem Gerät (`@AppStorage`/UserDefaults, auch für das Nachholen – entschieden am 12.11.2026 statt SwiftData). App Group für Widgets und Live Activity.
-- Texte: String Catalog `Localizable.xcstrings` mit 16 Sprachen (DE, TR, EN, ES, FR, NL, BS, SQ, AR, UR, ID, MS, BN, FA, RU, IT; Spec § 9.10), erzeugt aus `T` – dazu die Platzhalter der Verse aus `VERSES` und `SURAH` und die Mehrzahlformen aus `PLURAL` (seit Phase 15). Die zwölf Sprachen ab FR sind KI-Entwürfe („Needs Review“ im Katalog). AR, UR und FA laufen von rechts nach links; Ziffern und Kalender wie das System der Region (Spec § 9.10). Keine fest verdrahteten Texte.
+- Texte: String Catalog `Localizable.xcstrings` mit 16 Sprachen (DE, TR, EN, ES, FR, NL, BS, SQ, AR, UR, ID, MS, BN, FA, RU, IT; Spec § 9.10), erzeugt aus `T` – dazu die Übersetzungen der Verse aus `VERSES`, die Namen der Suren aus `SURAH` und die Mehrzahlformen aus `PLURAL` (seit Phase 15). Die zwölf Sprachen ab FR sind KI-Entwürfe („Needs Review“ im Katalog). AR, UR und FA laufen von rechts nach links; Ziffern und Kalender wie das System der Region (Spec § 9.10). Keine fest verdrahteten Texte.
 - Systemkomponenten bevorzugen: `TabView`, `NavigationStack`, `.glassEffect`, `GlassEffectContainer`, `.buttonStyle(.glass)`, `.searchable`, `.sheet`, `Text(timerInterval:)`, `Calendar(identifier: .islamicUmmAlQura)`. Eigene Leisten nur dort, wo die Spec sie verlangt (Chips oben im Gebete-Tab).
 - Barrierefreiheit wie in der Spec: Dynamic Type bis AX, VoiceOver-Labels, 44-pt-Tippziele, Reduce Motion, Farbe nie als einziges Signal.
 

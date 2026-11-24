@@ -9,6 +9,8 @@ Wenn nichts anderes steht: Deutsch, hell, Berlin, 14:25 (Asr aktiv).
 
 **Spec v0.9 (18.11.2026, § 10):** Neu aufgenommen sind die Bilder, deren Texte oder Aussehen sich geändert haben. Das sind „Verbotszeit“ mit Infopunkt, die längeren Abschnitte im Bogen, Onboarding und Datenschutztexte, der Rechner mit „Für wen?“ und „Alles zurücksetzen“, die Live-Aktivität mit 30 % und das Widget „Live“: `iphone/01`–`04`, `10`–`23`, `30`–`34`, `40`–`50`, `60`, `61`, `70`–`75`, `system/90`–`96`. Im Prototyp scheint das Widget „Live“ mit 30 % durch; in der App bleibt es deckend (`docs/OPEN-QUESTIONS.md`, „Annahmen in Phase 16“).
 
+**Spec v0.10 (24.11.2026, § 11):** Neu aufgenommen sind `iphone/50` und `51` (Verse mit den Ausschnitten veröffentlichter Übersetzungen, darunter der Name der Übersetzung) und `iphone/86` (Adhan-Fenster mit einer Aufnahme statt dreier Stimmen, neu auch dunkel). `duo/closed-50` und `duo/open-50` sind weiter von v0.7 und zeigen noch die früheren Platzhaltertexte; sie gelten nur für die Anordnung.
+
 **Nachtrag 16.11.2026 (Spec § 9.14):** Der Sonnenaufgang steht als Punkt im Bogen, gleich groß wie die Gebete. Neu aufgenommen sind deshalb `iphone/10`–`23` sowie `system/90`, `91`, `93`, `94` und `96`. Die Bilder unter `duo/*` sind weiter von v0.7 und zeigen den Bogen noch ohne Sonnenaufgang.
 
 **Phase 14 (15.11.2026):** `system/90`–`96` aus dem Prototyp v0.8 neu (Ansichten `widgets`, `live` und die der Mitteilungen; `screen` in `capture-prototype.mjs` wählt den Bildschirm): Rechteck mit Mini-Bogen, Widget „Live“ über dem mittleren, Kerahat auf der Spur der Live-Aktivität, App-Symbol im Kopf und in den Mitteilungen. Wegen des Namens „Vaqt“ (Spec § 9.13) neu: `04` (Dialog des Systems, jetzt auch aus dem Prototyp), `05`, `71`, `72`, `83` (Texte mit `{app}`). Nach dem Änderungswunsch zum Rechteck (Stil der Live-Aktivität, Spec § 9.11) noch einmal neu: `90`, `93`, `96`.
@@ -96,7 +98,7 @@ Vollbild über der Anleitung; `-debugWalk dhuhr -debugWalkStep N` mit `N` wie `S
 
 | Datei | Zeigt |
 |---|---|
-| `iphone/50-verses.png` | Verse tab: verse of the day + last days |
+| `iphone/50-verses.png` | Verse tab: verse of the day + last days; excerpts of published translations, translation named under the card (§ 11.1) |
 | `iphone/51-verses-dark.png` | Verse tab dark |
 
 ## Nachholen – Phase 6
@@ -139,7 +141,8 @@ Vollbild über der Anleitung; `-debugWalk dhuhr -debugWalkStep N` mit `N` wie `S
 | Datei | Zeigt |
 |---|---|
 | `iphone/85-sheet-city.png` | City sheet (.large, searchable) |
-| `iphone/86-sheet-adhan.png` | Adhan player sheet |
+| `iphone/86-sheet-adhan.png` | Adhan player sheet: one recording, source and licence under the player (§ 11.2) |
+| `iphone/86-sheet-adhan-dark.png` | Same in dark mode |
 
 ## Widgets, Mitteilungen, Live-Aktivität – Phase 8 + 9, v0.8 in Phase 14
 

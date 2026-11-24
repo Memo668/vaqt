@@ -1,4 +1,4 @@
-# Prayer Times (iOS) – Design Spec v0.9
+# Prayer Times (iOS) – Design Spec v0.10
 
 Handoff for building the native SwiftUI app. The visual reference is `prayer-times-prototype.html` (single file, open it in a browser). Design tokens are in its `:root` CSS, every string is in the JS object `T` (16 languages since v0.8, § 9.10), mock data is in `CITIES` / `BERLIN_SUMMER` / `METHODS`, and the app state model is `S`.
 
@@ -101,7 +101,7 @@ Countdown: 64 pt thin, `monospacedDigit()`, `@ScaledMetric` capped at ×1.05 (×
 | HUD toast | Glass capsule above the home indicator (the top is now taken by the bar), about 1.7 s. |
 | Banner / note / hint pill | Location denied (banner + "Change"), high latitude (note card + link), offline (small pill). |
 | Compass | Dial with 5° ticks, upright cardinal labels, N in red, accent Qibla needle + Kaaba marker, fixed lubber line. Aligned within ±3° → accent + `.success` haptic. |
-| Adhan player | Title (voice), waveform (played part in accent), scrubber, 72 pt play/pause, voice list (placeholders), Fajr variant toggle. |
+| Adhan player | Title (name of the muezzin), waveform (played part in accent), scrubber, 72 pt play/pause; under the card a footnote with the source and licence of the recording. Until v0.9 also a voice list (placeholders) and a Fajr variant toggle; both removed in § 11.2. |
 | Widgets | systemSmall (next prayer + timer) · systemMedium (next + all six times, next highlighted) · accessoryCircular (Gauge from previous → next) · accessoryRectangular (next, timer, following) · accessoryInline (icon + "Asr 14:00"). |
 | Live Activity | ActivityKit + WidgetKit extension. **Lock Screen** (≤ 160 pt): accent background (`activityBackgroundTint`, light accent in both modes), header app glyph + name / city, the day arc in white (7 pt track, 21 pt markers, Kerahat marks in warm yellow), inside the arc "Maghrib · 16:27" and the countdown (30 pt rounded bold, `Text(timerInterval:)`). **Dynamic Island compact**: leading prayer symbol, trailing countdown, both in the dark accent. **Minimal**: prayer symbol in a progress ring. **Expanded**: leading symbol + time, trailing city, caption "Maghrib in", countdown 38 pt, bar from the previous event to the next with the Kerahat window as a 2 pt line under the bar, ends labelled ("Asr 14:00" / "Maghrib 16:27"). No buttons. |
 | Notifications | Title "Dhuhr · 13:12", body "It's time for Dhuhr in Berlin." Reminder: "Dhuhr in 10 minutes". |
@@ -157,14 +157,14 @@ Automatic method per country (proposal): DE → MWL, TR → Diyanet, ES → MWL,
 2. High-latitude default rule: angle-based (proposal) vs. 1/7 of the night.
 3. Calculation library: own implementation or an open-source library (e.g. Adhan Swift, MIT)? It must stay offline and tracking-free.
 4. iOS allows at most 64 pending local notifications → schedule a rolling window of about 9–10 days, refresh on app launch / background refresh.
-5. Adhan recordings: source, licence, number of voices; full Adhan in-app or only the 30 s clip?
+5. Adhan recordings: source, licence, number of voices; full Adhan in-app or only the 30 s clip? → Decided 24.11.2026: one recording, the clip of at most 30 s (§ 11.2). A Fajr version is still open.
 6. Time-sensitive notifications (break through Focus)? Needs the entitlement and a justification for review.
 7. Hijri date: Umm al-Qura calendar vs. local moon sighting; ±1 day correction setting?
 8. Passed rows now use textSecondary `#6C6C70` (4.7 : 1). Is that enough dimming, or should passed rows get an extra marker?
 9. Brand: app name per language and app icon (the crescent in the prototype is a placeholder).
 10. Minimum iOS version: the top bar uses `glassEffect`, `GlassEffectContainer` and `.buttonStyle(.glass)` (iOS 26). Deployment target iOS 26, like Projekt-Health?
 11. Share a small design package with Projekt-Health (tokens, top bar, card radius 26), or keep the two apps independent?
-12. Verses: which translations, with which licence (e.g. DE Bubenheim/Elyas, TR Diyanet meali, EN Sahih International, ES Isa García)? The prototype uses placeholder translations. Arabic text source (e.g. Tanzil, Uthmani script) with attribution. Who picks the verses (fixed curated list vs. rotation)?
+12. Verses: which translations, with which licence (e.g. DE Bubenheim/Elyas, TR Diyanet meali, EN Sahih International, ES Isa García)? The prototype uses placeholder translations. Arabic text source (e.g. Tanzil, Uthmani script) with attribution. Who picks the verses (fixed curated list vs. rotation)? → Provisional decision 24.11.2026: verbatim excerpts of published translations, Arabic text in the spelling of Tanzil (§ 11.1). Which verses and how many is still open.
 13. Qada: count a year as 365 (solar) or 354 (lunar) days? Witr default on for Hanafi users? Reminder to make up prayers (e.g. after each prayer)? Should it be possible to hide the area entirely?
 14. Prayer guide: who reviews the texts (imam / scholar per language)? One neutral version, or variants per school (Hanafi, Shafiʿi …) and for women? Real illustrations instead of line pictograms? Audio for the formulas?
 15. Kerahat durations: the prototype uses 45 / 10 / 45 min (common Turkish practice). Sources differ for the zenith window (about 10 min vs. 45 min before Dhuhr) and other schools use shorter windows after sunrise (≈ 15–20 min). Fixed values, per method/school, or editable minutes? Name per language (DE "Kerahat", TR "Kerahat", EN/ES "Makruh")?
@@ -345,7 +345,7 @@ The coordinates are rounded to 0.01° before they are stored or sent (in the app
   - When on, the choice "Vor Sonnenaufgang" (default; minutes 10–120, step 5, default 45) or "Feste Uhrzeit" (step 5 min, 03:00 to sunrise − 5).
   - A fixed time rings at most 5 min before sunrise.
   - The footers explain the daily ring, silent mode and Focus, and how the two modes differ.
-  - **Sound** (added 18.11.2026 with the Phase 17 plan): a group "Klang" with "Systemton" (default, the iOS alarm sound) or "Kurzer Adhan" (the voice chosen in the adhan sheet; at Fajr its Fajr version once there is a recording). Footer `alarmSoundFooter`.
+  - **Sound** (added 18.11.2026 with the Phase 17 plan): a group "Klang" with "Systemton" (default, the iOS alarm sound) or "Kurzer Adhan" (since v0.10 the one adhan recording, § 11.2; before that the voice chosen in the adhan sheet). Footer `alarmSoundFooter`.
   - **Permission denied:** the switch stays off and cannot be turned on; below it "iOS-Einstellungen öffnen", footer `alarmDeniedFooter`. The settings row and the chip then show "Aus" or nothing.
 - **Alarm alert:** title "Wecker zu Fadschr" (`alarmRow`), one button "Stopp" (`alarmStop`), no snooze (decided 18.11.2026). Reason in the system dialog: `alAlarmBody`.
 - **Today screen:** The Fajr row shows a small chip with a clock glyph and today's ring time.
@@ -356,7 +356,34 @@ The coordinates are rounded to 0.01° before they are stored or sent (in the app
 
 ---
 
+## 11. Changes before the Golden Beta (v0.10, decided 24.11.2026)
+
+Decided by the product owner on 24.11.2026, built in Phase 18.
+
+### 11.1 Verses: excerpts of published translations
+- **Arabic text:** unchanged. Each of the six verses shows a part of the verse in the Uthmani spelling of the Tanzil project (tanzil.net).
+- **Translation:** no longer a placeholder. Every language except Arabic shows a **verbatim excerpt** of one published translation, cut to the part of the verse that the Arabic shows. Arabic shows the verse alone.
+  - "…" marks a left-out part of the verse, before or after the excerpt. It is tied to the text with a no-break space so that it never wraps alone.
+  - A comma, semicolon, colon, dash or quotation mark directly at the cut is dropped. Nothing else is changed and nothing is reworded.
+- **Translations** (chosen from the collection fawazahmed0/quran-api; provisional): DE Bubenheim and Elyas · TR Türkiye Diyanet Vakfı · EN Saheeh International · ES Muhammad Isa García · FR Muhammad Hamidullah · NL Fred Leemhuis · BS Besim Korkut · SQ Sherif Ahmeti · UR Fateh Muhammad Jalandhari · ID Kementerian Agama RI · MS Abdullah Muhammad Basmeih · BN Muhiuddin Khan · FA Mohammad Mahdi Fooladvand · RU Elmir Kuliev · IT Hamza Roberto Piccardo.
+- **Footnote under the verse card** (`verseSource`): names the translation of the language, e.g. "Übersetzung: Bubenheim und Elyas". In Arabic it names the source of the verse text.
+- **No network:** the texts are bundled with the app; nothing is loaded at run time.
+- **Licences page:** the Arabic text and the translations are listed with their sources (Einstellungen › Über › Lizenzen).
+- **Still open:** which verses the app shows in the long run and how many (§ 6.12); the rights to the translations once the app takes money. Most of them come via Tanzil, whose terms allow non-commercial use with a link back. Sources, editions and terms: `docs/THIRD-PARTY.md`.
+- Reference: `iphone/50-verses`, `iphone/51-verses-dark`.
+
+### 11.2 Adhan: one recording
+- **Removed:** the three placeholder voices with their unverified place names (Makkah, Madinah, Istanbul), the voice list and the switch "Fadschr-Variante". Strings `voice`, `voiceN`, `fajrVariant` and `fajrVariantFooter` are gone.
+- **The recording:** the adhan of **Ustadh Mmanga Muharram**, recorded by DARSA TV (Tanzania) and published on YouTube under the Creative Commons Attribution licence. The app uses a cut of at most 30 seconds, the limit of iOS for notification sounds. Notifications, the Fajr alarm ("Kurzer Adhan") and the player all play this cut.
+- **Adhan sheet:** title "Adhan". The player card shows the name as title and "Kurzer Adhan · für Mitteilungen" as subtitle, then waveform, scrubber and play/pause. Under the card the footnote `voiceFooter`: "Aufnahme: DARSA TV, Tansania (gekürzt). Lizenz: CC BY."
+- **Fajr:** plays the same recording as the other prayers. A Fajr version with "aṣ-ṣalātu khayrun mina n-nawm" needs a recording of its own and is not part of this change.
+- **Licences page:** the recording is listed with title, source, licence and the changes made.
+- Reference: `iphone/86-sheet-adhan`, `iphone/86-sheet-adhan-dark`. Source, licence and the cut: `docs/THIRD-PARTY.md`.
+
+---
+
 ## Changelog
+- **v0.10 (24.11.2026):** Changes before the Golden Beta (§ 11): verse translations as verbatim excerpts of published translations in 15 languages, with the translation named under the card; one adhan recording (Ustadh Mmanga Muharram, DARSA TV, CC BY) instead of three placeholder voices, no Fajr variant switch.
 - **v0.9 (18.11.2026):** Changes after the first beta (§ 10): "Verbotszeit" in German and longer kerahat windows on the arc, info sheet on prohibited times, Live Activity at 30 % with orange prohibited time and compact ended activities (newest on top), Live widget at 30 %, new onboarding title, location and Live Activity hints, honest privacy texts, qada for men and women with reset, Fajr alarm (Phase 17), share link to TestFlight.
   - *Addendum 18.11.2026 (Phase 17 plan):* the alarm sound is a choice of system sound or short adhan; denied permission keeps the switch off with a link to iOS Settings; the alert has only "Stopp", no snooze (§ 10.8).
 - **v0.8, addendum 4 (16.11.2026):** sunrise as a marker on the day arc, same look as the prayers, everywhere the arc appears (§ 9.14).
