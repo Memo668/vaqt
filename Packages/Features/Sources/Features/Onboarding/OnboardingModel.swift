@@ -96,6 +96,13 @@ final class OnboardingModel {
         showFree()
     }
 
+    /// Wischen zu einer anderen Seite (Spec § 11.5): fragt nichts ab, wie „Überspringen“. Das `TabView` lässt
+    /// nur die Nachbarseiten zu; die letzte Seite schließt nur ihr Knopf.
+    func swipe(to step: OnboardingStep) {
+        guard navigation.onboardingStep != nil, step != self.step else { return }
+        navigation.onboardingStep = step
+    }
+
     /// „Später“ und „Überspringen“ (`ob-free`): zu Schritt 4, ohne zu fragen.
     func showFree() {
         navigation.onboardingStep = .free

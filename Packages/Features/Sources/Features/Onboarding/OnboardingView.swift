@@ -1,12 +1,14 @@
 import DesignSystem
 import SwiftUI
 
-/// Das Onboarding beim ersten Start: vier Seiten mit Punkten darunter und den Knöpfen des Schritts –
+/// Das Onboarding beim ersten Start: die Seiten mit Punkten darunter und den Knöpfen des Schritts –
 /// `onboardingHTML()` im Prototyp.
 ///
-/// Die Seiten wechseln nur über die Knöpfe, wie im Prototyp: So lässt sich der Vorab-Bildschirm für den
-/// Standort nicht wegwischen, ohne zu antworten. Die neue Seite schiebt sich von der Seite des
-/// Zeilenendes herein; bei „Bewegung reduzieren“ blendet sie über.
+/// Seit dem Nachtrag zu Phase 18 (Spec § 11.5) wechseln die Seiten auch per Wischen: nach links eine vor,
+/// nach rechts eine zurück, im Arabischen gespiegelt. Am Anfang und am Ende federt die Seite zurück; die
+/// letzte schließt nur der Knopf. Wie „Überspringen“ fragt das Wischen keine Erlaubnis ab. Dafür sind die
+/// Seiten ein `TabView` im Seitenstil, wie es der Prototyp für die App vorsieht. Die Knöpfe schieben die
+/// nächste Seite herein; bei „Bewegung reduzieren“ wechselt sie ohne Bewegung.
 struct OnboardingView: View {
     let model: OnboardingModel
 
@@ -17,28 +19,20 @@ struct OnboardingView: View {
     var body: some View {
         VStack(spacing: 0) {
             topBar
-            // Die Seite steht mittig; reicht der Platz nicht – bei sehr großer Schrift –, scrollt sie, und
-            // Punkte und Knöpfe bleiben unten stehen.
-            GeometryReader { proxy in
-                ScrollView {
-                    ZStack {
-                        page(model.step)
-                            .id(model.step)
-                            .transition(reduceMotion ? .opacity : .push(from: .trailing))
-                    }
-                    .frame(maxWidth: .infinity, minHeight: proxy.size.height)
+            TabView(selection: Binding(get: { model.step }, set: model.swipe(to:))) {
+                ForEach(OnboardingStep.allCases, id: \.self) { step in
+                    scrollingPage(step)
+                        .tag(step)
                 }
-                .scrollBounceBehavior(.basedOnSize)
-                .scrollIndicators(.automatic)
             }
+            .tabViewStyle(.page(indexDisplayMode: .never))
             .padding(.bottom, OnboardingMetrics.pageBottom)
-            .clipped()
             PageDots(count: OnboardingStep.allCases.count, current: model.step.rawValue)
             actions
         }
         .background(Palette.background.ignoresSafeArea())
         .tint(Palette.accent)
-        .animation(reduceMotion ? .easeInOut(duration: 0.2) : .spring(duration: OnboardingMetrics.pageDuration), value: model.step)
+        .animation(reduceMotion ? nil : .spring(duration: OnboardingMetrics.pageDuration), value: model.step)
         // Das Stadt-Sheet hängt an der Wurzel der App; ist es zu, entscheidet das Modell, wie es weitergeht.
         .onChange(of: model.today.isCitySheetPresented) { _, isPresented in
             if !isPresented {
@@ -69,6 +63,19 @@ struct OnboardingView: View {
         .padding(.horizontal, OnboardingMetrics.topBarInsetX)
         // Mindestens 44 pt; bei sehr großer Schrift wächst die Leiste mit „Überspringen“.
         .frame(minHeight: OnboardingMetrics.topBarHeight)
+    }
+
+    /// Die Seite steht mittig; reicht der Platz nicht – bei sehr großer Schrift –, scrollt sie, und Punkte und
+    /// Knöpfe bleiben unten stehen.
+    private func scrollingPage(_ step: OnboardingStep) -> some View {
+        GeometryReader { proxy in
+            ScrollView {
+                page(step)
+                    .frame(maxWidth: .infinity, minHeight: proxy.size.height)
+            }
+            .scrollBounceBehavior(.basedOnSize)
+            .scrollIndicators(.automatic)
+        }
     }
 
     @ViewBuilder

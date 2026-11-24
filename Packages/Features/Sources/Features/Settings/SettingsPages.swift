@@ -40,7 +40,8 @@ struct SettingsDestination: View {
 
 // MARK: - Startseite
 
-/// Die Einstellungen: Standort, Berechnung, Mitteilungen, Darstellung, Unterstützen, Über (`PAGES.settings`).
+/// Die Einstellungen: Standort, Darstellung, Berechnung, Mitteilungen, Unterstützen, Über (`PAGES.settings`).
+/// Seit dem Nachtrag zu Phase 18 steht „Darstellung“ über „Berechnung“ (Spec § 11.4).
 struct SettingsPage: View {
     @Environment(SettingsModel.self) private var model
     @Environment(FajrAlarmModel.self) private var alarm
@@ -50,9 +51,9 @@ struct SettingsPage: View {
     var body: some View {
         List {
             locationSection
+            appearanceSection
             calculationSection
             notificationSection
-            appearanceSection
             supportSection
             aboutSection
         }
@@ -434,7 +435,8 @@ struct LeadTimePage: View {
     }
 }
 
-/// Einstellungen › Klang, darunter „Adhan anhören“ (`PAGES.sound`).
+/// Einstellungen › Klang, darunter „Adhan anhören“ (`PAGES.sound`). Nur der Standardton von iOS, keine Liste
+/// von Tönen: Bei „Systemton“ sagt die Fußzeile, wo man ihn in iOS wählt (Spec § 11.3).
 struct SoundPage: View {
     @Environment(SettingsModel.self) private var model
 
@@ -448,13 +450,18 @@ struct SoundPage: View {
                     .listRowMetrics()
                 }
             } footer: {
-                ListSectionFooter(L10n.soundFooter)
+                ListSectionFooter(Self.footer(for: model.settings.notifications.sound))
             }
             Section {
                 ListLinkRow(L10n.previewAdhan, systemImage: "waveform", action: model.openAdhan)
                     .listRowMetrics()
             }
         }
+    }
+
+    /// Fußzeile der Wahl: bei „Systemton“ mit dem Satz, wo man den Ton in iOS wählt (`soundSystemFooter`).
+    static func footer(for sound: NotificationSound) -> String {
+        sound == .system ? L10n.soundFooter + " " + L10n.soundSystemFooter : L10n.soundFooter
     }
 }
 
