@@ -45,7 +45,7 @@ public struct NotificationPlanner: Sendable {
     ///   - cityName: Name des Ortes im Text („Zeit für Dhuhr in Berlin.“).
     ///   - settings: Methode, Asr, Regel für hohe Breiten, Minutenkorrekturen.
     ///   - bells: Stand der Glocke je Ereignis; fehlt einer, gilt seine Voreinstellung.
-    ///   - preferences: Vorab-Erinnerung, Klang und Stimme.
+    ///   - preferences: Vorab-Erinnerung und Klang.
     public func plan(
         at now: Date, place: Place, cityName: String, settings: CalculationSettings,
         bells: [Prayer: BellState], preferences: NotificationPreferences

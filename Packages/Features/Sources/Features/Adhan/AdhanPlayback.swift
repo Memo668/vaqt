@@ -18,33 +18,19 @@ protocol AdhanPlayback: AnyObject {
     func stop()
 }
 
-/// Welche Aufnahme eine Stimme hat – `VOICES` im Prototyp, mit Platzhaltern.
-///
-/// TODO(placeholder): Stimme 1 und 2 spielen freie Aufnahmen von Wikimedia Commons (App/Sounds,
-/// scripts/adhan-clip.swift); Stimme 3 und die Fadschr-Varianten haben keine und laufen stumm wie im
-/// Prototyp, 27 bzw. 30 Sekunden (`adhanDur()`). Spec § 6.5 ist offen.
+/// Die Aufnahme des Adhan im Player – `ADHAN_VOICE` im Prototyp (Spec § 11.2). Es ist dieselbe Datei, die
+/// Mitteilungen und Wecker spielen (`AdhanRecording` in PrayerCore).
 enum AdhanClips {
 
-    /// Name der Datei im Bundle der App, ohne Endung; `nil`, wenn es keine Aufnahme gibt. Dieselben
-    /// Aufnahmen spielen die Mitteilungen (`AdhanVoice.clipResource(fajrVariant:)` in PrayerCore).
-    static func resource(for voice: AdhanVoice, fajrVariant: Bool) -> String? {
-        voice.clipResource(fajrVariant: fajrVariant)
-    }
-
-    /// Länge des stummen Ablaufs ohne Aufnahme (`adhanDur()`): 27 Sekunden, die Fadschr-Variante 30.
-    static func silentDuration(fajrVariant: Bool) -> TimeInterval {
-        fajrVariant ? 30 : 27
-    }
-
-    /// Die Wiedergabe einer Stimme: ihre Aufnahme aus dem Bundle der App, sonst stumm.
+    /// Die Wiedergabe der Aufnahme aus dem Bundle der App. Fehlt die Datei oder lässt sie sich nicht
+    /// öffnen – etwa im Bundle der Tests –, läuft der Player stumm über ihre Länge (`adhanDur()`).
     @MainActor
-    static func playback(for voice: AdhanVoice, fajrVariant: Bool, bundle: Bundle = .main) -> any AdhanPlayback {
-        if let name = resource(for: voice, fajrVariant: fajrVariant),
-           let url = bundle.url(forResource: name, withExtension: "caf"),
+    static func playback(bundle: Bundle = .main) -> any AdhanPlayback {
+        if let url = bundle.url(forResource: AdhanRecording.clipResource, withExtension: AdhanRecording.clipExtension),
            let playback = AudioClipPlayback(url: url) {
             return playback
         }
-        return SilentPlayback(duration: silentDuration(fajrVariant: fajrVariant))
+        return SilentPlayback(duration: AdhanRecording.clipDuration)
     }
 }
 

@@ -14,7 +14,7 @@ public enum FajrAlarmMode: String, CaseIterable, Codable, Sendable {
 public enum FajrAlarmSound: String, CaseIterable, Codable, Sendable {
     /// Der Weckton von iOS.
     case system
-    /// Der kurze Adhan der gewählten Stimme, zu Fadschr ihre Fadschr-Fassung, sobald es eine Aufnahme gibt.
+    /// Der kurze Adhan – dieselbe Aufnahme wie bei den Mitteilungen (`AdhanRecording`).
     case adhan
 }
 

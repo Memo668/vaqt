@@ -89,9 +89,13 @@ const STATES = [
   { file: 'iphone/49-walk-done', at: hm(14, 25), s: { ...home, tab: 'guide', walk: { p: 'dhuhr', i: 29, dir: 1 } } },
   { file: 'iphone/49-walk-done-dark', dark: true, at: hm(14, 25), s: { ...home, tab: 'guide', walk: { p: 'dhuhr', i: 29, dir: 1 } } },
 
-  // Verse – Phase 6
+  // Verse – Phase 6; seit Phase 18 mit den Ausschnitten veröffentlichter Übersetzungen (Spec § 11.1)
   { file: 'iphone/50-verses', at: hm(14, 25), s: { ...home, section: 'verses' } },
   { file: 'iphone/51-verses-dark', dark: true, at: hm(14, 25), s: { ...home, section: 'verses' } },
+
+  // Adhan – Phase 7; seit Phase 18 eine Aufnahme statt dreier Platzhalter-Stimmen (Spec § 11.2)
+  { file: 'iphone/86-sheet-adhan', at: hm(14, 25), s: { ...home, stack: { settings: ['settings', 'sound'] }, sheet: 'adhan' } },
+  { file: 'iphone/86-sheet-adhan-dark', dark: true, at: hm(14, 25), s: { ...home, stack: { settings: ['settings', 'sound'] }, sheet: 'adhan' } },
 
   // Nachholen – Phase 6, Änderung 7 (Rechner ganz unten)
   { file: 'iphone/60-qada', at: hm(14, 25), s: { ...home, section: 'qada' } },

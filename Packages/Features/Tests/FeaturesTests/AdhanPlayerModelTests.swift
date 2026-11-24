@@ -4,7 +4,8 @@ import PrayerCore
 import Testing
 @testable import Features
 
-/// Der Adhan-Player verhält sich wie `S.adhan`, `adhanStep()` und die Aktionen des Prototyps.
+/// Der Adhan-Player verhält sich wie `S.adhan`, `adhanStep()` und `adhan-toggle` im Prototyp; er spielt die
+/// eine Aufnahme der App (Spec § 11.2).
 @MainActor
 @Suite("Adhan-Player")
 struct AdhanPlayerModelTests {
@@ -38,63 +39,46 @@ struct AdhanPlayerModelTests {
         }
     }
 
-    @MainActor
-    final class Factory {
-        var made: [(voice: AdhanVoice, fajr: Bool, playback: FakePlayback)] = []
-
-        func make(_ voice: AdhanVoice, _ fajr: Bool) -> any AdhanPlayback {
-            let playback = FakePlayback(duration: AdhanClips.resource(for: voice, fajrVariant: fajr) == nil
-                ? AdhanClips.silentDuration(fajrVariant: fajr) : 27)
-            made.append((voice, fajr, playback))
-            return playback
-        }
-
-        var last: FakePlayback { made[made.count - 1].playback }
+    /// Der Player mit einer Wiedergabe, so lang wie die Aufnahme: 29,5 Sekunden.
+    private func model() -> (AdhanPlayerModel, FakePlayback) {
+        let playback = FakePlayback(duration: AdhanRecording.clipDuration)
+        return (AdhanPlayerModel { playback }, playback)
     }
 
-    private func model(_ change: (inout SettingsStore.Snapshot) -> Void = { _ in }) -> (AdhanPlayerModel, Factory) {
-        var snapshot = SettingsStore.Snapshot()
-        change(&snapshot)
-        let factory = Factory()
-        let model = AdhanPlayerModel(settings: SettingsStore(storage: .ephemeral(snapshot)), makePlayback: factory.make)
-        return (model, factory)
-    }
-
-    @Test("der Player beginnt mit Stimme 1 bei 0:00 von 0:27, wie iphone/86")
+    @Test("der Player beginnt bei 0:00 von 0:29, mit dem Muezzin als Titel, wie iphone/86")
     func start() {
-        let (model, factory) = model()
-        #expect(model.voice == .one)
-        #expect(model.title == "\(L10n.voiceN(n: "1")) · Makkah")
+        let (model, playback) = model()
+        #expect(model.title == "Ustadh Mmanga Muharram")
         #expect(model.subtitle == L10n.shortAdhan)
         #expect(model.position == 0)
-        #expect(model.duration == 27)
+        #expect(model.duration == 29.5)
         #expect(!model.isPlaying)
-        #expect(factory.made.count == 1)
+        #expect(playback.plays == 0)
     }
 
     @Test("Play spielt, ein Takt liest die Stelle, Pause hält an")
     func playPause() async {
-        let (model, factory) = model()
+        let (model, playback) = model()
         model.togglePlay()
         #expect(model.isPlaying)
         await model.waitUntilStarted()
         #expect(model.isPlaying)
-        #expect(factory.last.plays == 1)
-        factory.last.currentTime = 12.4
+        #expect(playback.plays == 1)
+        playback.currentTime = 12.4
         model.step()
         #expect(model.position == 12.4)
         model.togglePlay()
         #expect(!model.isPlaying)
-        #expect(!factory.last.isPlaying)
+        #expect(!playback.isPlaying)
         #expect(model.position == 12.4)
     }
 
     @Test("am Ende springt der Player zurück auf 0:00 (adhanStep)")
     func end() async {
-        let (model, factory) = model()
+        let (model, playback) = model()
         model.togglePlay()
         await model.waitUntilStarted()
-        factory.last.currentTime = 27
+        playback.currentTime = AdhanRecording.clipDuration
         model.step()
         #expect(!model.isPlaying)
         #expect(model.position == 0)
@@ -102,10 +86,10 @@ struct AdhanPlayerModelTests {
 
     @Test("endet die Wiedergabe von selbst, steht der Player wieder am Anfang")
     func finishedByItself() async {
-        let (model, factory) = model()
+        let (model, playback) = model()
         model.togglePlay()
         await model.waitUntilStarted()
-        factory.last.isPlaying = false
+        playback.isPlaying = false
         model.step()
         #expect(!model.isPlaying)
         #expect(model.position == 0)
@@ -113,8 +97,8 @@ struct AdhanPlayerModelTests {
 
     @Test("läuft die Wiedergabe nicht an – etwa ohne Ausgabegerät –, steht der Player still")
     func cannotPlay() async {
-        let (model, factory) = model()
-        factory.last.canPlay = false
+        let (model, playback) = model()
+        playback.canPlay = false
         model.togglePlay()
         #expect(model.isPlaying)
         await model.waitUntilStarted()
@@ -124,84 +108,47 @@ struct AdhanPlayerModelTests {
 
     @Test("der Scrubber springt, höchstens bis ans Ende")
     func seek() {
-        let (model, factory) = model()
+        let (model, playback) = model()
         model.seek(to: 10)
         #expect(model.position == 10)
-        #expect(factory.last.currentTime == 10)
+        #expect(playback.currentTime == 10)
         model.seek(to: 100)
-        #expect(model.position == 27)
+        #expect(model.position == 29.5)
         model.seek(to: -3)
         #expect(model.position == 0)
     }
 
-    @Test("eine andere Stimme hält an, springt an den Anfang und bleibt gespeichert")
-    func selectVoice() async {
-        let (model, factory) = model()
+    @Test("das Schließen des Sheets hält an und springt an den Anfang (stopAdhan)")
+    func stop() async {
+        let (model, playback) = model()
         model.togglePlay()
         await model.waitUntilStarted()
-        factory.last.currentTime = 5
+        playback.currentTime = 5
         model.step()
-        let first = factory.last
-        model.selectVoice(.three)
-        #expect(!first.isPlaying)
+        #expect(model.position == 5)
+        model.stop()
+        #expect(!playback.isPlaying)
+        #expect(playback.currentTime == 0)
         #expect(!model.isPlaying)
         #expect(model.position == 0)
-        #expect(model.voice == .three)
-        #expect(model.settings.notifications.voice == .three)
-        #expect(model.title == "\(L10n.voiceN(n: "3")) · Istanbul")
-        // Stimme 3 hat keine Aufnahme: stumm, 27 Sekunden.
-        #expect(model.duration == 27)
-        #expect(factory.made.last?.voice == .three)
-    }
-
-    @Test("die Fadschr-Variante ist eine Vorschau: 30 Sekunden, nicht gespeichert")
-    func fajrVariant() {
-        let (model, factory) = model()
-        model.setFajrVariant(true)
-        #expect(model.isFajrVariant)
-        #expect(model.duration == 30)
-        #expect(model.subtitle == L10n.shortAdhan + " · " + L10n.fajrVariant)
-        #expect(factory.made.last?.fajr == true)
-        #expect(model.settings.notifications == NotificationPreferences())
-        model.setFajrVariant(false)
-        #expect(model.duration == 27)
-    }
-
-    @Test("die gespeicherte Stimme gilt beim Öffnen")
-    func savedVoice() {
-        let (model, factory) = model { $0.notifications.voice = .two }
-        #expect(model.voice == .two)
-        #expect(factory.made.first?.voice == .two)
     }
 
     @Test("nach dem Ende beginnt Play wieder vorn")
     func replayFromStart() {
-        let (model, factory) = model()
-        model.seek(to: 27)
+        let (model, playback) = model()
+        model.seek(to: 29.5)
         model.togglePlay()
-        #expect(factory.last.currentTime == 0)
+        #expect(playback.currentTime == 0)
         #expect(model.position == 0)
     }
 
-    // MARK: - Aufnahmen
+    // MARK: - Aufnahme
 
-    @Test("Stimme 1 und 2 haben Aufnahmen, Stimme 3 und die Fadschr-Varianten nicht")
-    func clips() {
-        #expect(AdhanClips.resource(for: .one, fajrVariant: false) == "adhan-voice1")
-        #expect(AdhanClips.resource(for: .two, fajrVariant: false) == "adhan-voice2")
-        #expect(AdhanClips.resource(for: .three, fajrVariant: false) == nil)
-        for voice in AdhanVoice.allCases {
-            #expect(AdhanClips.resource(for: voice, fajrVariant: true) == nil)
-        }
-        #expect(AdhanClips.silentDuration(fajrVariant: false) == 27)
-        #expect(AdhanClips.silentDuration(fajrVariant: true) == 30)
-    }
-
-    @Test("ohne Aufnahme im Bundle läuft der Player stumm")
+    @Test("ohne Aufnahme im Bundle läuft der Player stumm, 29,5 Sekunden wie die Aufnahme")
     func silentFallback() {
-        let playback = AdhanClips.playback(for: .one, fajrVariant: false, bundle: Bundle(for: FakePlayback.self))
+        let playback = AdhanClips.playback(bundle: Bundle(for: FakePlayback.self))
         #expect(playback is SilentPlayback)
-        #expect(playback.duration == 27)
+        #expect(playback.duration == 29.5)
     }
 
     @Test("der stumme Ablauf zählt in Echtzeit und springt beim Setzen")

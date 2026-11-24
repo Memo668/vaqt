@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Die Karte des Adhan-Players: Stimme, „Kurzer Adhan · für Mitteilungen“, Wellenform, Scrubber, Zeiten
+/// Die Karte des Adhan-Players: der Muezzin, „Kurzer Adhan · für Mitteilungen“, Wellenform, Scrubber, Zeiten
 /// und der runde Play-Knopf – `.player` in `adhanSheet()` im Prototyp (Spec § 3, „Adhan player“).
 public struct AdhanPlayerCard: View {
     private let title: String
@@ -12,8 +12,8 @@ public struct AdhanPlayerCard: View {
     private let onToggle: () -> Void
 
     /// - Parameters:
-    ///   - title: „Stimme 1 · Makkah“.
-    ///   - subtitle: „Kurzer Adhan · für Mitteilungen“, mit der Fadschr-Variante „… · Fadschr-Variante“.
+    ///   - title: der Muezzin der Aufnahme, „Ustadh Mmanga Muharram“.
+    ///   - subtitle: „Kurzer Adhan · für Mitteilungen“.
     ///   - position: gespielte Sekunden.
     ///   - duration: Länge des Ausschnitts, höchstens 30 Sekunden.
     public init(
@@ -213,9 +213,10 @@ public enum AdhanTime {
 
 /// Maße der Karte (`.player`, `.player-title`, `.player-sub`, `.wave`, `.scrub`, `.times`, `.play-btn`).
 public enum AdhanPlayerMetrics {
-    /// `.player { margin: 4px 16px 30px; padding: 22px 18px }`
+    /// `.player { margin: 4px 16px 10px; padding: 22px 18px }`; unter der Karte folgt die Fußnote zur
+    /// Aufnahme (`.card-foot`).
     public static let marginTop: CGFloat = 4
-    public static let marginBottom: CGFloat = 30
+    public static let marginBottom: CGFloat = 10
     static let paddingY: CGFloat = 22
     static let paddingX: CGFloat = 18
     /// `.player-title { font: 600 var(--fs-title3)/1.25; letter-spacing: .38px }`

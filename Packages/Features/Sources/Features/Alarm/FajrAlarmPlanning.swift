@@ -4,7 +4,7 @@ import SwiftUI
 /// (`AppContent`), wie `OutsideAppPlanning` für die Live-Aktivitäten.
 ///
 /// Plant, wenn die App nach vorn kommt – beim Start und danach jedes Mal – und nach jeder Änderung an dem,
-/// was eingeht: Ort, Berechnung, Wecker, Stimme, Sprache und Erlaubnis.
+/// was eingeht: Ort, Berechnung, Wecker, Sprache und Erlaubnis.
 struct FajrAlarmPlanning: View {
     let model: FajrAlarmModel
 

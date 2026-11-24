@@ -139,7 +139,8 @@ if wanted 86; then
   launch "$OUT/adhan-86.png" "${STATE[@]}" -debugTab adhan
   echo "iphone/86 (Adhan):"
   halves card-86 86-sheet-adhan "$OUT/adhan-86.png" 128 140 326
-  halves voices-86 86-sheet-adhan "$OUT/adhan-86.png" 470 482 380
+  # Seit Phase 18 steht unter der Karte nur noch die Fußnote zur Aufnahme (Spec § 11.2).
+  halves foot-86 86-sheet-adhan "$OUT/adhan-86.png" 454 466 60
 fi
 
 onboarding() {

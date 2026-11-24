@@ -72,14 +72,18 @@ struct L10nTests {
         #expect(AppLanguage.allCases.contains(L10n.systemLanguage))
     }
 
-    @Test("der Katalog hat 337 Schlüssel und keinen doppelt")
+    @Test("der Katalog hat 377 Schlüssel und keinen doppelt")
     func keyCount() {
         // 260 aus der Design-Übergabe v0.7, dazu `noTimes` (Phase 3), `noCompass` (Phase 4) und
         // `hlMoonsighting` (Phase 7, docs/OPEN-QUESTIONS.md), dazu aus `SURAH` und `VERSES` vier Suren und
         // sechs Verse (Phase 6); seit Phase 12 die 60 Nachträge vom 15.11.2026 (Spec § 9); seit Phase 13
         // die vier Texte der Seite „Lizenzen“ (Spec § 9.7); seit Phase 16 die 37 Nachträge vom 17./18.11.2026
-        // (Spec § 10, davon elf für den Wecker aus Phase 17).
-        #expect(L10n.allKeys.count == 378)
+        // (Spec § 10, davon elf für den Wecker aus Phase 17), mit dem Nachtrag zu Phase 17 vier weitere für
+        // den Wecker (`alAlarmBody`, `alarmDeniedFooter`, `alarmSoundFooter`, `alarmStop`, Spec § 10.8); seit
+        // Phase 18 ohne die vier Texte zur Wahl der Stimme und zur Fadschr-Variante (`voice`, `voiceN`,
+        // `fajrVariant`, `fajrVariantFooter`, Spec § 11.2), dafür drei für die neuen Einträge der Seite
+        // „Lizenzen“ (`licRecordingSub`, `licTanzilSub`, `licTranslationsSub`, Spec § 11).
+        #expect(L10n.allKeys.count == 377)
         #expect(Set(L10n.allKeys).count == L10n.allKeys.count)
     }
 

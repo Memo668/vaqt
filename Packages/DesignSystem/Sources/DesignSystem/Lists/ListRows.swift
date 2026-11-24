@@ -1,9 +1,9 @@
 import SwiftUI
 
 // Zeilen für die Liste des Systems (`List`), wie die eingerückten Gruppen des Prototyps (`group()`,
-// `.row`): Titel mit Zusatz, Wert, Häkchen, Link. Die Einstellungen und das Adhan-Sheet bauen ihre Seiten
-// daraus; das Stadt-Sheet hat dieselben Maße (`CitySheetMetrics`). Die Fläche, die Ecken, die Trennlinien
-// und – bei `NavigationLink` – den Chevron zeichnet die Liste.
+// `.row`): Titel mit Zusatz, Wert, Häkchen, Link. Die Einstellungen bauen ihre Seiten daraus; das
+// Stadt-Sheet hat dieselben Maße (`CitySheetMetrics`). Die Fläche, die Ecken, die Trennlinien und – bei
+// `NavigationLink` – den Chevron zeichnet die Liste.
 
 /// Titel einer Zeile mit Zusatz darunter (`.row-label`, `.row-sub`).
 public struct RowTitle: View {

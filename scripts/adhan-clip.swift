@@ -7,19 +7,16 @@
 // Sekunden Ausblenden am Ende; die Spitze liegt bei −1 dBFS. Danach komprimiert `afconvert` ihn in IMA4,
 // eines der Formate, die iOS für Mitteilungstöne annimmt (unter 30 Sekunden):
 //
-//   afconvert -f caff -d ima4 -c 1 <ausschnitt.caf> App/Sounds/adhan-voice1.caf
+//   afconvert -f caff -d ima4 -c 1 <ausschnitt.caf> App/Sounds/adhan.caf
 //
-// TODO(placeholder): Die Aufnahmen sind Platzhalter (Spec § 6.5), entschieden am 12.11.2026
-// (docs/OPEN-QUESTIONS.md). Quelle ist die MP3-Fassung, die Wikimedia Commons aus der Ogg-Datei erzeugt:
+// Seit Phase 18 (Spec § 11.2) gibt es eine Aufnahme, den Adhan von Ustadh Mmanga Muharram (DARSA TV, auf
+// YouTube unter CC BY). Quelle, Lizenz und Prüfsummen stehen in docs/THIRD-PARTY.md. Die MP3 hat der Inhaber
+// geliefert; sie liegt nicht im Repo.
 //
-//   App/Sounds/adhan-voice1.caf  „Beautiful adhan.ogg“, CC0 1.0, Adam-synagda, 2022
-//     https://commons.wikimedia.org/wiki/File:Beautiful_adhan.ogg
-//     clip … 0.3 27 1.5   – die ersten 27 Sekunden
-//   App/Sounds/adhan-voice2.caf  „Oración Al-Azzan.ogg“, gemeinfrei, B9, aufgenommen 2005 in Medina
-//     https://commons.wikimedia.org/wiki/File:Oración_Al-Azzan.ogg
-//     clip … 0.3 29.5 0.5 – die ganze Aufnahme ohne die Stille am Anfang
+//   App/Sounds/adhan.caf   clip … 0.0 29.5 1.0   – die ersten 29,5 Sekunden, sie enden in der dritten
+//                                                  Pause der Aufnahme (gemessen mit `envelope`)
 //
-// Die Lizenzangaben stammen von den Hochladenden; vor dem App Store zu prüfen.
+// Bis Phase 17 lagen hier zwei Platzhalter von Wikimedia Commons (adhan-voice1.caf, adhan-voice2.caf).
 import AVFoundation
 import Foundation
 

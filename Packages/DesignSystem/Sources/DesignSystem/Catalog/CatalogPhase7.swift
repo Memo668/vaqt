@@ -97,8 +97,8 @@ struct CatalogAdhan: View {
 
     private func card(position: TimeInterval, isPlaying: Bool) -> some View {
         AdhanPlayerCard(
-            title: "\(L10n.voiceN(n: "1")) · \(AdhanVoice.one.place)", subtitle: L10n.shortAdhan,
-            position: position, duration: 27, isPlaying: isPlaying, onSeek: { _ in }, onToggle: {}
+            title: AdhanRecording.muezzin, subtitle: L10n.shortAdhan, position: position,
+            duration: AdhanRecording.clipDuration, isPlaying: isPlaying, onSeek: { _ in }, onToggle: {}
         )
     }
 }

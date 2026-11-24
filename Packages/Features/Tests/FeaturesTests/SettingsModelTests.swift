@@ -214,7 +214,7 @@ struct SettingsModelTests {
         model.setSound(.system)
         #expect(model.soundValue == L10n.soundSystem)
         #expect(model.settings.notifications == NotificationPreferences(
-            reminderMinutes: 0, liveActivityMinutes: 60, sound: .system, voice: .one
+            reminderMinutes: 0, liveActivityMinutes: 60, sound: .system
         ))
     }
 

@@ -194,7 +194,7 @@ struct FajrAlarmTests {
         let date = day.at("06:29", in: .berlin)
         let first = FajrAlarmPlanner.identifier(for: date, variant: "system|de")
         #expect(first == FajrAlarmPlanner.identifier(for: date, variant: "system|de"))
-        #expect(first != FajrAlarmPlanner.identifier(for: date, variant: "adhan-voice1|de"))
+        #expect(first != FajrAlarmPlanner.identifier(for: date, variant: "adhan|de"))
         #expect(first != FajrAlarmPlanner.identifier(for: date.addingTimeInterval(60), variant: "system|de"))
         // Version 5, Variante RFC 4122
         #expect(first.uuidString.dropFirst(14).first == "5")

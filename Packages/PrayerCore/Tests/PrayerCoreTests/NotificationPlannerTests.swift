@@ -10,7 +10,7 @@ import Testing
 /// Gerechnet wird mit den Mock-Zeiten für Berlin am 10.11.2026: Fadschr 05:16, Sonnenaufgang 07:14,
 /// Dhuhr 11:52, Asr 14:00, Maghrib 16:27, Ischa 18:17. Die Glocken und Einstellungen sind die Startwerte
 /// von `S`: alle Gebete mit Ton, Ischa lautlos, Sonnenaufgang aus; Erinnerung 10 Minuten vorher, kurzer
-/// Adhan, Stimme 1.
+/// Adhan.
 @Suite("Mitteilungen: Plan")
 struct NotificationPlannerTests {
 
@@ -50,7 +50,7 @@ struct NotificationPlannerTests {
             "reminder isha 2026-11-11 18:07", "prayer isha 2026-11-11 18:17",
         ])
         #expect(notifications.map(\.tone).prefix(6) == [
-            .system, .clip("adhan-voice1.caf"), .silent, .silent, .system, .clip("adhan-voice1.caf"),
+            .system, .clip("adhan.caf"), .silent, .silent, .system, .clip("adhan.caf"),
         ])
     }
 
@@ -177,17 +177,15 @@ struct NotificationPlannerTests {
         #expect(system.prefix(2).map(\.tone) == [.system, .system])
         let silent = plan(at: "14:25", preferences: NotificationPreferences(sound: .silent))
         #expect(silent.allSatisfy { $0.tone == .silent })
-        let voice2 = plan(at: "14:25", preferences: NotificationPreferences(voice: .two))
-        #expect(voice2[1].tone == .clip("adhan-voice2.caf"))
-        let voice3 = plan(at: "14:25", preferences: NotificationPreferences(voice: .three))
-        #expect(voice3[1].tone == .system)
+        let adhan = plan(at: "14:25", preferences: NotificationPreferences(sound: .adhan))
+        #expect(adhan.prefix(2).map(\.tone) == [.system, .clip("adhan.caf")])
     }
 
-    @Test("Fadschr spielt den Ausschnitt der gewählten Stimme")
+    @Test("Fadschr spielt dieselbe Aufnahme wie die anderen Gebete")
     func fajrTone() {
-        let notifications = plan(at: "04:00", preferences: NotificationPreferences(voice: .two))
+        let notifications = plan(at: "04:00")
         #expect(summary([notifications[1]]) == ["prayer fajr 2026-11-10 05:16"])
-        #expect(notifications[1].tone == .clip("adhan-voice2.caf"))
+        #expect(notifications[1].tone == .clip("adhan.caf"))
     }
 
     // MARK: - Grenze des Fensters

@@ -5,37 +5,13 @@
 public enum NotificationSound: String, CaseIterable, Codable, Sendable {
     /// Der Ton des Systems.
     case system
-    /// Der kurze Adhan der gewählten Stimme, höchstens 30 Sekunden.
+    /// Der kurze Adhan, höchstens 30 Sekunden – die eine Aufnahme der App (`AdhanRecording`).
     case adhan
     /// Kein Ton, auch bei Gebeten mit „Ton“.
     case silent
 }
 
-/// Eine Stimme des Adhan – `VOICES` im Prototyp.
-///
-/// TODO(placeholder): Die drei Stimmen und ihre Orte sind Platzhalter des Prototyps; die endgültigen
-/// Aufnahmen stehen noch nicht fest (Spec § 6.5). Bis dahin spielen Stimme 1 und 2 freie Aufnahmen von
-/// Wikimedia Commons, Stimme 3 hat keine (docs/OPEN-QUESTIONS.md, „Entschieden mit dem Plan für Phase 7“).
-public enum AdhanVoice: Int, CaseIterable, Codable, Sendable {
-    case one = 1
-    case two = 2
-    case three = 3
-
-    /// Nummer der Stimme, wie sie in „Stimme {n}“ erscheint.
-    public var number: Int { rawValue }
-
-    /// Ort der Aufnahme (`VOICES[].place`). In allen Sprachen gleich, wie im Prototyp.
-    public var place: String {
-        switch self {
-        case .one: "Makkah"
-        case .two: "Madinah"
-        case .three: "Istanbul"
-        }
-    }
-}
-
-/// Was neben der Glocke je Gebet zu den Mitteilungen gehört – `S.reminder`, `S.liveAct`, `S.sound` und
-/// die Stimme des Adhan (`S.adhan.voice`).
+/// Was neben der Glocke je Gebet zu den Mitteilungen gehört – `S.reminder`, `S.liveAct` und `S.sound`.
 ///
 /// Mitteilungen plant `NotificationPlanner` damit, Live-Aktivitäten `LiveActivityPlanner`. Werte, die
 /// keine der Wahlmöglichkeiten sind, gelten als nicht gesetzt: Es bleibt der Startwert des Prototyps.
@@ -58,34 +34,31 @@ public struct NotificationPreferences: Hashable, Sendable {
         didSet { if !Self.liveActivityChoices.contains(liveActivityMinutes) { liveActivityMinutes = Self.standardLiveActivityMinutes } }
     }
     public var sound: NotificationSound
-    public var voice: AdhanVoice
 
     /// Startwerte wie `S` im Prototyp: Erinnerung 10 Minuten vorher, Live-Aktivität 30 Minuten vorher,
-    /// kurzer Adhan, Stimme 1.
+    /// kurzer Adhan.
     public init(
         reminderMinutes: Int = NotificationPreferences.standardReminderMinutes,
         liveActivityMinutes: Int = NotificationPreferences.standardLiveActivityMinutes,
-        sound: NotificationSound = .adhan,
-        voice: AdhanVoice = .one
+        sound: NotificationSound = .adhan
     ) {
         self.reminderMinutes = Self.reminderChoices.contains(reminderMinutes) ? reminderMinutes : Self.standardReminderMinutes
         self.liveActivityMinutes = Self.liveActivityChoices.contains(liveActivityMinutes)
             ? liveActivityMinutes : Self.standardLiveActivityMinutes
         self.sound = sound
-        self.voice = voice
     }
 }
 
 /// Gespeichert wird ein Objekt mit den Kennungen des Prototyps, z. B.
-/// `{"reminder": 10, "liveAct": 30, "sound": "adhan", "voice": 1}`. Fehlt ein Wert oder passt er nicht,
-/// gilt sein Startwert.
+/// `{"reminder": 10, "liveAct": 30, "sound": "adhan"}`. Fehlt ein Wert oder passt er nicht, gilt sein
+/// Startwert. Stände aus der Zeit vor Phase 18 enthalten noch `"voice"`, die damals gewählte Stimme
+/// (Spec § 11.2); der Wert wird überlesen und beim nächsten Speichern nicht mehr geschrieben.
 extension NotificationPreferences: Codable {
 
     private enum CodingKeys: String, CodingKey {
         case reminderMinutes = "reminder"
         case liveActivityMinutes = "liveAct"
         case sound
-        case voice
     }
 
     public init(from decoder: any Decoder) throws {
@@ -94,8 +67,7 @@ extension NotificationPreferences: Codable {
             reminderMinutes: (try? container.decode(Int.self, forKey: .reminderMinutes)) ?? Self.standardReminderMinutes,
             liveActivityMinutes: (try? container.decode(Int.self, forKey: .liveActivityMinutes))
                 ?? Self.standardLiveActivityMinutes,
-            sound: (try? container.decode(NotificationSound.self, forKey: .sound)) ?? .adhan,
-            voice: (try? container.decode(AdhanVoice.self, forKey: .voice)) ?? .one
+            sound: (try? container.decode(NotificationSound.self, forKey: .sound)) ?? .adhan
         )
     }
 
@@ -104,6 +76,5 @@ extension NotificationPreferences: Codable {
         try container.encode(reminderMinutes, forKey: .reminderMinutes)
         try container.encode(liveActivityMinutes, forKey: .liveActivityMinutes)
         try container.encode(sound, forKey: .sound)
-        try container.encode(voice, forKey: .voice)
     }
 }

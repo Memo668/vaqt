@@ -156,14 +156,15 @@ struct FajrAlarmModelTests {
         #expect(Set(alarms.map(\.id)).count == 14)
     }
 
-    @Test("Kurzer Adhan: die Aufnahme der gewählten Stimme; Stimme 3 hat keine, dann der Weckton")
-    func adhanTone() async throws {
+    @Test("Kurzer Adhan: dieselbe Aufnahme wie bei den Mitteilungen, unabhängig von deren Klang")
+    func adhanTone() async {
         let fixture = fixture(alarm: FajrAlarmPreferences(isOn: true, sound: .adhan), status: .authorized)
         await fixture.model.reschedule()
-        #expect(fixture.scheduler.alarms.first?.tone == .clip("adhan-voice1.caf"))
-        fixture.settings.updateNotifications { $0.voice = .three }
+        #expect(fixture.scheduler.alarms.count == 14)
+        #expect(fixture.scheduler.alarms.allSatisfy { $0.tone == .clip("adhan.caf") })
+        fixture.settings.updateNotifications { $0.sound = .silent }
         await fixture.model.reschedule()
-        #expect(fixture.scheduler.alarms.first?.tone == .system)
+        #expect(fixture.scheduler.alarms.first?.tone == .clip("adhan.caf"))
     }
 
     @Test("Gleicher Plan, gleiche Kennungen; anderer Klang, andere Kennungen")
@@ -202,18 +203,21 @@ struct FajrAlarmModelTests {
         #expect(fixture.scheduler.alarms.map(\.date) == [date])
     }
 
-    @Test("Was eingeht: Ort, Wecker, Stimme und Erlaubnis lösen neues Planen aus")
+    @Test("Was eingeht: Ort, Wecker und Erlaubnis lösen neues Planen aus, die Mitteilungen nicht")
     func inputs() async {
         let fixture = fixture(alarm: on)
         let start = fixture.model.inputs
         fixture.model.setMode(.fixedTime)
         #expect(fixture.model.inputs != start)
         let fixed = fixture.model.inputs
-        fixture.settings.updateNotifications { $0.voice = .two }
+        fixture.settings.select(.istanbul)
         #expect(fixture.model.inputs != fixed)
-        let voice = fixture.model.inputs
+        let moved = fixture.model.inputs
+        // Der Wecker hat seinen eigenen Klang; der Klang der Mitteilungen geht nicht ein.
+        fixture.settings.updateNotifications { $0.sound = .system }
+        #expect(fixture.model.inputs == moved)
         await fixture.model.setOn(true)
-        #expect(fixture.model.inputs != voice)
+        #expect(fixture.model.inputs != moved)
     }
 
     private func clock(_ text: String) -> ClockTime {

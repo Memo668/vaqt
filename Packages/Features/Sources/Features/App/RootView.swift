@@ -136,7 +136,7 @@ struct AppContent: View {
             sourceCodeURL: AppInfo.sourceCodeURL, appStoreURL: AppInfo.appStoreURL, version: AppInfo.version
         ))
         _onboarding = State(initialValue: OnboardingModel(navigation: navigation, today: today, notifications: notifications))
-        _adhan = State(initialValue: AdhanPlayerModel(settings: settings))
+        _adhan = State(initialValue: AdhanPlayerModel())
     }
 
     var body: some View {

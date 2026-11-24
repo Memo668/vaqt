@@ -9775,208 +9775,6 @@
         }
       }
     },
-    "fajrVariant" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "صيغة أذان الفجر"
-          }
-        },
-        "bn" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "ফজরের আজান"
-          }
-        },
-        "bs" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sabahski ezan"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fadschr-Variante"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fajr Variant"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Variante de Fajr"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "نسخه اذان صبح"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Variante du Fajr"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Varian Subuh"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Variante Fajr"
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Varian Subuh"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Fajr-variant"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Вариант для Фаджра"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Ezani i sabahut"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sabah ezanı"
-          }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "فجر کی اذان"
-          }
-        }
-      }
-    },
-    "fajrVariantFooter" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "تتضمن عبارة «الصلاة خير من النوم»."
-          }
-        },
-        "bn" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "এতে আছে “As-salātu khayrun mina n-nawm” — “ঘুমের চেয়ে নামাজ উত্তম”।"
-          }
-        },
-        "bs" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sadrži „As-salātu khayrun mina n-nawm“ — „Namaz je bolji od sna“."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mit „Aṣ-ṣalātu khairun mina n-naum“ – „Das Gebet ist besser als Schlaf“."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Includes “As-salātu khayrun mina n-nawm” — “Prayer is better than sleep”."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Con “As-salatu jairun mina n-naum”: “La oración es mejor que el sueño”."
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "شامل «الصلاة خیر من النوم» — «نماز بهتر از خواب است»."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Avec « As-salātu khayrun mina n-nawm » — « La prière est meilleure que le sommeil »."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dengan “As-salātu khayrun mina n-nawm” — “Salat lebih baik daripada tidur”."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Include “As-salātu khayrun mina n-nawm” — “La preghiera è migliore del sonno”."
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Dengan “As-salātu khayrun mina n-nawm” — “Solat itu lebih baik daripada tidur”."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Met ‘As-salātu khayrun mina n-nawm’ — ‘Het gebed is beter dan de slaap’."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "С фразой «As-salātu khayrun mina n-nawm» — «Намаз лучше сна»."
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Përmban „As-salātu khayrun mina n-nawm“ — „Namazi është më i mirë se gjumi“."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“Es-salâtü hayrun mine’n-nevm” – “Namaz uykudan hayırlıdır” ile."
-          }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "اس میں “As-salātu khayrun mina n-nawm” شامل ہے — “نماز نیند سے بہتر ہے”۔"
-          }
-        }
-      }
-    },
     "gAsrKerahat" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -14432,97 +14230,400 @@
         "ar" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "يتضمن التطبيق برمجيات وخطوطًا حرة. نصوص التراخيص معروضة بلغتها الإنجليزية الأصلية."
+            "value" : "يتضمن التطبيق برمجيات وخطوطًا حرة وتسجيلًا ونصوصًا لآخرين. التراخيص والإشعارات معروضة بلغتها الإنجليزية الأصلية."
           }
         },
         "bn" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "অ্যাপটিতে মুক্ত সফটওয়্যার ও ফন্ট রয়েছে। লাইসেন্সের লেখাগুলো মূল ইংরেজিতে দেখানো হয়েছে।"
+            "value" : "অ্যাপটিতে মুক্ত সফটওয়্যার ও ফন্ট, একটি রেকর্ডিং এবং অন্যদের লেখা রয়েছে। লাইসেন্স ও বিজ্ঞপ্তিগুলো মূল ইংরেজিতে দেখানো হয়েছে।"
           }
         },
         "bs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Aplikacija sadrži slobodni softver i fontove. Tekstovi licenci su u engleskom originalu."
+            "value" : "Aplikacija sadrži slobodni softver i fontove, jedan snimak i tekstove drugih autora. Licence i napomene su u engleskom originalu."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die App enthält freie Software und Schriften. Die Lizenztexte stehen im englischen Original."
+            "value" : "Die App enthält freie Software und Schriften, eine Aufnahme und Texte anderer. Lizenzen und Hinweise stehen im englischen Original."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The app includes open-source software and fonts. The licence texts are shown in the original English."
+            "value" : "The app includes open-source software and fonts, a recording and texts by others. Licences and notices are shown in the original English."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La app incluye software y tipografías libres. Los textos de las licencias se muestran en su versión original en inglés."
+            "value" : "La app incluye software y tipografías libres, una grabación y textos de terceros. Las licencias y los avisos se muestran en su versión original en inglés."
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "این برنامه نرم‌افزار و قلم‌های آزاد دارد. متن مجوزها به زبان اصلی انگلیسی آمده است."
+            "value" : "این برنامه نرم‌افزار و قلم‌های آزاد، یک ضبط صوتی و متن‌هایی از دیگران دارد. مجوزها و یادداشت‌ها به زبان اصلی انگلیسی آمده است."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "L’app contient des logiciels et des polices libres. Les textes des licences sont affichés dans leur version originale en anglais."
+            "value" : "L’app contient des logiciels et des polices libres, un enregistrement et des textes de tiers. Les licences et mentions sont affichées dans leur version originale en anglais."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Aplikasi ini memuat perangkat lunak dan huruf bebas. Teks lisensi ditampilkan dalam bahasa Inggris aslinya."
+            "value" : "Aplikasi ini memuat perangkat lunak dan huruf bebas, sebuah rekaman, dan teks dari pihak lain. Lisensi dan keterangan ditampilkan dalam bahasa Inggris aslinya."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "L’app contiene software e caratteri liberi. I testi delle licenze sono riportati nell’originale inglese."
+            "value" : "L’app contiene software e caratteri liberi, una registrazione e testi di terzi. Licenze e note sono riportate nell’originale inglese."
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Aplikasi ini mengandungi perisian dan fon bebas. Teks lesen dipaparkan dalam bahasa Inggeris asal."
+            "value" : "Aplikasi ini mengandungi perisian dan fon bebas, satu rakaman serta teks pihak lain. Lesen dan notis dipaparkan dalam bahasa Inggeris asal."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "De app bevat vrije software en lettertypen. De licentieteksten staan in het Engelse origineel."
+            "value" : "De app bevat vrije software en lettertypen, een opname en teksten van anderen. Licenties en vermeldingen staan in het Engelse origineel."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Приложение использует свободное ПО и шрифты. Тексты лицензий приведены в английском оригинале."
+            "value" : "Приложение использует свободное ПО и шрифты, аудиозапись и тексты других авторов. Лицензии и примечания приведены в английском оригинале."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Aplikacioni përmban softuer dhe shkronja të lira. Tekstet e licencave janë në origjinalin anglisht."
+            "value" : "Aplikacioni përmban softuer dhe shkronja të lira, një incizim dhe tekste të autorëve të tjerë. Licencat dhe shënimet janë në origjinalin anglisht."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uygulama özgür yazılım ve yazı tipleri içerir. Lisans metinleri İngilizce asıllarıyla gösterilir."
+            "value" : "Uygulama özgür yazılım ve yazı tipleri, bir ses kaydı ve başkalarına ait metinler içerir. Lisanslar ve açıklamalar İngilizce asıllarıyla gösterilir."
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "ایپ میں آزاد سافٹ ویئر اور فونٹس شامل ہیں۔ لائسنس کی عبارتیں اصل انگریزی میں ہیں۔"
+            "value" : "ایپ میں آزاد سافٹ ویئر اور فونٹس، ایک ریکارڈنگ اور دوسروں کے متون شامل ہیں۔ لائسنس اور نوٹس اصل انگریزی میں ہیں۔"
+          }
+        }
+      }
+    },
+    "licRecordingSub" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "أذان قصير للإشعارات والمنبّه والمعاينة"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "নোটিফিকেশন, অ্যালার্ম ও প্রিভিউয়ের জন্য সংক্ষিপ্ত আজান"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Kratki ezan za obavijesti, alarm i pregled"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurzer Adhan für Mitteilungen, Wecker und Vorschau"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Short adhan for notifications, alarm and preview"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adhan corto para notificaciones, alarma y vista previa"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "اذان کوتاه برای اعلان‌ها، زنگ هشدار و پیش‌نمایش"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Adhan court pour les notifications, le réveil et l’aperçu"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Azan singkat untuk notifikasi, alarm, dan pratinjau"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Adhan breve per notifiche, sveglia e anteprima"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Azan ringkas untuk pemberitahuan, penggera dan pratonton"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Korte adhan voor meldingen, wekker en voorvertoning"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Короткий азан для уведомлений, будильника и прослушивания"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ezan i shkurtër për njoftime, alarm dhe parapamje"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirimler, alarm ve önizleme için kısa ezan"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "اطلاعات، الارم اور پیش منظر کے لیے مختصر اذان"
+          }
+        }
+      }
+    },
+    "licTanzilSub" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "النص العربي للآيات"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "আয়াতের আরবি পাঠ"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Arapski tekst ajeta"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arabischer Text der Verse"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arabic text of the verses"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Texto árabe de los versículos"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "متن عربی آیات"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Texte arabe des versets"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Teks Arab ayat"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Testo arabo dei versetti"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Teks Arab ayat"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Arabische tekst van de verzen"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Арабский текст аятов"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Teksti arabisht i ajeteve"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayetlerin Arapça metni"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "آیات کا عربی متن"
+          }
+        }
+      }
+    },
+    "licTranslationsSub" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ترجمات الآيات، مقتطفات"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "আয়াতের অনুবাদ, উদ্ধৃতাংশ"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Prijevodi ajeta, u odlomcima"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Übersetzungen der Verse, in Auszügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verse translations, in excerpts"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traducciones de los versículos, en extractos"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ترجمهٔ آیات، به‌صورت گزیده"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Traductions des versets, par extraits"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Terjemahan ayat, berupa kutipan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Traduzioni dei versetti, per estratti"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Terjemahan ayat, dalam bentuk petikan"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vertalingen van de verzen, in fragmenten"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Переводы аятов, в отрывках"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Përkthimet e ajeteve, në fragmente"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayet mealleri, kısa alıntılar hâlinde"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "آیات کے ترجمے، اقتباسات کی صورت میں"
           }
         }
       }
@@ -38760,306 +38861,103 @@
         }
       }
     },
-    "voice" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "الصوت"
-          }
-        },
-        "bn" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "কণ্ঠ"
-          }
-        },
-        "bs" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Glas"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stimme"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Voice"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Voz"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "صدا"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Voix"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Suara"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Voce"
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Suara"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stem"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Голос"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Zëri"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ses"
-          }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "آواز"
-          }
-        }
-      }
-    },
     "voiceFooter" : {
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "مؤقت — ستتوفر التسجيلات النهائية لاحقًا."
+            "value" : "التسجيل: DARSA TV، تنزانيا (مختصر). الترخيص: CC BY."
           }
         },
         "bn" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "অস্থায়ী — চূড়ান্ত রেকর্ডিং পরে আসবে।"
+            "value" : "রেকর্ডিং: DARSA TV, তানজানিয়া (সংক্ষেপিত)। লাইসেন্স: CC BY।"
           }
         },
         "bs" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Privremeni sadržaj — konačni snimci slijede."
+            "value" : "Snimak: DARSA TV, Tanzanija (skraćeno). Licenca: CC BY."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Platzhalter – endgültige Aufnahmen folgen."
+            "value" : "Aufnahme: DARSA TV, Tansania (gekürzt). Lizenz: CC BY."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Placeholder — final recordings to follow."
+            "value" : "Recording: DARSA TV, Tanzania (shortened). License: CC BY."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Marcador de posición: las grabaciones finales llegarán más adelante."
+            "value" : "Grabación: DARSA TV, Tanzania (abreviada). Licencia: CC BY."
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "موقت — ضبط‌های نهایی به‌زودی اضافه می‌شوند."
+            "value" : "ضبط: DARSA TV، تانزانیا (کوتاه‌شده). مجوز: CC BY."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Provisoire — les enregistrements définitifs suivront."
+            "value" : "Enregistrement : DARSA TV, Tanzanie (abrégé). Licence : CC BY."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Rekaman sementara — rekaman final akan menyusul."
+            "value" : "Rekaman: DARSA TV, Tanzania (dipersingkat). Lisensi: CC BY."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Segnaposto — seguiranno le registrazioni definitive."
+            "value" : "Registrazione: DARSA TV, Tanzania (abbreviata). Licenza: CC BY."
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Rakaman sementara — rakaman muktamad akan menyusul."
+            "value" : "Rakaman: DARSA TV, Tanzania (dipendekkan). Lesen: CC BY."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Tijdelijk — definitieve opnamen volgen."
+            "value" : "Opname: DARSA TV, Tanzania (ingekort). Licentie: CC BY."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Временная запись — окончательные записи появятся позже."
+            "value" : "Запись: DARSA TV, Танзания (сокращена). Лицензия: CC BY."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Provizor — regjistrimet përfundimtare do të shtohen më vonë."
+            "value" : "Incizimi: DARSA TV, Tanzani (i shkurtuar). Licenca: CC BY."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Yer tutucu – kesin kayıtlar daha sonra eklenecek."
+            "value" : "Kayıt: DARSA TV, Tanzanya (kısaltılmış). Lisans: CC BY."
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "عارضی — حتمی ریکارڈنگز بعد میں آئیں گی۔"
-          }
-        }
-      }
-    },
-    "voiceN" : {
-      "comment" : "Argumente: 1 = n.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "صوت %@"
-          }
-        },
-        "bn" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "কণ্ঠ %@"
-          }
-        },
-        "bs" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Glas %@"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stimme %@"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Voice %@"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Voz %@"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "صدای %@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Voix %@"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Suara %@"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Voce %@"
-          }
-        },
-        "ms" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Suara %@"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Stem %@"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Голос %@"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Zëri %@"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ses %@"
-          }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "آواز %@"
+            "value" : "ریکارڈنگ: DARSA TV، تنزانیہ (مختصر)۔ لائسنس: CC BY۔"
           }
         }
       }

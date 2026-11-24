@@ -471,16 +471,8 @@ public enum L10n {
     public static var play: String { text("play") }
     /// „Pausieren“
     public static var pause: String { text("pause") }
-    /// „Stimme“
-    public static var voice: String { text("voice") }
-    /// „Stimme {n}“
-    public static func voiceN(n: String) -> String { text("voiceN", n) }
-    /// „Platzhalter – endgültige Aufnahmen folgen.“
+    /// „Aufnahme: DARSA TV, Tansania (gekürzt). Lizenz: CC BY.“
     public static var voiceFooter: String { text("voiceFooter") }
-    /// „Fadschr-Variante“
-    public static var fajrVariant: String { text("fajrVariant") }
-    /// „Mit „Aṣ-ṣalātu khairun mina n-naum“ – „Das Gebet ist besser als Schlaf“.“
-    public static var fajrVariantFooter: String { text("fajrVariantFooter") }
     /// „Kurzer Adhan · für Mitteilungen“
     public static var shortAdhan: String { text("shortAdhan") }
     /// „Wiedergabeposition“
@@ -660,8 +652,14 @@ public enum L10n {
     public static var licAmiriSub: String { text("licAmiriSub") }
     /// „Berechnung der Gebetszeiten“
     public static var licAdhanSub: String { text("licAdhanSub") }
-    /// „Die App enthält freie Software und Schriften. Die Lizenztexte stehen im englischen Original.“
+    /// „Die App enthält freie Software und Schriften, eine Aufnahme und Texte anderer. Lizenzen und Hinweise stehen im englischen Original.“
     public static var licensesFooter: String { text("licensesFooter") }
+    /// „Kurzer Adhan für Mitteilungen, Wecker und Vorschau“
+    public static var licRecordingSub: String { text("licRecordingSub") }
+    /// „Arabischer Text der Verse“
+    public static var licTanzilSub: String { text("licTanzilSub") }
+    /// „Übersetzungen der Verse, in Auszügen“
+    public static var licTranslationsSub: String { text("licTranslationsSub") }
     /// „Was sind Verbotszeiten?“
     public static var kerahatInfoTitle: String { text("kerahatInfoTitle") }
     /// „Heute“
@@ -981,11 +979,7 @@ public enum L10n {
         "close",
         "play",
         "pause",
-        "voice",
-        "voiceN",
         "voiceFooter",
-        "fajrVariant",
-        "fajrVariantFooter",
         "shortAdhan",
         "progress",
         "qibla",
@@ -1081,6 +1075,9 @@ public enum L10n {
         "licAmiriSub",
         "licAdhanSub",
         "licensesFooter",
+        "licRecordingSub",
+        "licTanzilSub",
+        "licTranslationsSub",
         "kerahatInfoTitle",
         "kerahatToday",
         "kerahatInfoP1",

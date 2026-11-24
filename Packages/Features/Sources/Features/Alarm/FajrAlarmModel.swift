@@ -162,7 +162,6 @@ public final class FajrAlarmModel {
         public var place: Place?
         public var calculation: CalculationSettings
         public var preferences: FajrAlarmPreferences
-        public var voice: AdhanVoice
         public var language: AppLanguage?
         public var authorization: AlarmAuthorization
     }
@@ -170,7 +169,7 @@ public final class FajrAlarmModel {
     public var inputs: Inputs {
         Inputs(
             place: location.place, calculation: settings.calculation, preferences: preferences,
-            voice: settings.notifications.voice, language: settings.language, authorization: authorization
+            language: settings.language, authorization: authorization
         )
     }
 
@@ -214,16 +213,12 @@ public final class FajrAlarmModel {
         )
     }
 
-    /// Der Ton des Weckers: der Weckton von iOS oder der kurze Adhan der gewählten Stimme – zu Fadschr ihre
-    /// Fadschr-Fassung, sonst der normale Ausschnitt; ohne Aufnahme der Weckton (wie bei den Mitteilungen).
+    /// Der Ton des Weckers: der Weckton von iOS oder der kurze Adhan – dieselbe Aufnahme wie bei den
+    /// Mitteilungen (`AdhanRecording`).
     var tone: NotificationTone {
         switch preferences.sound {
-        case .system:
-            return .system
-        case .adhan:
-            var notifications = settings.notifications
-            notifications.sound = .adhan
-            return NotificationTone.prayer(.fajr, bell: .sound, preferences: notifications) ?? .system
+        case .system: .system
+        case .adhan: .clip(AdhanRecording.clipFile)
         }
     }
 

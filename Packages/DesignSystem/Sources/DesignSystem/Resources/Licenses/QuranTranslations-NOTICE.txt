@@ -1,0 +1,19 @@
+Vaqt shows short excerpts of six verses of the Quran in translation. Each excerpt is taken word for word from one published translation. "…" marks a part of the verse that was left out. The rights to the translations remain with the translators and their publishers.
+
+German: A. S. F. Bubenheim and N. Elyas
+Turkish: Türkiye Diyanet Vakfı
+English: Saheeh International
+Spanish: Muhammad Isa García
+French: Muhammad Hamidullah
+Dutch: Fred Leemhuis
+Bosnian: Besim Korkut
+Albanian: Sherif Ahmeti
+Urdu: Fateh Muhammad Jalandhari
+Indonesian: Kementerian Agama Republik Indonesia
+Malay: Abdullah Muhammad Basmeih
+Bengali: Muhiuddin Khan
+Persian: Mohammad Mahdi Fooladvand
+Russian: Elmir Kuliev
+Italian: Hamza Roberto Piccardo
+
+Sources: The translations were chosen from the collection at https://github.com/fawazahmed0/quran-api, which takes them from the Tanzil Project, https://tanzil.net/trans/ (Indonesian: https://quranenc.com). Tanzil provides its translations for non-commercial purposes only.

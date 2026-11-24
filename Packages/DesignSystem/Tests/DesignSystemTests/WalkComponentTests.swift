@@ -175,11 +175,57 @@ struct SoftwareLicenseTests {
 
     @Test("Amiri (OFL 1.1) und Adhan Swift (MIT), jeweils mit Text und Zweck")
     func licenses() {
-        #expect(SoftwareLicense.allCases.map(\.component) == ["Amiri, Amiri Quran", "Adhan Swift"])
-        #expect(SoftwareLicense.allCases.map(\.licenseName) == ["SIL Open Font License 1.1", "MIT License"])
+        #expect(SoftwareLicense.allCases.prefix(2).map(\.component) == ["Amiri, Amiri Quran", "Adhan Swift"])
+        #expect(SoftwareLicense.allCases.prefix(2).map(\.licenseName) == ["SIL Open Font License 1.1", "MIT License"])
         #expect(SoftwareLicense.amiri.localizedPurpose == L10n.licAmiriSub)
         #expect(SoftwareLicense.adhanSwift.localizedPurpose == L10n.licAdhanSub)
         #expect(SoftwareLicense.amiri.text.contains("Reserved Font Name") || SoftwareLicense.amiri.text.contains("SIL OPEN FONT LICENSE"))
         #expect(SoftwareLicense.adhanSwift.text.contains("Permission is hereby granted"))
+    }
+
+    @Test("seit Phase 18 auch fremde Inhalte: Adhan-Aufnahme, arabischer Verstext und Übersetzungen (Spec § 11)")
+    func contents() {
+        #expect(SoftwareLicense.allCases.map(\.component) == [
+            "Amiri, Amiri Quran", "Adhan Swift", "Adhan: Ustadh Mmanga Muharram", "Tanzil Quran Text", "Quran Translations",
+        ])
+        #expect(SoftwareLicense.allCases.suffix(3).map(\.licenseName) == [
+            "Creative Commons Attribution (CC BY)", "Creative Commons Attribution 3.0", "Translators and sources",
+        ])
+        #expect(SoftwareLicense.adhanRecording.localizedPurpose == L10n.licRecordingSub)
+        #expect(SoftwareLicense.tanzil.localizedPurpose == L10n.licTanzilSub)
+        #expect(SoftwareLicense.verseTranslations.localizedPurpose == L10n.licTranslationsSub)
+    }
+
+    @Test("die Aufnahme nennt Titel, Urheber, Quelle, Lizenz und Änderungen, wie CC BY es verlangt")
+    func recordingNotice() {
+        let text = SoftwareLicense.adhanRecording.text
+        #expect(text.contains(AdhanRecording.muezzin))
+        #expect(text.contains("DARSA TV"))
+        #expect(text.contains("https://www.youtube.com/watch?v=TuPIDIsDWl0"))
+        #expect(text.contains("Creative Commons Attribution"))
+        #expect(text.contains("Changes:"))
+    }
+
+    @Test("der Hinweis von Tanzil steht im Wortlaut da, mit Link")
+    func tanzilNotice() {
+        let text = SoftwareLicense.tanzil.text
+        #expect(text.contains("Copyright (C) 2007-2021 Tanzil Project"))
+        #expect(text.contains("License: Creative Commons Attribution 3.0"))
+        #expect(text.contains("CHANGING IT IS NOT ALLOWED"))
+        #expect(text.contains("tanzil.net"))
+    }
+
+    @Test("die Übersetzungen: je Sprache der App außer Arabisch ein Übersetzer, dazu die Quellen")
+    func translationsNotice() {
+        let text = SoftwareLicense.verseTranslations.text
+        let languages = ["German", "Turkish", "English", "Spanish", "French", "Dutch", "Bosnian", "Albanian", "Urdu",
+                         "Indonesian", "Malay", "Bengali", "Persian", "Russian", "Italian"]
+        #expect(languages.count == AppLanguage.allCases.count - 1)
+        for language in languages {
+            #expect(text.contains("\n\(language): "), "\(language) fehlt")
+        }
+        #expect(text.contains("https://tanzil.net/trans/"))
+        #expect(text.contains("https://github.com/fawazahmed0/quran-api"))
+        #expect(text.contains("non-commercial"))
     }
 }

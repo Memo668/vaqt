@@ -231,7 +231,6 @@ struct SettingsStoreTests {
                 $0.reminderMinutes = 5
                 $0.liveActivityMinutes = 60
                 $0.sound = .system
-                $0.voice = .two
             }
             store.setAppearance(.dark)
             store.updateCalculation {
@@ -242,12 +241,27 @@ struct SettingsStoreTests {
 
             let reloaded = SettingsStore(storage: .userDefaults(suiteName: name))
             #expect(reloaded.notifications == NotificationPreferences(
-                reminderMinutes: 5, liveActivityMinutes: 60, sound: .system, voice: .two
+                reminderMinutes: 5, liveActivityMinutes: 60, sound: .system
             ))
             #expect(reloaded.appearance == .dark)
             #expect(reloaded.calculation.asr == .hanafi)
             #expect(reloaded.calculation.adjustments[.fajr] == 3)
             #expect(reloaded.onboardingCompleted)
+        }
+    }
+
+    @Test("ein Stand aus der Zeit vor Phase 18 mit gewählter Stimme: Die Mitteilungen bleiben, wie sie waren")
+    func notificationsWithStoredVoice() throws {
+        try withSuite { name in
+            let defaults = try #require(UserDefaults(suiteName: name))
+            defaults.set(
+                Data(#"{"reminder":5,"liveAct":60,"sound":"silent","voice":2}"#.utf8),
+                forKey: SettingsStore.Key.notifications
+            )
+            let store = SettingsStore(storage: .userDefaults(suiteName: name))
+            #expect(store.notifications == NotificationPreferences(
+                reminderMinutes: 5, liveActivityMinutes: 60, sound: .silent
+            ))
         }
     }
 

@@ -140,12 +140,11 @@ struct NotificationModelTests {
         #expect(request.content.sound == nil)
     }
 
-    @Test("Klang und Stimme wirken auf den Ton")
+    @Test("der Klang wirkt auf den Ton: erst der kurze Adhan, dann der Systemton")
     func sound() async {
         let fixture = fixture()
-        fixture.settings.updateNotifications { $0.voice = .two }
         await fixture.model.reschedule()
-        #expect(fixture.model.planned[1].tone == .clip("adhan-voice2.caf"))
+        #expect(fixture.model.planned[1].tone == .clip("adhan.caf"))
         fixture.settings.updateNotifications { $0.sound = .system }
         await fixture.model.reschedule()
         #expect(fixture.model.planned[1].tone == .system)
@@ -191,7 +190,7 @@ struct NotificationModelTests {
         #expect(fixture.model.planned[1].title == L10n.notifPrayerTitle(p: L10n.p_maghrib, time: "16:24"))
     }
 
-    @Test("was eingeht: Ort, Rechnung, Glocken, Erinnerung, Klang, Stimme und Sprache")
+    @Test("was eingeht: Ort, Rechnung, Glocken, Erinnerung, Klang und Sprache")
     func inputs() {
         let fixture = fixture()
         var last = fixture.model.inputs
@@ -204,8 +203,6 @@ struct NotificationModelTests {
         fixture.settings.updateNotifications { $0.reminderMinutes = 5 }
         #expect(changed())
         fixture.settings.updateNotifications { $0.sound = .silent }
-        #expect(changed())
-        fixture.settings.updateNotifications { $0.voice = .three }
         #expect(changed())
         fixture.settings.updateCalculation { $0.asr = .hanafi }
         #expect(changed())
@@ -220,7 +217,7 @@ struct NotificationModelTests {
         #expect(self.fixture(language: .tr).model.inputs != self.fixture().model.inputs)
     }
 
-    @Test("nach einer Änderung an Glocke, Erinnerung, Live-Aktivität oder Klang fragt die App – nicht nach der Stimme")
+    @Test("nach einer Änderung an Glocke, Erinnerung, Live-Aktivität oder Klang fragt die App – nicht nach einer an der Rechnung")
     func choices() {
         let fixture = fixture()
         var last = fixture.model.choices
@@ -236,7 +233,7 @@ struct NotificationModelTests {
         #expect(changed())
         fixture.settings.updateNotifications { $0.sound = .system }
         #expect(changed())
-        fixture.settings.updateNotifications { $0.voice = .two }
+        fixture.settings.updateCalculation { $0.asr = .hanafi }
         #expect(!changed())
     }
 
@@ -247,7 +244,7 @@ struct NotificationModelTests {
         let now = instant("2026-11-10", "14:25")
         let notification = PrayerNotification(
             kind: .prayer, prayer: .dhuhr, day: day("2026-11-10"), date: now.addingTimeInterval(600), eventDate: now.addingTimeInterval(600),
-            title: "Dhuhr · 11:52", body: "Zeit für Dhuhr in Berlin.", tone: .clip("adhan-voice1.caf")
+            title: "Dhuhr · 11:52", body: "Zeit für Dhuhr in Berlin.", tone: .clip("adhan.caf")
         )
         let request = try #require(SystemNotificationScheduler.request(for: notification, now: now))
         #expect(request.identifier == "prayer.2026-11-10.dhuhr")
@@ -276,7 +273,7 @@ struct NotificationModelTests {
     func sounds() {
         #expect(SystemNotificationScheduler.sound(for: .silent) == nil)
         #expect(SystemNotificationScheduler.sound(for: .system) == .default)
-        #expect(SystemNotificationScheduler.sound(for: .clip("adhan-voice1.caf")) == UNNotificationSound(named: UNNotificationSoundName("adhan-voice1.caf")))
+        #expect(SystemNotificationScheduler.sound(for: .clip("adhan.caf")) == UNNotificationSound(named: UNNotificationSoundName("adhan.caf")))
     }
 
     // MARK: - Hintergrund

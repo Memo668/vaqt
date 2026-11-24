@@ -3,58 +3,41 @@ import Foundation
 import Observation
 import PrayerCore
 
-/// Der Adhan-Player – `S.adhan` und die Aktionen `adhan-toggle`, `pick` (Stimme), `toggle-fajr` und der
-/// Scrubber im Prototyp.
+/// Der Adhan-Player – `S.adhan`, die Aktion `adhan-toggle` und der Scrubber im Prototyp.
 ///
-/// Die gewählte Stimme gilt auch für die Mitteilungen (Phase 8) und bleibt gespeichert. Die
-/// Fadschr-Variante ist nur eine Vorschau im Player. Ein Wechsel der Stimme oder der Variante hält an und
-/// springt an den Anfang; am Ende springt der Player zurück auf 0:00; das Schließen des Sheets hält an.
+/// Er spielt die eine Aufnahme der App, dieselbe wie Mitteilungen und Wecker (`AdhanRecording`,
+/// Spec § 11.2). Am Ende springt der Player zurück auf 0:00; das Schließen des Sheets hält an.
 @MainActor
 @Observable
 final class AdhanPlayerModel {
 
-    let settings: SettingsStore
-    /// Die Vorschau der Fadschr-Variante (`S.adhan.fajr`).
-    private(set) var isFajrVariant = false
     private(set) var isPlaying = false
     /// Gespielte Sekunden (`S.adhan.pos`).
     private(set) var position: TimeInterval = 0
-    private(set) var duration: TimeInterval
+    /// Länge der Aufnahme in Sekunden (`adhanDur()`).
+    let duration: TimeInterval
 
-    @ObservationIgnored private let makePlayback: @MainActor (AdhanVoice, Bool) -> any AdhanPlayback
-    @ObservationIgnored private var playback: any AdhanPlayback
+    @ObservationIgnored private let playback: any AdhanPlayback
     /// Lässt die Wiedergabe anlaufen (`starting`) und liest dann alle 0,1 s die Stelle (`ticker`).
     @ObservationIgnored private var starting: Task<Void, Never>?
     @ObservationIgnored private var ticker: Task<Void, Never>?
 
-    /// - Parameter makePlayback: die Wiedergabe einer Stimme mit oder ohne Fadschr-Variante; ohne Angabe
-    ///   die Aufnahme aus dem Bundle der App, sonst stumm (`AdhanClips`).
-    init(
-        settings: SettingsStore,
-        makePlayback: @escaping @MainActor (AdhanVoice, Bool) -> any AdhanPlayback = { voice, fajr in
-            AdhanClips.playback(for: voice, fajrVariant: fajr)
-        }
-    ) {
-        self.settings = settings
-        self.makePlayback = makePlayback
-        let playback = makePlayback(settings.notifications.voice, false)
+    /// - Parameter makePlayback: die Wiedergabe der Aufnahme; ohne Angabe aus dem Bundle der App, sonst
+    ///   stumm (`AdhanClips`).
+    init(makePlayback: @MainActor () -> any AdhanPlayback = { AdhanClips.playback() }) {
+        let playback = makePlayback()
         self.playback = playback
         duration = playback.duration
     }
 
-    /// Die gewählte Stimme (`S.adhan.voice`).
-    var voice: AdhanVoice {
-        settings.notifications.voice
-    }
-
-    /// „Stimme 1 · Makkah“.
+    /// Der Muezzin der Aufnahme (`ADHAN_VOICE.name`).
     var title: String {
-        "\(L10n.voiceN(n: String(voice.number))) · \(voice.place)"
+        AdhanRecording.muezzin
     }
 
-    /// „Kurzer Adhan · für Mitteilungen“, mit der Variante „… · Fadschr-Variante“.
+    /// „Kurzer Adhan · für Mitteilungen“.
     var subtitle: String {
-        isFajrVariant ? L10n.shortAdhan + " · " + L10n.fajrVariant : L10n.shortAdhan
+        L10n.shortAdhan
     }
 
     // MARK: - Aktionen
@@ -80,20 +63,6 @@ final class AdhanPlayerModel {
         sync()
     }
 
-    /// Eine andere Stimme: anhalten, an den Anfang, die Wahl speichern.
-    func selectVoice(_ voice: AdhanVoice) {
-        stop()
-        settings.updateNotifications { $0.voice = voice }
-        replacePlayback()
-    }
-
-    /// Die Fadschr-Variante ein oder aus: anhalten, an den Anfang.
-    func setFajrVariant(_ isOn: Bool) {
-        stop()
-        isFajrVariant = isOn
-        replacePlayback()
-    }
-
     /// Anhalten und an den Anfang – beim Schließen des Sheets (`stopAdhan()`; `pos` bleibt im Prototyp
     /// stehen, die App beginnt beim nächsten Öffnen vorn).
     func stop() {
@@ -115,12 +84,6 @@ final class AdhanPlayerModel {
         starting = nil
         ticker?.cancel()
         ticker = nil
-    }
-
-    private func replacePlayback() {
-        playback = makePlayback(voice, isFajrVariant)
-        duration = playback.duration
-        position = 0
     }
 
     // MARK: - Ablauf

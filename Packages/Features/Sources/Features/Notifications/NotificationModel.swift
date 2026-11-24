@@ -8,7 +8,7 @@ import PrayerCore
 ///
 /// Geplant wird bei jedem Start, wenn die App nach vorn kommt, bei der Hintergrundaktualisierung und nach
 /// jeder Änderung an dem, was in die Mitteilungen eingeht (`inputs`): Ort, Methode, Asr, Regel für hohe
-/// Breiten, Minutenkorrektur, Glocken, Erinnerung, Klang, Stimme und Sprache. Was geplant wird, bestimmt
+/// Breiten, Minutenkorrektur, Glocken, Erinnerung, Klang und Sprache. Was geplant wird, bestimmt
 /// `NotificationPlanner` in PrayerCore; hier kommen Einstellungen, Ort und Uhr der App dazu.
 ///
 /// Ohne Erlaubnis plant die App nichts und löscht, was noch aussteht. Die Glocken bleiben trotzdem
@@ -63,9 +63,8 @@ public final class NotificationModel {
         )
     }
 
-    /// Die Wahl unter Einstellungen › Mitteilungen und an den Glocken – ohne die Stimme, die man im
-    /// Adhan-Sheet wählt. Ändert sie sich und hat iOS noch nie gefragt, fragt die App jetzt
-    /// (`requestIfNeverAsked()`).
+    /// Die Wahl unter Einstellungen › Mitteilungen und an den Glocken. Ändert sie sich und hat iOS noch nie
+    /// gefragt, fragt die App jetzt (`requestIfNeverAsked()`).
     public struct Choices: Hashable, Sendable {
         public var bells: [Prayer: BellState]
         public var reminderMinutes: Int

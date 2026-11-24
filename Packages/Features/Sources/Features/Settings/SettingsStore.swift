@@ -39,8 +39,7 @@ public final class SettingsStore {
         public var calculation = CalculationSettings()
         /// Der Schalter „Kerahat-Zeiten zeigen“ (`S.kerahat`).
         public var showKerahat = true
-        /// Vorab-Erinnerung, Live-Aktivität, Klang und Stimme (`S.reminder`, `S.liveAct`, `S.sound`,
-        /// `S.adhan.voice`).
+        /// Vorab-Erinnerung, Live-Aktivität und Klang (`S.reminder`, `S.liveAct`, `S.sound`).
         public var notifications = NotificationPreferences()
         /// Der Wecker zu Fadschr (`S.alarmOn`, `S.alarmMode`, `S.alarmBefore`, `S.alarmTime`, `S.alarmSound`).
         public var fajrAlarm = FajrAlarmPreferences()
