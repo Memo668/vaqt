@@ -1,6 +1,7 @@
 import DesignSystem
 import PrayerCore
 import SwiftUI
+import UIKit
 
 /// Wurzel der App: Einstellungen, Sprache, Erscheinungsbild und wo man in der App steht. Darunter liegt
 /// der Inhalt (`AppContent`).
@@ -58,6 +59,29 @@ public struct RootView: View {
             // und umgekehrt (Spec § 9.10).
             .environment(\.layoutDirection, L10n.layoutDirection)
             .preferredColorScheme(settings.appearance.colorScheme)
+            // Die Grundfarbe aus Einstellungen › Stil (Spec § 11.7) für die Bedienelemente des Systems – statt des
+            // Assets `AccentColor`, das nur noch für den Start gilt. Dialoge des Systems nehmen die Farbe des Fensters.
+            .tint(Palette.accent)
+            .onChange(of: settings.style.accent, initial: true) { _, accent in
+                WindowTint.apply(accent)
+            }
+    }
+}
+
+/// Die Farbe der Fenster der App: Dialoge des Systems (`UIAlertController`) und Teilen-Blätter nehmen sie, nicht
+/// die Farbe von SwiftUI.
+@MainActor
+enum WindowTint {
+    static func apply(_ accent: AccentColorID) {
+        let color = UIColor { traits in
+            let value = traits.userInterfaceStyle == .dark ? accent.dark : accent.light
+            return UIColor(red: value.red, green: value.green, blue: value.blue, alpha: value.alpha)
+        }
+        for case let scene as UIWindowScene in UIApplication.shared.connectedScenes {
+            for window in scene.windows {
+                window.tintColor = color
+            }
+        }
     }
 }
 

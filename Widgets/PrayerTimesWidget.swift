@@ -62,7 +62,8 @@ struct PrayerTimelineProvider: TimelineProvider {
                 date: entry.date.addingTimeInterval(-offset),
                 content: PrayerWidgetContent(
                     state: Self.widgetState(entry.content), cityName: state.cityName,
-                    isCurrentLocation: state.isCurrentLocation, clockOffset: offset, showKerahat: state.showKerahat
+                    isCurrentLocation: state.isCurrentLocation, clockOffset: offset, showKerahat: state.showKerahat,
+                    style: state.effectiveStyle
                 ),
                 language: state.language
             )
@@ -102,8 +103,9 @@ struct PrayerTimesWidgetView: View {
     @Environment(\.widgetFamily) private var family
 
     var body: some View {
-        // Die Texte in der Sprache der App, bevor die Ansichten sie lesen.
+        // Die Texte in der Sprache der App und die Grundfarbe (Spec § 11.7), bevor die Ansichten sie lesen.
         L10n.chosenLanguage = entry.language
+        AccentStore.shared.accent = entry.content.style.accent
         return content
             .environment(\.locale, L10n.locale)
             .environment(\.layoutDirection, L10n.layoutDirection)
@@ -178,13 +180,17 @@ struct PrayerLiveWidgetView: View {
     let entry: PrayerEntry
 
     var body: some View {
-        // Die Texte in der Sprache der App, bevor die Ansichten sie lesen.
+        // Die Texte in der Sprache der App und die Grundfarbe, bevor die Ansichten sie lesen.
         L10n.chosenLanguage = entry.language
+        AccentStore.shared.accent = entry.content.style.accent
+        // Der Stil der Live-Aktivität gilt auch für dieses Widget (Spec § 11.7).
         return LivePrayerWidget(content: entry.content)
             .environment(\.locale, L10n.locale)
             .environment(\.layoutDirection, L10n.layoutDirection)
             .containerBackground(for: .widget) {
-                LiveActivityBackground(opacity: LiveActivityMetrics.liveWidgetBackgroundOpacity)
+                LiveActivityBackground(
+                    look: LiveActivityLook(style: entry.content.style), opacity: LiveActivityMetrics.liveWidgetBackgroundOpacity
+                )
             }
     }
 }

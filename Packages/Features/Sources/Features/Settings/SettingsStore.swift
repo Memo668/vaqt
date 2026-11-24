@@ -45,6 +45,8 @@ public final class SettingsStore {
         public var fajrAlarm = FajrAlarmPreferences()
         /// Erscheinungsbild (`S.appearance`).
         public var appearance = Appearance.system
+        /// Stil: Grundfarbe und Aussehen der Live-Aktivität (`S.accent`, `S.laStyle`, `S.laInv`; Spec § 11.7).
+        public var style = AppStyle.standard
         /// Die in der App gewählte Sprache (`S.lang`); `nil` heißt: wie das Gerät.
         public var language: AppLanguage?
         /// Ob das Onboarding durchlaufen oder übersprungen ist (`S.onboarded`).
@@ -68,12 +70,16 @@ public final class SettingsStore {
     public private(set) var notifications: NotificationPreferences
     public private(set) var fajrAlarm: FajrAlarmPreferences
     public private(set) var appearance: Appearance
+    public private(set) var style: AppStyle
     public private(set) var language: AppLanguage?
     public private(set) var onboardingCompleted: Bool
 
     @ObservationIgnored private let defaults: UserDefaults?
+    /// Wo die Grundfarbe gilt – in der App der gemeinsame Speicher, in Tests ein eigener.
+    @ObservationIgnored private let accentStore: AccentStore
 
-    public init(storage: Storage) {
+    public init(storage: Storage, accentStore: AccentStore = .shared) {
+        self.accentStore = accentStore
         let snapshot: Snapshot
         switch storage {
         case .userDefaults(let suiteName):
@@ -95,8 +101,11 @@ public final class SettingsStore {
         notifications = snapshot.notifications
         fajrAlarm = snapshot.fajrAlarm
         appearance = snapshot.appearance
+        style = snapshot.style
         language = snapshot.language
         onboardingCompleted = snapshot.onboardingCompleted
+        // Die Grundfarbe gilt vom ersten Bild an (Spec § 11.7).
+        accentStore.accent = snapshot.style.accent
     }
 
     /// Der Stand aller Einstellungen.
@@ -112,6 +121,7 @@ public final class SettingsStore {
         snapshot.notifications = notifications
         snapshot.fajrAlarm = fajrAlarm
         snapshot.appearance = appearance
+        snapshot.style = style
         snapshot.language = language
         snapshot.onboardingCompleted = onboardingCompleted
         return snapshot
@@ -248,6 +258,21 @@ public final class SettingsStore {
         defaults?.set(appearance.rawValue, forKey: Key.appearance)
     }
 
+    /// Der Stil der App (Spec § 11.7). Die Grundfarbe gilt sofort überall (`AccentStore`); Widgets und
+    /// Live-Aktivitäten bekommen den Stil, wenn die App neu plant.
+    public func setStyle(_ style: AppStyle) {
+        self.style = style
+        accentStore.accent = style.accent
+        save(style, forKey: Key.style)
+    }
+
+    /// Ändert einen Teil des Stils, z. B. `{ $0.accent = .ocean }`.
+    public func updateStyle(_ change: (inout AppStyle) -> Void) {
+        var style = style
+        change(&style)
+        setStyle(style)
+    }
+
     /// Wählt die Sprache der App. Die Texte folgen sofort (`L10n.chosenLanguage`); die Seiten bauen sich
     /// dafür neu auf (`RootView`).
     public func setLanguage(_ language: AppLanguage?) {
@@ -281,6 +306,7 @@ public final class SettingsStore {
         static let notifications = "settings.notifications"
         static let fajrAlarm = "settings.fajrAlarm"
         static let appearance = "settings.appearance"
+        static let style = "settings.style"
         static let language = "settings.language"
         static let onboardingCompleted = "settings.onboarded"
 
@@ -316,6 +342,9 @@ public final class SettingsStore {
         }
         if let appearance = defaults.string(forKey: Key.appearance).flatMap(Appearance.init(rawValue:)) {
             snapshot.appearance = appearance
+        }
+        if let style = decode(AppStyle.self, from: defaults, forKey: Key.style) {
+            snapshot.style = style
         }
         snapshot.language = defaults.string(forKey: Key.language).flatMap(AppLanguage.init(rawValue:))
         snapshot.onboardingCompleted = defaults.bool(forKey: Key.onboardingCompleted)

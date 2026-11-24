@@ -61,11 +61,16 @@ public struct LiveActivityContent: Codable, Hashable, Sendable {
     public let segment: Segment?
     /// Beginn der Verbotszeit vor dem Gebet (App-Uhr), wenn die Aktivität dazu gehört.
     public let prohibitedStart: Date?
+    /// Stil der App: Grundfarbe und Aussehen (Spec § 11.7); `nil` in Inhalten vor dem Nachtrag zu Phase 18, dort
+    /// gilt der Standard. Ändert er sich, plant die App neu: Laufende Aktivitäten bekommen den neuen Inhalt,
+    /// geplante werden ersetzt (`LiveActivityLifecycle`).
+    public let style: AppStyle?
 
     public init(
         prayer: DayPhase.Event, previous: DayPhase.Event, countdown: DayPhase, begun: DayPhase,
         kerahat: [KerahatMark], cityName: String, isCurrentLocation: Bool, showKerahat: Bool,
-        clockOffset: TimeInterval = 0, hasBegun: Bool = false, segment: Segment = .regular, prohibitedStart: Date? = nil
+        clockOffset: TimeInterval = 0, hasBegun: Bool = false, segment: Segment = .regular, prohibitedStart: Date? = nil,
+        style: AppStyle? = nil
     ) {
         self.prayer = prayer
         self.previous = previous
@@ -79,6 +84,7 @@ public struct LiveActivityContent: Codable, Hashable, Sendable {
         self.hasBegun = hasBegun
         self.segment = segment
         self.prohibitedStart = prohibitedStart
+        self.style = style
     }
 
     /// Teil der Strecke; ältere Inhalte ohne Angabe sind `regular`.
@@ -112,7 +118,7 @@ public struct LiveActivityContent: Codable, Hashable, Sendable {
         LiveActivityContent(
             prayer: prayer, previous: previous, countdown: countdown, begun: begun, kerahat: kerahat,
             cityName: cityName, isCurrentLocation: isCurrentLocation, showKerahat: showKerahat,
-            clockOffset: clockOffset, hasBegun: true, segment: kind, prohibitedStart: prohibitedStart
+            clockOffset: clockOffset, hasBegun: true, segment: kind, prohibitedStart: prohibitedStart, style: style
         )
     }
 

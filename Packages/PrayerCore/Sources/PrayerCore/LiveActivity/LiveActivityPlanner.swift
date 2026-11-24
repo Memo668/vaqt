@@ -77,14 +77,19 @@ public struct LiveActivityPlanner: Sendable {
         /// Uhr der App minus Gerätezeit (`-debugTime`); sonst 0.
         public var clockOffset: TimeInterval
 
+        /// Stil der App (Spec § 11.7): Grundfarbe und Aussehen der Aktivität.
+        public var style: AppStyle
+
         public init(
-            leadMinutes: Int, cityName: String, isCurrentLocation: Bool, showKerahat: Bool, clockOffset: TimeInterval = 0
+            leadMinutes: Int, cityName: String, isCurrentLocation: Bool, showKerahat: Bool, clockOffset: TimeInterval = 0,
+            style: AppStyle = .standard
         ) {
             self.leadMinutes = leadMinutes
             self.cityName = cityName
             self.isCurrentLocation = isCurrentLocation
             self.showKerahat = showKerahat
             self.clockOffset = clockOffset
+            self.style = style
         }
     }
 
@@ -223,7 +228,7 @@ public struct LiveActivityPlanner: Sendable {
                 ? LiveActivityContent.kerahatMarks(between: previous.date, and: event.date, windows: windows) : [],
             cityName: options.cityName, isCurrentLocation: options.isCurrentLocation,
             showKerahat: options.showKerahat, clockOffset: options.clockOffset,
-            segment: segment, prohibitedStart: prohibitedStart
+            segment: segment, prohibitedStart: prohibitedStart, style: options.style
         )
         return LiveActivityPlan(
             id: LiveActivityPlan.identifier(prayer: prayer.prayer, day: prayer.day, prohibited: segment == .prohibited),

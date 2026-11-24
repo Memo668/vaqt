@@ -331,7 +331,7 @@ private struct CatalogLiveActivityArc: View {
     let phase: DayPhase
 
     var body: some View {
-        DayArc(phase: phase, style: .liveActivity)
+        DayArc(phase: phase, style: .liveActivity(.standard))
             .padding(.top, 11 + 16)
             .padding(.horizontal, 14)
             .padding(.bottom, 8)

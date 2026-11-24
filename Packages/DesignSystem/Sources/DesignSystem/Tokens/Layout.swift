@@ -87,9 +87,9 @@ public struct ShadowToken: Sendable {
     /// Ruhende Gebetskarte: `0 1px 2px rgba(0,0,0,.04)`.
     public static let row = ShadowToken(color: .black.opacity(0.04), blur: 2, y: 1)
     /// Karte des laufenden Gebets: `0 8px 22px` in Akzent mit 20 % Deckkraft.
-    public static let currentRow = ShadowToken(color: Palette.accent.opacity(0.20), blur: 22, y: 8)
+    public static var currentRow: ShadowToken { ShadowToken(color: Palette.accent.opacity(0.20), blur: 22, y: 8) }
     /// Ausgewählter Chip: `0 10px 26px` in Akzent mit 24 % Deckkraft.
-    public static let selectedChip = ShadowToken(color: Palette.accent.opacity(0.24), blur: 26, y: 10)
+    public static var selectedChip: ShadowToken { ShadowToken(color: Palette.accent.opacity(0.24), blur: 26, y: 10) }
     /// Knopf für „jetzt“ auf dem Bogen: `drop-shadow(0 1px 2px rgba(0,0,0,.28))`. Bei `drop-shadow`
     /// ist die Angabe schon die Standardabweichung, deshalb hier das Doppelte.
     public static let knob = ShadowToken(color: .black.opacity(0.28), blur: 4, y: 1)

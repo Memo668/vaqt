@@ -1,27 +1,47 @@
+import PrayerCore
 import SwiftUI
 import UIKit
 
 /// Die Farben der App – Design Spec § 2 und das `:root`-CSS des Prototyps (`[data-theme]`).
 ///
-/// Eigene Werte haben nur der Akzent (Pine Teal) und was daraus gemischt ist, die Sekundärschrift im
-/// hellen Erscheinungsbild und die Kerahat-Farben. Alles andere sind die semantischen Systemfarben,
-/// deren Werte der Prototyp nachbildet.
+/// Eigene Werte haben nur der Akzent und was daraus gemischt ist, die Sekundärschrift im hellen
+/// Erscheinungsbild und die Kerahat-Farben. Alles andere sind die semantischen Systemfarben, deren Werte der
+/// Prototyp nachbildet.
+///
+/// Seit dem Nachtrag zu Phase 18 ist der Akzent die Grundfarbe aus Einstellungen › Stil (Spec § 11.7, 24 Farben,
+/// Standard Petrol). Alles, was von ihr abhängt, liest sie aus `AccentStore` – bei jedem Aufbau neu, und eine
+/// Ansicht, die so eine Farbe liest, baut sich nach einem Wechsel neu auf. Bei Orange, Gold und Sand sind die
+/// Verbotszeiten violett statt orange.
 public enum Palette {
+
+    /// Die Grundfarbe, die gerade gilt.
+    static var current: AccentColorID {
+        AccentStore.shared.accent
+    }
 
     // MARK: - Akzent
 
-    /// `--accent`: Pine Teal, `#1F7A6D` hell und `#4CC2AE` dunkel. Dieselben Werte stehen im Asset
-    /// `AccentColor` der App.
-    public static let accent = Color(light: Values.accentLight, dark: Values.accentDark)
+    /// `--accent`: die Grundfarbe, z. B. Petrol `#1F7A6D` hell und `#4CC2AE` dunkel. Petrol steht auch im Asset
+    /// `AccentColor` der App – für den Start, bevor die Einstellungen gelesen sind.
+    public static var accent: Color {
+        let accent = current
+        return Color(light: accent.light, dark: accent.dark)
+    }
 
-    /// `--on-accent`: Schrift und Symbole auf Akzentflächen, `#FFFFFF` hell und `#04221D` dunkel.
-    public static let onAccent = Color(light: Values.onAccentLight, dark: Values.onAccentDark)
+    /// `--on-accent`: Schrift und Symbole auf Akzentflächen, `#FFFFFF` hell und dunkel die Schrift der
+    /// Grundfarbe (`--on-accent-d`, bei Petrol `#04221D`).
+    public static var onAccent: Color {
+        Color(light: Values.onAccentLight, dark: current.onDark)
+    }
 
     /// `--accent-tint`: Akzent mit 13 % Deckkraft.
-    public static let accentTint = Color(
-        light: Values.accentLight.opacity(Values.accentTintOpacity),
-        dark: Values.accentDark.opacity(Values.accentTintOpacity)
-    )
+    public static var accentTint: Color {
+        let accent = current
+        return Color(
+            light: accent.light.opacity(Values.accentTintOpacity),
+            dark: accent.dark.opacity(Values.accentTintOpacity)
+        )
+    }
 
     // MARK: - Schrift
 
@@ -75,23 +95,30 @@ public enum Palette {
 
     /// `--arc-track`: der noch kommende Teil des Bogens und die Marker kommender Gebete – Akzent zu
     /// 20 % auf dem Seitenhintergrund, dunkel zu 30 %. Deckend, damit sich Marker und Bogen decken.
-    public static let arcTrack = Color(
-        light: Values.accentLight.mixed(Values.arcTrackShareLight, with: Values.backgroundGroupedLight),
-        dark: Values.accentDark.mixed(Values.arcTrackShareDark, with: Values.backgroundGroupedDark)
-    )
+    public static var arcTrack: Color {
+        let accent = current
+        return Color(
+            light: accent.light.mixed(Values.arcTrackShareLight, with: Values.backgroundGroupedLight),
+            dark: accent.dark.mixed(Values.arcTrackShareDark, with: Values.backgroundGroupedDark)
+        )
+    }
 
     /// Karte des laufenden Gebets: Akzent zu 15 % auf der Kartenfarbe (`.prow.is-current`).
-    public static let currentRow = Color(
-        light: Values.accentLight.mixed(Values.currentRowShare, with: Values.backgroundCellLight),
-        dark: Values.accentDark.mixed(Values.currentRowShare, with: Values.backgroundCellDark)
-    )
+    public static var currentRow: Color {
+        let accent = current
+        return Color(
+            light: accent.light.mixed(Values.currentRowShare, with: Values.backgroundCellLight),
+            dark: accent.dark.mixed(Values.currentRowShare, with: Values.backgroundCellDark)
+        )
+    }
 
     /// Schrift in Akzent auf der Karte des laufenden Gebets: hell 8 % dunkler als `accent`, damit sie auf der
     /// getönten Karte 4,5 : 1 erreicht (WCAG AA; 4,8 statt 4,2 : 1) – entschieden mit dem Plan für Phase 11
     /// („Schrift dort dunkler“). Dunkel gilt der Akzent, er erreicht dort 5,9 : 1.
-    public static let currentRowAccent = Color(
-        light: Values.accentLight.mixed(Values.currentRowTextShare, with: RGBA.black), dark: Values.accentDark
-    )
+    public static var currentRowAccent: Color {
+        let accent = current
+        return Color(light: accent.light.mixed(Values.currentRowTextShare, with: RGBA.black), dark: accent.dark)
+    }
 
     /// Sekundärschrift auf der Karte des laufenden Gebets, z. B. die Kerahat-Zeile: hell 8 % dunkler
     /// (4,9 statt 4,3 : 1), dunkel die Systemfarbe.
@@ -102,36 +129,52 @@ public enum Palette {
     })
 
     /// Die laufende Kerahat-Zeile auf der Karte des laufenden Gebets: hell 8 % dunkler (4,7 statt 4,2 : 1).
-    public static let currentRowKerahatText = Color(
-        light: Values.kerahatTextLight.mixed(Values.currentRowTextShare, with: RGBA.black), dark: Values.kerahatTextDark
-    )
+    public static var currentRowKerahatText: Color {
+        let accent = current
+        return Color(
+            light: KerahatTone.rgba(0x9A6212, accent: accent).mixed(Values.currentRowTextShare, with: RGBA.black),
+            dark: KerahatTone.rgba(0xE3B36B, accent: accent)
+        )
+    }
 
     /// Gewählter Eintrag einer Liste aus Karten, z. B. der Vers, den die Karte oben zeigt: Akzent zu 13 %
     /// auf der Kartenfarbe (`.vitem[aria-pressed="true"]`).
-    public static let selectedItem = Color(
-        light: Values.accentLight.mixed(Values.selectedItemShare, with: Values.backgroundCellLight),
-        dark: Values.accentDark.mixed(Values.selectedItemShare, with: Values.backgroundCellDark)
-    )
+    public static var selectedItem: Color {
+        let accent = current
+        return Color(
+            light: accent.light.mixed(Values.selectedItemShare, with: Values.backgroundCellLight),
+            dark: accent.dark.mixed(Values.selectedItemShare, with: Values.backgroundCellDark)
+        )
+    }
 
-    /// `--kerahat`: die Kerahat-Marken, `#C7862A` hell und `#D9A04E` dunkel.
-    public static let kerahat = Color(light: Values.kerahatLight, dark: Values.kerahatDark)
+    /// `--kerahat`: die Kerahat-Marken, `#C7862A` hell und `#D9A04E` dunkel; bei warmen Grundfarben violett
+    /// (`#A282D9`, `#B89AED`, Spec § 11.7).
+    public static var kerahat: Color {
+        let accent = current
+        return Color(light: KerahatTone.rgba(0xC7862A, accent: accent), dark: KerahatTone.rgba(0xD9A04E, accent: accent))
+    }
 
-    /// `--kerahat-text`: die Kerahat-Zeile, solange das Fenster läuft – `#9A6212` hell, `#E3B36B` dunkel.
-    public static let kerahatText = Color(light: Values.kerahatTextLight, dark: Values.kerahatTextDark)
+    /// `--kerahat-text`: die Kerahat-Zeile, solange das Fenster läuft – `#9A6212` hell, `#E3B36B` dunkel; bei
+    /// warmen Grundfarben violett (`#7B5FA8`, `#C6ADF6`).
+    public static var kerahatText: Color {
+        let accent = current
+        return Color(light: KerahatTone.rgba(0x9A6212, accent: accent), dark: KerahatTone.rgba(0xE3B36B, accent: accent))
+    }
 
     // MARK: - Live-Aktivität
 
-    /// Die Farben des kleinen Bogens auf dem Sperrbildschirm (`.arc-la`). Der Hintergrund ist in beiden
-    /// Erscheinungsbildern der helle Akzent, deshalb gibt es hier keine dunklen Werte.
+    /// Die Farben des kleinen Bogens auf dem Sperrbildschirm (`.arc-la`) im Stil „Farbig“ und in der Grundfarbe,
+    /// die gerade gilt. Der Hintergrund ist in beiden Erscheinungsbildern der helle Akzent, deshalb gibt es hier
+    /// keine dunklen Werte. Alle Stile beschreibt `LiveActivityColors` (Spec § 11.7).
     public enum LiveActivity {
         /// Hintergrund der Live-Aktivität (`--accent-l`).
-        public static let background = Color(Values.accentLight)
+        public static var background: Color { Color(Palette.current.light) }
         /// Bogen, kommender Teil: Weiß mit 28 % Deckkraft.
         public static let track = Color(RGBA.white.opacity(0.28))
         /// Bogen bis „jetzt“, begonnene Marker und der Rand des Knopfes.
         public static let foreground = Color(RGBA.white)
         /// Marker kommender Gebete: Weiß zu 30 % auf dem Akzent.
-        public static let marker = Color(RGBA.white.mixed(0.30, with: Values.accentLight))
+        public static var marker: Color { Color(RGBA.white.mixed(0.30, with: Palette.current.light)) }
         /// Zeiten am Bogen: Weiß. Der Prototyp nimmt 80 % Deckkraft (3,9 : 1); voll Weiß erreicht 5,2 : 1
         /// (WCAG AA, entschieden mit dem Plan für Phase 11: „Schrift dort dunkler“).
         public static let time = Color(RGBA.white)

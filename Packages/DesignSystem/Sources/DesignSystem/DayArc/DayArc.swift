@@ -5,13 +5,12 @@ import SwiftUI
 public enum DayArcStyle: Hashable, Sendable {
     /// Der Bogen der Zeiten-Seite (`ARCS.home`).
     case home
-    /// Der kleine Bogen der Live-Aktivität: weiß auf Akzent (`ARCS.la`, `.arc-la`).
-    case liveActivity
-    /// Der Bogen der Live-Aktivität in der Verbotszeit: dieselben Maße, auf Orange (Spec § 10.3).
-    case liveActivityProhibited
+    /// Der kleine Bogen der Live-Aktivität (`ARCS.la`, `.arc-la`) im Stil der App und, in der Verbotszeit, orange
+    /// bzw. violett (Spec § 10.3, § 11.7).
+    case liveActivity(LiveActivityLook)
     /// Der Bogen des mittleren Widgets „Live“: wie in der Live-Aktivität, etwas schmaler (`ARCS.wla` mit
-    /// dem Aussehen `la`; Spec § 9.11).
-    case liveWidget
+    /// dem Aussehen `la`; Spec § 9.11). Der Stil der Live-Aktivität gilt auch hier (§ 11.7).
+    case liveWidget(LiveActivityLook)
     /// Der Bogen des rechteckigen Widgets auf dem Sperrbildschirm: wie in der Live-Aktivität, aber einfarbig
     /// und ohne Uhrzeiten, Kerahat gestreift (`ARCS.acc`, `.arc-acc`; Spec § 9.11).
     case lockScreen
@@ -19,7 +18,7 @@ public enum DayArcStyle: Hashable, Sendable {
     public var metrics: DayArcMetrics {
         switch self {
         case .home: .home
-        case .liveActivity, .liveActivityProhibited: .liveActivity
+        case .liveActivity: .liveActivity
         case .liveWidget: .liveWidget
         case .lockScreen: .lockScreen
         }
@@ -28,8 +27,7 @@ public enum DayArcStyle: Hashable, Sendable {
     var colors: DayArcColors {
         switch self {
         case .home: .home
-        case .liveActivity, .liveWidget: .liveActivity
-        case .liveActivityProhibited: .liveActivityProhibited
+        case .liveActivity(let look), .liveWidget(let look): .live(look.colors)
         case .lockScreen: .lockScreen
         }
     }
@@ -167,50 +165,48 @@ struct DayArcColors {
     /// Strichstärke der Symbole in den Markern (`sw` in `ARCS`, hier als Schriftstärke).
     let symbolWeight: Font.Weight
 
-    static let home = DayArcColors(
-        track: Palette.arcTrack, done: Palette.accent,
-        markerUpcoming: Palette.arcTrack, symbolUpcoming: Palette.accent,
-        markerBegun: Palette.accent, symbolBegun: Palette.onAccent,
-        glow: Palette.accent.opacity(0.16), ring: Palette.backgroundGrouped,
-        time: Palette.textSecondary, timeCurrent: Palette.accent,
-        // `.arc-k.on-track`: 0,92, vorbei 0,42, laufend 1 (Spec § 9.3).
-        kerahat: Palette.kerahat, kerahatOpacity: 0.92, kerahatPastOpacity: 0.42, kerahatActiveOpacity: 1,
-        knob: .white, knobStroke: .black.opacity(0.06), knobStrokeWidth: 0.5, knobShadow: .knob,
-        symbolWeight: .bold
-    )
+    /// Seit dem Nachtrag zu Phase 18 hängen die Farben an der Grundfarbe, die gerade gilt (`AccentStore`): Sie
+    /// entstehen bei jedem Aufbau neu.
+    static var home: DayArcColors {
+        DayArcColors(
+            track: Palette.arcTrack, done: Palette.accent,
+            markerUpcoming: Palette.arcTrack, symbolUpcoming: Palette.accent,
+            markerBegun: Palette.accent, symbolBegun: Palette.onAccent,
+            glow: Palette.accent.opacity(0.16), ring: Palette.backgroundGrouped,
+            time: Palette.textSecondary, timeCurrent: Palette.accent,
+            // `.arc-k.on-track`: 0,92, vorbei 0,42, laufend 1 (Spec § 9.3).
+            kerahat: Palette.kerahat, kerahatOpacity: 0.92, kerahatPastOpacity: 0.42, kerahatActiveOpacity: 1,
+            knob: .white, knobStroke: .black.opacity(0.06), knobStrokeWidth: 0.5, knobShadow: .knob,
+            symbolWeight: .bold
+        )
+    }
 
-    static let liveActivity = DayArcColors(
-        track: Palette.LiveActivity.track, done: Palette.LiveActivity.foreground,
-        markerUpcoming: Palette.LiveActivity.marker, symbolUpcoming: Palette.LiveActivity.foreground,
-        markerBegun: Palette.LiveActivity.foreground, symbolBegun: Palette.LiveActivity.background,
-        glow: Palette.LiveActivity.foreground.opacity(0.22), ring: Palette.LiveActivity.background,
-        time: Palette.LiveActivity.time, timeCurrent: Palette.LiveActivity.foreground,
-        // `.arc-la .arc-k.on-track`: 0,95, vorbei 0,5; laufend 1 wie in Spec § 9.3 (Phase 14). Im CSS gewinnt
-        // für das laufende Fenster die spätere Regel mit 0,95 – der Unterschied ist nicht zu sehen.
-        kerahat: Palette.LiveActivity.kerahat, kerahatOpacity: 0.95, kerahatPastOpacity: 0.5, kerahatActiveOpacity: 1,
-        knob: Palette.LiveActivity.background, knobStroke: Palette.LiveActivity.foreground, knobStrokeWidth: 2,
-        knobShadow: nil,
-        // Die Symbole sind hier nur gut 8 pt groß; erst mit dieser Stärke ist der Strich so kräftig
-        // wie im Prototyp (1,15 pt).
-        symbolWeight: .heavy
-    )
-
-    /// `.la.is-kerahat`: wie `liveActivity`, auf Orange (Spec § 10.3).
-    static let liveActivityProhibited = DayArcColors(
-        track: Palette.LiveActivity.track, done: Palette.LiveActivity.foreground,
-        markerUpcoming: Palette.LiveActivity.prohibitedMarker, symbolUpcoming: Palette.LiveActivity.foreground,
-        markerBegun: Palette.LiveActivity.foreground, symbolBegun: Palette.LiveActivity.prohibitedDeep,
-        glow: Palette.LiveActivity.foreground.opacity(0.22), ring: Palette.LiveActivity.prohibited,
-        time: Palette.LiveActivity.time, timeCurrent: Palette.LiveActivity.foreground,
-        kerahat: Palette.LiveActivity.prohibitedKerahat, kerahatOpacity: 0.95, kerahatPastOpacity: 0.5, kerahatActiveOpacity: 1,
-        knob: Palette.LiveActivity.prohibited, knobStroke: Palette.LiveActivity.foreground, knobStrokeWidth: 2,
-        knobShadow: nil,
-        symbolWeight: .heavy
-    )
+    /// `.arc-la` in einem Stil der Live-Aktivität (`--la-*`, Spec § 10.3, § 11.7).
+    static func live(_ la: LiveActivityColors) -> DayArcColors {
+        DayArcColors(
+            track: Color(la.track), done: Color(la.line),
+            markerUpcoming: Color(la.marker), symbolUpcoming: Color(la.markerSymbol),
+            markerBegun: Color(la.markerBegun), symbolBegun: Color(la.markerBegunSymbol),
+            glow: Color(la.glow).opacity(0.22), ring: Color(la.gap),
+            time: Color(la.arcTime), timeCurrent: Color(la.foreground),
+            // `.arc-la .arc-k.on-track`: 0,95, vorbei 0,5 (auf farbiger Linie 0,85); laufend 1 wie in Spec § 9.3
+            // (Phase 14). Im CSS gewinnt für das laufende Fenster die spätere Regel mit 0,95 – der Unterschied ist
+            // nicht zu sehen.
+            kerahat: Color(la.kerahat), kerahatOpacity: 0.95, kerahatPastOpacity: la.kerahatPastOpacity, kerahatActiveOpacity: 1,
+            // Schwarz-weiß: gestreift über Schwarz zu 50 % (`[data-la="mono"] .arc-k-base`, `stroke-dasharray: 2.4 2.2`).
+            kerahatDash: la.isMonochrome ? [2.4, 2.2] : nil,
+            kerahatBase: la.isMonochrome ? Color.black.opacity(0.5) : nil,
+            knob: Color(la.knob), knobStroke: Color(la.knobRing), knobStrokeWidth: 2,
+            knobShadow: nil,
+            // Die Symbole sind hier nur gut 8 pt groß; erst mit dieser Stärke ist der Strich so kräftig
+            // wie im Prototyp (1,15 pt).
+            symbolWeight: .heavy
+        )
+    }
 
     /// `.arc-acc`: alles Weiß, abgestuft über die Deckkraft; Dunkles (Symbole begonnener Gebete, Mitte des
     /// Knopfes, Ring enger Gebete, Grund von Kerahat) zeigt iOS auf dem Sperrbildschirm durchsichtig.
-    static let lockScreen = DayArcColors(
+    static var lockScreen: DayArcColors { DayArcColors(
         track: Palette.LockScreen.track, done: Palette.LockScreen.foreground,
         markerUpcoming: Palette.LockScreen.marker, symbolUpcoming: Palette.LockScreen.foreground,
         markerBegun: Palette.LockScreen.foreground, symbolBegun: Palette.LockScreen.cutOut,
@@ -222,7 +218,7 @@ struct DayArcColors {
         knobShadow: nil,
         // Die Symbole sind nur knapp 6 pt groß – wie in der Live-Aktivität kräftig.
         symbolWeight: .heavy
-    )
+    ) }
 }
 
 // MARK: - Zeichnung

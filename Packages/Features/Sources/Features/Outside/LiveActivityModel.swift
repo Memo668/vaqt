@@ -103,6 +103,9 @@ public final class LiveActivityModel {
         public var showKerahat: Bool
         public var leadMinutes: Int
         public var language: AppLanguage?
+        /// Stil der App (Spec § 11.7): Ändert er sich, bekommen laufende Aktivitäten den neuen Inhalt, geplante
+        /// werden neu angelegt.
+        public var style: AppStyle
     }
 
     public var inputs: Inputs {
@@ -110,7 +113,8 @@ public final class LiveActivityModel {
             place: location.place, cityName: location.cityTitle,
             isCurrentLocation: location.isAutomatic && location.place != nil,
             calculation: settings.calculation, showKerahat: settings.showKerahat,
-            leadMinutes: settings.notifications.liveActivityMinutes, language: settings.language
+            leadMinutes: settings.notifications.liveActivityMinutes, language: settings.language,
+            style: settings.style
         )
     }
 
@@ -144,7 +148,7 @@ public final class LiveActivityModel {
             options: LiveActivityPlanner.Options(
                 leadMinutes: settings.notifications.liveActivityMinutes, cityName: location.cityTitle,
                 isCurrentLocation: location.isAutomatic, showKerahat: settings.showKerahat,
-                clockOffset: WidgetSync.clockOffset(of: clock)
+                clockOffset: WidgetSync.clockOffset(of: clock), style: settings.style
             ),
             debugStart: debugStart
         )

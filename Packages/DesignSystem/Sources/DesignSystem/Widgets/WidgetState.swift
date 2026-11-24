@@ -39,11 +39,14 @@ public struct WidgetState: Codable, Hashable, Sendable {
     /// Die Sprache, in der die App ihre Texte zeigt, auch ohne eigene Wahl. Die Extension läuft in der
     /// Sprache des Geräts; so stimmen ihre Texte mit denen der App überein.
     public var language: AppLanguage
+    /// Stil der App (Spec § 11.7): Grundfarbe und Aussehen des Widgets mit dem Bogen; `nil` in Ständen vor dem
+    /// Nachtrag zu Phase 18, dann gilt der Standard.
+    public var style: AppStyle?
     public var debug: Debug?
 
     public init(
         place: Place?, cityName: String, isCurrentLocation: Bool, calculation: CalculationSettings,
-        showKerahat: Bool, language: AppLanguage, debug: Debug? = nil
+        showKerahat: Bool, language: AppLanguage, style: AppStyle = .standard, debug: Debug? = nil
     ) {
         self.place = place
         self.cityName = cityName
@@ -51,7 +54,13 @@ public struct WidgetState: Codable, Hashable, Sendable {
         self.calculation = calculation
         self.showKerahat = showKerahat
         self.language = language
+        self.style = style
         self.debug = debug
+    }
+
+    /// Der Stil, der gilt.
+    public var effectiveStyle: AppStyle {
+        style ?? .standard
     }
 
     /// Uhr der App minus Gerätezeit; ohne Debug-Uhr 0.

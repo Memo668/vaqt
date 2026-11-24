@@ -31,6 +31,7 @@ struct SettingsDestination: View {
         case .alarm: AlarmPage()
         case .sound: SoundPage()
         case .appearance: AppearancePage()
+        case .style: StylePage()
         case .language: LanguagePage()
         case .privacy: PrivacyPage()
         case .licenses: LicensesPage()
@@ -164,6 +165,11 @@ struct SettingsPage: View {
         Section {
             NavigationLink(value: SettingsRoute.appearance) {
                 ValueRowLabel(L10n.appearance, value: model.appearanceValue)
+            }
+            .listRowMetrics()
+            // Spec § 11.7: Grundfarbe und Aussehen der Live-Aktivität; der Wert ist der Name der Grundfarbe.
+            NavigationLink(value: SettingsRoute.style) {
+                ValueRowLabel(L10n.style, value: model.styleValue)
             }
             .listRowMetrics()
             NavigationLink(value: SettingsRoute.language) {
@@ -507,6 +513,85 @@ struct AppearancePage: View {
                     }
                     .listRowMetrics()
                 }
+            }
+        }
+    }
+}
+
+/// Einstellungen › Stil (`PAGES.style`, Spec § 11.7): oben die Vorschau der Live-Aktivität, darunter die
+/// Grundfarben (zugeklappt die Standardreihe, aufgeklappt 4 × 6), die drei Stile der Live-Aktivität mit dem
+/// Schalter „Invertiert“ und, sobald etwas vom Standard abweicht, „Standard wiederherstellen“.
+struct StylePage: View {
+    @Environment(SettingsModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Aufgeklappt oder nicht (`S.palOpen`). Beim Öffnen der Seite aufgeklappt, wenn eine weitere Farbe gewählt ist;
+    /// danach wechselt es nur über den Pfeil – sonst klappte das Raster unter dem Finger zu.
+    @State private var isPaletteOpen: Bool?
+
+    var body: some View {
+        let style = model.settings.style
+        let isOpen = isPaletteOpen ?? !style.accent.isInStandardRow
+        SettingsList {
+            if let content = model.stylePreview(at: model.today.clock.now) {
+                Section {
+                    LiveActivityPreview(content: content)
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
+                }
+                .listSectionSpacing(StyleMetrics.previewBottom)
+            }
+            Section {
+                VStack(spacing: 0) {
+                    AccentColorGrid(
+                        colors: isOpen ? AccentColorID.allCases : AccentColorID.standardRow,
+                        selection: style.accent, onSelect: model.setAccent
+                    )
+                    AccentMoreButton(isExpanded: isOpen, hiddenSelection: style.accent.isInStandardRow ? nil : style.accent) {
+                        withAnimation(reduceMotion ? nil : .spring(duration: 0.3)) {
+                            isPaletteOpen = !isOpen
+                        }
+                    }
+                }
+                .listRowInsets(EdgeInsets())
+            } header: {
+                ListSectionHeader(L10n.styleColor)
+            } footer: {
+                ListSectionFooter(L10n.styleColorFooter)
+            }
+            Section {
+                HStack(alignment: .top, spacing: StyleMetrics.tilesGap) {
+                    ForEach(LiveActivityStyle.allCases, id: \.self) { kind in
+                        LiveActivityStyleTile(
+                            style: kind, accent: style.accent, isInverted: style.isInverted,
+                            isSelected: style.liveActivity == kind
+                        ) {
+                            model.setLiveActivityStyle(kind)
+                        }
+                    }
+                }
+                .padding(StyleMetrics.tilesPadding)
+                .listRowInsets(EdgeInsets())
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel(L10n.liveAct)
+                ListSwitchRow(L10n.laInvert, detail: L10n.laInvertSub, isOn: Binding(
+                    get: { model.settings.style.isInverted }, set: model.setInverted
+                ))
+                .listRowMetrics()
+            } header: {
+                ListSectionHeader(L10n.liveAct)
+            } footer: {
+                ListSectionFooter(L10n.styleLiveFooter)
+            }
+            if !style.isStandard {
+                Section {
+                    ListLinkRow(L10n.styleReset, action: model.resetStyle)
+                        .listRowMetrics()
+                }
+            }
+        }
+        .onAppear {
+            if isPaletteOpen == nil {
+                isPaletteOpen = !model.settings.style.accent.isInStandardRow
             }
         }
     }

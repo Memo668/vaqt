@@ -37,7 +37,7 @@ public struct LaunchOptions: Equatable, Sendable {
     /// Stadt-Sheet über der Zeiten-Seite.
     public enum Page: String, CaseIterable, Sendable {
         case today, qibla, guide, verses, qada, settings
-        case method, asr, madhab, hl, adjust, perPrayer, reminder, live, alarm, sound, appearance, language, privacy, licenses, support
+        case method, asr, madhab, hl, adjust, perPrayer, reminder, live, alarm, sound, appearance, style, language, privacy, licenses, support
         case adhan
         /// Das Stadt-Sheet über der Zeiten-Seite (`iphone/85`, `duo/closed-85`, `duo/open-85`).
         case city
@@ -62,6 +62,18 @@ public struct LaunchOptions: Equatable, Sendable {
     public var madhab: Madhab?
     /// `-debugSound`: der Klang der Mitteilungen (`iphone/80-settings-sound-system`), nur mit `-debugFixtureTimes`.
     public var sound: NotificationSound?
+    /// `-debugAccent`: die Grundfarbe (Spec § 11.7), nur mit `-debugFixtureTimes`.
+    public var accent: AccentColorID?
+    /// `-debugLiveStyle`: der Stil der Live-Aktivität (`full`, `arc`, `mono`), nur mit `-debugFixtureTimes`.
+    public var liveStyle: LiveActivityStyle?
+    /// `-debugLiveInverted`: die Live-Aktivität invertiert, nur mit `-debugFixtureTimes`.
+    public var liveInverted = false
+
+    /// Der Stil aus `-debugAccent`, `-debugLiveStyle` und `-debugLiveInverted`; `nil` ohne diese Argumente.
+    public var style: AppStyle? {
+        guard accent != nil || liveStyle != nil || liveInverted else { return nil }
+        return AppStyle(accent: accent ?? .standard, liveActivity: liveStyle ?? .full, isInverted: liveInverted)
+    }
     /// Tage, die die Zeiten-Seite beim Start vor (+) oder zurück (−) zeigt (`-debugDayOffset`), −365 bis 365.
     public var dayOffset = 0
     /// Gebet, dessen Durchlauf „Schritt für Schritt“ beim Start offen ist (`-debugWalk`).
@@ -156,6 +168,14 @@ public struct LaunchOptions: Equatable, Sendable {
             case "-debugMadhab":
                 let schools = Madhab.allCases.map(\.rawValue).joined(separator: ", ")
                 madhab = value(of: argument, from: &rest, expected: "eine der Rechtsschulen \(schools)") { Madhab(rawValue: $0) }
+            case "-debugAccent":
+                let colors = AccentColorID.allCases.map(\.rawValue).joined(separator: ", ")
+                accent = value(of: argument, from: &rest, expected: "eine der Grundfarben \(colors)") { AccentColorID(rawValue: $0) }
+            case "-debugLiveStyle":
+                let styles = LiveActivityStyle.allCases.map(\.rawValue).joined(separator: ", ")
+                liveStyle = value(of: argument, from: &rest, expected: "einer der Stile \(styles)") { LiveActivityStyle(rawValue: $0) }
+            case "-debugLiveInverted":
+                liveInverted = true
             case "-debugSound":
                 let sounds = NotificationSound.allCases.map(\.rawValue).joined(separator: ", ")
                 sound = value(of: argument, from: &rest, expected: "einer der Klänge \(sounds)") { NotificationSound(rawValue: $0) }
@@ -205,6 +225,9 @@ public struct LaunchOptions: Equatable, Sendable {
         }
         if sound != nil, !fixtureTimes {
             problems.append("-debugSound wirkt nur zusammen mit -debugFixtureTimes.")
+        }
+        if style != nil, !fixtureTimes {
+            problems.append("-debugAccent, -debugLiveStyle und -debugLiveInverted wirken nur zusammen mit -debugFixtureTimes.")
         }
         if onboardingStep != nil, skipOnboarding {
             problems.append("-debugOnboarding zeigt das Onboarding; -debugSkipOnboarding wird übergangen.")

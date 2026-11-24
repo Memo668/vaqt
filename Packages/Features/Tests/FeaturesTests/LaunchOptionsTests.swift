@@ -234,7 +234,7 @@ struct LaunchOptionsTests {
         let pages = LaunchOptions.Page.allCases.compactMap { page in page.settingsRoute.map { (page, $0) } }
         #expect(pages.map(\.0.rawValue) == [
             "settings", "method", "asr", "madhab", "hl", "adjust", "perPrayer", "reminder", "live", "alarm", "sound", "appearance",
-            "language", "privacy", "licenses", "support", "adhan",
+            "style", "language", "privacy", "licenses", "support", "adhan",
         ])
         for (page, route) in pages where page != .adhan {
             #expect(route.rawValue == page.rawValue)
@@ -260,6 +260,28 @@ struct LaunchOptionsTests {
         #expect(snapshot.notifications.sound == .system)
         #expect(LaunchOptions(arguments: ["-debugMadhab", "maliki"]).problems.count == 1)
         #expect(LaunchOptions(arguments: ["-debugSound", "silent"]).problems.count == 1)
+    }
+
+    @Test("-debugAccent, -debugLiveStyle und -debugLiveInverted setzen den Stil, nur mit -debugFixtureTimes")
+    func style() {
+        let options = LaunchOptions(arguments: [
+            "-debugFixtureTimes", "-debugAccent", "orange", "-debugLiveStyle", "arc", "-debugLiveInverted", "-debugTab", "style",
+        ])
+        #expect(options.problems.isEmpty)
+        #expect(options.style == AppStyle(accent: .orange, liveActivity: .arc, isInverted: true))
+        #expect(options.page == .style)
+        #expect(options.page?.settingsRoute == .style)
+        let environment = AppEnvironment(options: options)
+        guard case .ephemeral(let snapshot) = environment.settings else {
+            Issue.record("Mit Mock-Zeiten liegen die Einstellungen nur im Speicher")
+            return
+        }
+        #expect(snapshot.style == AppStyle(accent: .orange, liveActivity: .arc, isInverted: true))
+        #expect(LaunchOptions(arguments: ["-debugFixtureTimes"]).style == nil)
+        #expect(LaunchOptions(arguments: ["-debugFixtureTimes", "-debugLiveInverted"]).style == AppStyle(isInverted: true))
+        #expect(LaunchOptions(arguments: ["-debugAccent", "ocean"]).problems.count == 1)
+        #expect(LaunchOptions(arguments: ["-debugAccent", "neon"]).problems.count == 1)
+        #expect(LaunchOptions(arguments: ["-debugLiveStyle", "glow"]).problems.count == 1)
     }
 
     @Test("-debugTab kerahat öffnet das Blatt „Was sind Verbotszeiten?“ über der Zeiten-Seite")

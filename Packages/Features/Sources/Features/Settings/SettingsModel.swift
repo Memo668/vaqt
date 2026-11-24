@@ -173,6 +173,46 @@ public final class SettingsModel {
         updateCalculation { $0.madhab = madhab }
     }
 
+    // MARK: - Stil
+
+    /// Der Name der Grundfarbe als Wert der Zeile „Stil“ (Spec § 11.7).
+    public var styleValue: String { settings.style.accent.localizedName }
+
+    /// Wählt die Grundfarbe; sie gilt sofort in der App, Widgets und Live-Aktivitäten folgen, sobald die App neu
+    /// plant.
+    public func setAccent(_ accent: AccentColorID) {
+        settings.updateStyle { $0.accent = accent }
+    }
+
+    /// Wählt den Stil der Live-Aktivität: farbig, nur Bogen, schwarz-weiß.
+    public func setLiveActivityStyle(_ style: LiveActivityStyle) {
+        settings.updateStyle { $0.liveActivity = style }
+    }
+
+    /// „Invertiert“: heller Grund, dunkle Schrift.
+    public func setInverted(_ isInverted: Bool) {
+        settings.updateStyle { $0.isInverted = isInverted }
+    }
+
+    /// „Standard wiederherstellen“: Petrol, farbig, nicht invertiert.
+    public func resetStyle() {
+        settings.setStyle(.standard)
+    }
+
+    /// Die Live-Aktivität, wie sie jetzt aussähe – die zum nächsten Gebet, im gewählten Stil – für die Vorschau
+    /// der Seite „Stil“ (`laBanner(phase(nowSec()))`); `nil` ohne Ort oder Zeiten.
+    public func stylePreview(at now: Date) -> LiveActivityContent? {
+        guard let place else { return nil }
+        let planner = LiveActivityPlanner(source: timesSource)
+        let options = LiveActivityPlanner.Options(
+            leadMinutes: settings.notifications.liveActivityMinutes, cityName: location.cityTitle,
+            isCurrentLocation: location.isAutomatic, showKerahat: settings.showKerahat,
+            clockOffset: WidgetSync.clockOffset(of: today.clock), style: settings.style
+        )
+        return planner.plan(at: now, place: place, settings: settings.calculation, options: options, debugStart: now)
+            .first?.content
+    }
+
     /// Fußzeile der Gruppe „Darstellung“: die Verbotszeiten der gewählten Schule.
     public var kerahatFooter: String { settings.calculation.madhab.kerahatFooter }
 

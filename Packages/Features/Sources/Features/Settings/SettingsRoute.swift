@@ -30,6 +30,8 @@ public enum SettingsRoute: String, CaseIterable, Hashable, Sendable {
     case sound
     /// Einstellungen › Erscheinungsbild (`appearance`).
     case appearance
+    /// Einstellungen › Stil (`style`, Spec § 11.7): Grundfarbe und Aussehen der Live-Aktivität.
+    case style
     /// Einstellungen › Sprache (`language`).
     case language
     /// Einstellungen › Datenschutz (`privacy`).
@@ -54,6 +56,7 @@ public enum SettingsRoute: String, CaseIterable, Hashable, Sendable {
         case .alarm: L10n.alarmRow
         case .sound: L10n.sound
         case .appearance: L10n.appearance
+        case .style: L10n.style
         case .language: L10n.language
         case .privacy: L10n.privacy
         case .licenses: L10n.licenses

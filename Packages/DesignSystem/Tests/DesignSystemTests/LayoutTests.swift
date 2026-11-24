@@ -184,7 +184,7 @@ struct LayoutTests {
     func arcSizes() {
         let phase = CatalogFixtures.phase(time: "14:25")
         #expect(size(DayArc(phase: phase)) == CGSize(width: 358, height: 180))
-        #expect(size(DayArc(phase: phase, style: .liveActivity)) == CGSize(width: 330, height: 122))
+        #expect(size(DayArc(phase: phase, style: .liveActivity(.standard))) == CGSize(width: 330, height: 122))
         #expect(size(CatalogHero(phase: phase)) == CGSize(width: 358, height: 180))
     }
 

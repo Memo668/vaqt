@@ -23,15 +23,20 @@ public struct PrayerWidgetContent: Hashable, Sendable {
     public let clockOffset: TimeInterval
     /// Der Schalter „Kerahat-Zeiten zeigen“: Kerahat im Bogen des Rechtecks und des Widgets „Live“.
     public let showKerahat: Bool
+    /// Stil der App (Spec § 11.7): die Grundfarbe für alle Widgets, das Aussehen der Live-Aktivität für das Widget
+    /// mit dem Bogen.
+    public let style: AppStyle
 
     public init(
-        state: State, cityName: String, isCurrentLocation: Bool, clockOffset: TimeInterval = 0, showKerahat: Bool = true
+        state: State, cityName: String, isCurrentLocation: Bool, clockOffset: TimeInterval = 0, showKerahat: Bool = true,
+        style: AppStyle = .standard
     ) {
         self.state = state
         self.cityName = cityName
         self.isCurrentLocation = isCurrentLocation
         self.clockOffset = clockOffset
         self.showKerahat = showKerahat
+        self.style = style
     }
 
     /// Der Zeitpunkt der Gerätezeit zu einem der App-Uhr. Countdown und Ring laufen in Gerätezeit.
@@ -535,11 +540,15 @@ public struct LivePrayerWidget: View {
     }
 
     public var body: some View {
-        VStack(spacing: 0) {
+        // Der Stil der Live-Aktivität gilt auch hier (Spec § 11.7); in der Verbotszeit bleibt das Widget, wie es ist
+        // (`.w-la` hat kein `.is-kerahat`).
+        let look = LiveActivityLook(style: content.style)
+        let colors = look.colors
+        return VStack(spacing: 0) {
             switch content.state {
             case .times(let snapshot):
-                LiveHeader(cityName: content.cityName)
-                DayArc(phase: snapshot.phase, style: .liveWidget, showKerahat: content.showKerahat) {
+                LiveHeader(cityName: content.cityName, colors: colors)
+                DayArc(phase: snapshot.phase, style: .liveWidget(look), showKerahat: content.showKerahat) {
                     VStack(spacing: 0) {
                         Text(snapshot.next.prayer.localizedName + " · " + WidgetTexts.time(of: snapshot.next, in: snapshot))
                             .font(LiveActivityMetrics.nameFont)
@@ -555,16 +564,16 @@ public struct LivePrayerWidget: View {
                 }
                 .padding(.top, WidgetMetrics.liveArcTop)
             case .noTimes:
-                LiveHeader(cityName: content.cityName)
+                LiveHeader(cityName: content.cityName, colors: colors)
                 message(L10n.noTimes)
             case .noPlace:
-                LiveHeader(cityName: "")
+                LiveHeader(cityName: "", colors: colors)
                 message(L10n.citySheetTitle)
             }
         }
         .padding(WidgetMetrics.livePadding)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .foregroundStyle(.white)
+        .foregroundStyle(Color(colors.foreground))
         .accessibilityElement(children: .combine)
     }
 

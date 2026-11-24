@@ -150,6 +150,35 @@ struct SettingsModelTests {
         #expect(fixture.model.kerahatFooter == L10n.kerahatFooter_hanbali)
     }
 
+    @Test("Stil: Grundfarbe, Stufe und invertiert gelten sofort, gespeichert und zurückgesetzt (Spec § 11.7)")
+    func style() throws {
+        let suite = "settings-style-" + UUID().uuidString
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let accents = AccentStore()
+        let store = SettingsStore(storage: .userDefaults(suiteName: suite), accentStore: accents)
+        #expect(store.style == .standard)
+        #expect(accents.accent == .teal)
+        store.updateStyle { $0.accent = .ocean }
+        store.updateStyle { $0.liveActivity = .mono }
+        store.updateStyle { $0.isInverted = true }
+        #expect(accents.accent == .ocean)
+        let reloaded = SettingsStore(storage: .userDefaults(suiteName: suite), accentStore: AccentStore())
+        #expect(reloaded.style == AppStyle(accent: .ocean, liveActivity: .mono, isInverted: true))
+        store.setStyle(.standard)
+        #expect(accents.accent == .teal)
+        #expect(SettingsStore(storage: .userDefaults(suiteName: suite), accentStore: AccentStore()).style == .standard)
+    }
+
+    @Test("Stil: der Wert der Zeile ist der Name der Grundfarbe, die Vorschau trägt den Stil")
+    func styleModel() throws {
+        let fixture = fixture { $0.style = AppStyle(accent: .teal) }
+        #expect(fixture.model.styleValue == L10n.col_teal)
+        let preview = try #require(fixture.model.stylePreview(at: instant("2026-11-10", "14:25")))
+        #expect(preview.prayer.prayer == .maghrib)
+        #expect(preview.style == .standard)
+    }
+
     @Test("Klang: bei „Systemton“ sagt die Fußzeile, wo man den Ton in iOS wählt (Spec § 11.3)")
     func soundFooter() {
         #expect(SoundPage.footer(for: .adhan) == L10n.soundFooter)

@@ -90,7 +90,7 @@ public final class WidgetSync {
             place: location.place, cityName: location.cityTitle,
             isCurrentLocation: location.isAutomatic && location.place != nil,
             calculation: settings.calculation, showKerahat: settings.showKerahat,
-            language: L10n.currentLanguage, debug: debugState
+            language: L10n.currentLanguage, style: settings.style, debug: debugState
         )
     }
 

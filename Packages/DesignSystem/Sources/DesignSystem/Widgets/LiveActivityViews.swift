@@ -34,14 +34,12 @@ public enum LiveActivityMetrics {
     public static let countLineHeight: CGFloat = 1.05
     public static let countTracking: CGFloat = -0.3
 
-    /// Der Verlauf des Hintergrunds (`linear-gradient(160deg, …)`): oben links Akzent zu 82 % auf Weiß,
-    /// in der Mitte der helle Akzent, unten rechts Akzent zu 78 % auf Schwarz – in beiden
-    /// Erscheinungsbildern, wie `activityBackgroundTint` (Spec § 3).
-    public static let backgroundStops: [Gradient.Stop] = [
-        .init(color: Color(Palette.Values.accentLight.mixed(0.82, with: .white)), location: 0),
-        .init(color: Color(Palette.Values.accentLight), location: 0.5),
-        .init(color: Color(Palette.Values.accentLight.mixed(0.78, with: .black)), location: 1),
-    ]
+    /// Der Verlauf des Hintergrunds (`linear-gradient(160deg, …)`): im Stil „Farbig“ oben links Akzent zu 82 % auf
+    /// Weiß, in der Mitte der helle Akzent, unten rechts Akzent zu 78 % auf Schwarz – in beiden
+    /// Erscheinungsbildern, wie `activityBackgroundTint` (Spec § 3). Die übrigen Stile: `LiveActivityColors`.
+    public static var backgroundStops: [Gradient.Stop] {
+        LiveActivityLook(style: AppStyle(accent: AccentStore.shared.accent)).colors.gradientStops
+    }
 
     /// Anfang und Ende eines Verlaufs mit dem Winkel des CSS (`160deg`) für eine Fläche dieser Größe: Die
     /// Linie läuft durch die Mitte und ist so lang, dass die Ecken genau auf Anfang und Ende fallen.
@@ -63,13 +61,6 @@ public enum LiveActivityMetrics {
     /// (Simulator, 18.11.2026). Spec § 10.4 lässt das offen; die Entscheidung liegt beim Nutzer.
     public static let liveWidgetBackgroundOpacity: Double = 1
 
-    /// Der Verlauf in der Verbotszeit (`.la.is-kerahat`, `--k-or: #EC8530`): oben links Orange zu 80 % auf Weiß,
-    /// in der Mitte das Orange, unten rechts zu 76 % auf Schwarz (Spec § 10.3).
-    public static let prohibitedStops: [Gradient.Stop] = [
-        .init(color: Color(Palette.Values.liveActivityProhibited.mixed(0.80, with: .white)), location: 0),
-        .init(color: Color(Palette.Values.liveActivityProhibited), location: 0.5),
-        .init(color: Color(Palette.Values.liveActivityProhibited.mixed(0.76, with: .black)), location: 1),
-    ]
 
     /// Die schmale Zeile einer abgelaufenen Aktivität (`.la-compact`): 11 pt oben und unten, 14 pt seitlich,
     /// 13 pt halbfett (Spec § 10.3).
@@ -80,11 +71,10 @@ public enum LiveActivityMetrics {
 
     // MARK: - Dynamic Island (`.di-*`)
 
-    /// Der dunkle Akzent (`--accent-d`, `#4CC2AE`): Symbol, Zeit und Countdown in der Insel.
-    public static let islandAccent = Color(Palette.Values.accentDark)
-    /// Die Farbe der Insel: in der Verbotszeit Orange (`#F0A257`, Spec § 10.3), sonst der dunkle Akzent.
+    /// Die Farbe der Insel: Symbol, Zeit, Countdown und Balken – der dunkle Akzent (`--accent-d`), in der
+    /// Verbotszeit Orange (`#F0A257`, Spec § 10.3; violett bei warmen Grundfarben), schwarz-weiß Weiß (§ 11.7).
     public static func islandAccent(_ content: LiveActivityContent) -> Color {
-        content.isProhibited ? Palette.LiveActivity.islandProhibited : islandAccent
+        Color(LiveActivityLook(content: content).colors.island)
     }
     /// Symbol links in der kompakten Insel – `ic(…, 18)`.
     public static let compactSymbolBox: CGFloat = 18
@@ -123,11 +113,10 @@ public enum LiveActivityMetrics {
     public static let barHeight: CGFloat = 6
     public static let barTop: CGFloat = 8
     public static let barTrack = Color.white.opacity(0.18)
-    /// Kerahat unter dem Balken (`.di-bar b`: 2 pt hoch, 5 pt unter der Unterkante, `#E0A84F` zu 85 %).
+    /// Kerahat unter dem Balken (`.di-bar b`: 2 pt hoch, 5 pt unter der Unterkante, `#E0A84F` zu 85 %; violett bei
+    /// warmen Grundfarben, schwarz-weiß Weiß zu 60 % – `LiveActivityColors.islandKerahat`).
     public static let kerahatHeight: CGFloat = 2
     public static let kerahatDrop: CGFloat = 5
-    public static let kerahatColor = Color(RGBA(hex: 0xE0A84F))
-    public static let kerahatOpacity: Double = 0.85
     /// Enden des Balkens (`.di-ends`: 500 12px/14px, `opacity: .6`, `margin-top: 8px`).
     public static let endsFont = Font.system(size: 12, weight: .medium).monospacedDigit()
     public static let endsLineHeight: CGFloat = 14 / 12
@@ -209,14 +198,15 @@ public struct LiveActivityLockScreen: View {
     }
 
     private var running: some View {
-        VStack(spacing: 0) {
+        let look = LiveActivityLook(content: content)
+        let colors = look.colors
+        return VStack(spacing: 0) {
             LiveHeader(
                 trailing: content.isProhibited ? content.prohibitedHeader : content.cityName,
-                isEmphasized: content.isProhibited
+                isEmphasized: content.isProhibited, colors: colors
             )
 
-            DayArc(phase: content.countdown, style: content.isProhibited ? .liveActivityProhibited : .liveActivity,
-                   showKerahat: content.showKerahat) {
+            DayArc(phase: content.countdown, style: .liveActivity(look), showKerahat: content.showKerahat) {
                 VStack(spacing: 0) {
                     Text(LiveActivityTexts.nameAndTime(content))
                         .font(LiveActivityMetrics.nameFont)
@@ -234,7 +224,7 @@ public struct LiveActivityLockScreen: View {
             .frame(maxWidth: .infinity)
         }
         .padding(LiveActivityMetrics.lockScreenPadding)
-        .foregroundStyle(.white)
+        .foregroundStyle(Color(colors.foreground))
     }
 }
 
@@ -248,10 +238,12 @@ public struct LiveActivityEndedRow: View {
     }
 
     public var body: some View {
-        HStack(spacing: 10) {
+        let colors = LiveActivityLook(content: content).colors
+        return HStack(spacing: 10) {
             HStack(spacing: LiveActivityMetrics.iconGap) {
                 AppMark(size: .header)
                     .environment(\.colorScheme, .light)
+                    .grayscale(colors.isMonochrome ? 1 : 0)
                 Text(LiveActivityTexts.nameAndTime(content))
             }
             Spacer(minLength: 8)
@@ -262,7 +254,7 @@ public struct LiveActivityEndedRow: View {
         .font(LiveActivityMetrics.headFont)
         .tracking(LiveActivityMetrics.headTracking)
         .lineLimit(1)
-        .foregroundStyle(.white)
+        .foregroundStyle(Color(colors.foreground))
         .padding(LiveActivityMetrics.endedPadding)
         .accessibilityElement(children: .combine)
     }
@@ -287,14 +279,19 @@ extension LiveActivityContent {
 struct LiveHeader: View {
     let trailing: String
     var isEmphasized = false
+    /// Farben des Stils: schwarz-weiß ist das App-Symbol grau, „Verbotszeit bis …“ hat bei „Nur Bogen“ eine
+    /// eigene Farbe (`--la-warn`, Spec § 11.7).
+    var colors = LiveActivityLook.standard.colors
 
-    init(cityName: String) {
+    init(cityName: String, colors: LiveActivityColors = LiveActivityLook.standard.colors) {
         trailing = cityName
+        self.colors = colors
     }
 
-    init(trailing: String, isEmphasized: Bool) {
+    init(trailing: String, isEmphasized: Bool, colors: LiveActivityColors = LiveActivityLook.standard.colors) {
         self.trailing = trailing
         self.isEmphasized = isEmphasized
+        self.colors = colors
     }
 
     var body: some View {
@@ -305,11 +302,13 @@ struct LiveHeader: View {
                 // im hellen System dunkel. Die dunkle Fassung ist durchsichtig und verschwände fast (Phase 14).
                 AppMark(size: .header)
                     .environment(\.colorScheme, .light)
+                    .grayscale(colors.isMonochrome ? 1 : 0)
                 Text(L10n.appName)
             }
             Spacer(minLength: 8)
             Text(trailing)
                 .fontWeight(isEmphasized ? .semibold : .medium)
+                .foregroundStyle(isEmphasized ? Color(colors.warning ?? colors.foreground) : Color(colors.foreground))
                 .opacity(isEmphasized ? 1 : LiveActivityMetrics.cityOpacity)
         }
         .font(LiveActivityMetrics.headFont)
@@ -319,25 +318,23 @@ struct LiveHeader: View {
     }
 }
 
-/// Der Hintergrund der Live-Aktivität und des Widgets „Live“: der Verlauf auf dem hellen Akzent (`.la`), in der
-/// Verbotszeit auf Orange, mit 30 % Deckkraft (Spec § 10.3, § 10.4).
+/// Der Hintergrund der Live-Aktivität und des Widgets „Live“: der Verlauf im Stil der App (`.la`, `--la-base`) –
+/// farbig auf dem hellen Akzent, in der Verbotszeit auf Orange, „Nur Bogen“ und „Schwarz-weiß“ ohne Farbe,
+/// invertiert weiß –, immer mit 30 % Deckkraft (Spec § 10.3, § 10.4, § 11.7).
 public struct LiveActivityBackground: View {
-    private let isProhibited: Bool
+    private let look: LiveActivityLook
     private let opacity: Double
 
-    public init(isProhibited: Bool = false, opacity: Double = LiveActivityMetrics.backgroundOpacity) {
-        self.isProhibited = isProhibited
+    public init(look: LiveActivityLook = .standard, opacity: Double = LiveActivityMetrics.backgroundOpacity) {
+        self.look = look
         self.opacity = opacity
     }
 
     public var body: some View {
         GeometryReader { proxy in
             let points = LiveActivityMetrics.gradientPoints(size: proxy.size)
-            LinearGradient(
-                stops: isProhibited ? LiveActivityMetrics.prohibitedStops : LiveActivityMetrics.backgroundStops,
-                startPoint: points.start, endPoint: points.end
-            )
-            .opacity(opacity)
+            LinearGradient(stops: look.colors.gradientStops, startPoint: points.start, endPoint: points.end)
+                .opacity(opacity)
         }
     }
 }
@@ -504,11 +501,12 @@ struct LiveActivityBar: View {
             .frame(height: LiveActivityMetrics.barHeight)
             .overlay(alignment: .topLeading) {
                 if content.showKerahat, !content.kerahat.isEmpty {
+                    let colors = LiveActivityLook(content: content).colors
                     GeometryReader { proxy in
                         ForEach(Array(content.kerahat.enumerated()), id: \.offset) { _, mark in
                             Capsule()
-                                .fill(LiveActivityMetrics.kerahatColor)
-                                .opacity(LiveActivityMetrics.kerahatOpacity)
+                                .fill(Color(colors.islandKerahat))
+                                .opacity(colors.islandKerahatOpacity)
                                 .frame(width: proxy.size.width * mark.length, height: LiveActivityMetrics.kerahatHeight)
                                 .offset(
                                     x: proxy.size.width * mark.start,

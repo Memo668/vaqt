@@ -13,16 +13,18 @@ struct PrayerLiveActivity: Widget {
 
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: PrayerActivityAttributes.self) { context in
-            let _ = Self.applyLanguage()
-            // Spec § 10.3: der Verlauf mit 30 % Deckkraft über durchsichtigem Grund, in der Verbotszeit orange.
+            let _ = Self.apply(context.state)
+            // Spec § 10.3: der Verlauf mit 30 % Deckkraft über durchsichtigem Grund, in der Verbotszeit orange; seit
+            // § 11.7 im Stil der App (Grundfarbe, farbig, nur Bogen, schwarz-weiß, invertiert).
+            let look = LiveActivityLook(content: context.state)
             LiveActivityLockScreen(content: context.state, isStale: context.isStale)
-                .background(LiveActivityBackground(isProhibited: context.state.isProhibited))
+                .background(LiveActivityBackground(look: look))
                 .activityBackgroundTint(.clear)
-                .activitySystemActionForegroundColor(.white)
+                .activitySystemActionForegroundColor(Color(look.colors.foreground))
                 .environment(\.locale, L10n.locale)
                 .environment(\.layoutDirection, L10n.layoutDirection)
         } dynamicIsland: { context in
-            let _ = Self.applyLanguage()
+            let _ = Self.apply(context.state)
             return DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
                     LiveActivityExpandedLeading(content: context.state)
@@ -51,8 +53,11 @@ struct PrayerLiveActivity: Widget {
         }
     }
 
-    /// Die Texte in der Sprache der App, aus der App Group – bevor die Ansichten sie lesen.
-    static func applyLanguage() {
-        L10n.chosenLanguage = WidgetState.sharedDefaults.flatMap(WidgetState.load(from:))?.language
+    /// Die Texte in der Sprache der App, aus der App Group, und die Grundfarbe der Aktivität – bevor die Ansichten
+    /// sie lesen. Inhalte ohne Stil (vor dem Nachtrag zu Phase 18) nehmen den Stil der App Group.
+    static func apply(_ content: LiveActivityContent) {
+        let state = WidgetState.sharedDefaults.flatMap(WidgetState.load(from:))
+        L10n.chosenLanguage = state?.language
+        AccentStore.shared.accent = (content.style ?? state?.effectiveStyle ?? .standard).accent
     }
 }

@@ -228,7 +228,9 @@ extension AppEnvironment {
             timesSource = FixtureTimesSource(highLatitude: options.highLatitude)
             connectivity = FixedConnectivity(isOnline: !options.offline)
             citySearch = NoCitySearch()
-            settings = .ephemeral(.prototype(city: options.effectiveCity, alarm: options.alarm, madhab: options.madhab, sound: options.sound))
+            settings = .ephemeral(.prototype(
+                city: options.effectiveCity, alarm: options.alarm, madhab: options.madhab, sound: options.sound, style: options.style
+            ))
             qadaStorage = .ephemeral(.prototypeSample)
         } else {
             timesSource = AdhanTimesSource()
@@ -315,9 +317,13 @@ extension SettingsStore.Snapshot {
     /// Die Startwerte von `S` im Prototyp: Standort automatisch, die Stadt der Fixture als gewählte und
     /// als aktuelle Stadt (`S.city`, `S.deviceCity`), die fünf Städte aus `CITY_IDS` als gespeicherte.
     static func prototype(
-        city: FixtureTimes.City?, alarm: LaunchOptions.AlarmState? = nil, madhab: Madhab? = nil, sound: NotificationSound? = nil
+        city: FixtureTimes.City?, alarm: LaunchOptions.AlarmState? = nil, madhab: Madhab? = nil, sound: NotificationSound? = nil,
+        style: AppStyle? = nil
     ) -> SettingsStore.Snapshot {
         var snapshot = SettingsStore.Snapshot()
+        if let style {
+            snapshot.style = style
+        }
         if let madhab {
             snapshot.calculation.madhab = madhab
         }
