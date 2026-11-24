@@ -11,6 +11,8 @@ Wenn nichts anderes steht: Deutsch, hell, Berlin, 14:25 (Asr aktiv).
 
 **Spec v0.10 (24.11.2026, § 11):** Neu aufgenommen sind `iphone/50` und `51` (Verse mit den Ausschnitten veröffentlichter Übersetzungen, darunter der Name der Übersetzung) und `iphone/86` (Adhan-Fenster mit einer Aufnahme statt dreier Stimmen, neu auch dunkel). `duo/closed-50` und `duo/open-50` sind weiter von v0.7 und zeigen noch die früheren Platzhaltertexte; sie gelten nur für die Anordnung.
 
+**Spec v0.11 (Nachtrag zu Phase 18, 24./25.11.2026, § 11.3–11.7):** Neu aufgenommen sind das Onboarding (fünf Schritte: die Rechtsschule ist Schritt 3, `03-*`; Mitteilungen und „Kostenlos“ rücken zu `05` und `06`; in `01`, `02` und `04` nur die fünf Punkte), die Einstellungen `70`–`72` (Gruppe „Darstellung“ über „Berechnung“, Zeilen „Stil“ und „Rechtsschule“) und neu `25`–`27` (Grundfarbe, Rechtsschule, Blatt zu den Verbotszeiten), `80-settings-sound-system`, `87` (Stil), `88` (Rechtsschule) sowie `system/97`–`99` (Stile der Live-Aktivität und des Widgets „Live“). Alle übrigen Bilder sind gleich geblieben (Pixelvergleich mit der Aufnahme aus dem neuen Prototyp).
+
 **Nachtrag 16.11.2026 (Spec § 9.14):** Der Sonnenaufgang steht als Punkt im Bogen, gleich groß wie die Gebete. Neu aufgenommen sind deshalb `iphone/10`–`23` sowie `system/90`, `91`, `93`, `94` und `96`. Die Bilder unter `duo/*` sind weiter von v0.7 und zeigen den Bogen noch ohne Sonnenaufgang.
 
 **Phase 14 (15.11.2026):** `system/90`–`96` aus dem Prototyp v0.8 neu (Ansichten `widgets`, `live` und die der Mitteilungen; `screen` in `capture-prototype.mjs` wählt den Bildschirm): Rechteck mit Mini-Bogen, Widget „Live“ über dem mittleren, Kerahat auf der Spur der Live-Aktivität, App-Symbol im Kopf und in den Mitteilungen. Wegen des Namens „Vaqt“ (Spec § 9.13) neu: `04` (Dialog des Systems, jetzt auch aus dem Prototyp), `05`, `71`, `72`, `83` (Texte mit `{app}`). Nach dem Änderungswunsch zum Rechteck (Stil der Live-Aktivität, Spec § 9.11) noch einmal neu: `90`, `93`, `96`.
@@ -31,10 +33,13 @@ Abweichungen des Prototyps, denen die App nicht folgt (Spec > Screenshot > HTML)
 | `iphone/01-onboarding-1-welcome.png` | Onboarding step 1 (welcome) |
 | `iphone/01-onboarding-1-welcome-dark.png` | Same in dark mode – app icon instead of the crescent (§ 9.1) |
 | `iphone/02-onboarding-2-location.png` | Onboarding step 2 (location priming) |
-| `iphone/03-onboarding-3-notifications.png` | Onboarding step 3 (notification priming) |
+| `iphone/03-onboarding-3-madhab.png` | Onboarding step 3 „Deine Rechtsschule“: menu button with Hanafi (§ 11.5, `-debugOnboarding 3`) |
+| `iphone/03-onboarding-3-madhab-dark.png` | Same in dark mode |
+| `iphone/03-onboarding-3-madhab-menu.png` | Same with the menu of the four schools open (in the app: tap the button) |
 | `iphone/04-alert-location.png` | iOS location alert over step 2 (system UI, for flow context only) |
-| `iphone/05-onboarding-4-free.png` | Onboarding step 4 „Kostenlos. Ohne Werbung.“ (§ 9.9) |
-| `iphone/05-onboarding-4-free-dark.png` | Same in dark mode |
+| `iphone/05-onboarding-4-notifications.png` | Onboarding step 4 (notification priming; until Phase 18 `03-onboarding-3-notifications`) |
+| `iphone/06-onboarding-5-free.png` | Onboarding step 5 „Kostenlos. Ohne Werbung.“ (§ 9.9; until Phase 18 `05-onboarding-4-free`) |
+| `iphone/06-onboarding-5-free-dark.png` | Same in dark mode |
 
 ## Zeiten (Home) – Phase 2 + 3
 
@@ -57,6 +62,13 @@ Abweichungen des Prototyps, denen die App nicht folgt (Spec > Screenshot > HTML)
 | `iphone/23-home-next-day.png` | Next day (`-debugDayOffset 1`): that day's times, relative day + date instead of the countdown, „Zurück zu heute“ (§ 9.4) |
 | `iphone/23-home-next-day-dark.png` | Same in dark mode |
 | `iphone/24-home-alarm-chip.png` | Fajr alarm on (`-debugAlarm before`): chip with clock glyph and today's ring time 06:29 in the Fajr row (§ 10.8, Phase 17) |
+| `iphone/25-home-accent-ocean.png` | Accent colour Ozean (`-debugAccent ocean`, § 11.7) |
+| `iphone/25-home-accent-orange-kerahat.png` | Accent colour Orange at 07:30: prohibited time violet instead of orange (`-debugAccent orange`) |
+| `iphone/25-home-accent-orange-kerahat-dark.png` | Same in dark mode |
+| `iphone/26-home-maliki.png` | Madhab Maliki (`-debugMadhab maliki`): no window before Dhuhr, 20 min after sunrise and before Maghrib (§ 11.6) |
+| `iphone/26-home-shafii-friday.png` | Madhab Schafii on a Friday (13.11., `-debugDayOffset 3`): no window before Dhuhr |
+| `iphone/27-sheet-kerahat.png` | Sheet „Was sind Verbotszeiten?“ (Hanafi, `-debugTab kerahat`, § 10.2, § 11.6) |
+| `iphone/27-sheet-kerahat-maliki.png` | Same for Maliki: own intro, two windows |
 
 ## Qibla – Phase 4
 
@@ -125,6 +137,7 @@ Vollbild über der Anleitung; `-debugWalk dhuhr -debugWalkStep N` mit `N` wie `S
 | `iphone/78-settings-reminder.png` | Settings › Reminder before |
 | `iphone/79-settings-live.png` | Settings › Live Activity lead time |
 | `iphone/80-settings-sound.png` | Settings › Sound |
+| `iphone/80-settings-sound-system.png` | Settings › Sound with „Systemton“: footer says where to choose the tone in iOS (`-debugSound system`, § 11.3) |
 | `iphone/81-settings-privacy.png` | Settings › Privacy page |
 | `iphone/82-settings-hl-manual.png` | Settings › High latitude with „Manuelle Winkel“ selected: twilight angle steppers (§ 9.12) |
 | `iphone/82-settings-hl-manual-dark.png` | Same in dark mode |
@@ -135,6 +148,12 @@ Vollbild über der Anleitung; `-debugWalk dhuhr -debugWalkStep N` mit `N` wie `S
 | `iphone/84-settings-alarm-fixed.png` | Same with a fixed time 05:30 and the short adhan (`-debugAlarm fixed`) |
 | `iphone/84-settings-alarm-off.png` | Same page, alarm off (`-debugTab alarm`) |
 | `iphone/84-settings-alarm-denied.png` | Alarm permission denied (`-debugAlarm denied`): switch off and disabled, „iOS-Einstellungen öffnen“ |
+| `iphone/87-settings-style.png` | Settings › Stil (`-debugTab style`, § 11.7): Live Activity preview, standard row of accent colours, three styles, „Invertiert“ |
+| `iphone/87-settings-style-dark.png` | Same in dark mode |
+| `iphone/87-settings-style-open.png` | Same with Orange and „Nur Bogen“ inverted: grid 4 × 6 open (`-debugAccent orange -debugLiveStyle arc -debugLiveInverted`) |
+| `iphone/87-settings-style-open-end.png` | Same, scrolled to the end: „Standard wiederherstellen“ |
+| `iphone/88-settings-madhab.png` | Settings › Rechtsschule (`-debugTab madhab`, § 11.6) |
+| `iphone/88-settings-madhab-dark.png` | Same in dark mode, Schafii selected |
 
 ## Sheets – Phase 3 (Stadt) und 7 (Adhan)
 
@@ -155,6 +174,29 @@ Vollbild über der Anleitung; `-debugWalk dhuhr -debugWalkStep N` mit `N` wie `S
 | `system/94-live-activity-island-compact.png` | Live Activity – Dynamic Island compact |
 | `system/95-live-activity-island-expanded.png` | Live Activity – Dynamic Island expanded (long press) |
 | `system/96-live-activity-lockscreen-dark.png` | Live Activity, dark system, Maghrib active |
+
+## Stil der Live-Aktivität – Nachtrag zu Phase 18 (§ 11.7)
+
+Im Katalog mit `-debugCatalog live` bzw. `widgets` und `-debugLiveStyle arc|mono`, `-debugLiveInverted`, `-debugAccent …` (`scripts/compare-system`).
+
+| Datei | Zeigt |
+|---|---|
+| `system/97-live-activity-arc.png` | „Nur Bogen“: colourless surface, arc in the dark accent |
+| `system/97-live-activity-mono.png` | „Schwarz-weiß“: no colour, app icon grey |
+| `system/97-live-activity-full-inverted.png` | „Farbig“, inverted: white surface, arc and text in the accent |
+| `system/97-live-activity-arc-inverted.png` | „Nur Bogen“, inverted |
+| `system/97-live-activity-mono-inverted.png` | „Schwarz-weiß“, inverted |
+| `system/97-live-activity-ocean.png` | „Farbig“ in Ozean |
+| `system/98-live-activity-kerahat.png` | Prohibited time (16:05): orange, header „Verbotszeit bis 16:27“ |
+| `system/98-live-activity-kerahat-arc.png` | Same, „Nur Bogen“: only the arc orange, header in `#F8B877` |
+| `system/98-live-activity-kerahat-mono.png` | Same, „Schwarz-weiß“: striped, no orange |
+| `system/98-live-activity-kerahat-full-inverted.png` | Same, „Farbig“ inverted |
+| `system/98-live-activity-kerahat-arc-inverted.png` | Same, „Nur Bogen“ inverted |
+| `system/98-live-activity-kerahat-warm.png` | Same with Orange as accent: violet instead of orange |
+| `system/98-live-activity-island-expanded-kerahat-warm.png` | Dynamic Island expanded, prohibited time, Orange: violet text, bar and marks |
+| `system/98-live-activity-island-expanded-mono.png` | Dynamic Island expanded, „Schwarz-weiß“: all white |
+| `system/99-homescreen-widgets-arc-inverted.png` | Home Screen: widget „Live“ in „Nur Bogen“, inverted |
+| `system/99-homescreen-widgets-ocean.png` | Home Screen: widgets in Ozean |
 
 ## iPhone Duo – Phase 10
 
