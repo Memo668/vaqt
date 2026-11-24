@@ -23,9 +23,10 @@ public struct CatalogOutsideState: Sendable {
     ///
     /// - Parameter clockOffset: Uhr der App minus Gerätezeit – damit der Countdown in Gerätezeit dieselbe
     ///   Restzeit zeigt.
+    ///   - style: Stil der App (Spec § 11.7) – Grundfarbe und Aussehen der Live-Aktivität und des Widgets „Live“.
     public static func make(
         source: any PrayerTimesSource, place: Place, cityName: String, isCurrentLocation: Bool,
-        settings: CalculationSettings, showKerahat: Bool, now: Date, clockOffset: TimeInterval
+        settings: CalculationSettings, showKerahat: Bool, now: Date, clockOffset: TimeInterval, style: AppStyle = .standard
     ) -> CatalogOutsideState {
         let entry = WidgetTimeline.entries(from: now, source: source, place: place, settings: settings).entries.first
         let state: PrayerWidgetContent.State
@@ -37,14 +38,14 @@ public struct CatalogOutsideState: Sendable {
             at: now, place: place, settings: settings,
             options: LiveActivityPlanner.Options(
                 leadMinutes: 0, cityName: cityName, isCurrentLocation: isCurrentLocation,
-                showKerahat: showKerahat, clockOffset: clockOffset
+                showKerahat: showKerahat, clockOffset: clockOffset, style: style
             ),
             debugStart: now
         )
         return CatalogOutsideState(
             widget: PrayerWidgetContent(
                 state: state, cityName: cityName, isCurrentLocation: isCurrentLocation, clockOffset: clockOffset,
-                showKerahat: showKerahat
+                showKerahat: showKerahat, style: style
             ),
             liveActivity: plan.first?.content
         )
@@ -121,7 +122,7 @@ struct CatalogWidgets: View {
             CatalogWallpaper()
             LivePrayerWidget(content: content)
                 .frame(width: WidgetMetrics.liveSize.width, height: WidgetMetrics.liveSize.height)
-                .background(LiveActivityBackground())
+                .background(LiveActivityBackground(look: LiveActivityLook(style: content.style)))
                 .clipShape(.rect(cornerRadius: WidgetMetrics.cornerRadius, style: .continuous))
                 .shadow(color: .black.opacity(0.14), radius: 9, y: 4)
                 .offset(x: CatalogOutsideMetrics.homeLeft, y: CatalogOutsideMetrics.liveTop)
@@ -196,7 +197,8 @@ struct CatalogLiveActivity: View {
 
                 LiveActivityLockScreen(content: content, isStale: isStale)
                     .frame(width: LiveActivityMetrics.lockScreenWidth)
-                    .background(LiveActivityBackground())
+                    // Im Stil der Aktivität, in der Verbotszeit orange bzw. violett (Spec § 10.3, § 11.7).
+                    .background(LiveActivityBackground(look: LiveActivityLook(content: content)))
                     .clipShape(.rect(cornerRadius: LiveActivityMetrics.lockScreenRadius, style: .continuous))
                     .shadow(color: .black.opacity(0.2), radius: 13, y: 8)
                     .frame(width: CatalogMetrics.referenceWidth)

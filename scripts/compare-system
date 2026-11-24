@@ -28,14 +28,32 @@ REF="$ROOT/design/screenshots/system"
 OUT="${OUT:-$ROOT/screenshots-out/system}"
 ZOOM="${ZOOM:-3}"
 
-# Nummer | Datei des Referenzbilds | hell oder dunkel | Abschnitt des Katalogs | Uhrzeit
+# Nummer | Datei des Referenzbilds | hell oder dunkel | Abschnitt des Katalogs | Uhrzeit | weitere Argumente
+# Seit dem Nachtrag zu Phase 18 (Spec § 11.7) die Stile der Live-Aktivität (97, in der Verbotszeit 98) und des
+# Widgets „Live“ (99), mit -debugAccent, -debugLiveStyle und -debugLiveInverted.
 STATES='
-90|90-lockscreen-widgets|light|widgets|14:25
-91|91-homescreen-widgets|light|widgets|14:25
-93|93-live-activity-lockscreen|light|live|14:25
-94|94-live-activity-island-compact|light|live|14:25
-95|95-live-activity-island-expanded|light|live|14:25
-96|96-live-activity-lockscreen-dark|dark|live|16:35
+90|90-lockscreen-widgets|light|widgets|14:25|
+91|91-homescreen-widgets|light|widgets|14:25|
+93|93-live-activity-lockscreen|light|live|14:25|
+94|94-live-activity-island-compact|light|live|14:25|
+95|95-live-activity-island-expanded|light|live|14:25|
+96|96-live-activity-lockscreen-dark|dark|live|16:35|
+97a|97-live-activity-arc|light|live|14:25|-debugLiveStyle arc
+97m|97-live-activity-mono|light|live|14:25|-debugLiveStyle mono
+97fi|97-live-activity-full-inverted|light|live|14:25|-debugLiveInverted
+97ai|97-live-activity-arc-inverted|light|live|14:25|-debugLiveStyle arc -debugLiveInverted
+97mi|97-live-activity-mono-inverted|light|live|14:25|-debugLiveStyle mono -debugLiveInverted
+97o|97-live-activity-ocean|light|live|14:25|-debugAccent ocean
+98|98-live-activity-kerahat|light|live|16:05|
+98a|98-live-activity-kerahat-arc|light|live|16:05|-debugLiveStyle arc
+98m|98-live-activity-kerahat-mono|light|live|16:05|-debugLiveStyle mono
+98fi|98-live-activity-kerahat-full-inverted|light|live|16:05|-debugLiveInverted
+98ai|98-live-activity-kerahat-arc-inverted|light|live|16:05|-debugLiveStyle arc -debugLiveInverted
+98w|98-live-activity-kerahat-warm|light|live|16:05|-debugAccent orange
+98ew|98-live-activity-island-expanded-kerahat-warm|light|live|16:05|-debugAccent orange
+98em|98-live-activity-island-expanded-mono|light|live|14:25|-debugLiveStyle mono
+99ai|99-homescreen-widgets-arc-inverted|light|widgets|14:25|-debugLiveStyle arc -debugLiveInverted
+99o|99-homescreen-widgets-ocean|light|widgets|14:25|-debugAccent ocean
 '
 
 # Ausschnitte in pt (x,y,Breite,Höhe): Teil | im Referenzbild | in der Aufnahme. Der Katalog ist 390 pt
@@ -44,9 +62,13 @@ crops() {
   case "$1" in
     90) printf '%s\n' "accessory|67,226,256,72|73,690,256,72" "inline|150,83,162,26|121,638,162,26" ;;
     91) printf '%s\n' "live|26,66,338,158|32,66,338,158" "medium|26,258,338,154|32,258,338,154" "small|26,446,154,154|32,446,154,154" ;;
-    93 | 96) printf '%s\n' "lockscreen|12,577,366,155|18,400,366,155" ;;
+    # Seit Spec § 10.3 steht unter der Aktivität die schmale Zeile der abgelaufenen; die Aktivität steht deshalb
+    # höher als bis Phase 14 (577 pt) – um 14:25 und 16:35 bei 532 pt, in der Verbotszeit (16:05, drei Einträge) bei 486 pt.
+    93 | 96 | 97*) printf '%s\n' "lockscreen|12,532,366,155|18,400,366,155" ;;
+    98 | 98a | 98m | 98fi | 98ai | 98w) printf '%s\n' "lockscreen|12,486,366,155|18,400,366,155" ;;
     94) printf '%s\n' "compact|89,11.5,212,37|95,120,212,37" ;;
-    95) printf '%s\n' "expanded|9,9,372,156|15,180,372,156" ;;
+    95 | 98e*) printf '%s\n' "expanded|9,9,372,156|15,180,372,156" ;;
+    99*) printf '%s\n' "live|26,66,338,158|32,66,338,158" "medium|26,258,338,154|32,258,338,154" ;;
   esac
 }
 
@@ -56,14 +78,14 @@ xcrun simctl bootstatus "$SIM" -b >/dev/null
 xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" -debugCatalog live >/dev/null
 sleep 3
 
-echo "$STATES" | while IFS='|' read -r number file appearance section time; do
+echo "$STATES" | while IFS='|' read -r number file appearance section time extra; do
   [ -n "$number" ] || continue
   if [ $# -gt 0 ] && ! printf '%s\n' "$@" | grep -qx "$number"; then continue; fi
   xcrun simctl ui "$SIM" appearance "$appearance"
   xcrun simctl launch --terminate-running-process "$SIM" "$BUNDLE_ID" \
     -AppleLanguages '(de)' -AppleLocale de_DE \
-    -debugCatalog "$section" -debugFixtureTimes -debugDate 2026-11-10 -debugTime "$time" >/dev/null
-  sleep 2
+    -debugCatalog "$section" -debugFixtureTimes -debugDate 2026-11-10 -debugTime "$time" $extra >/dev/null
+  sleep 2.5
   xcrun simctl io "$SIM" screenshot "$OUT/catalog-$number.png" >/dev/null 2>&1
   crops "$number" | while IFS='|' read -r part ref shot; do
     printf '%s %s: ' "$number" "$part"

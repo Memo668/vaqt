@@ -143,25 +143,49 @@ if wanted 86; then
   halves foot-86 86-sheet-adhan "$OUT/adhan-86.png" 454 466 60
 fi
 
+# onboarding Nummer Schritt Referenzbild Lage-y – seit dem Nachtrag zu Phase 18 fünf Schritte (Spec § 11.5):
+# 01 Willkommen, 02 Standort, 03 Rechtsschule, 05 Mitteilungen (Schritt 4), 06 „Kostenlos“ (Schritt 5).
 onboarding() {
-  local nr="$1" name="$2" shift_y="$3"
-  wanted "0$nr" || return 0
-  launch "$OUT/onboarding-0$nr.png" -debugFixtureTimes -debugDate 2026-11-10 -debugTime 09:10 -debugOnboarding "$nr"
-  echo "iphone/0$nr (Onboarding, Schritt $nr):"
-  compare "page-0$nr" "$name" "0,200,390,340" "$OUT/onboarding-0$nr.png" "6,$shift_y,390,340"
-  compare "actions-0$nr" "$name" "0,700,390,144" "$OUT/onboarding-0$nr.png" "6,729,390,144"
-  compare "skip-0$nr" "$name" "190,54,200,44" "$OUT/onboarding-0$nr.png" "202,62,200,44"
+  local nr="$1" step="$2" name="$3" shift_y="$4"
+  wanted "$nr" || return 0
+  launch "$OUT/onboarding-$nr.png" -debugFixtureTimes -debugDate 2026-11-10 -debugTime 09:10 -debugOnboarding "$step"
+  echo "iphone/$nr (Onboarding, Schritt $step):"
+  compare "page-$nr" "$name" "0,200,390,340" "$OUT/onboarding-$nr.png" "6,$shift_y,390,340"
+  compare "actions-$nr" "$name" "0,700,390,144" "$OUT/onboarding-$nr.png" "6,729,390,144"
+  compare "skip-$nr" "$name" "190,54,200,44" "$OUT/onboarding-$nr.png" "202,62,200,44"
 }
-onboarding 1 01-onboarding-1-welcome 218.6
-onboarding 2 02-onboarding-2-location 218
-onboarding 3 03-onboarding-3-notifications 218
+onboarding 01 1 01-onboarding-1-welcome 218.6
+onboarding 02 2 02-onboarding-2-location 218
+onboarding 03 3 03-onboarding-3-madhab 218
+onboarding 05 4 05-onboarding-4-notifications 218
 
-# Seite 4 „Kostenlos. Ohne Werbung.“ (Spec § 9.9).
-if wanted 05; then
-  launch "$OUT/onboarding-05.png" -debugFixtureTimes -debugDate 2026-11-10 -debugTime 09:10 -debugOnboarding 4
-  echo "iphone/05 (Onboarding, Schritt 4):"
-  compare "page-05" 05-onboarding-4-free "0,140,390,360" "$OUT/onboarding-05.png" "6,158,390,360"
-  compare "actions-05" 05-onboarding-4-free "0,700,390,144" "$OUT/onboarding-05.png" "6,729,390,144"
+# Schritt 5 „Kostenlos. Ohne Werbung.“ (Spec § 9.9).
+if wanted 06; then
+  launch "$OUT/onboarding-06.png" -debugFixtureTimes -debugDate 2026-11-10 -debugTime 09:10 -debugOnboarding 5
+  echo "iphone/06 (Onboarding, Schritt 5):"
+  compare "page-06" 06-onboarding-5-free "0,140,390,360" "$OUT/onboarding-06.png" "6,158,390,360"
+  compare "actions-06" 06-onboarding-5-free "0,700,390,144" "$OUT/onboarding-06.png" "6,729,390,144"
+fi
+
+# Nachtrag zu Phase 18: Klang mit Systemton (§ 11.3), Rechtsschule (§ 11.6), Stil (§ 11.7).
+if wanted 80s; then
+  launch "$OUT/settings-80s.png" "${STATE[@]}" -debugTab sound -debugSound system
+  echo "iphone/80-settings-sound-system (Klang, Systemton):"
+  halves sound-80s 80-settings-sound-system "$OUT/settings-80s.png" 105 122 300
+fi
+subpage 88 madhab 88-settings-madhab 520
+if wanted 87; then
+  launch "$OUT/settings-87.png" "${STATE[@]}" -debugTab style
+  echo "iphone/87 (Stil):"
+  compare preview-87 87-settings-style "0,105,390,190" "$OUT/settings-87.png" "6,122,390,190"
+  halves colors-87 87-settings-style "$OUT/settings-87.png" 295 312 200
+  halves live-87 87-settings-style "$OUT/settings-87.png" 495 512 270
+fi
+if wanted 87o; then
+  launch "$OUT/settings-87o.png" "${STATE[@]}" -debugTab style -debugAccent orange -debugLiveStyle arc -debugLiveInverted
+  echo "iphone/87-settings-style-open (Stil, Orange, Nur Bogen invertiert):"
+  compare preview-87o 87-settings-style-open "0,105,390,190" "$OUT/settings-87o.png" "6,122,390,190"
+  halves colors-87o 87-settings-style-open "$OUT/settings-87o.png" 295 312 380
 fi
 
 echo "Ergebnis in $OUT"

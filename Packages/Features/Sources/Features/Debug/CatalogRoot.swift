@@ -40,10 +40,11 @@ struct CatalogRoot: View {
             ? FixtureTimesSource(highLatitude: options.highLatitude)
             : AdhanTimesSource()
         let place = city.place(named: city.localizedName)
+        // Stil und Rechtsschule aus `-debugAccent`, `-debugLiveStyle`, `-debugLiveInverted` und `-debugMadhab`.
         return CatalogOutsideState.make(
             source: source, place: place, cityName: place.name, isCurrentLocation: true,
-            settings: CalculationSettings(), showKerahat: true, now: environment.clock.now,
-            clockOffset: WidgetSync.clockOffset(of: environment.clock)
+            settings: CalculationSettings(madhab: options.madhab ?? .standard), showKerahat: true, now: environment.clock.now,
+            clockOffset: WidgetSync.clockOffset(of: environment.clock), style: options.style ?? .standard
         )
     }
 
