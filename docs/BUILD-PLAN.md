@@ -338,7 +338,9 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 - Lizenzseite: Aufnahme, arabischer Verstext (Tanzil) und Übersetzungen mit Quelle und Bedingungen. Alles dazu steht in `docs/THIRD-PARTY.md`.
 - Referenzbilder `iphone/50`, `51` und `86` neu aus dem Prototyp, `86` jetzt auch dunkel.
 
-**Nachtrag zu Phase 18** (*Spec v0.11 § 11.3–11.7, abgenommen am 24.11.2026 im Prototyp „Stil“, Version 11; Go zum Bau am 24.11.2026. Gebaut auf demselben Zweig, Ergebnis unten unter „Annahmen im Nachtrag zu Phase 18“ in `docs/OPEN-QUESTIONS.md`.*)
+**Nachtrag zu Phase 18** (*Spec v0.11 § 11.3–11.7, abgenommen am 24.11.2026 im Prototyp „Stil“, Version 11; Go zum Bau am 24.11.2026.*)
+
+*Gebaut am 24./25.11.2026 auf `claude/phase-18`, 1104 Tests grün, im Simulator gegen die neuen Referenzbilder abgeglichen (Onboarding, Einstellungen, Stil, Rechtsschule, Zeiten-Seite, Blatt, Live-Aktivität und Widgets im Katalog und im System, Stichproben dunkel, Arabisch und große Schrift). Annahmen in `docs/OPEN-QUESTIONS.md` („Annahmen im Nachtrag zu Phase 18“). Die Abnahme steht aus; Ibrahims Prüfung der neuen Texte vor dem App Store.*
 
 - Klang: nur Systemton, kurzer Adhan oder lautlos; bei „Systemton“ der Hinweis `soundSystemFooter`.
 - Einstellungen: Gruppe „Darstellung“ unter „Standort“ und über „Berechnung“, neue Zeilen „Stil“ und „Rechtsschule“.

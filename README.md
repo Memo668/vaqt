@@ -48,8 +48,8 @@ open Gebetszeiten.xcodeproj
 | `make compare-walk` | „Gebet Schritt für Schritt“ in den Zuständen von `iphone/43`–`49` aufnehmen und neben die Referenz legen (`STATES='47 49-dark'` für einzelne) |
 | `make compare-verses` | Verse in den Zuständen von `iphone/50` (hell) und `51` (dunkel) aufnehmen und neben die Referenz legen |
 | `make compare-qada` | Nachholen im Zustand von `iphone/60` aufnehmen und neben die Referenz legen, dazu `61`, wenn aufgenommen |
-| `make compare-settings` | Einstellungen, Onboarding und Adhan-Sheet in den Zuständen von `iphone/01`–`03`, `05`, `70`, `73`–`81`, `83` und `86` aufnehmen und neben die Referenz legen, dazu `71`, `72` und `82`, wenn aufgenommen |
-| `make compare-system` | Widgets und Live-Aktivität im Katalog in den Zuständen von `system/90`, `91` und `93`–`96` aufnehmen und neben die Referenz legen |
+| `make compare-settings` | Einstellungen, Onboarding und Adhan-Sheet in den Zuständen von `iphone/01`–`03`, `05`, `06`, `70`, `73`–`81`, `80-settings-sound-system`, `83`, `86`, `87` und `88` aufnehmen und neben die Referenz legen, dazu `71`, `72` und `82`, wenn aufgenommen |
+| `make compare-system` | Widgets und Live-Aktivität im Katalog in den Zuständen von `system/90`, `91`, `93`–`96` und den Stilen `97`–`99` (Nachtrag zu Phase 18) aufnehmen und neben die Referenz legen |
 | `make compare-language` | eine Sprache gegen den Prototyp in derselben Sprache: 20 Zustände (Onboarding, Zeiten, Qibla, Anleitung, Durchlauf, Verse, Nachholen, Einstellungen, Widgets, Live-Aktivität) aus dem Prototyp und der App nebeneinander (`LANGUAGE=ar STATES='10 43'`, `REGION=ar_SA` für eine andere Region; Phase 15) |
 | `make compare-duo` | auf dem Simulator „iPhone Duo“ die Zustände von `duo/open-*` (`MODE=open`, aufgeklappt und quer) oder `duo/closed-*` (`MODE=closed`) aufnehmen und neben die Referenz legen; auf- und zuklappen in Device Hub |
 | `make harness` | Skripte des UI-Hilfsprojekts ausführen, das antippt, wischt und aufnimmt (`SCRIPTS='scripts/ui-harness/scripts/iphone-61-qada.txt'`) – für Zustände mit Tipp |
@@ -362,7 +362,7 @@ make compare-verses
 make compare-qada
 ```
 
-`make compare-settings` stellt die Einstellungen (`iphone/70`, `73` bis `81`, `83`), das Adhan-Sheet (`86`) und das Onboarding (`01` bis `03`, `05`) mit den Debug-Argumenten nach – `-debugTab settings|method|…|privacy|support|adhan` und `-debugOnboarding 1|2|3|4` – und schreibt Aufnahmen und Ausschnitte nach `screenshots-out/phase-7/`. Gruppen und Karten werden in zwei Hälften verglichen; die Lage in der Höhe folgt den Leisten des Systems (Kopf des Skripts). `iphone/71` und `72` sind die Einstellungen gescrollt, `82` „Hohe Breitengrade“ mit „Manuelle Winkel“; liegen ihre Aufnahmen `settings-71.png`, `settings-72.png` und `settings-82.png` dort – aufgenommen mit dem UI-Hilfsprojekt –, vergleicht das Skript sie mit. `iphone/04` zeigt nur den Dialog des Systems.
+`make compare-settings` stellt die Einstellungen (`iphone/70`, `73` bis `81`, `83`, seit dem Nachtrag zu Phase 18 auch `80-settings-sound-system`, `87` Stil und `88` Rechtsschule), das Adhan-Sheet (`86`) und das Onboarding (`01` bis `03`, `05`, `06` – fünf Schritte, Spec § 11.5) mit den Debug-Argumenten nach – `-debugTab settings|method|…|privacy|support|adhan|style|madhab` und `-debugOnboarding 1` bis `5` – und schreibt Aufnahmen und Ausschnitte nach `screenshots-out/phase-7/`. Gruppen und Karten werden in zwei Hälften verglichen; die Lage in der Höhe folgt den Leisten des Systems (Kopf des Skripts). `iphone/71` und `72` sind die Einstellungen gescrollt, `82` „Hohe Breitengrade“ mit „Manuelle Winkel“; liegen ihre Aufnahmen `settings-71.png`, `settings-72.png` und `settings-82.png` dort – aufgenommen mit dem UI-Hilfsprojekt –, vergleicht das Skript sie mit. `iphone/04` zeigt nur den Dialog des Systems.
 
 ```bash
 make compare-settings
@@ -438,6 +438,8 @@ Seit Phase 16 (Spec § 10.3):
 ### Abgleich von `system/90`, `91` und `93`–`96`
 
 `make compare-system` nimmt den Katalog (`-debugCatalog widgets`, `live`) in den Maßen des Prototyps auf und legt jeden Baustein neben die Referenz. Im System selbst – Widgets auf Home- und Sperrbildschirm, Live-Aktivität auf dem Sperrbildschirm und in der Dynamic Island – stellt das UI-Hilfsprojekt die Referenzbilder nach; die Schritte und Argumente stehen in `docs/PROMPTS.md`, was abweicht in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 9“ und „Annahmen in Phase 14“). Die Widgets von „Vaqt“ liegen im Simulator auf der Seite links neben der des Hilfsprojekts; eingerichtet werden sie mit `system-setup-home-widgets.txt` und `system-setup-lock-widgets.txt`.
+
+Seit dem Nachtrag zu Phase 18 (Spec § 11.7) zeigt der Katalog Live-Aktivität und Widget „Live“ im Stil aus `-debugAccent`, `-debugLiveStyle` und `-debugLiveInverted`; `make compare-system` vergleicht damit auch `system/97`–`99`. Im System selbst nimmt `scripts/ui-harness/scripts/nachtrag-18-system.txt` Widgets in Ozean, die Live-Aktivität in der Verbotszeit mit Orange (violett) und schwarz-weiß auf; `nachtrag-18-onboarding-stil.txt` prüft das Wischen im Onboarding, das Menü der Rechtsschule und das Auf- und Zuklappen der Grundfarben.
 
 Das Protokoll der App nennt in DEBUG, welche Aktivitäten es gibt und was die App anmeldet, auffrischt und beendet:
 

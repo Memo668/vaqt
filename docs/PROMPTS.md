@@ -64,8 +64,16 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 |---|---|
 | `iphone/01` | `-debugFixtureTimes -debugDate 2026-11-10 -debugTime 09:10 -debugOnboarding 1` (Statusleiste `make statusbar TIME=09:10`) |
 | `iphone/02` | wie `01` mit `-debugOnboarding 2` |
-| `iphone/03` | wie `01` mit `-debugOnboarding 3` |
-| `iphone/05` | wie `01` mit `-debugOnboarding 4` (seit Phase 12) |
+| `iphone/03` | wie `01` mit `-debugOnboarding 3` – seit dem Nachtrag zu Phase 18 die Rechtsschule (`03-onboarding-3-madhab`); das Menü öffnet ein Tipp auf die Kapsel |
+| `iphone/05` | wie `01` mit `-debugOnboarding 4` (Mitteilungen, seit dem Nachtrag zu Phase 18; vorher `03`) |
+| `iphone/06` | wie `01` mit `-debugOnboarding 5` („Kostenlos“, seit dem Nachtrag zu Phase 18; vorher `05`) |
+| `iphone/25` | wie `10` mit `-debugAccent ocean`; `-orange-kerahat` mit `-debugTime 07:30 -debugAccent orange` |
+| `iphone/26` | wie `10` mit `-debugMadhab maliki`; `-shafii-friday` mit `-debugMadhab shafii -debugDayOffset 3` |
+| `iphone/27` | wie `10` mit `-debugTab kerahat` (`-maliki` mit `-debugMadhab maliki`) |
+| `iphone/80-settings-sound-system` | wie `10` mit `-debugTab sound -debugSound system` |
+| `iphone/87` | wie `10` mit `-debugTab style`; `-open` mit `-debugAccent orange -debugLiveStyle arc -debugLiveInverted` |
+| `iphone/88` | wie `10` mit `-debugTab madhab` (dunkel mit `-debugMadhab shafii`) |
+| `system/97`–`99` | `-debugCatalog live` bzw. `widgets` mit `-debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25` (98: `16:05`) und `-debugLiveStyle arc|mono`, `-debugLiveInverted`, `-debugAccent …` – Einzelheiten in `scripts/compare-system` |
 | `iphone/04` | wie `02`, dann „Standort erlauben“ – ohne `-debugFixtureTimes` und mit noch nicht beantworteter Standortabfrage; der Dialog ist der des Systems |
 | `iphone/10` | `-debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25` |
 | `iphone/12` | … `-debugTime 05:14` |

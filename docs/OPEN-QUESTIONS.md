@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 25.11.2026, Phase 18 (Verse und Adhan, Spec § 11.1–11.2) mit dem Nachtrag (Klang, Stil, Rechtsschule, Onboarding, Spec § 11.3–11.7) gebaut, die Abnahme steht aus; danach Build 0.1.0 (5) für die Golden Beta am 26.11.2026.
+Stand: 25.11.2026, Phase 18 (Verse und Adhan, Spec § 11.1–11.2) mit dem Nachtrag (Klang, Stil, Rechtsschule, Onboarding, Spec § 11.3–11.7) gebaut und im Simulator abgeglichen; die Abnahme und die Hörprobe des Adhan stehen aus, danach Build 0.1.0 (5) für die Golden Beta am 26.11.2026.
 
 ## Für die erste Beta
 
@@ -554,6 +554,43 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 | Ausrichtung | „Ja, so lassen“ | nur Hochformat. Phase 10: Die Info.plist bleibt so; auf dem inneren Display des iPhone Duo zeigt iOS die App trotzdem quer und hoch (siehe „Annahmen in Phase 10“). |
 | Nachholen | „Ja, so lassen“ | Die App startet leer: kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr. `iphone/60` und `61` zeigen die Beispielzahlen des Prototyps; die gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Annahme für Phase 6: Mit `-debugFixtureTimes` zeigt die Seite sie. |
 | JAKIM und Kemenag | „Ja, so lassen“ | reine Winkel 20°/18°. Vor der Veröffentlichung gegen offizielle Tabellen zu prüfen, siehe oben. |
+
+## Annahmen im Nachtrag zu Phase 18
+
+Gebaut am 24./25.11.2026 auf `claude/phase-18`, auf den drei Commits von Phase 18 (`57c9eda` bis `aebb18c`). Spec v0.11 § 11.3–11.7. 1104 Tests grün (PrayerCore 498, DesignSystem 251, Features 355; vorher 1059). Neue Referenzbilder aus dem Prototyp: siehe `design/screenshots/INDEX.md` („Spec v0.11“).
+
+### Was mit den Referenzbildern übereinstimmt
+- **Onboarding** (`iphone/01`–`06`, `make compare-settings 01 02 03 05 06`): fünf Punkte, Seite „Deine Rechtsschule“ mit Kapsel und Doppelpfeil, Menü mit den vier Schulen und Haken (UI-Hilfsprojekt), hell und dunkel. Wischen vor und zurück, federnd am Anfang und Ende, auf Arabisch gespiegelt (`scripts/ui-harness/scripts/nachtrag-18-onboarding-stil.txt`).
+- **Einstellungen** (`iphone/70`): „Darstellung“ unter „Standort“, Zeilen „Stil“ (Petrol) und „Rechtsschule“ (Hanafi). Seite „Rechtsschule“ (`88`, auch dunkel mit Schafii), „Klang“ mit Systemton (`80-settings-sound-system`).
+- **Stil** (`87`, `87-dark`, `87-open`): Vorschau, Grundfarben zugeklappt und aufgeklappt, Ring und Haken, kleiner Punkt neben dem Pfeil, Kacheln mit Zeichen und Radioknopf, „Invertiert“. Auf- und Zuklappen und die Wahl einer weiteren Farbe im UI-Hilfsprojekt geprüft (das Raster bleibt offen).
+- **Zeiten-Seite** (`25`, `26`): Ozean; Orange um 07:30 mit violetter Verbotszeit, hell und dunkel; Maliki ohne Fenster vor Dhuhr (07:14–07:34, 16:07–16:27); Schafii am Freitag ohne Fenster vor Dhuhr (25 Minuten).
+- **Blatt „Was sind Verbotszeiten?“** (`27`, `27-maliki`): Einleitung je Schule, zwei oder drei Fenster, „Asr noch nicht gebetet?“ nur hanafitisch, die drei neuen Abschnitte.
+- **Live-Aktivität und Widgets** (`make compare-system`, Katalog): alle sechs Stile (`97`), in der Verbotszeit (`98`) auch warm, Insel erweitert warm und schwarz-weiß, Widget „Live“ invertiert und Ozean (`99`). Im System selbst (`nachtrag-18-system.txt`): Widgets in Ozean auf dem Home-Bildschirm, Live-Aktivität und Insel in der Verbotszeit mit Orange violett, schwarz-weiß auf dem Sperrbildschirm.
+- **Arabisch und große Schrift** (Stichproben): Stil, Rechtsschule, Einstellungen und Blatt gespiegelt; bei AX XL brechen die Texte um, das Onboarding scrollt wie bisher.
+
+### Was abweicht und bleibt
+- **Abstände im Blatt:** Die Überschriften der Abschnitte haben jetzt die Abstände des CSS (18 pt darüber, 6 pt darunter); vorher stand der Abschnitt „Asr noch nicht gebetet?“ mit 12 pt. Zwischen der Gruppe „Heute“ und der ersten Überschrift ist der Abstand etwas kleiner als im Prototyp (Abstand der Liste).
+- **Vorschau der Stil-Seite:** Den Weichzeichner des Prototyps (`backdrop-filter: blur(18px) saturate(1.4)`) ersetzt ein dünnes Material; das neutrale Hintergrundbild ist aus drei Verläufen nachgebaut. Die Fläche wirkt dadurch etwas dunkler.
+- **Vergangene Verbotszeiten an einem anderen Tag** (`26-home-shafii-friday`): Der Prototyp blendet sie nach der heutigen Uhrzeit ab, die App zeigt alle gleich kräftig – wie bei `23` (Spec § 9.4).
+- **Kontrast der Grundfarben** ist geprüft wie im Bauskript (4,5 : 1). Wie die Farben auf dem Display wirken, zeigt erst das Gerät.
+
+### Annahmen in der Umsetzung
+- **Rechtsschule in den Rechen-Einstellungen:** `Madhab` steht in `CalculationSettings` und an `DayTimes`. So gilt sie überall, wo Zeiten gerechnet werden – Zeiten-Seite, Widgets (über die App Group) und Live-Aktivität (der Inhalt trägt die Zeiten) –, ohne dass jede Stelle sie eigens bekommt. Sie ändert keine Gebetszeit (Test). Gespeicherte Einstellungen und Inhalte ohne Schule lesen sich als Hanafi.
+- **Freitag** ist der Wochentag des Kalendertags, zu dem die Zeiten gehören, in der Zeitzone des Ortes – wie `getDay()` des angezeigten Tages im Prototyp.
+- **Anleitung:** Der Hinweis zum Farḍ von Asr steht jetzt nur, wenn die App Verbotszeiten zeigt und die Schule Hanafi ist – wie `S.kerahat && S.madhab === 'hanafi'` im Prototyp. Bisher stand er auch bei ausgeschalteten Verbotszeiten.
+- **Menü der Rechtsschule im Onboarding:** ein `Menu` mit einer Kapsel als Etikett und einem `Picker` darin (Haken bei der gewählten Schule). Ein `Picker` mit `.pickerStyle(.menu)` allein zeigt nur Text in Akzentfarbe ohne die Kapsel des Prototyps; das Verhalten ist dasselbe.
+- **Wischen im Onboarding:** die Seiten als `TabView` im Seitenstil, wie es der Prototyp für die App vorschlägt. Die Knöpfe wechseln die Seite mit Feder; bei „Bewegung reduzieren“ ohne Bewegung (vorher Überblenden).
+- **Grundfarbe:** ein beobachtbarer Speicher (`AccentStore`) statt des Assets `AccentColor`. Jede Farbe, die vom Akzent abhängt, liest ihn beim Aufbau; ein Wechsel baut die betroffenen Ansichten neu auf, ohne die Navigation zurückzusetzen. Das Asset bleibt Petrol für den Start. Bedienelemente nehmen die Farbe über `.tint`, Dialoge des Systems über die Farbe des Fensters (nach dem ersten Bild gesetzt). Der Wecker (AlarmKit) bekommt die Farbe beim Planen.
+- **Widgets** lesen den Stil aus der App Group und setzen die Grundfarbe vor dem Zeichnen; das Widget „Live“ zeichnet im Stil der Live-Aktivität (in der Verbotszeit unverändert, wie `.w-la` im Prototyp).
+- **Live-Aktivität:** Der Stil steht im Inhalt der Aktivität. Ändert er sich, bekommen laufende Aktivitäten den neuen Inhalt, geplante werden beendet und neu angemeldet (`LiveActivityLifecycle`, Test). Inhalte ohne Stil (Build 4) zeichnen sich im Stil der App Group.
+- **Zeiten am Bogen der Live-Aktivität:** Wo der Prototyp Weiß zu 80 % nimmt, bleibt volles Weiß (Entscheidung mit dem Plan für Phase 11); in den invertierten Stilen gilt die Zweitschrift des Stils.
+- **Marken unter dem Balken der Insel** sind bei warmen Grundfarben violett. Im Vorschlag blieben sie orange; beim Übernehmen in `design/` ergänzt (siehe oben).
+- **Spanisch:** Die neuen Texte sind wie die übrigen 12 Sprachen ein KI-Entwurf, im Katalog aber wie bisher „translated“ (`draftLanguages` unverändert, wie in Phase 16).
+- **Abgleich:** Der Ausschnitt des Sperrbildschirms in `scripts/compare-system` stand seit Phase 16 rund 45 pt zu tief (unter der Aktivität steht seitdem die schmale Zeile der abgelaufenen); jetzt 532 pt, in der Verbotszeit 486 pt. Der Katalog zeichnete die Fläche in der Verbotszeit nicht orange; behoben.
+
+### Was sich im Simulator nicht prüfen lässt
+- **Hintergrundbild:** Wie lesbar die sechs Stile bei 30 % auf dem eigenen Hintergrundbild sind (normal auf dunklen, invertiert auf hellen Bildern), zeigt nur das Gerät.
+- **Mehrere Live-Aktivitäten nach einem Wechsel des Stils:** Im Simulator mit der Debug-Uhr bleibt eine schon gestartete Aktivität mit ihrem alten Zeitpunkt stehen (sie bekommt nur den neuen Stil). Am Gerät mit echter Zeit plant die App beim nächsten Start neu.
 
 ## Annahmen in Phase 18
 

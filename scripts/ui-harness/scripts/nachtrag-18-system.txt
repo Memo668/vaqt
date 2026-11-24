@@ -1,0 +1,50 @@
+# Nachtrag zu Phase 18 (Spec § 11.7): Stil im System selbst – Widgets und Live-Aktivität, wie system-90-91 und
+# system-93-95, aber mit einer anderen Grundfarbe und einem anderen Stil der Live-Aktivität. Vorher: Widgets
+# eingerichtet (system-setup-*), make statusbar.
+#
+# 1. Widgets in Ozean, Widget „Live“ im Stil „Nur Bogen“, invertiert (14:25).
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25 -debugAccent ocean -debugLiveStyle arc -debugLiveInverted
+wait 5
+home
+wait 2
+sbdrag 40 600 380 600
+wait 12
+shot {OUT}/sys-1-home-widgets-ocean-arc-inverted.png
+lock
+wait 2
+home
+wait 6
+shot {OUT}/sys-2-lock-widgets-ocean.png
+# 2. Live-Aktivität in der Verbotszeit (16:05) mit Orange: violett statt orange; Insel erweitert.
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugLiveActivity -debugTime 16:05 -debugAccent orange
+wait 12
+home
+wait 2
+sbdrag 40 600 380 600
+wait 4
+sbtaplabelif Always Allow
+shot {OUT}/sys-3-island-compact-warm.png
+sbpress 201 30 1.2
+wait 2
+shot {OUT}/sys-4-island-expanded-warm.png
+home
+wait 1
+lock
+wait 2
+home
+wait 3
+sbtaplabelif Always Allow
+wait 2
+shot {OUT}/sys-5-lock-live-activity-warm.png
+# 3. Live-Aktivität „Schwarz-weiß“ (14:25) auf dem Sperrbildschirm.
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugLiveActivity -debugTime 14:25 -debugLiveStyle mono
+wait 12
+home
+wait 1
+lock
+wait 2
+home
+wait 3
+sbtaplabelif Always Allow
+wait 2
+shot {OUT}/sys-6-lock-live-activity-mono.png
