@@ -55,8 +55,9 @@ public struct GuideHeaderCard: View {
                         .padding(.top, GuideHeaderMetrics.noteTop)
                 }
 
-                // Spec § 10.2: Bei Asr der Hinweis auf die Verbotszeit vor Sonnenuntergang – nur das Farḍ.
-                if header.prayer == .asr {
+                // Spec § 10.2: Bei Asr der Hinweis auf die Verbotszeit vor Sonnenuntergang – nur das Farḍ. Seit
+                // § 11.6 nur hanafitisch und nur, wenn die App Verbotszeiten zeigt (`S.kerahat`).
+                if header.prayer == .asr, header.showsAsrKerahatNote {
                     HStack(alignment: .firstTextBaseline, spacing: GuideHeaderMetrics.kerahatNoteGap) {
                         Circle()
                             .fill(Palette.kerahat)

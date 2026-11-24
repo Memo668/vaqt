@@ -20,10 +20,13 @@ public struct GuideHeader: Hashable, Sendable {
     public let automaticStatus: String?
     /// Das Gebet des Knopfs „Zum aktuellen Gebet“; `nil`, solange der Knopf fehlt.
     public let returnPrayer: Prayer?
+    /// Ob bei Asr der Hinweis auf die Verbotszeit steht (`gAsrKerahat`, Spec § 10.2): nur wenn die App
+    /// Verbotszeiten zeigt und nach hanafitischer Lehre (§ 11.6).
+    public let showsAsrKerahatNote: Bool
 
     public init(
         prayer: Prayer, status: String?, window: String?,
-        automatic: Prayer?, automaticStatus: String?, returnPrayer: Prayer?
+        automatic: Prayer?, automaticStatus: String?, returnPrayer: Prayer?, showsAsrKerahatNote: Bool = true
     ) {
         self.prayer = prayer
         rakahs = Guide.rakahs(for: prayer) ?? Rakahs(aloud: [])
@@ -32,19 +35,22 @@ public struct GuideHeader: Hashable, Sendable {
         self.automatic = automatic
         self.automaticStatus = automaticStatus
         self.returnPrayer = returnPrayer
+        self.showsAsrKerahatNote = showsAsrKerahatNote
     }
 
     /// - Parameters:
     ///   - window: das Zeitfenster des gezeigten Gebets (`Guide.window(of:in:at:)`); `nil` ohne Zeiten.
     ///   - timeZone: Zeitzone des Ortes; in ihr stehen die Uhrzeiten.
-    public init(state: GuideState, window: Guide.Window?, timeZone: TimeZone) {
+    ///   - showsAsrKerahatNote: ob bei Asr der Hinweis auf die Verbotszeit steht.
+    public init(state: GuideState, window: Guide.Window?, timeZone: TimeZone, showsAsrKerahatNote: Bool = true) {
         self.init(
             prayer: state.prayer,
             status: state.isCurrent ? L10n.now : state.isNext ? L10n.guideNext : nil,
             window: window.map { Self.windowText($0, timeZone: timeZone) },
             automatic: state.automatic,
             automaticStatus: state.automatic == nil ? nil : state.isAutomaticCurrent ? L10n.now : L10n.guideNext,
-            returnPrayer: state.showsReturnButton ? state.automatic : nil
+            returnPrayer: state.showsReturnButton ? state.automatic : nil,
+            showsAsrKerahatNote: showsAsrKerahatNote
         )
     }
 

@@ -2,12 +2,15 @@ import DesignSystem
 import PrayerCore
 import SwiftUI
 
-/// „Was sind Verbotszeiten?“ – die Erklärung hinter dem Infopunkt der Kerahat-Zeilen (Spec § 10.2,
-/// `kerahatSheet()` im Prototyp): Einleitung, die drei Fenster von heute mit Uhrzeit, was gilt, wenn Asr noch
-/// nicht gebetet ist, der überlieferte Grund und die Quelle der Näherungen. Fachlich noch zu prüfen.
+/// „Was sind Verbotszeiten?“ – die Erklärung hinter dem Infopunkt der Kerahat-Zeilen (Spec § 10.2, § 11.6,
+/// `kerahatSheet()` im Prototyp): Einleitung je Rechtsschule, die Fenster von heute mit Uhrzeit, was gilt, wenn
+/// Asr noch nicht gebetet ist (nur Hanafi), die Zeiten nach dem Fadschr- und dem Asr-Gebet, das Nachholen, andere
+/// Gebete, der überlieferte Grund und die Quelle der Näherungen. Fachlich noch zu prüfen (Ibrahim Gezer).
 struct KerahatInfoSheet: View {
     /// Die Zeiten des Tages, dessen Fenster die Gruppe „Heute“ zeigt; `nil` ohne Ort.
     let times: DayTimes?
+    /// Die Rechtsschule aus den Einstellungen – auch ohne Ort, wenn die Gruppe „Heute“ fehlt.
+    let madhab: Madhab
 
     @Environment(\.dismiss) private var dismiss
 
@@ -15,7 +18,7 @@ struct KerahatInfoSheet: View {
         NavigationStack {
             List {
                 Section {
-                    prose(L10n.kerahatInfoP1)
+                    prose(madhab.kerahatInfoIntro)
                 }
                 if let times {
                     Section {
@@ -28,20 +31,27 @@ struct KerahatInfoSheet: View {
                     }
                 }
                 Section {
-                    VStack(alignment: .leading, spacing: KerahatInfoMetrics.paragraphGap) {
-                        Text(L10n.kerahatAsrTitle)
-                            .textStyle(.headline, lineHeight: KerahatInfoMetrics.headlineLineHeight)
-                            .foregroundStyle(Palette.label)
-                            .accessibilityAddTraits(.isHeader)
-                        Text(L10n.kerahatAsrBody)
-                            .textStyle(.body, lineHeight: KerahatInfoMetrics.bodyLineHeight)
-                            .foregroundStyle(Palette.label)
+                    VStack(alignment: .leading, spacing: 0) {
+                        // `.k-sheet h3 { margin: 18px 0 6px }`, `.k-sheet p { margin: 0 0 12px }`.
+                        ForEach(Array(sections.enumerated()), id: \.offset) { index, section in
+                            Text(section.title)
+                                .textStyle(.headline, lineHeight: KerahatInfoMetrics.headlineLineHeight)
+                                .foregroundStyle(Palette.label)
+                                .accessibilityAddTraits(.isHeader)
+                                .padding(.top, index == 0 ? KerahatInfoMetrics.firstHeadingTop : KerahatInfoMetrics.headingTop)
+                                .padding(.bottom, KerahatInfoMetrics.headingBottom)
+                            Text(section.body)
+                                .textStyle(.body, lineHeight: KerahatInfoMetrics.bodyLineHeight)
+                                .foregroundStyle(Palette.label)
+                        }
                         Text(L10n.kerahatInfoP2)
                             .textStyle(.body, lineHeight: KerahatInfoMetrics.bodyLineHeight)
                             .foregroundStyle(Palette.label)
-                        Text(L10n.kerahatInfoFoot)
+                            .padding(.top, KerahatInfoMetrics.headingTop)
+                        Text(madhab.kerahatInfoFootnote)
                             .textStyle(.footnote, lineHeight: KerahatInfoMetrics.footnoteLineHeight)
                             .foregroundStyle(Palette.textSecondary)
+                            .padding(.top, KerahatInfoMetrics.paragraphGap)
                     }
                     .fixedSize(horizontal: false, vertical: true)
                     .listRowInsets(KerahatInfoMetrics.proseInsets)
@@ -63,6 +73,19 @@ struct KerahatInfoSheet: View {
         }
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
+    }
+
+    /// Die Abschnitte mit Überschrift: „Asr noch nicht gebetet?“ nur hanafitisch, dann für alle Schulen nach
+    /// dem Fadschr- und dem Asr-Gebet, das Nachholen je Schule und andere Gebete (Spec § 11.6).
+    private var sections: [(title: String, body: String)] {
+        var sections: [(title: String, body: String)] = []
+        if madhab.hasAsrNote {
+            sections.append((L10n.kerahatAsrTitle, L10n.kerahatAsrBody))
+        }
+        sections.append((L10n.kerahatAfterTitle, L10n.kerahatAfterBody))
+        sections.append((L10n.kerahatQadaTitle, madhab.kerahatQadaText))
+        sections.append((L10n.kerahatOtherTitle, L10n.kerahatOtherBody))
+        return sections
     }
 
     private func prose(_ text: String) -> some View {
@@ -110,6 +133,12 @@ enum KerahatInfoMetrics {
     static let proseInsets = EdgeInsets(top: 4, leading: 20, bottom: 8, trailing: 20)
     /// Abstand der Absätze (`margin-bottom: 12px`).
     static let paragraphGap: CGFloat = 12
+    /// Über einer Überschrift (`h3 { margin-top: 18px }`; der Absatz davor hat 12, die Ränder fallen zusammen).
+    static let headingTop: CGFloat = 18
+    /// Über der ersten Überschrift des Abschnitts: Die Gruppe darüber hält schon Abstand.
+    static let firstHeadingTop: CGFloat = 0
+    /// Unter einer Überschrift (`h3 { margin-bottom: 6px }`).
+    static let headingBottom: CGFloat = 6
     /// Punkt der Zeilen, 8 pt (`.k-row .k-dot`).
     static let dotSize: CGFloat = 8
     static let rowGap: CGFloat = 12

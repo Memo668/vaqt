@@ -22,6 +22,7 @@ struct SettingsDestination: View {
         case .settings: SettingsPage()
         case .method: MethodPage()
         case .asr: AsrPage()
+        case .madhab: MadhabPage()
         case .highLatitude: HighLatitudePage()
         case .adjustments: AdjustmentsPage()
         case .perPrayer: PerPrayerPage()
@@ -106,6 +107,11 @@ struct SettingsPage: View {
                 ValueRowLabel(L10n.asr, value: model.asrValue)
             }
             .listRowMetrics()
+            // Spec § 11.6: die Rechtsschule für die Verbotszeiten, unter Asr.
+            NavigationLink(value: SettingsRoute.madhab) {
+                ValueRowLabel(L10n.madhab, value: model.madhabValue)
+            }
+            .listRowMetrics()
             NavigationLink(value: SettingsRoute.highLatitude) {
                 ValueRowLabel(L10n.highLat, value: model.highLatitudeValue)
             }
@@ -169,7 +175,7 @@ struct SettingsPage: View {
         } header: {
             ListSectionHeader(L10n.secAppearance)
         } footer: {
-            ListSectionFooter(L10n.kerahatFooter)
+            ListSectionFooter(model.kerahatFooter)
         }
     }
 
@@ -282,6 +288,27 @@ struct AsrPage: View {
                     }
                     .listRowMetrics()
                 }
+            }
+        }
+    }
+}
+
+/// Einstellungen › Rechtsschule (`PAGES.madhab`, Spec § 11.6): die vier Schulen, je mit der Zeile, welche
+/// Verbotszeiten gelten. Die Fußzeile sagt, dass die Asr-Zeit getrennt eingestellt wird.
+struct MadhabPage: View {
+    @Environment(SettingsModel.self) private var model
+
+    var body: some View {
+        SettingsList {
+            Section {
+                ForEach(Madhab.allCases, id: \.self) { madhab in
+                    CheckRow(madhab.localizedName, detail: madhab.localizedDetail, isSelected: model.settings.calculation.madhab == madhab) {
+                        model.setMadhab(madhab)
+                    }
+                    .listRowMetrics()
+                }
+            } footer: {
+                ListSectionFooter(L10n.madhabFooter(asr: L10n.asr))
             }
         }
     }

@@ -21,7 +21,7 @@ public struct FixtureTimesSource: PrayerTimesSource {
     /// gilt Berlin, die Stadt, in der der Prototyp startet. Die Uhrzeiten gelten in der Zeitzone des Ortes.
     public func times(on day: CalendarDay, at place: Place, settings: CalculationSettings) -> DayTimes? {
         guard let minutes = minutes(at: place, settings: settings) else { return nil }
-        return dayTimes(on: day, minutes: minutes, in: place.timeZone)
+        return dayTimes(on: day, minutes: minutes, in: place.timeZone, madhab: settings.madhab)
     }
 
     /// Ein anderer Tag wie `dayTimes()` im Prototyp (Spec § 9.4): die Mock-Zeiten von heute plus die
@@ -40,7 +40,7 @@ public struct FixtureTimesSource: PrayerTimesSource {
         for prayer in Prayer.allCases {
             minutes[prayer, default: 0] += shift[prayer] ?? 0
         }
-        return dayTimes(on: day, minutes: minutes, in: place.timeZone)
+        return dayTimes(on: day, minutes: minutes, in: place.timeZone, madhab: settings.madhab)
     }
 
     /// Minuten seit Mitternacht samt Korrektur, wie `todayTimes()`. Ischa darf nach Mitternacht liegen
@@ -58,14 +58,14 @@ public struct FixtureTimesSource: PrayerTimesSource {
         return result
     }
 
-    private func dayTimes(on day: CalendarDay, minutes: [Prayer: Int], in zone: TimeZone) -> DayTimes {
+    private func dayTimes(on day: CalendarDay, minutes: [Prayer: Int], in zone: TimeZone, madhab: Madhab) -> DayTimes {
         func instant(_ prayer: Prayer) -> Date {
             Self.instant(minutes: minutes[prayer] ?? 0, after: day, in: zone)
         }
         return DayTimes(
             day: day, timeZone: zone,
             fajr: instant(.fajr), sunrise: instant(.sunrise), dhuhr: instant(.dhuhr),
-            asr: instant(.asr), maghrib: instant(.maghrib), isha: instant(.isha)
+            asr: instant(.asr), maghrib: instant(.maghrib), isha: instant(.isha), madhab: madhab
         )
     }
 

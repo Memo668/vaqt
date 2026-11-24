@@ -63,6 +63,8 @@ public struct AppEnvironment: Sendable {
     public var opensAdhanSheet: Bool
     /// Ob das Stadt-Sheet beim Start über der Zeiten-Seite offen ist (`-debugTab city`).
     public var opensCitySheet: Bool
+    /// Ob das Blatt „Was sind Verbotszeiten?“ beim Start über der Zeiten-Seite offen ist (`-debugTab kerahat`).
+    public var opensKerahatSheet = false
     /// Ob das Onboarding beim Start übergangen wird (`-debugSkipOnboarding`).
     public var skipsOnboarding: Bool
     /// Tage, die die Zeiten-Seite beim Start vor oder zurück zeigt (`-debugDayOffset`); sonst heute.
@@ -226,7 +228,7 @@ extension AppEnvironment {
             timesSource = FixtureTimesSource(highLatitude: options.highLatitude)
             connectivity = FixedConnectivity(isOnline: !options.offline)
             citySearch = NoCitySearch()
-            settings = .ephemeral(.prototype(city: options.effectiveCity, alarm: options.alarm))
+            settings = .ephemeral(.prototype(city: options.effectiveCity, alarm: options.alarm, madhab: options.madhab, sound: options.sound))
             qadaStorage = .ephemeral(.prototypeSample)
         } else {
             timesSource = AdhanTimesSource()
@@ -274,6 +276,7 @@ extension AppEnvironment {
         settingsPath = options.page?.settingsRoute?.path ?? []
         opensAdhanSheet = options.page == .adhan
         opensCitySheet = options.page == .city
+        opensKerahatSheet = options.page == .kerahat
         skipsOnboarding = options.skipOnboarding && options.onboardingStep == nil
         onboardingStep = options.onboardingStep.flatMap { OnboardingStep(rawValue: $0 - 1) }
         initialDayOffset = options.dayOffset
@@ -311,8 +314,16 @@ extension SettingsStore.Snapshot {
 
     /// Die Startwerte von `S` im Prototyp: Standort automatisch, die Stadt der Fixture als gewählte und
     /// als aktuelle Stadt (`S.city`, `S.deviceCity`), die fünf Städte aus `CITY_IDS` als gespeicherte.
-    static func prototype(city: FixtureTimes.City?, alarm: LaunchOptions.AlarmState? = nil) -> SettingsStore.Snapshot {
+    static func prototype(
+        city: FixtureTimes.City?, alarm: LaunchOptions.AlarmState? = nil, madhab: Madhab? = nil, sound: NotificationSound? = nil
+    ) -> SettingsStore.Snapshot {
         var snapshot = SettingsStore.Snapshot()
+        if let madhab {
+            snapshot.calculation.madhab = madhab
+        }
+        if let sound {
+            snapshot.notifications.sound = sound
+        }
         switch alarm {
         case .before: snapshot.fajrAlarm = FajrAlarmPreferences(isOn: true)
         case .fixed: snapshot.fajrAlarm = FajrAlarmPreferences(isOn: true, mode: .fixedTime, sound: .adhan)

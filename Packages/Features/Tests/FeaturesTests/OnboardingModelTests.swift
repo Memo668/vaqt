@@ -57,12 +57,12 @@ struct OnboardingModelTests {
         #expect(await fixture.location.requests == 0)
     }
 
-    @Test("„Standort erlauben“ fragt erst jetzt; erlaubt → Mitteilungen, der Ort ist bestimmt")
+    @Test("„Standort erlauben“ fragt erst jetzt; erlaubt → Rechtsschule, der Ort ist bestimmt")
     func allowLocation() async {
         let fixture = fixture(step: .location)
         await fixture.model.allowLocation()
         #expect(await fixture.location.requests == 1)
-        #expect(fixture.model.step == .notifications)
+        #expect(fixture.model.step == .madhab)
         #expect(fixture.model.showsSkip)
         #expect(fixture.settings.autoLocation)
         #expect(fixture.settings.devicePlace == .berlin)
@@ -70,7 +70,7 @@ struct OnboardingModelTests {
         #expect(!fixture.today.isCitySheetPresented)
     }
 
-    @Test("abgelehnt → Stadt-Sheet; mit einer Stadt → Mitteilungen")
+    @Test("abgelehnt → Stadt-Sheet; mit einer Stadt → Rechtsschule")
     func denyLocation() async {
         let fixture = fixture(afterRequest: .denied, step: .location)
         await fixture.model.allowLocation()
@@ -78,7 +78,7 @@ struct OnboardingModelTests {
         #expect(fixture.model.step == .location)
         fixture.today.select(.istanbul)
         fixture.model.citySheetClosed()
-        #expect(fixture.model.step == .notifications)
+        #expect(fixture.model.step == .madhab)
         #expect(fixture.settings.manualPlace == .istanbul)
     }
 
@@ -90,12 +90,47 @@ struct OnboardingModelTests {
         #expect(fixture.today.isCitySheetPresented)
     }
 
-    @Test("schon erlaubt: kein Dialog, gleich die Mitteilungen")
+    @Test("schon erlaubt: kein Dialog, gleich die Rechtsschule")
     func alreadyAuthorized() async {
         let fixture = fixture(status: .authorized, step: .location)
         await fixture.model.allowLocation()
         #expect(await fixture.location.requests == 0)
+        #expect(fixture.model.step == .madhab)
+    }
+
+    @Test("Rechtsschule: Hanafi vorgewählt, die Wahl gilt sofort; „Weiter“ → Mitteilungen")
+    func madhab() {
+        let fixture = fixture(step: .madhab)
+        #expect(fixture.model.madhab == .hanafi)
+        #expect(fixture.model.showsSkip)
+        fixture.model.setMadhab(.shafii)
+        #expect(fixture.settings.calculation.madhab == .shafii)
+        #expect(fixture.model.madhab == .shafii)
+        fixture.model.confirmMadhab()
         #expect(fixture.model.step == .notifications)
+    }
+
+    @Test("„Überspringen“ auf der Rechtsschule behält die Wahl, bis dahin Hanafi")
+    func skipMadhab() {
+        let fixture = fixture(step: .madhab)
+        fixture.model.showFree()
+        #expect(fixture.model.step == .free)
+        #expect(fixture.settings.calculation.madhab == .hanafi)
+    }
+
+    @Test("Wischen wechselt die Seite ohne Abfrage – auch über Standort und Mitteilungen hinweg")
+    func swipe() async {
+        let fixture = fixture(step: .location)
+        fixture.model.swipe(to: .madhab)
+        #expect(fixture.model.step == .madhab)
+        fixture.model.swipe(to: .notifications)
+        fixture.model.swipe(to: .free)
+        #expect(fixture.model.step == .free)
+        fixture.model.swipe(to: .notifications)
+        #expect(fixture.model.step == .notifications)
+        #expect(await fixture.location.requests == 0)
+        #expect(await fixture.notifications.requests == 0)
+        #expect(!fixture.settings.onboardingCompleted)
     }
 
     @Test("„Stadt manuell wählen“ öffnet das Stadt-Sheet ohne Standortabfrage; „Abbrechen“ bleibt bei Schritt 2")
@@ -109,13 +144,13 @@ struct OnboardingModelTests {
         #expect(await fixture.location.requests == 0)
     }
 
-    @Test("„Stadt manuell wählen“ mit einer Wahl führt zu den Mitteilungen")
+    @Test("„Stadt manuell wählen“ mit einer Wahl führt zur Rechtsschule")
     func manualCityChosen() {
         let fixture = fixture(step: .location)
         fixture.model.chooseCityManually()
         fixture.today.select(.munich)
         fixture.model.citySheetClosed()
-        #expect(fixture.model.step == .notifications)
+        #expect(fixture.model.step == .madhab)
         #expect(!fixture.settings.autoLocation)
     }
 
@@ -173,10 +208,11 @@ struct OnboardingModelTests {
         #expect(await fixture.notifications.requests == 0)
     }
 
-    @Test("vier Schritte, der letzte ist „Kostenlos. Ohne Werbung.“")
+    @Test("fünf Schritte, der dritte ist die Rechtsschule, der letzte „Kostenlos. Ohne Werbung.“")
     func steps() {
-        #expect(OnboardingStep.allCases == [.welcome, .location, .notifications, .free])
-        #expect(OnboardingStep(rawValue: 3) == .free)
+        #expect(OnboardingStep.allCases == [.welcome, .location, .madhab, .notifications, .free])
+        #expect(OnboardingStep(rawValue: 2) == .madhab)
+        #expect(OnboardingStep(rawValue: 4) == .free)
     }
 
     @Test("nach „Überspringen“ fragt die Zeiten-Seite selbst nach dem Standort")

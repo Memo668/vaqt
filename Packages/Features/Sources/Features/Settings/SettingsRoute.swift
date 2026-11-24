@@ -12,6 +12,8 @@ public enum SettingsRoute: String, CaseIterable, Hashable, Sendable {
     case method
     /// Einstellungen › Asr (`asr`).
     case asr
+    /// Einstellungen › Rechtsschule (`madhab`, Spec § 11.6).
+    case madhab
     /// Einstellungen › Hohe Breitengrade (`hl`).
     case highLatitude = "hl"
     /// Einstellungen › Minutenkorrektur (`adjust`).
@@ -43,6 +45,7 @@ public enum SettingsRoute: String, CaseIterable, Hashable, Sendable {
         case .settings: L10n.settings
         case .method: L10n.methodTitle
         case .asr: L10n.asr
+        case .madhab: L10n.madhab
         case .highLatitude: L10n.highLat
         case .adjustments: L10n.adjustments
         case .perPrayer: L10n.perPrayer

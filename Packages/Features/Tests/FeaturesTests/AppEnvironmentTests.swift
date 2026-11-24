@@ -257,7 +257,9 @@ struct AppEnvironmentTests {
             AppEnvironment(options: LaunchOptions(arguments: arguments))
         }
         #expect(environment("-debugOnboarding", "1").onboardingStep == .welcome)
-        #expect(environment("-debugOnboarding", "3").onboardingStep == .notifications)
+        #expect(environment("-debugOnboarding", "3").onboardingStep == .madhab)
+        #expect(environment("-debugOnboarding", "4").onboardingStep == .notifications)
+        #expect(environment("-debugOnboarding", "5").onboardingStep == .free)
         #expect(!environment("-debugOnboarding", "2").skipsOnboarding)
         #expect(environment("-debugSkipOnboarding").skipsOnboarding)
         #expect(environment("-debugSkipOnboarding").onboardingStep == nil)

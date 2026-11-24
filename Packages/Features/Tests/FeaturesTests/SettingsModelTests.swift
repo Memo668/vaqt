@@ -133,6 +133,45 @@ struct SettingsModelTests {
         #expect(fixture.today.timeline?.today.clockTime(of: .asr) == hanafi)
     }
 
+    @Test("die Rechtsschule ändert die Verbotszeiten sofort, nicht die Asr-Zeit (Spec § 11.6)")
+    func madhab() throws {
+        let fixture = fixture()
+        #expect(fixture.model.madhabValue == L10n.madhab_hanafi)
+        #expect(fixture.model.kerahatFooter == L10n.kerahatFooter)
+        let asr = fixture.model.todayTime(of: .asr)
+        fixture.model.setMadhab(.maliki)
+        #expect(fixture.model.madhabValue == L10n.madhab_maliki)
+        #expect(fixture.model.kerahatFooter == L10n.kerahatFooter_maliki)
+        #expect(fixture.model.todayTime(of: .asr) == asr)
+        let today = try #require(fixture.today.timeline?.today)
+        #expect(today.madhab == .maliki)
+        #expect(Kerahat.windows(for: today).map(\.id) == [.sunrise, .sunset])
+        fixture.model.setMadhab(.hanbali)
+        #expect(fixture.model.kerahatFooter == L10n.kerahatFooter_hanbali)
+    }
+
+    @Test("Klang: bei „Systemton“ sagt die Fußzeile, wo man den Ton in iOS wählt (Spec § 11.3)")
+    func soundFooter() {
+        #expect(SoundPage.footer(for: .adhan) == L10n.soundFooter)
+        #expect(SoundPage.footer(for: .silent) == L10n.soundFooter)
+        #expect(SoundPage.footer(for: .system) == L10n.soundFooter + " " + L10n.soundSystemFooter)
+    }
+
+    @Test("die Texte je Rechtsschule: Hanafi wie bisher, die übrigen eigene", arguments: Madhab.allCases)
+    func madhabTexts(madhab: Madhab) {
+        #expect(!madhab.localizedName.isEmpty)
+        #expect(!madhab.localizedDetail.isEmpty)
+        #expect(madhab.hasAsrNote == (madhab == .hanafi))
+        if madhab == .hanafi {
+            #expect(madhab.kerahatInfoIntro == L10n.kerahatInfoP1)
+            #expect(madhab.kerahatInfoFootnote == L10n.kerahatInfoFoot)
+            #expect(madhab.kerahatQadaText == L10n.kerahatQadaHanafi)
+        } else {
+            #expect(madhab.kerahatInfoIntro != L10n.kerahatInfoP1)
+            #expect(madhab.kerahatQadaText.contains(madhab.localizedAdjective))
+        }
+    }
+
     @Test("bei Moonsighting sagt die Seite „Hohe Breitengrade“, dass die Regel nicht wirkt")
     func moonsightingHint() {
         let model = fixture().model

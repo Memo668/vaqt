@@ -126,6 +126,8 @@ public enum IconBadgeMetrics {
     public static let bellSymbolSize: CGFloat = 30
     /// `ic('shield', 48)`: Schild mit Haken, rund 19 pt breit.
     public static let shieldSymbolSize: CGFloat = 38.5
+    /// `ic('book', 46)` auf der Seite „Deine Rechtsschule“ (Spec § 11.5): das offene Buch, rund 31 pt breit.
+    public static let bookSymbolSize: CGFloat = 29
 }
 
 /// Zeichen der App über einer Zeile in Sekundärfarbe, mittig – `.tagline` am Ende der Einstellungen:

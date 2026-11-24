@@ -1,4 +1,5 @@
 import DesignSystem
+import PrayerCore
 import SwiftUI
 
 /// Das Onboarding beim ersten Start: die Seiten mit Punkten darunter und den Knöpfen des Schritts –
@@ -89,6 +90,13 @@ struct OnboardingView: View {
             OnboardingPage(title: L10n.ob2Title, message: L10n.ob2Body) {
                 IconBadge(systemImage: "location.fill", symbolSize: IconBadgeMetrics.locationSymbolSize)
             }
+        case .madhab:
+            OnboardingPage(title: L10n.obMadhabTitle, message: L10n.obMadhabBody) {
+                IconBadge(systemImage: "book", symbolSize: IconBadgeMetrics.bookSymbolSize)
+            } footer: {
+                // Spec § 11.5: Auswahlmenü (`.ob-pick`) – ein Menü mit den vier Schulen, die gewählte mit Haken.
+                MadhabMenu(selection: Binding(get: { model.madhab }, set: model.setMadhab))
+            }
         case .notifications:
             OnboardingPage(title: L10n.ob3Title, message: L10n.ob3Body) {
                 IconBadge(systemImage: "bell.and.waves.left.and.right", symbolSize: IconBadgeMetrics.bellSymbolSize)
@@ -116,6 +124,8 @@ struct OnboardingView: View {
                     Task { await model.allowLocation() }
                 }
                 plainButton(L10n.ob2Manual, action: model.chooseCityManually)
+            case .madhab:
+                primaryButton(L10n.obContinue, action: model.confirmMadhab)
             case .notifications:
                 primaryButton(L10n.ob3Allow) {
                     Task { await model.allowNotifications() }
@@ -152,6 +162,55 @@ struct OnboardingView: View {
         }
         .buttonStyle(.borderless)
     }
+}
+
+/// Die Wahl der Rechtsschule im Onboarding (`.ob-pick`, Spec § 11.5): eine Kapsel mit der gewählten Schule und
+/// dem Doppelpfeil, die ein Menü mit den vier Schulen öffnet – ein `Picker` im Menü, die gewählte mit Haken. Die
+/// Kapsel ist ein eigenes Etikett des Menüs, damit sie aussieht wie im Prototyp (Füllung `--fill-3`, 44 pt hoch,
+/// Schrift halbfett); der `Picker` mit `.pickerStyle(.menu)` zeigte nur Text in Akzentfarbe.
+private struct MadhabMenu: View {
+    @Binding var selection: Madhab
+
+    var body: some View {
+        Menu {
+            Picker(L10n.madhab, selection: $selection) {
+                ForEach(Madhab.allCases, id: \.self) { madhab in
+                    Text(madhab.localizedName).tag(madhab)
+                }
+            }
+            .pickerStyle(.inline)
+        } label: {
+            HStack(spacing: MadhabMenuMetrics.gap) {
+                Text(selection.localizedName)
+                    .font(TypeScale.body.font(weight: .semibold))
+                    .foregroundStyle(Palette.label)
+                Image(systemName: "chevron.up.chevron.down")
+                    .font(.system(size: MadhabMenuMetrics.chevronSize, weight: .semibold))
+                    .foregroundStyle(Palette.textSecondary)
+            }
+            .padding(.leading, MadhabMenuMetrics.paddingLeading)
+            .padding(.trailing, MadhabMenuMetrics.paddingTrailing)
+            .frame(minHeight: MadhabMenuMetrics.height)
+            .background(Palette.fillTertiary, in: .capsule)
+            .contentShape(.capsule)
+        }
+        .menuOrder(.fixed)
+        .padding(.top, MadhabMenuMetrics.top)
+        .accessibilityLabel(L10n.madhab)
+        .accessibilityValue(selection.localizedName)
+    }
+}
+
+/// Maße der Kapsel (`.ob-pick`: 44 pt hoch, innen 20 pt vorn und 18 pt hinten, 9 pt Abstand; `.ob-madhab`:
+/// 26 pt über der Kapsel).
+private enum MadhabMenuMetrics {
+    static let top: CGFloat = 26
+    static let height: CGFloat = 44
+    static let paddingLeading: CGFloat = 20
+    static let paddingTrailing: CGFloat = 18
+    static let gap: CGFloat = 9
+    /// Der Doppelpfeil, 12 × 16 pt im Prototyp.
+    static let chevronSize: CGFloat = 13
 }
 
 /// Der Hauptknopf des Onboardings (`.btn-primary`): Akzentfläche, Schrift in `--on-accent`, gedrückt

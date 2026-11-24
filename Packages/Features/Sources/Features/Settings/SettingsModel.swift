@@ -164,6 +164,18 @@ public final class SettingsModel {
         updateCalculation { $0.asr = asr }
     }
 
+    /// Die Rechtsschule für die Verbotszeiten, als Wert der Zeile (Spec § 11.6).
+    public var madhabValue: String { settings.calculation.madhab.localizedName }
+
+    /// Wählt die Rechtsschule. Sie ändert keine Gebetszeit, nur die Verbotszeiten und ihre Texte; Zeiten-Seite,
+    /// Widgets und Live-Aktivitäten rechnen neu.
+    public func setMadhab(_ madhab: Madhab) {
+        updateCalculation { $0.madhab = madhab }
+    }
+
+    /// Fußzeile der Gruppe „Darstellung“: die Verbotszeiten der gewählten Schule.
+    public var kerahatFooter: String { settings.calculation.madhab.kerahatFooter }
+
     public var highLatitudeValue: String { settings.calculation.highLatitudeRule.localizedName }
 
     public func setHighLatitudeRule(_ rule: HighLatitudeRule) {

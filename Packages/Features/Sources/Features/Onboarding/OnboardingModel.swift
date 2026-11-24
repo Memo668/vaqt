@@ -8,10 +8,12 @@ import PrayerCore
 /// 1. Willkommen → „Weiter“.
 /// 2. Standort: „Standort erlauben“ fragt erst jetzt mit dem Dialog des Systems. Erlaubt → Schritt 3;
 ///    abgelehnt → Stadt-Sheet, mit einer Wahl → Schritt 3. „Stadt manuell wählen“ → Stadt-Sheet → Schritt 3.
-/// 3. Mitteilungen: „Mitteilungen erlauben“ fragt erst jetzt; danach wie „Später“ zu Schritt 4.
-/// 4. „Kostenlos. Ohne Werbung.“ (Spec § 9.9) → „Los geht’s“ in die App.
+/// 3. Rechtsschule (Spec § 11.5): Auswahlmenü, Hanafi vorgewählt → „Weiter“ (`ob-madhab`).
+/// 4. Mitteilungen: „Mitteilungen erlauben“ fragt erst jetzt; danach wie „Später“ zu Schritt 5.
+/// 5. „Kostenlos. Ohne Werbung.“ (Spec § 9.9) → „Los geht’s“ in die App.
 ///
-/// „Überspringen“ auf Schritt 1 bis 3 führt sofort zu Schritt 4, ohne zu fragen (`ob-free`). Das
+/// „Überspringen“ auf Schritt 1 bis 4 führt sofort zu Schritt 5, ohne zu fragen (`ob-free`); die Rechtsschule
+/// bleibt dann, wie sie ist (Hanafi). Wischen geht eine Seite vor oder zurück, ebenso ohne zu fragen. Das
 /// Onboarding erscheint danach nicht wieder.
 @MainActor
 @Observable
@@ -57,7 +59,7 @@ final class OnboardingModel {
         switch await location.requestAuthorization() {
         case .authorized:
             today.settings.useCurrentLocation()
-            navigation.onboardingStep = .notifications
+            navigation.onboardingStep = .madhab
             // Den Ort schon jetzt bestimmen, damit die Zeiten-Seite gleich Zeiten zeigt.
             if await location.updateDevicePlace() {
                 today.refresh()
@@ -79,14 +81,31 @@ final class OnboardingModel {
         today.isCitySheetPresented = true
     }
 
-    /// Das Stadt-Sheet ist zu. Mit einer Wahl geht es zu den Mitteilungen; mit „Abbrechen“ bleibt
+    /// Das Stadt-Sheet ist zu. Mit einer Wahl geht es zur Rechtsschule; mit „Abbrechen“ bleibt
     /// Schritt 2 stehen (`select-city`, `use-current`, `close-sheet`).
     func citySheetClosed() {
         guard let before = cityChoicesWhenOpened else { return }
         cityChoicesWhenOpened = nil
         if today.cityChoices > before, navigation.onboardingStep == .location {
-            navigation.onboardingStep = .notifications
+            navigation.onboardingStep = .madhab
         }
+    }
+
+    /// Die Rechtsschule für die Verbotszeiten (Spec § 11.5, § 11.6); später unter Einstellungen › Rechtsschule.
+    var madhab: Madhab {
+        today.settings.calculation.madhab
+    }
+
+    /// Eine Schule im Auswahlmenü wählen (`ob-menu-pick`). Die Zeiten-Seite rechnet ihre Fenster neu.
+    func setMadhab(_ madhab: Madhab) {
+        guard madhab != self.madhab else { return }
+        today.settings.updateCalculation { $0.madhab = madhab }
+        today.refresh()
+    }
+
+    /// „Weiter“ nach der Rechtsschule (`ob-madhab`).
+    func confirmMadhab() {
+        navigation.onboardingStep = .notifications
     }
 
     /// „Mitteilungen erlauben“ (`ob-notif`): fragt mit dem Dialog des Systems, dann zu Schritt 4 – wie die

@@ -48,12 +48,14 @@ public final class GuideModel {
     /// Auswahl und Kopfkarte.
     public var header: GuideHeader {
         let state = state
+        // Spec § 11.6: der Hinweis zum Farḍ von Asr nur hanafitisch, und nur wenn die App Verbotszeiten zeigt.
+        let asrNote = today.settings.showKerahat && today.settings.calculation.madhab.hasAsrNote
         guard let phase, let timeline else {
-            return GuideHeader(state: state, window: nil, timeZone: .gmt)
+            return GuideHeader(state: state, window: nil, timeZone: .gmt, showsAsrKerahatNote: asrNote)
         }
         return GuideHeader(
             state: state, window: Guide.window(of: state.prayer, in: timeline, at: phase.now),
-            timeZone: phase.times.timeZone
+            timeZone: phase.times.timeZone, showsAsrKerahatNote: asrNote
         )
     }
 

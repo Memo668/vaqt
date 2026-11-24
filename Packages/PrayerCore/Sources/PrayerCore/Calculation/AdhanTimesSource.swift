@@ -41,7 +41,7 @@ public struct AdhanTimesSource: PrayerTimesSource {
         return DayTimes(
             day: day, timeZone: place.timeZone,
             fajr: times.fajr, sunrise: times.sunrise, dhuhr: times.dhuhr,
-            asr: times.asr, maghrib: times.maghrib, isha: times.isha
+            asr: times.asr, maghrib: times.maghrib, isha: times.isha, madhab: settings.madhab
         )
     }
 
@@ -68,7 +68,7 @@ public struct AdhanTimesSource: PrayerTimesSource {
             day: day, timeZone: place.timeZone,
             fajr: base.fajr != reference.fajr ? manual.fajr : base.fajr,
             sunrise: base.sunrise, dhuhr: base.dhuhr, asr: base.asr, maghrib: base.maghrib,
-            isha: base.isha != reference.isha ? manual.isha : base.isha
+            isha: base.isha != reference.isha ? manual.isha : base.isha, madhab: settings.madhab
         )
     }
 

@@ -19,6 +19,8 @@ final class AppNavigation {
     /// Ob sich das Stadt-Sheet beim ersten Erscheinen der Tabs öffnet (`-debugTab city`). Gilt einmal: Baut
     /// sich der Inhalt in einer neuen Sprache neu auf, bleibt es zu.
     var opensCitySheetOnAppear: Bool
+    /// Ob das Blatt „Was sind Verbotszeiten?“ aufgeht, sobald die App zu sehen ist (`-debugTab kerahat`).
+    var opensKerahatSheetOnAppear = false
     /// Der Schritt des Onboardings (`S.obStep`); `nil`, wenn die App zu sehen ist (`S.onboarded`).
     var onboardingStep: OnboardingStep?
 

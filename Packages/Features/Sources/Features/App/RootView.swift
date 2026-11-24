@@ -22,12 +22,14 @@ public struct RootView: View {
         // Das Onboarding erscheint beim ersten Start; `-debugOnboarding` zeigt es auch danach,
         // `-debugSkipOnboarding` übergeht es.
         let showsOnboarding = !settings.onboardingCompleted && !environment.skipsOnboarding
-        _navigation = State(initialValue: AppNavigation(
+        let navigation = AppNavigation(
             tab: environment.initialTab, prayersPage: environment.initialPage,
             settingsPath: environment.settingsPath, isAdhanSheetPresented: environment.opensAdhanSheet,
             opensCitySheetOnAppear: environment.opensCitySheet,
             onboardingStep: environment.onboardingStep ?? (showsOnboarding ? .welcome : nil)
-        ))
+        )
+        navigation.opensKerahatSheetOnAppear = environment.opensKerahatSheet
+        _navigation = State(initialValue: navigation)
     }
 
     public var body: some View {
@@ -160,7 +162,7 @@ struct AppContent: View {
         }
         // Der Infopunkt einer Kerahat-Zeile (Spec § 10.2).
         .sheet(isPresented: $today.isKerahatInfoPresented) {
-            KerahatInfoSheet(times: today.shownDayTimes)
+            KerahatInfoSheet(times: today.shownDayTimes, madhab: today.settings.calculation.madhab)
                 .centeredSheetCard(isRegular: horizontalSizeClass == .regular)
         }
         // „Adhan anhören“ in den Einstellungen; Schließen hält die Wiedergabe an.
@@ -189,6 +191,10 @@ struct AppContent: View {
 
     /// `-debugTab city`: das Stadt-Sheet über der Zeiten-Seite, einmal beim ersten Erscheinen der Tabs.
     private func openCitySheetIfRequested() {
+        if navigation.opensKerahatSheetOnAppear {
+            navigation.opensKerahatSheetOnAppear = false
+            today.isKerahatInfoPresented = true
+        }
         guard navigation.opensCitySheetOnAppear else { return }
         navigation.opensCitySheetOnAppear = false
         today.isCitySheetPresented = true

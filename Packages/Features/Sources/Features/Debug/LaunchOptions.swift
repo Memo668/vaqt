@@ -37,15 +37,18 @@ public struct LaunchOptions: Equatable, Sendable {
     /// Stadt-Sheet über der Zeiten-Seite.
     public enum Page: String, CaseIterable, Sendable {
         case today, qibla, guide, verses, qada, settings
-        case method, asr, hl, adjust, perPrayer, reminder, live, alarm, sound, appearance, language, privacy, licenses, support
+        case method, asr, madhab, hl, adjust, perPrayer, reminder, live, alarm, sound, appearance, language, privacy, licenses, support
         case adhan
         /// Das Stadt-Sheet über der Zeiten-Seite (`iphone/85`, `duo/closed-85`, `duo/open-85`).
         case city
+        /// Das Blatt „Was sind Verbotszeiten?“ über der Zeiten-Seite (`iphone/27`, Spec § 10.2, § 11.6).
+        case kerahat
 
-        /// Die Seite der Einstellungen, die offen ist; `nil` für die Tabs, ihre Seiten und das Stadt-Sheet.
+        /// Die Seite der Einstellungen, die offen ist; `nil` für die Tabs, ihre Seiten und die Blätter über
+        /// der Zeiten-Seite.
         public var settingsRoute: SettingsRoute? {
             switch self {
-            case .today, .qibla, .guide, .verses, .qada, .city: nil
+            case .today, .qibla, .guide, .verses, .qada, .city, .kerahat: nil
             case .adhan: .settings
             default: SettingsRoute(rawValue: rawValue)
             }
@@ -53,8 +56,12 @@ public struct LaunchOptions: Equatable, Sendable {
     }
 
     public var skipOnboarding = false
-    /// Schritt des Onboardings, mit dem die App startet (`-debugOnboarding`), 1 bis 4.
+    /// Schritt des Onboardings, mit dem die App startet (`-debugOnboarding`), 1 bis 5.
     public var onboardingStep: Int?
+    /// `-debugMadhab`: die Rechtsschule für die Verbotszeiten (Spec § 11.6), nur mit `-debugFixtureTimes`.
+    public var madhab: Madhab?
+    /// `-debugSound`: der Klang der Mitteilungen (`iphone/80-settings-sound-system`), nur mit `-debugFixtureTimes`.
+    public var sound: NotificationSound?
     /// Tage, die die Zeiten-Seite beim Start vor (+) oder zurück (−) zeigt (`-debugDayOffset`), −365 bis 365.
     public var dayOffset = 0
     /// Gebet, dessen Durchlauf „Schritt für Schritt“ beim Start offen ist (`-debugWalk`).
@@ -142,9 +149,16 @@ public struct LaunchOptions: Equatable, Sendable {
                 let pages = Page.allCases.map(\.rawValue).joined(separator: ", ")
                 page = value(of: argument, from: &rest, expected: "eine der Seiten \(pages)") { Page(rawValue: $0) }
             case "-debugOnboarding":
-                onboardingStep = value(of: argument, from: &rest, expected: "ein Schritt von 1 bis 4") {
-                    Int($0).flatMap { (1...4).contains($0) ? $0 : nil }
+                let steps = OnboardingStep.allCases.count
+                onboardingStep = value(of: argument, from: &rest, expected: "ein Schritt von 1 bis \(steps)") {
+                    Int($0).flatMap { (1...steps).contains($0) ? $0 : nil }
                 }
+            case "-debugMadhab":
+                let schools = Madhab.allCases.map(\.rawValue).joined(separator: ", ")
+                madhab = value(of: argument, from: &rest, expected: "eine der Rechtsschulen \(schools)") { Madhab(rawValue: $0) }
+            case "-debugSound":
+                let sounds = NotificationSound.allCases.map(\.rawValue).joined(separator: ", ")
+                sound = value(of: argument, from: &rest, expected: "einer der Klänge \(sounds)") { NotificationSound(rawValue: $0) }
             case "-debugDayOffset":
                 dayOffset = value(of: argument, from: &rest, expected: "eine Zahl von Tagen von −365 bis 365") {
                     Int($0).flatMap { (-365...365).contains($0) ? $0 : nil }
@@ -185,6 +199,12 @@ public struct LaunchOptions: Equatable, Sendable {
         }
         if alarm != nil, !fixtureTimes {
             problems.append("-debugAlarm wirkt nur zusammen mit -debugFixtureTimes.")
+        }
+        if madhab != nil, !fixtureTimes {
+            problems.append("-debugMadhab wirkt nur zusammen mit -debugFixtureTimes.")
+        }
+        if sound != nil, !fixtureTimes {
+            problems.append("-debugSound wirkt nur zusammen mit -debugFixtureTimes.")
         }
         if onboardingStep != nil, skipOnboarding {
             problems.append("-debugOnboarding zeigt das Onboarding; -debugSkipOnboarding wird übergangen.")

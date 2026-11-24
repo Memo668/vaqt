@@ -82,8 +82,9 @@ struct L10nTests {
         // den Wecker (`alAlarmBody`, `alarmDeniedFooter`, `alarmSoundFooter`, `alarmStop`, Spec § 10.8); seit
         // Phase 18 ohne die vier Texte zur Wahl der Stimme und zur Fadschr-Variante (`voice`, `voiceN`,
         // `fajrVariant`, `fajrVariantFooter`, Spec § 11.2), dafür drei für die neuen Einträge der Seite
-        // „Lizenzen“ (`licRecordingSub`, `licTanzilSub`, `licTranslationsSub`, Spec § 11).
-        #expect(L10n.allKeys.count == 377)
+        // „Lizenzen“ (`licRecordingSub`, `licTanzilSub`, `licTranslationsSub`, Spec § 11); mit dem Nachtrag zu
+        // Phase 18 69 neue für Stil, Klang, Rechtsschule und Onboarding (Spec § 11.3–11.7).
+        #expect(L10n.allKeys.count == 446)
         #expect(Set(L10n.allKeys).count == L10n.allKeys.count)
     }
 

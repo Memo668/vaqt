@@ -189,7 +189,9 @@ struct LaunchOptionsTests {
         ["-debugQiblaAccuracy", "inf"],
         ["-debugTab", "hohe"],
         ["-debugOnboarding", "0"],
-        ["-debugOnboarding", "5"],
+        ["-debugOnboarding", "6"],
+        ["-debugMadhab", "jafari"],
+        ["-debugSound", "glocke"],
         ["-debugDayOffset", "366"],
         ["-debugDayOffset", "-400"],
         ["-debugDayOffset", "morgen"],
@@ -205,7 +207,7 @@ struct LaunchOptionsTests {
         #expect(options.problems.first?.contains(arguments[1]) == true)
     }
 
-    @Test("-debugOnboarding nimmt die Schritte 1 bis 4", arguments: [1, 2, 3, 4])
+    @Test("-debugOnboarding nimmt die Schritte 1 bis 5", arguments: [1, 2, 3, 4, 5])
     func onboardingStep(step: Int) {
         let options = LaunchOptions(arguments: ["-debugOnboarding", String(step)])
         #expect(options.onboardingStep == step)
@@ -231,7 +233,7 @@ struct LaunchOptionsTests {
     func settingsPages() {
         let pages = LaunchOptions.Page.allCases.compactMap { page in page.settingsRoute.map { (page, $0) } }
         #expect(pages.map(\.0.rawValue) == [
-            "settings", "method", "asr", "hl", "adjust", "perPrayer", "reminder", "live", "alarm", "sound", "appearance",
+            "settings", "method", "asr", "madhab", "hl", "adjust", "perPrayer", "reminder", "live", "alarm", "sound", "appearance",
             "language", "privacy", "licenses", "support", "adhan",
         ])
         for (page, route) in pages where page != .adhan {
@@ -240,6 +242,33 @@ struct LaunchOptionsTests {
         #expect(LaunchOptions.Page.adhan.settingsRoute == .settings)
         #expect(LaunchOptions.Page.verses.settingsRoute == nil)
         #expect(LaunchOptions.Page.city.settingsRoute == nil)
+        #expect(LaunchOptions.Page.kerahat.settingsRoute == nil)
+    }
+
+    @Test("-debugMadhab und -debugSound setzen Rechtsschule und Klang, nur mit -debugFixtureTimes")
+    func madhabAndSound() {
+        let options = LaunchOptions(arguments: ["-debugFixtureTimes", "-debugMadhab", "shafii", "-debugSound", "system"])
+        #expect(options.madhab == .shafii)
+        #expect(options.sound == .system)
+        #expect(options.problems.isEmpty)
+        let environment = AppEnvironment(options: options)
+        guard case .ephemeral(let snapshot) = environment.settings else {
+            Issue.record("Mit Mock-Zeiten liegen die Einstellungen nur im Speicher")
+            return
+        }
+        #expect(snapshot.calculation.madhab == .shafii)
+        #expect(snapshot.notifications.sound == .system)
+        #expect(LaunchOptions(arguments: ["-debugMadhab", "maliki"]).problems.count == 1)
+        #expect(LaunchOptions(arguments: ["-debugSound", "silent"]).problems.count == 1)
+    }
+
+    @Test("-debugTab kerahat öffnet das Blatt „Was sind Verbotszeiten?“ über der Zeiten-Seite")
+    func kerahatSheet() {
+        let environment = AppEnvironment(options: LaunchOptions(arguments: ["-debugTab", "kerahat"]))
+        #expect(environment.opensKerahatSheet)
+        #expect(environment.settingsPath.isEmpty)
+        #expect(environment.initialTab == .prayers)
+        #expect(!AppEnvironment(options: LaunchOptions(arguments: ["-debugTab", "city"])).opensKerahatSheet)
     }
 
     @Test("ein fehlender Wert am Ende wird gemeldet")
