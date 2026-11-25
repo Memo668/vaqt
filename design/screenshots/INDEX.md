@@ -213,8 +213,8 @@ Aus der Ansicht „CarPlay“ des Prototyps (`scripts/capture-prototype cp-`), n
 | `carplay/cp-21-dashboard-standard.png` (+ `-dark`) | Same on the standard screen, Live Activity 240 × 100 with header |
 | `carplay/cp-22-dashboard-kerahat.png` | Dashboard in the prohibited time: the Live Activity orange |
 | `carplay/cp-30-alert.png` (+ `-dark`) | The Live Activity as a notice over another app (map) |
-| `carplay/cp-40-live-small.png` | Live Activity „small“ in all sizes: 240 × 100 (header), 240 × 78, 170 × 78, Smart Stack 194 × 80,5; below after the change (two lines) |
-| `carplay/cp-41-live-small-kerahat.png` | Same in the prohibited time: orange, „Verbotszeit bis 16:27“ in the arc (flat sizes) or the header; after the change „Verbotszeit ab 15:42“ |
+| `carplay/cp-40-live-small.png` | Live Activity „small“ in all sizes: 240 × 100 (header), 240 × 78, 170 × 78, Smart Stack 194 × 80,5; below the same activity after its change (two lines): the green part ends at the prohibited time, „Verbotszeit ab 15:42“ |
+| `carplay/cp-41-live-small-kerahat.png` | Same in the prohibited time: orange, „Verbotszeit bis 16:27“ in the arc (flat sizes) or the header; after the change orange with „hat begonnen“ |
 | `carplay/cp-42-live-small-{arc,mono,full-inverted,arc-inverted,mono-inverted,ocean}.png` | The board in the other styles of § 11.7 and in Ozean, full opacity |
 | `carplay/cp-43-live-small-kerahat-{arc,mono,full-inverted,arc-inverted,warm}.png` | Same in the prohibited time; `warm` = accent Orange, violet instead of orange |
 | `carplay/cp-50-small-widgets.png` (+ `-dark`) | The small widgets at 158 × 158: top with background (Home Screen) – „Nächstes Gebet“ as before, the new „Tagesbogen“; bottom without background (StandBy, CarPlay) |

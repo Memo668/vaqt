@@ -3416,14 +3416,14 @@ function laSmall(ph, size){
     <div class="las-arc">${arcHTML(ph, 'lasm', 'la')}<div class="acc-text"><div class="acc-name ${k && !head ? 'is-k' : ''}">${k && !head ? kt : `${t('p_' + nx.p)} · ${fmt(nx.at/60)}`}</div>
       <div class="acc-count" data-tick="cd">${cdDigital(ph.remaining)}</div></div></div></div>`;
 }
-/* Nach dem Wechsel (staleDate, § 10.3): Gebet · Uhrzeit und „hat begonnen“ bzw. beim grünen Teil vor einer Verbotszeit
-   „Verbotszeit ab …“ – zwei Zeilen, mittig */
+/* Dieselbe Aktivität nach ihrem Wechsel (staleDate, § 10.3): zwei Zeilen, mittig. Die grüne vor einer Verbotszeit endet zu
+   deren Beginn mit „Verbotszeit ab …“, sonst endet sie zu Gebetsbeginn mit „hat begonnen“; die orange bleibt orange. */
 function laSmallEnded(ph, size){
-  const [W, H] = LAS[size], kNow = activeKerahat(ph), pv = ph.prev;
-  const [p, at, right, orange] = kNow && kNow.id !== 'sunrise' ? [ph.next.p, ph.next.at/60, t('kerahatFrom',{a:fmt(kNow.a)}), false]
-    : [pv.p, pv.at/60, t('laBegan'), kerahatWins(ph.t).some(w => w.id !== 'sunrise' && Math.abs(w.b*60 - pv.at) < 90)];
-  return `<div class="las las-ended ${orange ? 'is-kerahat' : ''}" ${laAttr()} style="width:${W}px;height:${H}px" role="img" aria-label="${esc(t('p_' + p) + ' ' + fmt(at) + ', ' + right)}">
-    <span class="la-app">${appIconImg(16, 'ai-la', 'light')}<span>${t('p_' + p)} · ${fmt(at)}</span></span><span class="las-end">${right}</span></div>`;
+  const [W, H] = LAS[size], nx = ph.next, kNow = activeKerahat(ph), orange = !!kNow && kNow.id !== 'sunrise';
+  const kBefore = !kNow && S.kerahat ? kerahatWins(ph.t).find(w => w.id !== 'sunrise' && w.a*60 > ph.ns && Math.abs(w.b*60 - nx.at) < 90) : null;
+  const right = kBefore ? t('kerahatFrom',{a:fmt(kBefore.a)}) : t('laBegan');
+  return `<div class="las las-ended ${orange ? 'is-kerahat' : ''}" ${laAttr()} style="width:${W}px;height:${H}px" role="img" aria-label="${esc(t('p_' + nx.p) + ' ' + fmt(nx.at/60) + ', ' + right)}">
+    <span class="la-app">${appIconImg(16, 'ai-la', 'light')}<span>${t('p_' + nx.p)} · ${fmt(nx.at/60)}</span></span><span class="las-end">${right}</span></div>`;
 }
 
 /* --- CarPlay ohne eigene App --- */
@@ -3490,7 +3490,7 @@ function cwCarPlayHTML(){
         <div class="cp-card cp-media" aria-hidden="true"><i class="cp-art"></i><span class="cp-bars"><i></i><i></i></span><span class="cp-ctl">${ic('play',24)}</span></div></div>`)
     + cpFrame('cp-alert', 'CarPlay · Beginnt die Live-Aktivität, während eine andere App den Bildschirm füllt, erscheint sie unten als Hinweis', 'cp-full',
       `<div class="cp-map" aria-hidden="true">${cpMapSVG(true)}</div><div class="cp-note">${laSmall(ph, 'w')}</div>`)
-    + cwFrame('cp-sizes', 'Live-Aktivität „klein“ in allen Größen von Apple · dieselbe Ansicht in CarPlay und im Smart Stack der Uhr · unten nach dem Wechsel', 568, 440,
+    + cwFrame('cp-sizes', 'Live-Aktivität „klein“ in allen Größen von Apple · dieselbe Ansicht in CarPlay und im Smart Stack der Uhr · unten dieselbe Aktivität nach ihrem Wechsel', 568, 440,
       `<div class="cw-board"><div class="las-sizes">${['t', 'w', 'n', 'watch'].map(s => `<figure>${laSmall(ph, s)}<figcaption>${cap[s]}</figcaption></figure>`).join('')}
         ${['w', 'n'].map(s => `<figure>${laSmallEnded(ph, s)}<figcaption>Nach dem Wechsel · ${LAS[s].join(' × ')} pt</figcaption></figure>`).join('')}</div></div>`)
     + cwFrame('cp-small', 'Die kleinen Widgets in Originalgröße: oben mit Hintergrund (Home-Bildschirm), unten ohne (StandBy, CarPlay)', 436, 440, cwSmallHTML(ph))
