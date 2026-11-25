@@ -49,7 +49,7 @@ open Gebetszeiten.xcodeproj
 | `make compare-verses` | Verse in den Zuständen von `iphone/50` (hell) und `51` (dunkel) aufnehmen und neben die Referenz legen |
 | `make compare-qada` | Nachholen im Zustand von `iphone/60` aufnehmen und neben die Referenz legen, dazu `61`, wenn aufgenommen |
 | `make compare-settings` | Einstellungen, Onboarding und Adhan-Sheet in den Zuständen von `iphone/01`–`03`, `05`, `06`, `70`, `73`–`81`, `80-settings-sound-system`, `83`, `86`, `87` und `88` aufnehmen und neben die Referenz legen, dazu `71`, `72` und `82`, wenn aufgenommen |
-| `make compare-system` | Widgets und Live-Aktivität im Katalog in den Zuständen von `system/90`, `91`, `93`–`96` und den Stilen `97`–`99` (Nachtrag zu Phase 18) aufnehmen und neben die Referenz legen |
+| `make compare-system` | Widgets und Live-Aktivität im Katalog in den Zuständen von `system/90`, `91`, `93`–`96`, den Stilen `97`–`99` (Nachtrag zu Phase 18) und den Tafeln `carplay/cp-40`–`cp-52` (Phase 19) aufnehmen und neben die Referenz legen |
 | `make compare-language` | eine Sprache gegen den Prototyp in derselben Sprache: 20 Zustände (Onboarding, Zeiten, Qibla, Anleitung, Durchlauf, Verse, Nachholen, Einstellungen, Widgets, Live-Aktivität) aus dem Prototyp und der App nebeneinander (`LANGUAGE=ar STATES='10 43'`, `REGION=ar_SA` für eine andere Region; Phase 15) |
 | `make compare-duo` | auf dem Simulator „iPhone Duo“ die Zustände von `duo/open-*` (`MODE=open`, aufgeklappt und quer) oder `duo/closed-*` (`MODE=closed`) aufnehmen und neben die Referenz legen; auf- und zuklappen in Device Hub |
 | `make harness` | Skripte des UI-Hilfsprojekts ausführen, das antippt, wischt und aufnimmt (`SCRIPTS='scripts/ui-harness/scripts/iphone-61-qada.txt'`) – für Zustände mit Tipp |
@@ -111,7 +111,7 @@ Nur in DEBUG-Builds. Damit lässt sich jeder Referenz-Screenshot nachstellen:
 -debugLiveActivity            Live-Aktivität zum nächsten Gebet sofort, auch außerhalb des Vorlaufs und mit Mock-Zeiten
 -debugAlarm before|fixed|denied   Wecker zu Fadschr an oder Erlaubnis abgelehnt, nur mit -debugFixtureTimes
 -debugAlarmIn 2               ein echter Wecker (AlarmKit) so viele Minuten nach dem Start
--debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|widgets|live|all   Katalog der Bausteine statt der App, für den Abgleich
+-debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|widgets|live|carplay|all   Katalog der Bausteine statt der App, für den Abgleich
 ```
 
 Die Sprache kommt über die Systemargumente `-AppleLanguages '(tr)' -AppleLocale tr_TR` – für jede der 16 Sprachen mit der Region aus `LOC` im Prototyp (`make run LANGUAGE=ar`; Arabisch, Urdu und Persisch laufen dann von rechts nach links). Welche Argumente zu welchem Screenshot gehören, steht in `docs/PROMPTS.md`.
@@ -438,6 +438,8 @@ Seit Phase 16 (Spec § 10.3):
 ### Abgleich von `system/90`, `91` und `93`–`96`
 
 `make compare-system` nimmt den Katalog (`-debugCatalog widgets`, `live`) in den Maßen des Prototyps auf und legt jeden Baustein neben die Referenz. Im System selbst – Widgets auf Home- und Sperrbildschirm, Live-Aktivität auf dem Sperrbildschirm und in der Dynamic Island – stellt das UI-Hilfsprojekt die Referenzbilder nach; die Schritte und Argumente stehen in `docs/PROMPTS.md`, was abweicht in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 9“ und „Annahmen in Phase 14“). Die Widgets von „Vaqt“ liegen im Simulator auf der Seite links neben der des Hilfsprojekts; eingerichtet werden sie mit `system-setup-home-widgets.txt` und `system-setup-lock-widgets.txt`.
+
+Seit Phase 19 (Spec § 12) zeigt `-debugCatalog live` unten die Live-Aktivität „klein“ für CarPlay und den Smart Stack der Uhr in vier Größen, und `-debugCatalog carplay` die kleinen Widgets mit und ohne Hintergrund (StandBy, CarPlay) sowie „klein“ nach dem Wechsel; `make compare-system STATES='cp40 cp50'` legt sie neben die Tafeln aus `design/screenshots/carplay/`. Das neue Widget „Tagesbogen“ im System zeigt `scripts/ui-harness/scripts/phase-19-system.txt`. CarPlay Simulator und StandBy gibt es in Device Hub (Device › „CarPlay Simulator“, „Show Standby“).
 
 Seit dem Nachtrag zu Phase 18 (Spec § 11.7) zeigt der Katalog Live-Aktivität und Widget „Live“ im Stil aus `-debugAccent`, `-debugLiveStyle` und `-debugLiveInverted`; `make compare-system` vergleicht damit auch `system/97`–`99`. Im System selbst nimmt `scripts/ui-harness/scripts/nachtrag-18-system.txt` Widgets in Ozean, die Live-Aktivität in der Verbotszeit mit Orange (violett) und schwarz-weiß auf; `nachtrag-18-onboarding-stil.txt` prüft das Wischen im Onboarding, das Menü der Rechtsschule und das Auf- und Zuklappen der Grundfarben.
 

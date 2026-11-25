@@ -73,6 +73,8 @@ Lies die Änderungen, plane die nötigen Anpassungen in der App und setze sie na
 | `iphone/80-settings-sound-system` | wie `10` mit `-debugTab sound -debugSound system` |
 | `iphone/87` | wie `10` mit `-debugTab style`; `-open` mit `-debugAccent orange -debugLiveStyle arc -debugLiveInverted` |
 | `iphone/88` | wie `10` mit `-debugTab madhab` (dunkel mit `-debugMadhab shafii`) |
+| `carplay/cp-40`–`cp-43` | `-debugCatalog live` mit `-debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25` (41, 43: `16:05`), Stile wie `97`/`98`; nach dem Wechsel in `-debugCatalog carplay` (Phase 19) |
+| `carplay/cp-50`–`cp-52` | `-debugCatalog carplay` mit `-debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25` (51: `16:05`), dunkel über `simctl ui … appearance dark`, `52` mit `-debugAccent ocean` bzw. `orange` (Phase 19) |
 | `system/97`–`99` | `-debugCatalog live` bzw. `widgets` mit `-debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25` (98: `16:05`) und `-debugLiveStyle arc|mono`, `-debugLiveInverted`, `-debugAccent …` – Einzelheiten in `scripts/compare-system` |
 | `iphone/04` | wie `02`, dann „Standort erlauben“ – ohne `-debugFixtureTimes` und mit noch nicht beantworteter Standortabfrage; der Dialog ist der des Systems |
 | `iphone/10` | `-debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25` |

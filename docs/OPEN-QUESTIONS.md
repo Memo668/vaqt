@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 25.11.2026, nach der Abnahme von Phase 18 (Verse und Adhan, Spec § 11.1–11.2, mit dem Nachtrag Klang, Stil, Rechtsschule und Onboarding, Spec § 11.3–11.7); Build 0.1.0 (5) ist am 25.11.2026 hochgeladen und bei „Intern“ und „Extern“ (Golden Beta am 26.11.2026).
+Stand: 25.11.2026, Phase 19 (CarPlay-Widgets, StandBy und Live-Aktivität „klein“, Spec § 12) gebaut auf `claude/phase-19`, noch nicht abgenommen. Davor: nach der Abnahme von Phase 18 (Verse und Adhan, Spec § 11.1–11.2, mit dem Nachtrag Klang, Stil, Rechtsschule und Onboarding, Spec § 11.3–11.7); Build 0.1.0 (5) ist am 25.11.2026 hochgeladen und bei „Intern“ und „Extern“ (Golden Beta am 26.11.2026).
 
 ## Für die erste Beta
 
@@ -63,6 +63,17 @@ Offen bleibt:
 - **Welche Verse und wie viele:** Es bleiben die sechs bisherigen. Bei einem Vers am Tag wiederholen sie sich jede Woche (Spec § 6.12).
 - **Rechte an der Aufnahme:** Die Lizenz hat der Kanal DARSA TV gesetzt, der im Video als Produzent genannt ist. Eine eigene Zusage des Muezzins liegt nicht vor.
 - **Fadschr:** Für eine Fassung mit „aṣ-ṣalātu khayrun mina n-nawm“ braucht es eine eigene Aufnahme. Bis dahin spielt Fadschr dieselbe wie die übrigen Gebete.
+
+## CarPlay und Apple Watch, entschieden am 25.11.2026
+
+Nach dem Vorschlag „CarPlay und Apple Watch“ vom 24.11.2026 (Prototyp https://claude.ai/artifact/UFPJkRBD6A5hXzseS1G8cZ, Recherche mit Quellen in `docs/vorschlaege/2026-11-24/carplay-watch.md`, nicht im Repo). Bauplan freigegeben am 25.11.2026 („Plan freigeben“):
+
+| Punkt | Entscheidung |
+|---|---|
+| Eigene CarPlay-App | Nein. Gebetszeiten passen in keine Kategorie; die Berechtigung „Audio“ wird nicht beantragt. |
+| CarPlay | Phase 19: beide kleinen Widgets („Nächstes Gebet“ angepasst, neu „Tagesbogen“) und die Live-Aktivität „klein“ (Spec § 12). |
+| Apple Watch | Phasen 20 bis 22, nacheinander, jede in einer eigenen Sitzung: App (rechnet selbst, Einstellungen vom iPhone, Qibla mit Kompass), Komplikationen und Smart Stack, Feinschliff am Gerät. Nur zusammen mit der iPhone-App, watchOS 26. |
+| Zeitpunkt | Nach der Abnahme von Phase 18; nicht für den Release am 29.11.2026, Phase 19 könnte ins erste Update. |
 
 ## Nachtrag zu Phase 18: Stil, Klang und Verbotszeiten nach Rechtsschule, entschieden am 24.11.2026
 
@@ -560,6 +571,36 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 | Ausrichtung | „Ja, so lassen“ | nur Hochformat. Phase 10: Die Info.plist bleibt so; auf dem inneren Display des iPhone Duo zeigt iOS die App trotzdem quer und hoch (siehe „Annahmen in Phase 10“). |
 | Nachholen | „Ja, so lassen“ | Die App startet leer: kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr. `iphone/60` und `61` zeigen die Beispielzahlen des Prototyps; die gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Annahme für Phase 6: Mit `-debugFixtureTimes` zeigt die Seite sie. |
 | JAKIM und Kemenag | „Ja, so lassen“ | reine Winkel 20°/18°. Vor der Veröffentlichung gegen offizielle Tabellen zu prüfen, siehe oben. |
+
+## Annahmen in Phase 19
+
+Gebaut am 25.11.2026 auf `claude/phase-19` (ab `main` = `6f5910a`), Spec v0.12 § 12. 1125 Tests grün (PrayerCore 503, DesignSystem 267, Features 355; vorher 1104). Neue Referenzbilder: `design/screenshots/carplay/` (34 Bilder aus der Ansicht „CarPlay“ des Prototyps).
+
+### Was mit den Referenzbildern übereinstimmt
+- **Live-Aktivität „klein“** (`carplay/cp-40`–`cp-43`, `scripts/compare-system cp40 …` im Katalog `-debugCatalog live`): die vier Größen 240 × 100 mit Kopf, 240 × 78, 170 × 78 und 194 × 80,5; in der Verbotszeit orange mit „Verbotszeit bis 16:27“ im Kopf bzw. im Bogen; die Stile Nur Bogen (Warnfarbe `#F8B877`), Schwarz-weiß (gestreift, App-Symbol grau), invertiert, Ozean und warm (violett). Nach dem Wechsel (`-debugCatalog carplay`): zwei Zeilen, um 14:25 „Verbotszeit ab 15:42“, um 16:05 orange mit „hat begonnen“.
+- **Kleine Widgets** (`cp-50`–`cp-52`, Katalog `-debugCatalog carplay`): „Nächstes Gebet“ mit Hintergrund wie bisher, ohne Hintergrund mit Symbol und Name, Uhrzeit 46 pt, „in …“ und „Verbotszeit bis …“; „Tagesbogen“ mit und ohne Hintergrund, hell und dunkel, in der Verbotszeit, Ozean und warm. Abweichungen nur in Schrift (Browser statt SF Pro, auch der Doppelpunkt von SF Pro Rounded) und in den Symbolen (SF Symbols statt der Zeichnungen des Prototyps), wie in den früheren Phasen.
+- **Im System** (UI-Hilfsprojekt, `scripts/ui-harness/scripts/phase-19-system.txt`): Das Widget „Tagesbogen“ steht in der Galerie von „Vaqt“ als vierte Seite mit seiner Beschreibung (englisches System: „The day arc with the next prayer and the makruh times.“) und läuft auf dem Home-Bildschirm, um 16:05 mit „Verbotszeit bis 16:27“. Nach der Prüfung wieder entfernt.
+- **Arabisch und dunkel** (Stichprobe im Katalog): gespiegelt – Fadschr rechts, Kopf der Live-Aktivität gespiegelt, Widget ohne Hintergrund rechtsbündig.
+
+### Was abweicht und bleibt
+- **Katalog:** Die Abschnitte `widgets` und `live` sind voll. Die Live-Aktivität „klein“ in vier Größen steht unten in `live`; die kleinen Widgets mit und ohne Hintergrund und „klein“ nach dem Wechsel stehen im neuen Abschnitt `carplay`.
+- **Rahmen im Prototyp:** Bildschirm im Auto, Dashboard, Anordnung der Widgets im Auto und StandBy sind angenähert (Ansicht „CarPlay“); verglichen werden nur die Tafeln in Originalgröße.
+
+### Annahmen in der Umsetzung
+- **Ohne Hintergrund** heißt `showsWidgetContainerBackground == false` – das gilt in StandBy und CarPlay gleichermaßen; beide lassen sich im Widget nicht unterscheiden. Der Hintergrund bleibt entfernbar (`containerBackgroundRemovable(true)`, der Standard, hier ausdrücklich).
+- **Ring um eng liegende Gebete** im „Tagesbogen“: in der Farbe der Widget-Fläche (`backgroundCell`), mit und ohne Hintergrund. Was CarPlay hinter das Widget legt, weiß das Widget nicht; im Prototyp ist es eine Karte in `#FFF`/`#1C1C1E`, in StandBy Schwarz – dort wirkt der Ring als feiner dunkelgrauer Rand.
+- **Pfeil vor dem Ort** im „Tagesbogen“ nur beim aktuellen Standort, wie im mittleren Widget. Der Prototyp zeigt ihn immer.
+- **Dynamic Type:** Das kleine Widget ohne Hintergrund wächst wie mit Hintergrund begrenzt mit (bis 1,2-fach, `WidgetTextScaling`); der „Tagesbogen“ nicht – sein Text steht im Bogen wie im Rechteck des Sperrbildschirms.
+- **Zeitleiste:** `WidgetTimeline.Surface` ordnet jedem Widget zu, was es braucht. Das kleine Widget bekommt Einträge zu Beginn und Ende jeder Verbotszeit (sonst erschiene „Verbotszeit bis …“ erst beim nächsten Gebet), der „Tagesbogen“ zusätzlich alle 10 Minuten zwischen Fadschr und Ischa wie das Rechteck – höchstens rund 100 Einträge je Tag, wegen der 10-MB-Grenze des Archivs (Phase 14).
+- **Galerie:** Das neue Widget heißt wie die anderen „Vaqt“; die Beschreibung (`wArcDesc`) unterscheidet es. Die übrigen Widgets haben weiter keine Beschreibung (Bauplan: nur das neue).
+- **Live-Aktivität „klein“:** Die Ansicht zeichnet ihren Verlauf selbst (volle Deckkraft); `activityBackgroundTint` bleibt `.clear` wie auf dem Sperrbildschirm. Die Kopfzeile steht ab 90 pt Höhe – also in 240 × 100, nicht in 240 × 78 und nicht im Smart Stack (80,5 pt). Nach dem Wechsel stehen zwei Zeilen statt der schmalen Zeile des Sperrbildschirms, weil die in 170 pt nicht passt; das ist im Prototyp ergänzt.
+- **App-Symbol im Kopf** der Live-Aktivität „klein“: 14 pt mit Radius 3,5 (`.ai-las`), immer die helle Fassung mit Kachel wie im Kopf der Live-Aktivität. Im Vorschlag war es die dunkle.
+- **Neuer Text** `wArcDesc`: Deutsch, Türkisch und Englisch entworfen, die 13 übrigen Sprachen als KI-Entwurf (Spanisch im Katalog „translated“, die zwölf ab FR „Needs Review“).
+
+### Was sich im Simulator nicht prüfen lässt
+- **CarPlay Simulator und StandBy:** Device Hub (Xcode 27.2) hat unter „Device“ die Punkte „CarPlay Simulator“ und „Show Standby“. Für das iPhone 18 Pro (iOS 27.2) waren beide ausgegraut, als ich sie über die Bedienungshilfen ansteuerte; den CarPlay-Bildschirm des Simulators („Wireless“, Typ CarPlay) lässt `simctl io … screenConfig --display=3 power on` zwar an, er bleibt aber schwarz – CarPlay startet dort nicht. Offen bleibt deshalb: wie CarPlay die Fläche hinter dem Widget zeichnet, ob die Familie „small“ ihre Fläche selbst zeichnen darf, wie die Live-Aktivität beim Start als Hinweis erscheint, wie groß StandBy die Widgets zeichnet und wie der rote Nachtmodus sie färbt. Von Hand in Device Hub oder im Auto prüfen.
+- **Smart Stack der Apple Watch:** ohne gekoppelte Uhr nicht geprüft.
+- **Antippen im Auto:** Vaqt ist keine CarPlay-App; ein Tipp auf das Widget öffnet dort nichts (laut Apple).
 
 ## Annahmen im Nachtrag zu Phase 18
 

@@ -1,0 +1,43 @@
+# Phase 19 (Spec § 12.2): das neue kleine Widget „Tagesbogen“ im System – in der Galerie mit seiner Beschreibung
+# (`wArcDesc`) und auf dem Home-Bildschirm, um 14:25 und in der Verbotszeit (16:05). Vorher: Widgets eingerichtet
+# (system-setup-home-widgets), make statusbar. StandBy und CarPlay lassen sich so nicht zeigen (Device Hub).
+#
+# Die Galerie von „Vaqt“ zeigt seit Phase 19 vier Seiten: klein, mittel, „Live“ und „Tagesbogen“. Ein Tipp rechts
+# auf die Seitenpunkte blättert eine Seite weiter. Das neue Widget landet oben auf der Seite des Home-Bildschirms,
+# auf der das Hilfsprojekt startet, und schiebt die übrigen nach unten.
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25
+wait 5
+home
+wait 2
+sbpress 300 1300 1.6
+wait 1.5
+sbtaplabel Edit
+wait 1.5
+sbtaplabel Add Widget
+wait 2.5
+sbtaplabel Search Widgets
+wait 1
+sbtype Vaqt
+wait 2
+sbtapcell Vaqt
+wait 2.5
+shot {OUT}/p19-gallery-1.png
+sbpoint 225 748
+wait 1.5
+sbpoint 225 748
+wait 1.5
+sbpoint 225 748
+wait 2
+shot {OUT}/p19-gallery-4.png
+sbdump {OUT}/p19-gallery-4.txt
+sbpoint 201 791
+wait 2.5
+sbtaplabel Done
+wait 12
+shot {OUT}/p19-home-1425.png
+# In der Verbotszeit: „Verbotszeit bis 16:27“ unter dem Bogen.
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 16:05
+wait 5
+home
+wait 15
+shot {OUT}/p19-home-1605.png
