@@ -206,9 +206,9 @@ Aus der Ansicht „CarPlay“ des Prototyps (`scripts/capture-prototype cp-`), n
 
 | Datei | Zeigt |
 |---|---|
-| `carplay/cp-10-widgets-wide.png` (+ `-dark`) | CarPlay, wide screen: widgets left of the Dashboard – „Nächstes Gebet“ and „Tagesbogen“ without background, enlarged; a third widget of another app |
+| `carplay/cp-10-widgets-wide.png` (+ `-dark`) | CarPlay, wide screen: widgets left of the Dashboard – Vaqt „Nächstes Gebet“ without background, enlarged (the „Tagesbogen“ looks the same there), two widgets of other apps |
 | `carplay/cp-11-widgets-standard.png` (+ `-dark`) | Same on the standard screen (two widgets) |
-| `carplay/cp-12-widgets-kerahat.png` (+ `-dark`) | Same in the prohibited time (16:05): „Verbotszeit bis 16:27“ under both |
+| `carplay/cp-12-widgets-kerahat.png` (+ `-dark`) | Same in the prohibited time (16:05): „Verbotszeit bis 16:27“ |
 | `carplay/cp-20-dashboard-wide.png` (+ `-dark`) | Dashboard with map, the Live Activity „small“ (240 × 78) and music |
 | `carplay/cp-21-dashboard-standard.png` (+ `-dark`) | Same on the standard screen, Live Activity 240 × 100 with header |
 | `carplay/cp-22-dashboard-kerahat.png` | Dashboard in the prohibited time: the Live Activity orange |
@@ -217,10 +217,10 @@ Aus der Ansicht „CarPlay“ des Prototyps (`scripts/capture-prototype cp-`), n
 | `carplay/cp-41-live-small-kerahat.png` | Same in the prohibited time: orange, „Verbotszeit bis 16:27“ in the arc (flat sizes) or the header; after the change orange with „hat begonnen“ |
 | `carplay/cp-42-live-small-{arc,mono,full-inverted,arc-inverted,mono-inverted,ocean}.png` | The board in the other styles of § 11.7 and in Ozean, full opacity |
 | `carplay/cp-43-live-small-kerahat-{arc,mono,full-inverted,arc-inverted,warm}.png` | Same in the prohibited time; `warm` = accent Orange, violet instead of orange |
-| `carplay/cp-50-small-widgets.png` (+ `-dark`) | The small widgets at 158 × 158: top with background (Home Screen) – „Nächstes Gebet“ as before, the new „Tagesbogen“; bottom without background (StandBy, CarPlay) |
+| `carplay/cp-50-small-widgets.png` (+ `-dark`) | The small widgets at 158 × 158: top with background (Home Screen) – „Nächstes Gebet“ as before, the new „Tagesbogen“ with the arc; bottom without background (StandBy, CarPlay) – both the same, the large arrangement of „Nächstes Gebet“ |
 | `carplay/cp-51-small-widgets-kerahat.png` (+ `-dark`) | Same in the prohibited time |
 | `carplay/cp-52-small-widgets-ocean.png`, `cp-52-small-widgets-kerahat-warm.png` | Same in Ozean; in the prohibited time with Orange (violet) |
-| `carplay/cp-60-standby.png`, `cp-61-standby-kerahat.png` | StandBy (approximated): iPhone landscape, both small widgets without background, enlarged, dark |
+| `carplay/cp-60-standby.png`, `cp-61-standby-kerahat.png` | StandBy (approximated): iPhone landscape, left a widget of another app, right Vaqt „Nächstes Gebet“ without background (the „Tagesbogen“ looks the same), enlarged, dark |
 
 ## iPhone Duo – Phase 10
 

@@ -8,7 +8,7 @@ Neu aus dem Prototyp sind die Tafeln und Rahmen unter `design/screenshots/carpla
 |---|---|---|
 | `carplay/cp-40`, `cp-41` | `scripts/compare-system cp40 cp41 cp40e cp41e` | stimmt – vier Größen der Live-Aktivität „klein“ (8–14 % der Pixel, Schrift und Symbole), Kopf nur in 240 × 100, „Verbotszeit bis 16:27“ im Bogen der flachen Größen; nach dem Wechsel zwei Zeilen |
 | `carplay/cp-42`, `cp-43` | `scripts/compare-system cp42a cp42m cp42fi cp42ai cp42mi cp42o cp43a cp43m cp43fi cp43ai cp43w` | stimmt – Nur Bogen mit Warnfarbe, Schwarz-weiß gestreift und grau, invertiert, Ozean, warm violett |
-| `carplay/cp-50`–`cp-52` | `scripts/compare-system cp50 cp50d cp51 cp51d cp52o cp52w` | stimmt – „Nächstes Gebet“ mit und ohne Hintergrund, „Tagesbogen“ mit und ohne, hell und dunkel, Verbotszeit, Ozean, warm (5–9 %) |
+| `carplay/cp-50`–`cp-52` | `scripts/compare-system cp50 cp50d cp51 cp51d cp52o cp52w` | stimmt – „Nächstes Gebet“ mit und ohne Hintergrund, „Tagesbogen“ mit Bogen und ohne Hintergrund wie „Nächstes Gebet“ (nach dem Test am Gerät), hell und dunkel, Verbotszeit, Ozean, warm (6–8 %) |
 | Widget „Tagesbogen“ im System | `make harness SCRIPTS=scripts/ui-harness/scripts/phase-19-system.txt` | stimmt – vierte Seite der Galerie mit Beschreibung, auf dem Home-Bildschirm um 14:25 und 16:05 |
 | CarPlay, StandBy | Device Hub › Device › „CarPlay Simulator“, „Show Standby“ | nicht geprüft – beide Punkte waren ausgegraut (`docs/OPEN-QUESTIONS.md`, „Annahmen in Phase 19“) |
 

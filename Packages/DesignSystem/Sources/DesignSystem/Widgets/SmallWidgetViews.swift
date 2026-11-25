@@ -145,21 +145,33 @@ struct BareSmallPrayerWidget: View {
 
 /// Das kleine Widget „Tagesbogen“ (`.cpw-arcw`, Spec § 12.2, seit Phase 19): der Tagesbogen mit Sonnenaufgang und
 /// Verbotszeiten (§ 9.11, § 9.14, § 10.1), darin „Maghrib · 16:27“ und der Countdown, darunter der Ort – während
-/// einer Verbotszeit „Verbotszeit bis …“. Mit Hintergrund auf dem Home-Bildschirm, ohne in StandBy und CarPlay; die
-/// Anordnung ist dieselbe, den Hintergrund setzt die Extension.
+/// einer Verbotszeit „Verbotszeit bis …“. Den Bogen zeigt es nur mit Hintergrund, auf dem Home-Bildschirm; den
+/// Hintergrund setzt die Extension.
 ///
-/// Die Schrift wächst wie im Rechteck des Sperrbildschirms nicht mit Dynamic Type: Der Text steht im Bogen, und der hat
-/// eine feste Größe.
+/// Ohne Hintergrund – in StandBy und CarPlay – zeigt es dieselbe große Anordnung wie „Nächstes Gebet“ (§ 12.1):
+/// Aus der Entfernung sagen der Halbkreis und seine sieben Punkte nichts (entschieden am 25.11.2026 nach dem Test am
+/// Gerät).
+///
+/// Die Schrift im Bogen wächst wie im Rechteck des Sperrbildschirms nicht mit Dynamic Type: Der Text steht im Bogen, und
+/// der hat eine feste Größe.
 public struct SmallArcPrayerWidget: View {
     private let content: PrayerWidgetContent
+    private let showsBackground: Bool
 
-    public init(content: PrayerWidgetContent) {
+    /// - Parameter showsBackground: ob das Widget mit seinem Hintergrund erscheint – in der Extension
+    ///   `showsWidgetContainerBackground`; ohne (StandBy, CarPlay) die Anordnung von „Nächstes Gebet“.
+    public init(content: PrayerWidgetContent, showsBackground: Bool = true) {
         self.content = content
+        self.showsBackground = showsBackground
     }
 
     /// Die Zeilen (Spec § 12.2): im Bogen Gebet und Uhrzeit und der Countdown, darunter der Ort mit dem Pfeil beim
-    /// aktuellen Standort – oder während einer Verbotszeit „Verbotszeit bis …“. Ohne Zeiten oder Ort der Hinweis.
-    public nonisolated static func lines(for content: PrayerWidgetContent) -> [SmallWidgetLine] {
+    /// aktuellen Standort – oder während einer Verbotszeit „Verbotszeit bis …“. Ohne Zeiten oder Ort der Hinweis. Ohne
+    /// Hintergrund dieselben Zeilen wie „Nächstes Gebet“ ohne Hintergrund.
+    public nonisolated static func lines(for content: PrayerWidgetContent, showsBackground: Bool = true) -> [SmallWidgetLine] {
+        if !showsBackground {
+            return SmallPrayerWidget.lines(for: content, showsBackground: false)
+        }
         switch content.state {
         case .times(let snapshot):
             let name = snapshot.next.prayer.localizedName + " · " + WidgetTexts.time(of: snapshot.next, in: snapshot)
@@ -174,6 +186,14 @@ public struct SmallArcPrayerWidget: View {
     }
 
     public var body: some View {
+        if showsBackground {
+            arcBody
+        } else {
+            SmallPrayerWidget(content: content, showsBackground: false)
+        }
+    }
+
+    private var arcBody: some View {
         Group {
             switch content.state {
             case .times(let snapshot):

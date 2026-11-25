@@ -74,6 +74,7 @@ Nach dem Vorschlag „CarPlay und Apple Watch“ vom 24.11.2026 (Prototyp https:
 | CarPlay | Phase 19: beide kleinen Widgets („Nächstes Gebet“ angepasst, neu „Tagesbogen“) und die Live-Aktivität „klein“ (Spec § 12). |
 | Apple Watch | Phasen 20 bis 22, nacheinander, jede in einer eigenen Sitzung: App (rechnet selbst, Einstellungen vom iPhone, Qibla mit Kompass), Komplikationen und Smart Stack, Feinschliff am Gerät. Nur zusammen mit der iPhone-App, watchOS 26. |
 | Zeitpunkt | Nach der Abnahme von Phase 18; nicht für den Release am 29.11.2026, Phase 19 könnte ins erste Update. |
+| „Tagesbogen“ in StandBy und CarPlay | Nach dem Test am Gerät (25.11.2026, „Da sind 7 Punkte auf dem Widget und der Halbkreis bringt ja auch mal gar nichts.“) auf die Frage, was er dort zeigen soll: „Wie „Nächstes Gebet““. Ohne Hintergrund also dieselbe große Anordnung, kein Bogen; dort in der Galerie hinten. Auf dem Home-Bildschirm bleibt der Bogen (Spec § 12.2). |
 
 ## Nachtrag zu Phase 18: Stil, Klang und Verbotszeiten nach Rechtsschule, entschieden am 24.11.2026
 
@@ -574,11 +575,11 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 
 ## Annahmen in Phase 19
 
-Gebaut am 25.11.2026 auf `claude/phase-19` (ab `main` = `6f5910a`), Spec v0.12 § 12. 1125 Tests grün (PrayerCore 503, DesignSystem 267, Features 355; vorher 1104). Neue Referenzbilder: `design/screenshots/carplay/` (34 Bilder aus der Ansicht „CarPlay“ des Prototyps).
+Gebaut am 25.11.2026 auf `claude/phase-19` (ab `main` = `6f5910a`), Spec v0.12 § 12. 1126 Tests grün (PrayerCore 503, DesignSystem 268, Features 355; vorher 1104). Nach dem ersten Test am iPhone Duo geändert: Der „Tagesbogen“ zeigt ohne Hintergrund die Anordnung von „Nächstes Gebet“ (Entscheidung oben unter „CarPlay und Apple Watch“). Neue Referenzbilder: `design/screenshots/carplay/` (34 Bilder aus der Ansicht „CarPlay“ des Prototyps).
 
 ### Was mit den Referenzbildern übereinstimmt
 - **Live-Aktivität „klein“** (`carplay/cp-40`–`cp-43`, `scripts/compare-system cp40 …` im Katalog `-debugCatalog live`): die vier Größen 240 × 100 mit Kopf, 240 × 78, 170 × 78 und 194 × 80,5; in der Verbotszeit orange mit „Verbotszeit bis 16:27“ im Kopf bzw. im Bogen; die Stile Nur Bogen (Warnfarbe `#F8B877`), Schwarz-weiß (gestreift, App-Symbol grau), invertiert, Ozean und warm (violett). Nach dem Wechsel (`-debugCatalog carplay`): zwei Zeilen, um 14:25 „Verbotszeit ab 15:42“, um 16:05 orange mit „hat begonnen“.
-- **Kleine Widgets** (`cp-50`–`cp-52`, Katalog `-debugCatalog carplay`): „Nächstes Gebet“ mit Hintergrund wie bisher, ohne Hintergrund mit Symbol und Name, Uhrzeit 46 pt, „in …“ und „Verbotszeit bis …“; „Tagesbogen“ mit und ohne Hintergrund, hell und dunkel, in der Verbotszeit, Ozean und warm. Abweichungen nur in Schrift (Browser statt SF Pro, auch der Doppelpunkt von SF Pro Rounded) und in den Symbolen (SF Symbols statt der Zeichnungen des Prototyps), wie in den früheren Phasen.
+- **Kleine Widgets** (`cp-50`–`cp-52`, Katalog `-debugCatalog carplay`): „Nächstes Gebet“ mit Hintergrund wie bisher, ohne Hintergrund mit Symbol und Name, Uhrzeit 46 pt, „in …“ und „Verbotszeit bis …“; „Tagesbogen“ mit Hintergrund mit dem Bogen, ohne Hintergrund genau wie „Nächstes Gebet“; hell und dunkel, in der Verbotszeit, Ozean und warm. Abweichungen nur in Schrift (Browser statt SF Pro, auch der Doppelpunkt von SF Pro Rounded) und in den Symbolen (SF Symbols statt der Zeichnungen des Prototyps), wie in den früheren Phasen.
 - **Im System** (UI-Hilfsprojekt, `scripts/ui-harness/scripts/phase-19-system.txt`): Das Widget „Tagesbogen“ steht in der Galerie von „Vaqt“ als vierte Seite mit seiner Beschreibung (englisches System: „The day arc with the next prayer and the makruh times.“) und läuft auf dem Home-Bildschirm, um 16:05 mit „Verbotszeit bis 16:27“. Nach der Prüfung wieder entfernt.
 - **Arabisch und dunkel** (Stichprobe im Katalog): gespiegelt – Fadschr rechts, Kopf der Live-Aktivität gespiegelt, Widget ohne Hintergrund rechtsbündig.
 
@@ -588,7 +589,8 @@ Gebaut am 25.11.2026 auf `claude/phase-19` (ab `main` = `6f5910a`), Spec v0.12 �
 
 ### Annahmen in der Umsetzung
 - **Ohne Hintergrund** heißt `showsWidgetContainerBackground == false` – das gilt in StandBy und CarPlay gleichermaßen; beide lassen sich im Widget nicht unterscheiden. Der Hintergrund bleibt entfernbar (`containerBackgroundRemovable(true)`, der Standard, hier ausdrücklich).
-- **Ring um eng liegende Gebete** im „Tagesbogen“: in der Farbe der Widget-Fläche (`backgroundCell`), mit und ohne Hintergrund. Was CarPlay hinter das Widget legt, weiß das Widget nicht; im Prototyp ist es eine Karte in `#FFF`/`#1C1C1E`, in StandBy Schwarz – dort wirkt der Ring als feiner dunkelgrauer Rand.
+- **Ring um eng liegende Gebete** im „Tagesbogen“: in der Farbe der Widget-Fläche (`backgroundCell`); den Bogen gibt es nur mit Hintergrund.
+- **„Tagesbogen“ in StandBy und CarPlay:** ohne Hintergrund die Anordnung von „Nächstes Gebet“ (`SmallArcPrayerWidget(content:showsBackground:)`), in der Galerie dort hinter „Nächstes Gebet“ (`disfavoredLocations([.standBy, .carPlay], for: [.systemSmall])`). Wer beide Widgets in StandBy oder CarPlay hinzufügt, sieht zweimal dasselbe – so entschieden.
 - **Pfeil vor dem Ort** im „Tagesbogen“ nur beim aktuellen Standort, wie im mittleren Widget. Der Prototyp zeigt ihn immer.
 - **Dynamic Type:** Das kleine Widget ohne Hintergrund wächst wie mit Hintergrund begrenzt mit (bis 1,2-fach, `WidgetTextScaling`); der „Tagesbogen“ nicht – sein Text steht im Bogen wie im Rechteck des Sperrbildschirms.
 - **Zeitleiste:** `WidgetTimeline.Surface` ordnet jedem Widget zu, was es braucht. Das kleine Widget bekommt Einträge zu Beginn und Ende jeder Verbotszeit (sonst erschiene „Verbotszeit bis …“ erst beim nächsten Gebet), der „Tagesbogen“ zusätzlich alle 10 Minuten zwischen Fadschr und Ischa wie das Rechteck – höchstens rund 100 Einträge je Tag, wegen der 10-MB-Grenze des Archivs (Phase 14).

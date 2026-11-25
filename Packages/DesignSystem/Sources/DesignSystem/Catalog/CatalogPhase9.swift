@@ -269,7 +269,8 @@ struct CatalogCarPlay: View {
             tile(SmallPrayerWidget(content: content), frame: frames[0], background: true)
             tile(SmallArcPrayerWidget(content: content), frame: frames[1], background: true)
             tile(SmallPrayerWidget(content: content, showsBackground: false), frame: frames[2], background: false)
-            tile(SmallArcPrayerWidget(content: content), frame: frames[3], background: false)
+            // Ohne Hintergrund zeigt der „Tagesbogen“ die Anordnung von „Nächstes Gebet“ (Spec § 12.2).
+            tile(SmallArcPrayerWidget(content: content, showsBackground: false), frame: frames[3], background: false)
             if let activity = state.liveActivity {
                 ForEach(Array(CatalogOutsideMetrics.endedActivityFrames.enumerated()), id: \.offset) { _, frame in
                     CatalogSmallActivity(content: activity, isStale: true, size: frame.size)

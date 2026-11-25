@@ -172,8 +172,9 @@ struct PrayerTimesWidget: Widget {
 }
 
 /// Das kleine Widget „Tagesbogen“ (Spec § 12.2, seit Phase 19): der Tagesbogen mit Gebet, Uhrzeit und Countdown,
-/// darunter der Ort bzw. „Verbotszeit bis …“ – auf dem Home-Bildschirm mit Hintergrund, in StandBy und CarPlay ohne.
-/// In der Galerie heißt es wie die anderen nach der App; die Beschreibung sagt, was es zeigt (`wArcDesc`).
+/// darunter der Ort bzw. „Verbotszeit bis …“ – auf dem Home-Bildschirm. In StandBy und CarPlay (ohne Hintergrund) zeigt
+/// es die Anordnung von „Nächstes Gebet“ und steht dort in der Galerie hinten. In der Galerie heißt es wie die anderen
+/// nach der App; die Beschreibung sagt, was es zeigt (`wArcDesc`).
 struct PrayerArcWidget: Widget {
     nonisolated static let kind = "PrayerArc"
 
@@ -186,18 +187,23 @@ struct PrayerArcWidget: Widget {
         .supportedFamilies([.systemSmall])
         .contentMarginsDisabled()
         .containerBackgroundRemovable(true)
+        // Ohne Hintergrund sieht es aus wie „Nächstes Gebet“ – dort zuerst das (Spec § 12.2).
+        .disfavoredLocations([.standBy, .carPlay], for: [.systemSmall])
     }
 }
 
-/// Die Ansicht des Widgets „Tagesbogen“: dieselbe Anordnung mit und ohne Hintergrund.
+/// Die Ansicht des Widgets „Tagesbogen“: mit Hintergrund der Bogen, ohne (StandBy, CarPlay) die Anordnung von
+/// „Nächstes Gebet“.
 struct PrayerArcWidgetView: View {
     let entry: PrayerEntry
+
+    @Environment(\.showsWidgetContainerBackground) private var showsBackground
 
     var body: some View {
         // Die Texte in der Sprache der App und die Grundfarbe (Spec § 11.7), bevor die Ansichten sie lesen.
         L10n.chosenLanguage = entry.language
         AccentStore.shared.accent = entry.content.style.accent
-        return SmallArcPrayerWidget(content: entry.content)
+        return SmallArcPrayerWidget(content: entry.content, showsBackground: showsBackground)
             .environment(\.locale, L10n.locale)
             .environment(\.layoutDirection, L10n.layoutDirection)
             .containerBackground(Palette.backgroundCell, for: .widget)

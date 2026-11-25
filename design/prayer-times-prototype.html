@@ -1153,7 +1153,7 @@ button.row:disabled{color:var(--label-3)}
 .cpw-sub.is-k{color:var(--kerahat-text)}
 .arc-cpw .arc-track,.arc-cpw .arc-done{stroke-width:6}
 .arc-cpw .arc-k.on-track{stroke-width:6}
-/* Ring um eng liegende Gebete in der Farbe der Widget-Fläche (--bg-cell; so auch ohne Hintergrund) */
+/* Ring um eng liegende Gebete in der Farbe der Widget-Fläche (--bg-cell); den Bogen gibt es nur mit Hintergrund */
 .arc-cpw .pm.is-tight .pm-c{stroke:var(--bg-cell)}
 .arc-cpw .arc-now{filter:none}
 .arc-cpw .arc-now circle{fill:#fff;stroke:var(--accent);stroke-width:2}
@@ -1216,6 +1216,7 @@ button.row:disabled{color:var(--label-3)}
 .sb-scr{position:relative;display:flex;align-items:center;justify-content:center;gap:44px;width:844px;height:390px;overflow:hidden;border-radius:52px;
   background:#000;color:var(--label);font-family:var(--font);text-align:start;letter-spacing:-.2px}
 .sb-slot{position:relative;flex:none;width:310px;height:310px}
+.sb-scr{--cp-ph:rgba(120,120,128,.3)}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
@@ -3442,7 +3443,9 @@ function cpwNext(ph){
     <div class="cpw-in" data-tick="wcount">${t('wIn',{t:cdDigital(ph.remaining)})}</div>
     ${k ? `<div class="cpw-k"><i class="k-dot" aria-hidden="true"></i><span>${t('kerahatNow',{b:fmt(k.b)})}</span></div>` : ''}</div>`;
 }
-/* Widget „Tagesbogen“ (§ 12.2): der Bogen mit Sonnenaufgang und Verbotszeiten (§ 9.11, § 9.14, § 10.1) */
+/* Widget „Tagesbogen“ (§ 12.2): der Bogen mit Sonnenaufgang und Verbotszeiten (§ 9.11, § 9.14, § 10.1) – nur mit Hintergrund,
+   auf dem Home-Bildschirm. Nachtrag nach dem Test am Gerät (25.11.2026): Ohne Hintergrund (StandBy, CarPlay) zeigt es dieselbe
+   große Anordnung wie „Nächstes Gebet“ (`cpwNext()`); aus der Entfernung sagen der Halbkreis und seine Punkte nichts. */
 function cpwArc(ph){
   const nx = ph.next, k = activeKerahat(ph);
   return `<div class="cpw cpw-arcw" role="img" aria-label="${esc(cwLabel(ph))}"><div class="cpw-arcbox">${arcHTML(ph, 'cpw')}
@@ -3469,12 +3472,14 @@ function cwSmallHTML(ph){
   const tile = (inner, bg, cap) => `<figure><div class="cws-tile ${bg ? 'has-bg' : ''}">${inner}</div><figcaption>${cap}</figcaption></figure>`;
   return `<div class="cw-board cw-wboard" data-theme="${S.sysTheme}" dir="${S.rtl ? 'rtl' : 'ltr'}" lang="${S.lang}"><div class="cws">
     ${tile(wSmallHTML(ph), false, 'Nächstes Gebet · mit Hintergrund')}${tile(cpwArc(ph), true, 'Tagesbogen · mit Hintergrund')}
-    ${tile(cpwNext(ph), false, 'Nächstes Gebet · ohne Hintergrund')}${tile(cpwArc(ph), false, 'Tagesbogen · ohne Hintergrund')}</div></div>`;
+    ${tile(cpwNext(ph), false, 'Nächstes Gebet · ohne Hintergrund')}${tile(cpwNext(ph), false, 'Tagesbogen · ohne Hintergrund')}</div></div>`;
 }
-/* StandBy (angenähert): immer dunkel, zwei Widgets ohne Hintergrund nebeneinander */
+/* StandBy (angenähert): immer dunkel, zwei Widgets ohne Hintergrund nebeneinander – links das einer anderen App, rechts Vaqt
+   (beide Widgets von Vaqt sehen hier gleich aus, § 12.4) */
 function cwStandbyHTML(ph){
   const sl = inner => `<div class="sb-slot" style="--k:${(310/CPW).toFixed(3)}">${inner}</div>`;
-  return `<div class="sb-dev"><div class="sb-scr" data-theme="dark" dir="${S.rtl ? 'rtl' : 'ltr'}" lang="${S.lang}">${sl(cpwArc(ph))}${sl(cpwNext(ph))}</div></div>`;
+  return `<div class="sb-dev"><div class="sb-scr" data-theme="dark" dir="${S.rtl ? 'rtl' : 'ltr'}" lang="${S.lang}">
+    <div class="sb-slot cp-ph-w" style="--slot:310px" aria-hidden="true"><i></i><i></i><i></i></div>${sl(cpwNext(ph))}</div></div>`;
 }
 function cwCarPlayHTML(){
   const ph = phase(nowSec()), c = CP[S.cpScreen], slot = cwSlot(c), k = (slot/CPW).toFixed(3);
@@ -3482,8 +3487,9 @@ function cwCarPlayHTML(){
   const colW = Math.round((c.w - c.rail - 36)*.36), size = S.cpScreen === 'wide' ? 'w' : 't', [W, H] = LAS[size], f = colW/W;
   const cap = {w:'CarPlay · 240 × 78 pt', t:'CarPlay · 240 × 100 pt, mit Kopfzeile', n:'CarPlay · 170 × 78 pt', watch:'Smart Stack, Apple Watch 46 mm · 194 × 80,5 pt'};
   const three = cwCols() === 3;
-  return cpFrame('cp-widgets', `CarPlay · Widgets links vom Dashboard · Vaqt „Nächstes Gebet“ und „Tagesbogen“${three ? ', rechts das Widget einer anderen App' : ''} · Anordnung angenähert`, 'cp-wgrid',
-      sl(cpwNext(ph)) + sl(cpwArc(ph)) + (three ? `<div class="cp-slot cp-ph-w" style="--slot:${slot}px" aria-hidden="true"><i></i><i></i><i></i></div>` : ''))
+  const other = `<div class="cp-slot cp-ph-w" style="--slot:${slot}px" aria-hidden="true"><i></i><i></i><i></i></div>`;
+  return cpFrame('cp-widgets', `CarPlay · Widgets links vom Dashboard · Vaqt „Nächstes Gebet“ (der „Tagesbogen“ sieht ohne Hintergrund genauso aus), daneben Widgets anderer Apps · Anordnung angenähert`, 'cp-wgrid',
+      sl(cpwNext(ph)) + other + (three ? other : ''))
     + cpFrame('cp-dash', 'CarPlay · Dashboard mit der Live-Aktivität „klein“ (ab 30 Min. vor dem Gebet), daneben Karte und Musik · angenähert', 'cp-dash',
       `<div class="cp-map" aria-hidden="true">${cpMapSVG()}</div><div class="cp-col" style="width:${colW}px">
         <div class="cp-card cp-la" style="height:${(H*f).toFixed(1)}px"><div class="las-fit" style="--k:${f.toFixed(3)}">${laSmall(ph, size)}</div></div>
@@ -3493,8 +3499,8 @@ function cwCarPlayHTML(){
     + cwFrame('cp-sizes', 'Live-Aktivität „klein“ in allen Größen von Apple · dieselbe Ansicht in CarPlay und im Smart Stack der Uhr · unten dieselbe Aktivität nach ihrem Wechsel', 568, 440,
       `<div class="cw-board"><div class="las-sizes">${['t', 'w', 'n', 'watch'].map(s => `<figure>${laSmall(ph, s)}<figcaption>${cap[s]}</figcaption></figure>`).join('')}
         ${['w', 'n'].map(s => `<figure>${laSmallEnded(ph, s)}<figcaption>Nach dem Wechsel · ${LAS[s].join(' × ')} pt</figcaption></figure>`).join('')}</div></div>`)
-    + cwFrame('cp-small', 'Die kleinen Widgets in Originalgröße: oben mit Hintergrund (Home-Bildschirm), unten ohne (StandBy, CarPlay)', 436, 440, cwSmallHTML(ph))
-    + cwFrame('cp-standby', 'StandBy (angenähert): iPhone quer, zwei kleine Widgets ohne Hintergrund, vergrößert, immer dunkel', 872, 418, cwStandbyHTML(ph));
+    + cwFrame('cp-small', 'Die kleinen Widgets in Originalgröße: oben mit Hintergrund (Home-Bildschirm), unten ohne (StandBy, CarPlay) – dort zeigt auch der „Tagesbogen“ die große Anordnung', 436, 440, cwSmallHTML(ph))
+    + cwFrame('cp-standby', 'StandBy (angenähert): iPhone quer, links das Widget einer anderen App, rechts Vaqt „Nächstes Gebet“ (der „Tagesbogen“ sieht hier genauso aus), vergrößert, immer dunkel', 872, 418, cwStandbyHTML(ph));
 }
 function cwLayout(){
   if (S.view !== 'carplay') return false;
@@ -3514,7 +3520,7 @@ function renderPanel(){
   const jump = (v, l) => `<button class="pn-btn" data-act="jump" data-v="${v}" data-fkey="pn-j-${v}">${l}</button>`;
   document.getElementById('panel').innerHTML = `
     <div class="pn-title" lang="de">Vaqt · iOS-Prototyp</div><div class="pn-sub" lang="de">Design-Referenz für die SwiftUI-App · Spec v0.12 (Phase 19: CarPlay und StandBy)</div>
-    <section class="pn-sec pn-chg" lang="de"><h3>Phase 19: CarPlay und StandBy (25.11.2026)</h3><p class="pn-chg-lead">Spec v0.12 § 12. Aus dem Vorschlag vom 24.11.2026, ohne eigene CarPlay-App und ohne Apple Watch. Stil, Grundfarbe, Uhrzeit, Stadt, Sprache und Hell/Dunkel gelten auch hier. Zum Ansehen antippen.</p>
+    <section class="pn-sec pn-chg" lang="de"><h3>Phase 19: CarPlay und StandBy (25.11.2026)</h3><p class="pn-chg-lead">Spec v0.12 § 12. Aus dem Vorschlag vom 24.11.2026, ohne eigene CarPlay-App und ohne Apple Watch. Nach dem Test am Gerät: Der „Tagesbogen“ zeigt ohne Hintergrund die Anordnung von „Nächstes Gebet“. Stil, Grundfarbe, Uhrzeit, Stadt, Sprache und Hell/Dunkel gelten auch hier. Zum Ansehen antippen.</p>
       <ol class="pn-chg-list">${[['cp-widgets','CarPlay: Widgets links vom Dashboard'],['cp-dash','CarPlay: Dashboard mit Live-Aktivität „klein“'],['cp-alert','CarPlay: Live-Aktivität als Hinweis'],['cp-sizes','Live-Aktivität „klein“ in allen Größen'],
           ['cp-small','Kleine Widgets mit und ohne Hintergrund'],['cp-standby','StandBy'],['cp-k','In der Verbotszeit (vor Maghrib)']]
         .map(([v, l]) => `<li><button class="pn-btn" data-act="cp" data-v="${v}" data-fkey="pn-cp-${v}">${l}</button></li>`).join('')}</ol>

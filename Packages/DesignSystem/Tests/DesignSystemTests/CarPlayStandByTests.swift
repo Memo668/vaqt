@@ -113,6 +113,18 @@ struct CarPlayStandByTests {
         #expect(SmallArcPrayerWidget.lines(for: content("16:05:00", showKerahat: false)).last == .city("Berlin", showsArrow: true))
     }
 
+    @Test("Tagesbogen ohne Hintergrund (StandBy, CarPlay) wie „Nächstes Gebet“: kein Bogen, Uhrzeit groß, ohne Stadt",
+          arguments: ["14:25:01", "16:05:00", "07:30:00"])
+    func arcWidgetWithoutBackground(time: String) {
+        let content = content(time)
+        #expect(SmallArcPrayerWidget.lines(for: content, showsBackground: false)
+            == SmallPrayerWidget.lines(for: content, showsBackground: false))
+        #expect(!SmallArcPrayerWidget.lines(for: content, showsBackground: false)
+            .contains { if case .city = $0 { true } else { false } })
+        // Mit Hintergrund bleibt der Bogen: „Maghrib · 16:27“ im Bogen statt der Uhrzeit allein.
+        #expect(SmallArcPrayerWidget.lines(for: content) != SmallPrayerWidget.lines(for: content, showsBackground: false))
+    }
+
     @Test("Tagesbogen: die Verbotszeit endet nach der Rechtsschule – Schafii nach Sonnenaufgang 25 statt 45 Minuten")
     func arcWidgetMadhab() throws {
         let fixture = try #require(FixtureTimes.city("berlin"))
