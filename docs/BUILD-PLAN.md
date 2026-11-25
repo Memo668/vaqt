@@ -331,7 +331,7 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 
 *Grundlage: Spec v0.10 § 11, entschieden am 24.11.2026 (`docs/OPEN-QUESTIONS.md`, „Änderungen vor der Golden Beta“). Danach Build 0.1.0 (5) für die Golden Beta am 26.11.2026.*
 
-*Gebaut am 24.11.2026 auf `claude/phase-18`, 1059 Tests grün, geprüft im Simulator gegen `iphone/50`, `51` und `86`. Annahmen in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 18“). Die Abnahme und die Hörprobe am Gerät stehen aus.*
+*Gebaut am 24.11.2026 auf `claude/phase-18`, 1059 Tests grün, geprüft im Simulator gegen `iphone/50`, `51` und `86`. Annahmen in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 18“). Abgenommen am 25.11.2026, zusammen mit dem Nachtrag (auf die Frage „Nimmst du Phase 18 nach der Hörprobe ab?“).*
 
 - Verse: je Sprache ein wörtlicher Ausschnitt einer veröffentlichten Übersetzung statt der Platzhalter. Die Auswahl kommt aus fawazahmed0/quran-api, der Wortlaut ist mit Tanzil und QuranEnc abgeglichen. Unter der Karte steht der Name der Übersetzung. `scripts/import-strings` bricht ab, wenn einem Vers eine Sprache fehlt.
 - Adhan: eine Aufnahme (Ustadh Mmanga Muharram, DARSA TV, CC BY) statt dreier Platzhalter-Stimmen, als Ausschnitt von 29,5 Sekunden für Mitteilungen, Wecker und Player. Stimmenliste, Schalter „Fadschr-Variante“ und die Einstellung `voice` entfallen (`AdhanRecording` in PrayerCore).
@@ -340,7 +340,7 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 
 **Nachtrag zu Phase 18** (*Spec v0.11 § 11.3–11.7, abgenommen am 24.11.2026 im Prototyp „Stil“, Version 11; Go zum Bau am 24.11.2026.*)
 
-*Gebaut am 24./25.11.2026 auf `claude/phase-18`, 1104 Tests grün, im Simulator gegen die neuen Referenzbilder abgeglichen (Onboarding, Einstellungen, Stil, Rechtsschule, Zeiten-Seite, Blatt, Live-Aktivität und Widgets im Katalog und im System, Stichproben dunkel, Arabisch und große Schrift). Annahmen in `docs/OPEN-QUESTIONS.md` („Annahmen im Nachtrag zu Phase 18“). Die Abnahme steht aus; Ibrahims Prüfung der neuen Texte vor dem App Store.*
+*Gebaut am 24./25.11.2026 auf `claude/phase-18`, 1104 Tests grün, im Simulator gegen die neuen Referenzbilder abgeglichen (Onboarding, Einstellungen, Stil, Rechtsschule, Zeiten-Seite, Blatt, Live-Aktivität und Widgets im Katalog und im System, Stichproben dunkel, Arabisch und große Schrift). Annahmen in `docs/OPEN-QUESTIONS.md` („Annahmen im Nachtrag zu Phase 18“). Abgenommen am 25.11.2026; Ibrahims Prüfung der neuen Texte vor dem App Store.*
 
 - Klang: nur Systemton, kurzer Adhan oder lautlos; bei „Systemton“ der Hinweis `soundSystemFooter`.
 - Einstellungen: Gruppe „Darstellung“ unter „Standort“ und über „Berechnung“, neue Zeilen „Stil“ und „Rechtsschule“.
