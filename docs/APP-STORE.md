@@ -87,43 +87,51 @@ Vaqt is a non-profit app for the five daily prayers – no ads, no tracking, no 
 This is the first beta. Some content is still a placeholder: the verse translations, the adhan recordings and the app icon. Nobody has reviewed the guide texts for religious accuracy yet, and the languages from French on are drafts that native speakers have yet to review.
 ```
 
-### Was testen – Build 0.1.0 (4)
+### Was testen – Build 0.1.0 (5)
 
-Neu seit Build 3 (Spec § 10.8). Für jeden weiteren Build anpassen: Was ist neu, was soll geprüft werden?
+Neu seit Build 4 (Phase 18, Spec § 11). Für jeden weiteren Build anpassen: Was ist neu, was soll geprüft werden?
 
 Deutsch:
 
 ```text
-Neu in Build 4:
-– Wecker zu Fadschr (Einstellungen › Wecker zu Fadschr): klingelt jeden Tag vor Sonnenaufgang wie der Wecker von iOS, auch im Stummmodus und bei Fokus. Wahlweise einige Minuten vor Sonnenaufgang oder zu einer festen Uhrzeit (spätestens 5 Minuten vor Sonnenaufgang), mit Systemton oder kurzem Adhan. Die Weckzeit steht als kleiner Chip in der Fadschr-Zeile.
-Bitte besonders prüfen: Klingelt der Wecker zuverlässig, auch im Stummmodus, bei Fokus und wenn die App ein paar Tage nicht geöffnet war? Wie ist der kurze Adhan als Weckton?
-Seit Build 3: Verbotszeiten mit Erklärung, Live-Aktivität durchscheinend und in der Verbotszeit orange, Nachholen für Mann oder Frau mit „Alles zurücksetzen“.
+Neu in Build 5:
+– Verse: statt Platzhalter ein wörtlicher Ausschnitt einer veröffentlichten Übersetzung in deiner Sprache (Name darunter).
+– Adhan: eine echte Aufnahme (Ustadh Mmanga Muharram, DARSA TV, CC BY) für Mitteilungen, Wecker und „Adhan anhören“, ohne Wahl der Stimme. Quellen: Einstellungen › Über › Lizenzen.
+– Stil (Einstellungen › Stil): 24 Grundfarben, sechs Varianten der Live-Aktivität.
+– Rechtsschule (Einstellungen › Berechnung, auch im Onboarding): Hanafi, Schafii, Hanbali oder Maliki bestimmen die Verbotszeiten.
+– Onboarding: auch durch Wischen. Bei „Systemton“ steht jetzt, wo man den Ton wählt.
+Bitte besonders prüfen: Klingt der Adhan gut, und endet der Ausschnitt (30 Sekunden) passend? Stimmen die Verbotszeiten für deine Rechtsschule? Sind Farben und Live-Aktivität auf deinem Hintergrundbild lesbar? Sind die Verse in deiner Sprache verständlich?
+In Build 3 und 4 dazugekommen: Wecker zu Fadschr, Verbotszeiten mit Erklärung, durchscheinende Live-Aktivität, Nachholen für Mann oder Frau.
 
-Außerdem bitte im Alltag ausprobieren, vor allem:
-– Stimmen die Gebetszeiten für deinen Ort? Vergleiche mit deiner Moschee oder deinem Kalender; Methode und Minuten lassen sich in den Einstellungen ändern.
-– Kommen die Mitteilungen pünktlich, auch über mehrere Tage, bei gesperrtem iPhone und geschlossener App? Ist der Adhan zu hören?
-– Zeigen Widgets und Live-Aktivität (ab 30 Minuten vor jedem Gebet) die richtigen Zeiten?
-– Dreht der Qibla-Kompass ruhig und in die richtige Richtung?
-– Ist etwas unverständlich, abgeschnitten oder falsch übersetzt? Die Sprache lässt sich in den Einstellungen wechseln; Arabisch, Urdu und Persisch laufen von rechts nach links.
-Bekannt: Verse, Adhan-Aufnahmen und Symbol sind Platzhalter, die Anleitung ist ungeprüft, die Sprachen ab Französisch sind Entwürfe (Verse dort auf Englisch).
+Außerdem im Alltag prüfen:
+– Stimmen die Gebetszeiten für deinen Ort (Vergleich mit Moschee oder Kalender; Methode und Minuten in den Einstellungen)?
+– Kommen Mitteilungen und Wecker pünktlich, auch bei gesperrtem iPhone, im Stummmodus und bei Fokus?
+– Stimmen Widgets und Live-Aktivität (ab 30 Minuten vor jedem Gebet)?
+– Zeigt der Qibla-Kompass ruhig in die richtige Richtung?
+– Unverständlich, abgeschnitten oder falsch übersetzt? Arabisch, Urdu und Persisch laufen von rechts nach links.
+Bekannt: Symbol ist ein Platzhalter; Anleitung und Verbotszeiten-Texte fachlich ungeprüft; Sprachen ab Französisch sind Entwürfe; Vers-Ausschnitte noch von niemandem mit Muttersprache gelesen; der Adhan hat keine Fadschr-Fassung.
 Feedback am besten mit Screenshot direkt aus TestFlight.
 ```
 
 Englisch:
 
 ```text
-New in build 4:
-– Fajr alarm (Settings › Fajr Alarm): rings every day before sunrise like the iOS alarm, even in silent mode and with a Focus on. Either some minutes before sunrise or at a fixed time (no later than 5 minutes before sunrise), with the system sound or the short adhan. The alarm time appears as a small chip in the Fajr row.
-Please check in particular: Does the alarm ring reliably, also in silent mode, with a Focus on and when the app has not been opened for a few days? How is the short adhan as an alarm sound?
-Since build 3: makruh times with an explanation, translucent Live Activity that turns orange during makruh times, make-up prayers for men or women with "Reset Everything".
+New in build 5:
+– Verses: instead of placeholders, a literal excerpt of a published translation in your language (name below it).
+– Adhan: a real recording (Ustadh Mmanga Muharram, DARSA TV, CC BY) for notifications, the alarm and "Preview Adhan", with no choice of voice. Sources: Settings › About › Licences.
+– Style (Settings › Style): 24 accent colors, six variants of the Live Activity.
+– Madhhab (Settings › Calculation, also in onboarding): Hanafi, Shafi‘i, Hanbali or Maliki set the makruh times.
+– Onboarding: you can also swipe. With "System Sound" a note now says where to choose the tone.
+Please check in particular: Does the adhan sound good, and does the excerpt (30 seconds) end in a fitting place? Are the makruh times right for your madhhab? Are colors and the Live Activity readable on your wallpaper? Are the verses understandable in your language?
+Added in builds 3 and 4: Fajr alarm, makruh times with an explanation, translucent Live Activity, make-up prayers for men or women.
 
-Also please use it in everyday life and check in particular:
-– Are the prayer times right for your location? Compare with your mosque or calendar; method and minutes can be changed in Settings.
-– Do notifications arrive on time, also over several days, with the iPhone locked and the app closed? Can you hear the adhan?
-– Do the widgets and the Live Activity (from 30 minutes before each prayer) show the right times?
-– Does the Qibla compass turn smoothly and point the right way?
-– Is anything unclear, cut off or mistranslated? The language can be changed in Settings; Arabic, Urdu and Persian run right to left.
-Known: verses, adhan recordings and icon are placeholders, the guide has not been reviewed yet, the languages from French on are drafts (verses in English there).
+Also check in everyday life:
+– Are the prayer times right for your location (compare with your mosque or calendar; method and minutes in Settings)?
+– Do notifications and the alarm arrive on time, also with the iPhone locked, in silent mode and with a Focus on?
+– Are widgets and Live Activity (from 30 minutes before each prayer) right?
+– Does the Qibla compass point the right way, without jitter?
+– Anything unclear, cut off or mistranslated? Arabic, Urdu and Persian run right to left.
+Known: the icon is a placeholder; the guide and the makruh texts are not reviewed for religious accuracy yet; the languages from French on are drafts; nobody who speaks the language has read the verse excerpts yet; the adhan has no Fajr version.
 Feedback ideally with a screenshot straight from TestFlight.
 ```
 
@@ -152,7 +160,7 @@ Was ohne Konto nicht geht, in der Reihenfolge, in der es dran ist. Durchlaufen a
 
 5. **Upload:** in Xcode über Organizer › Distribute App › App Store Connect, oder mit `xcodebuild -exportArchive` und einer Export-Liste mit `method` = `app-store-connect` und `destination` = `upload`. Jeder weitere Upload braucht eine höhere Build-Nummer (`CURRENT_PROJECT_VERSION` in `project.yml`).
 
-   **Stolperstein (16.11.2026):** Nach der Hochstufung des persönlichen Teams scheiterte der Upload mit „Failed to Use Accounts – App Store Connect access for "V7652FBKMY" is required“, auch über den Organizer. Xcode hatte das Team noch als kostenloses „Personal Team“ gespeichert (`defaults read com.apple.dt.Xcode IDEProvisioningTeamByIdentifier`). Ein Neustart von Xcode half nicht. Erst Abmelden und neu Anmelden unter Xcode › Einstellungen › Apple Accounts hat es behoben, danach stand dort `teamType = Individual`.
+   **Stolperstein (16.11.2026):** Nach der Hochstufung des persönlichen Teams scheiterte der Upload mit „Failed to Use Accounts – App Store Connect access for "V7652FBKMY" is required“, auch über den Organizer. Xcode hatte das Team noch als kostenloses „Personal Team“ gespeichert (`defaults read com.apple.dt.Xcode IDEProvisioningTeamByIdentifier`). Ein Neustart von Xcode half nicht. Erst Abmelden und neu Anmelden unter Xcode › Einstellungen › Apple Accounts hat es behoben, danach stand dort `teamType = Individual`. Am 25.11.2026 kam derselbe Fehler noch einmal, bei Build 5: Die Kontenliste von Xcode war leer (`defaults read com.apple.dt.Xcode DVTDeveloperAccountManagerAppleIDLists` ohne Eintrag unter `IDE.Identifiers.Prod`), das Team stand richtig als `Individual` da. Wieder half nur die Anmeldung unter Xcode › Einstellungen › Apple Accounts, die der Nutzer selbst macht; danach lief derselbe Export durch.
 
    ```bash
    xcodebuild -exportArchive -archivePath /Volumes/Extern/Builds/NamazVakti/Archives/Vaqt-0.1.0-1.xcarchive -exportOptionsPlist ExportOptions-upload.plist -exportPath /Volumes/Extern/Builds/NamazVakti/Export/Vaqt-0.1.0-1 -allowProvisioningUpdates
