@@ -143,7 +143,7 @@ compare-settings: build boot ## Einstellungen, Onboarding und Adhan wie in iphon
 	xcrun simctl install '$(SIM)' '$(APP)'
 	SIM='$(SIM)' scripts/compare-settings $(STATES)
 
-compare-system: build boot ## Widgets und Live-Aktivität wie in system/90, 91, 93–96 im Katalog aufnehmen und danebenlegen (STATES='93 96' für einzelne)
+compare-system: build boot ## Widgets und Live-Aktivität wie in system/90–99 und carplay/cp-40–52 im Katalog aufnehmen und danebenlegen (STATES='93 cp50' für einzelne)
 	xcrun simctl install '$(SIM)' '$(APP)'
 	SIM='$(SIM)' scripts/compare-system $(STATES)
 

@@ -34,7 +34,7 @@ struct CatalogRootTests {
         #expect(options.catalog == nil)
         #expect(options.problems.count == 1)
         #expect(options.problems.first?.contains(
-            "arc, rows, glass, cards, compass, guide, steps, verses, qada, settings, onboarding, adhan, widgets, live, all"
+            "arc, rows, glass, cards, compass, guide, steps, verses, qada, settings, onboarding, adhan, widgets, live, carplay, all"
         ) == true)
     }
 

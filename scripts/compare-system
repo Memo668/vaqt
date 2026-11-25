@@ -1,6 +1,7 @@
 #!/bin/bash
 # Abgleich von Widgets und Live-Aktivität mit design/screenshots/system/90, 91 und 93–96 (Phase 9; seit
-# Phase 14 mit dem Widget „Live“, dem Rechteck mit Mini-Bogen und Kerahat auf der Spur, Spec § 9.11).
+# Phase 14 mit dem Widget „Live“, dem Rechteck mit Mini-Bogen und Kerahat auf der Spur, Spec § 9.11), seit Phase 19
+# mit den Tafeln aus design/screenshots/carplay/ (Live-Aktivität „klein“, kleine Widgets ohne Hintergrund, § 12).
 #
 # Startet die App mit `-debugCatalog widgets` bzw. `live` im Zustand jedes Referenzbilds, nimmt den
 # Bildschirm auf und legt die Bausteine mit scripts/compare-shot neben die Referenz. Der Katalog zeigt
@@ -15,6 +16,7 @@
 #
 #   make compare-system               alle Zustände
 #   scripts/compare-system 93 96      nur diese Referenzbilder
+#   scripts/compare-system cp40 cp50  CarPlay und StandBy (Phase 19)
 #
 # Ergebnis in screenshots-out/system/ (oder OUT=…): catalog-<nr>.png (Aufnahmen) und
 # compare-<nr>-<teil>.png (oben Referenz, Mitte Aufnahme, unten Unterschied).
@@ -54,10 +56,33 @@ STATES='
 98em|98-live-activity-island-expanded-mono|light|live|14:25|-debugLiveStyle mono
 99ai|99-homescreen-widgets-arc-inverted|light|widgets|14:25|-debugLiveStyle arc -debugLiveInverted
 99o|99-homescreen-widgets-ocean|light|widgets|14:25|-debugAccent ocean
+cp40|../carplay/cp-40-live-small|light|live|14:25|
+cp41|../carplay/cp-41-live-small-kerahat|light|live|16:05|
+cp42a|../carplay/cp-42-live-small-arc|light|live|14:25|-debugLiveStyle arc
+cp42m|../carplay/cp-42-live-small-mono|light|live|14:25|-debugLiveStyle mono
+cp42fi|../carplay/cp-42-live-small-full-inverted|light|live|14:25|-debugLiveInverted
+cp42ai|../carplay/cp-42-live-small-arc-inverted|light|live|14:25|-debugLiveStyle arc -debugLiveInverted
+cp42mi|../carplay/cp-42-live-small-mono-inverted|light|live|14:25|-debugLiveStyle mono -debugLiveInverted
+cp42o|../carplay/cp-42-live-small-ocean|light|live|14:25|-debugAccent ocean
+cp43a|../carplay/cp-43-live-small-kerahat-arc|light|live|16:05|-debugLiveStyle arc
+cp43m|../carplay/cp-43-live-small-kerahat-mono|light|live|16:05|-debugLiveStyle mono
+cp43fi|../carplay/cp-43-live-small-kerahat-full-inverted|light|live|16:05|-debugLiveInverted
+cp43ai|../carplay/cp-43-live-small-kerahat-arc-inverted|light|live|16:05|-debugLiveStyle arc -debugLiveInverted
+cp43w|../carplay/cp-43-live-small-kerahat-warm|light|live|16:05|-debugAccent orange
+cp40e|../carplay/cp-40-live-small|light|carplay|14:25|
+cp41e|../carplay/cp-41-live-small-kerahat|light|carplay|16:05|
+cp50|../carplay/cp-50-small-widgets|light|carplay|14:25|
+cp50d|../carplay/cp-50-small-widgets-dark|dark|carplay|14:25|
+cp51|../carplay/cp-51-small-widgets-kerahat|light|carplay|16:05|
+cp51d|../carplay/cp-51-small-widgets-kerahat-dark|dark|carplay|16:05|
+cp52o|../carplay/cp-52-small-widgets-ocean|light|carplay|14:25|-debugAccent ocean
+cp52w|../carplay/cp-52-small-widgets-kerahat-warm|light|carplay|16:05|-debugAccent orange
 '
 
-# Ausschnitte in pt (x,y,Breite,Höhe): Teil | im Referenzbild | in der Aufnahme. Der Katalog ist 390 pt
-# breit und sitzt 6 pt vom Rand; die Lage der Bausteine steht in CatalogOutsideMetrics.
+# Ausschnitte in pt (x,y,Breite,Höhe): Teil | im Referenzbild | in der Aufnahme [| Breite des Referenzbilds in pt,
+# ohne Angabe 390]. Der Katalog ist 390 pt breit und sitzt 6 pt vom Rand; die Lage der Bausteine steht in
+# CatalogOutsideMetrics. Die Tafeln aus carplay/ sind 568 bzw. 436 pt breit; die Lage ihrer Teile hat der Prototyp
+# gemessen (getBoundingClientRect relativ zur Tafel).
 crops() {
   case "$1" in
     90) printf '%s\n' "accessory|67,226,256,72|73,690,256,72" "inline|150,83,162,26|121,638,162,26" ;;
@@ -69,6 +94,13 @@ crops() {
     94) printf '%s\n' "compact|89,11.5,212,37|95,120,212,37" ;;
     95 | 98e*) printf '%s\n' "expanded|9,9,372,156|15,180,372,156" ;;
     99*) printf '%s\n' "live|26,66,338,158|32,66,338,158" "medium|26,258,338,154|32,258,338,154" ;;
+    # Phase 19: Live-Aktivität „klein“ unter der des Sperrbildschirms (`-debugCatalog live`), nach dem Wechsel und die
+    # kleinen Widgets im Abschnitt `carplay`.
+    cp40e | cp41e) printf '%s\n' "ended-w|25,310.84,240,78|18,446,240,78|568" "ended-n|333,310.84,170,78|18,536,170,78|568" ;;
+    cp4[0-3]|cp4[0-3]?|cp4[0-3]??) printf '%s\n' "t|25,27.56,240,100|18,567,240,100|568" "w|298,49.56,240,78|18,679,240,78|568" \
+      "n|60,189.25,170,78|18,769,170,78|568" "watch|321,171.16,194,80.5|200,769,194,80.5|568" ;;
+    cp5*) printf '%s\n' "next-bg|40,20,158,158|32,66,158,158|436" "arc-bg|238,20,158,158|212,66,158,158|436" \
+      "next|40,237.19,158,158|32,254,158,158|436" "arc|238,237.19,158,158|212,254,158,158|436" ;;
   esac
 }
 
@@ -87,9 +119,9 @@ echo "$STATES" | while IFS='|' read -r number file appearance section time extra
     -debugCatalog "$section" -debugFixtureTimes -debugDate 2026-11-10 -debugTime "$time" $extra >/dev/null
   sleep 2.5
   xcrun simctl io "$SIM" screenshot "$OUT/catalog-$number.png" >/dev/null 2>&1
-  crops "$number" | while IFS='|' read -r part ref shot; do
+  crops "$number" | while IFS='|' read -r part ref shot refpoints; do
     printf '%s %s: ' "$number" "$part"
-    "$ROOT/scripts/compare-shot" --ref "$REF/$file.png" --ref-rect "$ref" \
+    "$ROOT/scripts/compare-shot" --ref "$REF/$file.png" --ref-rect "$ref" --ref-points "${refpoints:-390}" \
       --shot "$OUT/catalog-$number.png" --shot-rect "$shot" \
       --out "$OUT/compare-$number-$part.png" --zoom "$ZOOM" | head -1
   done

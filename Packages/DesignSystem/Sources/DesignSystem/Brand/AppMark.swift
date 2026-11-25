@@ -22,6 +22,8 @@ public struct AppMark: View {
         /// 24 pt im Ring auf dem Sperrbildschirm, solange es keine Zeiten gibt – so groß wie bis Phase 13
         /// die Mondsichel dort.
         case accessory
+        /// 14 pt mit Radius 3,5 im Kopf der Live-Aktivität „klein“ (`.app-icon-img.ai-las`, Spec § 12.3).
+        case smallHeader
     }
 
     private let size: Size
@@ -62,17 +64,24 @@ enum AppMarkMetrics {
         case .small: 34
         case .header: 16
         case .accessory: 24
+        case .smallHeader: 14
         }
     }
 
     /// `border-radius: 22.4 %` – der Eckenradius der Symbole auf dem Home-Bildschirm; im Kopf der
     /// Live-Aktivität fest 4 pt (`.ai-la`).
     static func cornerRadius(for size: AppMark.Size) -> CGFloat {
-        size == .header ? headerCornerRadius : side(for: size) * cornerRatio
+        switch size {
+        case .header: headerCornerRadius
+        case .smallHeader: smallHeaderCornerRadius
+        case .large, .small, .accessory: side(for: size) * cornerRatio
+        }
     }
 
     static let cornerRatio: CGFloat = 0.224
     static let headerCornerRadius: CGFloat = 4
+    /// Im Kopf der Live-Aktivität „klein“ (`.ai-las`: `border-radius: 3.5px`).
+    static let smallHeaderCornerRadius: CGFloat = 3.5
     static let shadowOpacity = 0.18
     static let shadowBlur: CGFloat = 34
     static let shadowY: CGFloat = 14

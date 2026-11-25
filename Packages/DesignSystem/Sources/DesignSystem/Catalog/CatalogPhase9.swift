@@ -4,7 +4,8 @@ import PrayerCore
 import SwiftUI
 
 /// Widgets und Live-Aktivität im Katalog – zum Abgleich mit `system/90`, `91` und `93`–`96` (seit Phase 14
-/// mit dem Widget „Live“ und dem Rechteck mit Mini-Bogen, Spec § 9.11).
+/// mit dem Widget „Live“ und dem Rechteck mit Mini-Bogen, Spec § 9.11), seit Phase 19 mit der Live-Aktivität „klein“
+/// und den kleinen Widgets ohne Hintergrund (`carplay/cp-40`–`cp-52`, Spec § 12).
 ///
 /// Der Katalog zeigt die Ansichten der Extension in den Maßen des Prototyps auf einem Hintergrund wie
 /// `.wall`. Was iOS selbst zeichnet – Fläche, Ecken und Schatten der Widgets, die Form der Dynamic Island,
@@ -93,6 +94,29 @@ public enum CatalogOutsideMetrics {
     public static let expandedInset: CGFloat = 9
     public static let expandedRadius: CGFloat = 44
     public static let expandedPadding = EdgeInsets(top: 13, leading: 24, bottom: 16, trailing: 24)
+
+    /// Phase 19 (Spec § 12.3): die Live-Aktivität „klein“ unter der des Sperrbildschirms, 12 pt vom Rand und 12 pt
+    /// auseinander – 240 × 100, darunter 240 × 78, darunter 170 × 78 und daneben 194 × 80,5 (Smart Stack der Uhr).
+    public static let smallActivityFrames: [CGRect] = [
+        CGRect(x: 12, y: 567, width: 240, height: 100),
+        CGRect(x: 12, y: 679, width: 240, height: 78),
+        CGRect(x: 12, y: 769, width: 170, height: 78),
+        CGRect(x: 194, y: 769, width: 194, height: 80.5),
+    ]
+
+    /// Phase 19 (Spec § 12.1, § 12.2): die kleinen Widgets in Originalgröße (158 × 158) wie auf der Tafel des Prototyps –
+    /// oben mit Hintergrund („Nächstes Gebet“, „Tagesbogen“), darunter ohne.
+    public static let smallWidgetFrames: [CGRect] = [
+        CGRect(x: 26, y: 66, width: 158, height: 158),
+        CGRect(x: 206, y: 66, width: 158, height: 158),
+        CGRect(x: 26, y: 254, width: 158, height: 158),
+        CGRect(x: 206, y: 254, width: 158, height: 158),
+    ]
+    /// Darunter die Live-Aktivität „klein“ nach dem Wechsel: 240 × 78 und 170 × 78.
+    public static let endedActivityFrames: [CGRect] = [
+        CGRect(x: 12, y: 446, width: 240, height: 78),
+        CGRect(x: 12, y: 536, width: 170, height: 78),
+    ]
 }
 
 /// Der Hintergrund des Sperr- und Home-Bildschirms im Prototyp (`.wall`), vereinfacht auf den Verlauf
@@ -203,9 +227,70 @@ struct CatalogLiveActivity: View {
                     .shadow(color: .black.opacity(0.2), radius: 13, y: 8)
                     .frame(width: CatalogMetrics.referenceWidth)
                     .offset(y: CatalogOutsideMetrics.lockScreenTop)
+
+                // Phase 19: die Live-Aktivität „klein“ in den vier Größen (CarPlay, Smart Stack), wie `carplay/cp-40`.
+                ForEach(Array(CatalogOutsideMetrics.smallActivityFrames.enumerated()), id: \.offset) { _, frame in
+                    CatalogSmallActivity(content: content, isStale: isStale, size: frame.size)
+                        .offset(x: frame.minX, y: frame.minY)
+                }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+}
+
+/// Die Live-Aktivität „klein“ in einer Größe der Familie (Spec § 12.3); die Ecken rundet im Auto und auf der Uhr das
+/// System, hier der Katalog wie der Prototyp.
+struct CatalogSmallActivity: View {
+    let content: LiveActivityContent
+    var isStale = false
+    let size: CGSize
+
+    var body: some View {
+        LiveActivitySmall(content: content, isStale: isStale)
+            .frame(width: size.width, height: size.height)
+            .clipShape(.rect(cornerRadius: LiveActivityMetrics.smallRadius, style: .continuous))
+    }
+}
+
+/// CarPlay und StandBy (Phase 19, Spec § 12): die kleinen Widgets in Originalgröße wie die Tafel `carplay/cp-50` – oben
+/// mit Hintergrund (Home-Bildschirm), darunter ohne (StandBy, CarPlay) –, dazu die Live-Aktivität „klein“ nach dem
+/// Wechsel. Der Grund ist der der Tafel (`--bg-grouped`); was StandBy und CarPlay hinter ein Widget legen, zeichnet
+/// das System.
+struct CatalogCarPlay: View {
+    let state: CatalogOutsideState
+
+    var body: some View {
+        let content = state.widget
+        let frames = CatalogOutsideMetrics.smallWidgetFrames
+        ZStack(alignment: .topLeading) {
+            Palette.backgroundGrouped
+                .ignoresSafeArea()
+            tile(SmallPrayerWidget(content: content), frame: frames[0], background: true)
+            tile(SmallArcPrayerWidget(content: content), frame: frames[1], background: true)
+            tile(SmallPrayerWidget(content: content, showsBackground: false), frame: frames[2], background: false)
+            tile(SmallArcPrayerWidget(content: content), frame: frames[3], background: false)
+            if let activity = state.liveActivity {
+                ForEach(Array(CatalogOutsideMetrics.endedActivityFrames.enumerated()), id: \.offset) { _, frame in
+                    CatalogSmallActivity(content: activity, isStale: true, size: frame.size)
+                        .offset(x: frame.minX, y: frame.minY)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+
+    private func tile(_ widget: some View, frame: CGRect, background: Bool) -> some View {
+        widget
+            .frame(width: frame.width, height: frame.height)
+            .background {
+                if background {
+                    RoundedRectangle(cornerRadius: WidgetMetrics.cornerRadius, style: .continuous)
+                        .fill(Palette.backgroundCell)
+                        .shadow(color: .black.opacity(0.14), radius: 9, y: 4)
+                }
+            }
+            .offset(x: frame.minX, y: frame.minY)
     }
 }
 
@@ -219,6 +304,14 @@ struct CatalogLiveActivity: View {
 
 #Preview("Live-Aktivität – ab Beginn") {
     CatalogLiveActivity(state: .fixture(time: "16:20:00"), isStale: true)
+}
+
+#Preview("CarPlay und StandBy – 14:25") {
+    CatalogCarPlay(state: .fixture())
+}
+
+#Preview("CarPlay und StandBy – Verbotszeit") {
+    CatalogCarPlay(state: .fixture(time: "16:05:00"))
 }
 
 #endif

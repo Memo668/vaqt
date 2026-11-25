@@ -165,18 +165,35 @@ struct WidgetNextBlock: View {
 
 /// Das kleine Widget: Stadt und Symbol oben, unten das nächste Ereignis mit Uhrzeit und Countdown
 /// (`.w-small` in `homeScreenHTML()`).
+///
+/// Ohne Hintergrund – in StandBy und CarPlay, wo iOS den Hintergrund weglässt und das Widget vergrößert – gilt seit
+/// Phase 19 eine eigene Anordnung ohne Stadt, mit größerer Uhrzeit und „Verbotszeit bis …“ (`BareSmallPrayerWidget`,
+/// Spec § 12.1).
 public struct SmallPrayerWidget: View {
     private let content: PrayerWidgetContent
+    private let showsBackground: Bool
 
-    public init(content: PrayerWidgetContent) {
+    /// - Parameter showsBackground: ob das Widget mit seinem Hintergrund erscheint – in der Extension
+    ///   `showsWidgetContainerBackground`; ohne (StandBy, CarPlay) gilt die Anordnung von Spec § 12.1.
+    public init(content: PrayerWidgetContent, showsBackground: Bool = true) {
         self.content = content
+        self.showsBackground = showsBackground
     }
 
     public var body: some View {
-        WidgetTextScaling {
-            smallContent
+        Group {
+            if showsBackground {
+                WidgetTextScaling {
+                    smallContent
+                }
+                .padding(WidgetMetrics.smallPadding)
+            } else {
+                WidgetTextScaling {
+                    BareSmallPrayerWidget(content: content)
+                }
+                .padding(WidgetMetrics.barePadding)
+            }
         }
-        .padding(WidgetMetrics.smallPadding)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .accessibilityElement(children: .combine)
     }

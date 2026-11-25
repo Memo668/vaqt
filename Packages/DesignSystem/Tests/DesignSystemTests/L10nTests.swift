@@ -72,7 +72,7 @@ struct L10nTests {
         #expect(AppLanguage.allCases.contains(L10n.systemLanguage))
     }
 
-    @Test("der Katalog hat 377 Schlüssel und keinen doppelt")
+    @Test("der Katalog hat 447 Schlüssel und keinen doppelt")
     func keyCount() {
         // 260 aus der Design-Übergabe v0.7, dazu `noTimes` (Phase 3), `noCompass` (Phase 4) und
         // `hlMoonsighting` (Phase 7, docs/OPEN-QUESTIONS.md), dazu aus `SURAH` und `VERSES` vier Suren und
@@ -83,8 +83,9 @@ struct L10nTests {
         // Phase 18 ohne die vier Texte zur Wahl der Stimme und zur Fadschr-Variante (`voice`, `voiceN`,
         // `fajrVariant`, `fajrVariantFooter`, Spec § 11.2), dafür drei für die neuen Einträge der Seite
         // „Lizenzen“ (`licRecordingSub`, `licTanzilSub`, `licTranslationsSub`, Spec § 11); mit dem Nachtrag zu
-        // Phase 18 69 neue für Stil, Klang, Rechtsschule und Onboarding (Spec § 11.3–11.7).
-        #expect(L10n.allKeys.count == 446)
+        // Phase 18 69 neue für Stil, Klang, Rechtsschule und Onboarding (Spec § 11.3–11.7); seit Phase 19 die
+        // Beschreibung des Widgets „Tagesbogen“ (`wArcDesc`, Spec § 12.2).
+        #expect(L10n.allKeys.count == 447)
         #expect(Set(L10n.allKeys).count == L10n.allKeys.count)
     }
 

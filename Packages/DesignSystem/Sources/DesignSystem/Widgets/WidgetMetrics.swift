@@ -78,6 +78,70 @@ public enum WidgetMetrics {
     /// Abstand zwischen Name und Uhrzeit einer Zeile (`gap: 6px`).
     public static let listRowGap: CGFloat = 6
 
+    // MARK: - Ohne Hintergrund: StandBy und CarPlay (Spec § 12.1, seit Phase 19)
+
+    /// Das kleine Widget in den Tafeln des Prototyps (`.cpw`: 158 × 158) – systemSmall auf einem iPhone mit 390 pt
+    /// Breite. In StandBy und CarPlay vergrößert iOS es; die Anordnung bleibt.
+    public static let smallReferenceSize = CGSize(width: 158, height: 158)
+    /// Innenabstand ohne Hintergrund (`.cpw-next`: `padding: 12px 12px 12px 14px`).
+    public static let barePadding = EdgeInsets(top: 12, leading: 14, bottom: 12, trailing: 12)
+    /// Symbol vor dem Namen – `ic(…, 22)`, 6 pt Abstand (`.cpw-head`: `gap: 6px`).
+    public static let bareSymbolBox: CGFloat = 22
+    public static let bareSymbolGap: CGFloat = 6
+    /// Name des Gebets (`.cpw-head`: 600 19px/1.15, `-.3px`, Akzent).
+    public static let bareNameSize: CGFloat = 19
+    public static func bareNameFont(_ scale: CGFloat = 1) -> Font { .system(size: bareNameSize * scale, weight: .semibold) }
+    public static let bareNameLineHeight: CGFloat = 1.15
+    public static let bareNameTracking: CGFloat = -0.3
+    /// Uhrzeit groß (`.cpw-time`: 600 46px/1, gerundet, `-1px`, 3 pt darunter).
+    public static let bareTimeSize: CGFloat = 46
+    public static func bareTimeFont(_ scale: CGFloat = 1) -> Font {
+        .system(size: bareTimeSize * scale, weight: .semibold, design: .rounded).monospacedDigit()
+    }
+    public static let bareTimeLineHeight: CGFloat = 1
+    public static let bareTimeTracking: CGFloat = -1
+    public static let bareTimeTop: CGFloat = 3
+    /// „in 2:01:29“ (`.cpw-in`: 500 15px/1.2, Zweitschrift, 5 pt darunter).
+    public static let bareCountSize: CGFloat = 15
+    public static func bareCountFont(_ scale: CGFloat = 1) -> Font { .system(size: bareCountSize * scale, weight: .medium).monospacedDigit() }
+    public static let bareCountLineHeight: CGFloat = 1.2
+    public static let bareCountTop: CGFloat = 5
+    /// „Verbotszeit bis 16:27“ (`.cpw-k`: 600 11.5px/1.2, `-.15px`, `--kerahat-text`, 6 pt darunter) mit Punkt
+    /// (7 pt, 4 pt Abstand).
+    public static let bareKerahatSize: CGFloat = 11.5
+    public static func bareKerahatFont(_ scale: CGFloat = 1) -> Font {
+        .system(size: bareKerahatSize * scale, weight: .semibold).monospacedDigit()
+    }
+    public static let bareKerahatLineHeight: CGFloat = 1.2
+    public static let bareKerahatTracking: CGFloat = -0.15
+    public static let bareKerahatTop: CGFloat = 6
+    public static let kerahatDot: CGFloat = 7
+    public static let bareKerahatGap: CGFloat = 4
+
+    // MARK: - Tagesbogen (Spec § 12.2, seit Phase 19)
+
+    /// Innenabstand (`.cpw-arcw`: `padding: 8px 6px`); Bogen und Zeile darunter stehen mittig.
+    public static let arcPadding = EdgeInsets(top: 8, leading: 6, bottom: 8, trailing: 6)
+    /// „Maghrib · 16:27“ im Bogen (`.cpw-name`: 600 12px/15px, Zweitschrift).
+    public static let arcNameFont = Font.system(size: 12, weight: .semibold).monospacedDigit()
+    public static let arcNameLineHeight: CGFloat = 15 / 12
+    /// So breit darf „Sonnenaufgang · 07:14“ im Bogen werden, ohne an die Gebete an den Enden zu stoßen; sonst wird
+    /// die Zeile kleiner.
+    public static let arcNameMaxWidth: CGFloat = 118
+    /// Countdown im Bogen (`.cpw-cd`: 700 25px/1.05, gerundet, `-.3px`).
+    public static let arcCountSize: CGFloat = 25
+    public static let arcCountFont = Font.system(size: 25, weight: .bold, design: .rounded).monospacedDigit()
+    public static let arcCountLineHeight: CGFloat = 1.05
+    public static let arcCountTracking: CGFloat = -0.3
+    /// Die Zeile unter dem Bogen (`.cpw-sub`: 600 13px/1.2, 10 pt Abstand, Pfeil `ic('locFill', 12)` bzw. Punkt, 5 pt
+    /// Abstand).
+    public static let arcFooterSize: CGFloat = 13
+    public static let arcFooterFont = Font.system(size: 13, weight: .semibold).monospacedDigit()
+    public static let arcFooterLineHeight: CGFloat = 1.2
+    public static let arcFooterTop: CGFloat = 10
+    public static let arcFooterGap: CGFloat = 5
+    public static let arcLocationBox: CGFloat = 12
+
     // MARK: - Sperrbildschirm
 
     /// accessoryCircular im Prototyp (`.acc-circ`: 72 × 72).
