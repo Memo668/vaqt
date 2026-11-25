@@ -76,7 +76,7 @@ Deutsch:
 ```text
 Vaqt ist eine gemeinnützige App für die fünf täglichen Gebete – werbefrei, ohne Tracking und ohne Konto. Sie rechnet die Zeiten auf dem iPhone, für deinen Standort oder eine gewählte Stadt, und zeigt sie als Tagesbogen mit Countdown. Dazu kommen die Qibla-Richtung mit Kompass, eine Anleitung zu jedem Gebet, ein Vers des Tages und eine Übersicht zum Nachholen. Mitteilungen mit Adhan, Widgets für Home- und Sperrbildschirm und eine Live-Aktivität zum nächsten Gebet sind dabei; auf dem iPhone Duo nutzt die App beide Hälften. Sprachen: Deutsch, Türkisch, Englisch, Spanisch, Französisch, Niederländisch, Bosnisch, Albanisch, Arabisch, Urdu, Indonesisch, Malaiisch, Bengali, Persisch, Russisch und Italienisch.
 
-Dies ist die erste Beta. Einige Inhalte sind noch Platzhalter: die Übersetzungen der Verse, die Adhan-Aufnahmen und das App-Symbol. Die Texte der Anleitung hat noch niemand fachlich geprüft, und die Sprachen ab Französisch sind Entwürfe, die noch Muttersprachler durchsehen.
+Dies ist die erste Beta. Einige Inhalte sind noch vorläufig: die Auswahl der Vers-Übersetzungen, die einzelne Adhan-Aufnahme und das App-Symbol. Die Texte der Anleitung und der Verbotszeiten hat noch niemand fachlich geprüft, und die Sprachen ab Französisch sind Entwürfe, die noch Muttersprachler durchsehen.
 ```
 
 Englisch:
@@ -84,7 +84,7 @@ Englisch:
 ```text
 Vaqt is a non-profit app for the five daily prayers – no ads, no tracking, no account. It calculates the times on your iPhone, for your location or a city you choose, and shows them as a day arc with a countdown. It also has the Qibla direction with a compass, a guide to each prayer, a verse of the day and an overview for making up missed prayers. Notifications with the adhan, widgets for the Home Screen and Lock Screen and a Live Activity for the next prayer are included; on iPhone Duo the app uses both halves. Languages: German, Turkish, English, Spanish, French, Dutch, Bosnian, Albanian, Arabic, Urdu, Indonesian, Malay, Bengali, Persian, Russian and Italian.
 
-This is the first beta. Some content is still a placeholder: the verse translations, the adhan recordings and the app icon. Nobody has reviewed the guide texts for religious accuracy yet, and the languages from French on are drafts that native speakers have yet to review.
+This is the first beta. Some content is still provisional: the selection of verse translations, the single adhan recording and the app icon. Nobody has reviewed the guide and makruh texts for religious accuracy yet, and the languages from French on are drafts that native speakers have yet to review.
 ```
 
 ### Was testen – Build 0.1.0 (5)

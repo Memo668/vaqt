@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 25.11.2026, nach der Abnahme von Phase 18 (Verse und Adhan, Spec § 11.1–11.2, mit dem Nachtrag Klang, Stil, Rechtsschule und Onboarding, Spec § 11.3–11.7); Build 0.1.0 (5) ist am 25.11.2026 hochgeladen und bei „Intern“; ob er zu „Extern“ kommt, entscheidet der Nutzer (Golden Beta am 26.11.2026).
+Stand: 25.11.2026, nach der Abnahme von Phase 18 (Verse und Adhan, Spec § 11.1–11.2, mit dem Nachtrag Klang, Stil, Rechtsschule und Onboarding, Spec § 11.3–11.7); Build 0.1.0 (5) ist am 25.11.2026 hochgeladen und bei „Intern“ und „Extern“ (Golden Beta am 26.11.2026).
 
 ## Für die erste Beta
 
@@ -35,9 +35,10 @@ Die erste Beta über TestFlight kommt nach Phase 11 – seit dem 15.11.2026 nach
     - „Was testen“ steht auf Deutsch und Englisch drin (`docs/APP-STORE.md`).
     - Der Build ist den Gruppen „Intern“ und „Extern“ zugeordnet und war sofort ohne erneute Prüfung freigegeben („Testing“).
   - Build 0.1.0 (4) (Phase 17) ist nur der Gruppe „Intern“ zugeordnet („Ready to Submit“); bei „Extern“ steht zuletzt Build 3 (Stand App Store Connect, 25.11.2026).
-  - Build 0.1.0 (5) (Phase 18, `b3bcbc4`) ist am 25.11.2026 um 09:16 hochgeladen und war nach wenigen Minuten verarbeitet. Er ist der Gruppe „Intern“ zugeordnet („Ready to Submit“, 5 Tester).
+  - Build 0.1.0 (5) (Phase 18, `b3bcbc4`) ist am 25.11.2026 um 09:16 hochgeladen und war nach wenigen Minuten verarbeitet. Er ist den Gruppen „Intern“ („Ready to Submit“, 5 Tester) und „Extern“ zugeordnet.
     - „Was testen“ steht auf Deutsch und Englisch drin (`docs/APP-STORE.md`), eingetragen am 25.11.2026 mit dem Go des Nutzers („Passt, eintragen“).
-    - Für „Extern“ ist er noch nicht freigegeben; das entscheidet der Nutzer. Die Beta-Beschreibung nennt noch Verse und Adhan als Platzhalter (`docs/APP-STORE.md`, „Beta-Beschreibung“) und ist noch nicht angepasst.
+    - Für „Extern“ hat der Nutzer ihn am 25.11.2026 freigegeben („Ja, für Extern freigeben“): Er war sofort „Testing“, ohne erneute Prüfung, „Automatically notify testers“ stand an. Bei „Extern“ stehen jetzt Build 2, 3 und 5.
+    - Die Beta-Beschreibung (Deutsch und Englisch) ist am 25.11.2026 mit dem Go des Nutzers geändert: Verse und Adhan sind „vorläufig“ statt „Platzhalter“, letzter Absatz (`docs/APP-STORE.md`, „Beta-Beschreibung“).
   - Rückmeldungen aus TestFlight zu Build 2 (Tester, 17.11.2026), noch zu beheben:
     - Im Adhan-Sheet ist „Stimme 3“ stumm. Für sie gibt es keine Aufnahme; Stimme 1 und 2 sind Platzhalter von Wikimedia.
     - Ist der Schalter für die Fadschr-Fassung an, kommt bei keiner Stimme ein Ton.
