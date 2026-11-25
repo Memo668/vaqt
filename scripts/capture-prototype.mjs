@@ -168,7 +168,50 @@ const STATES = [
   { file: 'system/98-live-activity-island-expanded-mono', at: hm(14, 25, 1), s: { ...home, view: 'live', laStyle: 'mono' }, screen: 2 },
   { file: 'system/99-homescreen-widgets-arc-inverted', at: hm(14, 25, 1), s: { ...home, view: 'widgets', laStyle: 'arc', laInv: true }, screen: 1 },
   { file: 'system/99-homescreen-widgets-ocean', at: hm(14, 25, 1), s: { ...home, view: 'widgets', accent: 'ocean' }, screen: 1 },
+
+  // Phase 19 (Spec § 12): CarPlay und StandBy in der Ansicht „CarPlay“. `sel` wählt statt eines iPhone-Bildschirms den Rahmen:
+  // den Bildschirm im Auto (breit 8 : 3 oder Standard 5 : 3, `cpScreen`), eine Tafel in Originalgröße oder StandBy.
+  // Um 16:05 läuft die Verbotszeit vor Maghrib. Die Dateien beginnen mit `cp-`, damit `capture-prototype 10` sie nicht mitnimmt.
+  ...cpStates(),
 ];
+
+/** Die Zustände der Ansicht „CarPlay“ (Phase 19). */
+function cpStates() {
+  const cp = { ...home, view: 'carplay' };
+  const scr = key => `[data-cw="${key}"] .cp-scr`, board = key => `[data-cw="${key}"] .cw-board`;
+  const list = [];
+  const add = (file, at, s, sel, both) => {
+    list.push({ file: `carplay/${file}`, at, s: { ...cp, ...s }, sel });
+    if (both) list.push({ file: `carplay/${file}-dark`, dark: true, at, s: { ...cp, ...s }, sel });
+  };
+  // Widgets links vom Dashboard, Dashboard mit der Live-Aktivität „klein“, Hinweis über der Karte
+  add('cp-10-widgets-wide', hm(14, 25, 1), {}, scr('cp-widgets'), true);
+  add('cp-11-widgets-standard', hm(14, 25, 1), { cpScreen: 'std' }, scr('cp-widgets'), true);
+  add('cp-12-widgets-kerahat', hm(16, 5), {}, scr('cp-widgets'), true);
+  add('cp-20-dashboard-wide', hm(14, 25, 1), {}, scr('cp-dash'), true);
+  add('cp-21-dashboard-standard', hm(14, 25, 1), { cpScreen: 'std' }, scr('cp-dash'), true);
+  add('cp-22-dashboard-kerahat', hm(16, 5), {}, scr('cp-dash'));
+  add('cp-30-alert', hm(14, 25, 1), {}, scr('cp-alert'), true);
+  // Live-Aktivität „klein“ in allen Größen, in den Stilen der App und in der Verbotszeit
+  add('cp-40-live-small', hm(14, 25, 1), {}, board('cp-sizes'));
+  add('cp-41-live-small-kerahat', hm(16, 5), {}, board('cp-sizes'));
+  for (const [name, s] of [['arc', { laStyle: 'arc' }], ['mono', { laStyle: 'mono' }], ['full-inverted', { laInv: true }],
+    ['arc-inverted', { laStyle: 'arc', laInv: true }], ['mono-inverted', { laStyle: 'mono', laInv: true }], ['ocean', { accent: 'ocean' }]]) {
+    add(`cp-42-live-small-${name}`, hm(14, 25, 1), s, board('cp-sizes'));
+  }
+  for (const [name, s] of [['arc', { laStyle: 'arc' }], ['mono', { laStyle: 'mono' }], ['full-inverted', { laInv: true }],
+    ['arc-inverted', { laStyle: 'arc', laInv: true }], ['warm', { accent: 'orange' }]]) {
+    add(`cp-43-live-small-kerahat-${name}`, hm(16, 5), s, board('cp-sizes'));
+  }
+  // Die kleinen Widgets mit und ohne Hintergrund in Originalgröße, StandBy
+  add('cp-50-small-widgets', hm(14, 25, 1), {}, board('cp-small'), true);
+  add('cp-51-small-widgets-kerahat', hm(16, 5), {}, board('cp-small'), true);
+  add('cp-52-small-widgets-ocean', hm(14, 25, 1), { accent: 'ocean' }, board('cp-small'));
+  add('cp-52-small-widgets-kerahat-warm', hm(16, 5), { accent: 'orange' }, board('cp-small'));
+  add('cp-60-standby', hm(14, 25, 1), {}, '[data-cw="cp-standby"] .sb-scr');
+  add('cp-61-standby-kerahat', hm(16, 5), {}, '[data-cw="cp-standby"] .sb-scr');
+  return list;
+}
 
 const only = process.argv.slice(2);
 const states = only.length ? STATES.filter(st => only.some(p => st.file.split('/').pop().startsWith(p))) : STATES;
@@ -208,6 +251,8 @@ try {
           qibla: { heading: 99, drag: true }, scrollPos: {}, focusNext: null, _focus: null,
           // Nachtrag zu Phase 18: Grundfarbe, Stil der Live-Aktivität, Rechtsschule, Klang
           accent: 'teal', laStyle: 'full', laInv: false, palOpen: null, madhab: 'hanafi', obMenu: false, sound: 'adhan',
+          // Phase 19: Bildschirm im Auto
+          cpScreen: 'wide',
         }, st.s, lang ? { lang } : {});
         S.clock = { base: st.at, anchor: Date.now(), preset: 'custom' };
         render();
@@ -222,7 +267,9 @@ try {
       await page.waitForTimeout(700);   // Übergänge und Animationen des Prototyps abwarten
       const target = join(OUT, `${st.file}.png`);
       mkdirSync(dirname(target), { recursive: true });
-      await page.locator('#stage .screen').nth(st.screen || 0).screenshot({ path: target, animations: 'disabled' });
+      // Phase 19: In der Ansicht „CarPlay“ wählt `sel` den Rahmen; sonst ein iPhone-Bildschirm (`screen`).
+      const shot = st.sel ? page.locator(`#stage ${st.sel}`).first() : page.locator('#stage .screen').nth(st.screen || 0);
+      await shot.screenshot({ path: target, animations: 'disabled' });
       console.log(`  ${st.file}.png`);
     }
     await context.close();

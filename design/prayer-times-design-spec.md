@@ -1,4 +1,4 @@
-# Prayer Times (iOS) – Design Spec v0.11
+# Prayer Times (iOS) – Design Spec v0.12
 
 Handoff for building the native SwiftUI app. The visual reference is `prayer-times-prototype.html` (single file, open it in a browser). Design tokens are in its `:root` CSS, every string is in the JS object `T` (16 languages since v0.8, § 9.10), mock data is in `CITIES` / `BERLIN_SUMMER` / `METHODS`, and the app state model is `S`.
 
@@ -44,7 +44,7 @@ Settings
      └─ About: Source Code ↗ · Privacy → page · Version   (footer: calculation disclaimer)
 
 Sheets: City search (.large, searchable) · Adhan player (.large)
-Outside the app: Widgets (small, medium, accessoryCircular, accessoryRectangular, accessoryInline) · Live Activity (Lock Screen, Dynamic Island compact / minimal / expanded) · Local notifications (prayer + reminder)
+Outside the app: Widgets (small, medium, accessoryCircular, accessoryRectangular, accessoryInline; since v0.12 the small "Tagesbogen") · Live Activity (Lock Screen, Dynamic Island compact / minimal / expanded; since v0.12 "small" for CarPlay and the Apple Watch Smart Stack) · Local notifications (prayer + reminder) · StandBy and CarPlay show the small widgets without background (§ 12)
 ```
 
 iPhone Duo (foldable, since 23.10.2026) uses the same map; only the bars move (see § 8).
@@ -102,7 +102,7 @@ Countdown: 64 pt thin, `monospacedDigit()`, `@ScaledMetric` capped at ×1.05 (×
 | Banner / note / hint pill | Location denied (banner + "Change"), high latitude (note card + link), offline (small pill). |
 | Compass | Dial with 5° ticks, upright cardinal labels, N in red, accent Qibla needle + Kaaba marker, fixed lubber line. Aligned within ±3° → accent + `.success` haptic. |
 | Adhan player | Title (name of the muezzin), waveform (played part in accent), scrubber, 72 pt play/pause; under the card a footnote with the source and licence of the recording. Until v0.9 also a voice list (placeholders) and a Fajr variant toggle; both removed in § 11.2. |
-| Widgets | systemSmall (next prayer + timer) · systemMedium (next + all six times, next highlighted) · accessoryCircular (Gauge from previous → next) · accessoryRectangular (next, timer, following) · accessoryInline (icon + "Asr 14:00"). |
+| Widgets | systemSmall (next prayer + timer; without background in StandBy and CarPlay its own arrangement, § 12.1) · systemSmall "Tagesbogen" (§ 12.2) · systemMedium (next + all six times, next highlighted) · accessoryCircular (Gauge from previous → next) · accessoryRectangular (next, timer, following) · accessoryInline (icon + "Asr 14:00"). |
 | Live Activity | ActivityKit + WidgetKit extension. **Lock Screen** (≤ 160 pt): accent background (`activityBackgroundTint`, light accent in both modes), header app glyph + name / city, the day arc in white (7 pt track, 21 pt markers, Kerahat marks in warm yellow), inside the arc "Maghrib · 16:27" and the countdown (30 pt rounded bold, `Text(timerInterval:)`). **Dynamic Island compact**: leading prayer symbol, trailing countdown, both in the dark accent. **Minimal**: prayer symbol in a progress ring. **Expanded**: leading symbol + time, trailing city, caption "Maghrib in", countdown 38 pt, bar from the previous event to the next with the Kerahat window as a 2 pt line under the bar, ends labelled ("Asr 14:00" / "Maghrib 16:27"). No buttons. |
 | Notifications | Title "Dhuhr · 13:12", body "It's time for Dhuhr in Berlin." Reminder: "Dhuhr in 10 minutes". |
 | Verse card | Card radius 26: caption line (VERSE OF THE DAY · date), Arabic text right-aligned (system Arabic font, ~29 pt, `lang="ar"`), translation (`.body`), reference in accent ("Al-Baqara 2:45"), Share (ShareLink) and Copy as capsule buttons. Footer: translation source. Below: last days as standalone cards (date, two lines of translation, reference); tap shows that verse. |
@@ -462,9 +462,54 @@ Decided by the product owner on 24.11.2026, built in Phase 18. § 11.3–11.7 ar
 - Debug: `-debugAccent <id>`, `-debugLiveStyle full|arc|mono`, `-debugLiveInverted`, `-debugTab style`.
 - Reference: `iphone/87-settings-style` (+ `-dark`, `-open` with Orange and "Nur Bogen, invertiert", `-open-end`), `iphone/25-home-accent-ocean`, `iphone/25-home-accent-orange-kerahat` (+ `-dark`), `system/97-*` (six styles and Ozean), `system/98-*` (prohibited time, also warm), `system/99-*` (widget "Live").
 
+## 12. CarPlay and StandBy (v0.12, Phase 19, decided 25.11.2026)
+
+Decided by the product owner on 25.11.2026 after the proposal "CarPlay und Apple Watch" (prototype of 24.11.2026): **no own CarPlay app** – prayer times fit no CarPlay app category, the "Audio" entitlement is not requested; Phase 19 builds the CarPlay widgets and the Live Activity "small"; the Apple Watch app follows in Phases 20–22. Apple's rules with sources: `docs/vorschlaege/2026-11-24/carplay-watch.md`. Prototype: view "CarPlay" (panel block "Phase 19"). Where this section and older sections disagree, this section wins.
+
+What Apple allows (iOS 26):
+- **Widgets in CarPlay** stand left of the Dashboard (right with right-hand drive). Only the `systemSmall` family, drawn **without the container background**, enlarged and in full colour – like StandBy. Which widgets appear is chosen on the iPhone (Settings › General › CarPlay). Tapping a Vaqt widget in the car does nothing; only CarPlay apps can be opened from there.
+- **Live Activities** appear on the CarPlay Dashboard by themselves. With the family `small` they get their own view, the same as in the Smart Stack of Apple Watch. Sizes (HIG): CarPlay 240 × 78, 240 × 100 and 170 × 78 pt, Smart Stack (46 mm) 194 × 80.5 pt; CarPlay scales them per screen. Buttons would do nothing in the car.
+- Vaqt's notifications do not appear in the car (only CarPlay apps of some categories may show them).
+- The car screen (wide 8 : 3 or standard 5 : 3), the number of widgets side by side, the surface behind a widget and the place of the Live Activity on the Dashboard are approximated in the prototype.
+
+### 12.1 Small widget "Nächstes Gebet" without background
+- With its background (Home Screen) it stays as it is (§ 3, `system/91`).
+- Without background (`showsWidgetContainerBackground` is false: StandBy and CarPlay) it has its own arrangement, leading and vertically centred, padding 12 / 12 / 12 / 14 (158 pt reference):
+  - prayer symbol (22 pt box) and name, 19 pt semibold, accent, tracking −0.3, gap 6;
+  - the time large: 46 pt rounded semibold, tracking −1, 3 pt below;
+  - "in 2:01:29" (`wIn`), 15 pt medium, secondary, 5 pt below;
+  - during a prohibited time: kerahat dot (7 pt) and "Verbotszeit bis 16:27" (`kerahatNow`), 11.5 pt semibold in `--kerahat-text` (violet for warm accents, § 11.7), 6 pt below;
+  - no city.
+- The background stays removable (`containerBackgroundRemovable(true)`, the default).
+- The timeline of the small family also has entries at the start and end of each prohibited window, so that line appears and disappears on time.
+
+### 12.2 New small widget "Tagesbogen"
+- `systemSmall` only: Home Screen with background (`--bg-cell`), StandBy and CarPlay without. Gallery name "Vaqt" like the other widgets, description `wArcDesc` ("Der Tagesbogen mit dem nächsten Gebet und den Verbotszeiten.").
+- Layout (158 × 158 reference), a centred column with padding 8 / 6:
+  - the arc `ARCS.cpw`, 146 × 84: centre 73 / 100, radius 80, ends at 0.66 rad; markers 15 pt with a 9.5 pt symbol, the current one 18 pt with a 10.5 pt symbol and a 12 pt glow; track 6 pt, kerahat 6 pt on the track (minimum length § 10.1); knob 5 pt, white with a 2 pt accent ring, no shadow; no times; sunrise as a marker (§ 9.14);
+  - inside the arc "{p} · {time}" (12 pt semibold, secondary) and the countdown (25 pt rounded bold, tracking −0.3), flush with the bottom of the arc;
+  - 10 pt below: the location arrow (accent) and the city, 13 pt semibold, secondary – during a prohibited time the kerahat dot and "Verbotszeit bis …" in `--kerahat-text`.
+- Colours as the Home arc: accent, `--arc-track`, `--kerahat`, violet for warm accents. The ring around close markers is `--bg-cell`, with and without background.
+- Timeline from `WidgetTimeline`: an entry at each event, every 10 minutes between Fajr and Isha for the knob, and at the start and end of each prohibited window (as the Lock Screen rectangle).
+
+### 12.3 Live Activity "small"
+- `supplementalActivityFamilies([.small])`. For `activityFamily == .small` the activity has its own view; Lock Screen and Dynamic Island stay unchanged.
+- The drawing of the Lock Screen widget (`ARCS.acc`, 160 × 72 incl. "{p} · {time}" and countdown, § 9.11) centred on the surface of the activity, in the colours of the selected style (`--la-*`, § 11.7), but **at full opacity** instead of 30 %: in the car and in the Smart Stack no wallpaper shows through. Orange in a prohibited time (§ 10.3), violet for warm accents; black and white striped.
+- A header (app icon 14 pt, "Vaqt", the city or "Verbotszeit bis …"; 12 pt semibold, the city at 0.75) only where there is room: 240 × 100. In the flat sizes "Verbotszeit bis …" replaces "{p} · {time}" inside the arc during a prohibited time.
+- No buttons.
+- After the change (`staleDate`, § 10.3): two lines, centred – app icon and "{p} · {time}", below "hat begonnen" (`laBegan`) or, for the green part before a prohibited time, "Verbotszeit ab …" (`kerahatFrom`). The single line of the Lock Screen does not fit into 170 pt.
+
+### 12.4 StandBy
+StandBy shows the small widgets like CarPlay: without background, enlarged, always dark; both small widgets use the arrangement of § 12.1 and § 12.2. The red night mode is drawn by the system.
+
+- Debug: `-debugCatalog carplay` (the small widgets with and without background, the Live Activity "small" after the change) and `-debugCatalog live` (the Live Activity "small" in the four sizes), with `-debugTime`, `-debugAccent`, `-debugLiveStyle`, `-debugLiveInverted` as before.
+- Reference: `carplay/cp-10` … `cp-61` (`INDEX.md`).
+- Open (only the CarPlay Simulator or a car can show it): how CarPlay draws the surface behind a widget, whether the `small` family may draw its own surface (the prototype assumes it may), and how the Live Activity appears as a notice when it starts while another app fills the screen.
+
 ---
 
 ## Changelog
+- **v0.12 (25.11.2026, Phase 19):** CarPlay and StandBy (§ 12): the small widget "Nächstes Gebet" without background in its own arrangement, the new small widget "Tagesbogen", the Live Activity "small" for CarPlay and the Smart Stack of Apple Watch at full opacity; no own CarPlay app.
 - **v0.11 (24./25.11.2026):** Addendum to the changes before the Golden Beta (§ 11.3–11.7): sound only with the iOS default and a hint where to choose it; group "Darstellung" above "Berechnung"; onboarding with five pages (madhab as a menu) and swipe; prohibited times by madhab (Hanafi, Maliki, Schafii, Hanbali) with their own lengths, texts and info sheet sections; Settings › Stil with 24 accent colours (violet prohibited time for Orange, Gold, Sand) and six Live Activity styles at 30 %.
 - **v0.10 (24.11.2026):** Changes before the Golden Beta (§ 11): verse translations as verbatim excerpts of published translations in 15 languages, with the translation named under the card; one adhan recording (Ustadh Mmanga Muharram, DARSA TV, CC BY) instead of three placeholder voices, no Fajr variant switch.
 - **v0.9 (18.11.2026):** Changes after the first beta (§ 10): "Verbotszeit" in German and longer kerahat windows on the arc, info sheet on prohibited times, Live Activity at 30 % with orange prohibited time and compact ended activities (newest on top), Live widget at 30 %, new onboarding title, location and Live Activity hints, honest privacy texts, qada for men and women with reset, Fajr alarm (Phase 17), share link to TestFlight.

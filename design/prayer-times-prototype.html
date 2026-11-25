@@ -1096,6 +1096,127 @@ button.row:disabled{color:var(--label-3)}
 .onb-viewport{touch-action:pan-y;-webkit-user-select:none;user-select:none}   /* Wischen im Onboarding: waagrecht übernimmt die Seite */
 .onb-viewport img{-webkit-user-drag:none}   /* sonst zieht der Browser das App-Symbol statt zu wischen */
 
+/* =====================================================================
+   PHASE 19 (25.11.2026, Spec § 12): CARPLAY UND STANDBY
+   Aus dem Vorschlag „CarPlay und Apple Watch“ vom 24.11.2026, nur „ohne eigene App“, angepasst an „Stil“ (§ 11.7).
+   Maße von Apple: CarPlay-Widget = systemSmall ohne Hintergrund, vergrößert (wie StandBy); Live-Aktivität „klein“
+   240 × 78, 240 × 100, 170 × 78 (CarPlay) und 194 × 80,5 (Smart Stack, Apple Watch 46 mm).
+   Anordnung von Dashboard, Widget-Raster und StandBy angenähert.
+   ===================================================================== */
+/* Rahmen: Autodisplay, Tafeln, StandBy */
+.cwf .frame-label{max-width:100%;font:500 12.5px/1.45 var(--font);letter-spacing:0;text-transform:none;text-align:center;text-wrap:balance}
+.cp-dev,.cw-board,.sb-dev{position:absolute;left:0;top:0;width:var(--dw);height:var(--dh);transform:scale(var(--s));transform-origin:0 0}
+.cp-dev,.sb-dev{padding:14px;border-radius:26px;background:linear-gradient(160deg,#333336 0%,#151516 55%,#09090a 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 40px 80px -30px rgba(0,0,0,.45),0 18px 36px -24px rgba(0,0,0,.4)}
+/* CarPlay */
+.cp-scr{position:relative;display:flex;width:var(--cw);height:var(--ch);overflow:hidden;border-radius:12px;isolation:isolate;
+  background:var(--cp-bg);color:var(--label);font-family:var(--font);text-align:start;letter-spacing:-.2px}
+.cp-scr[data-theme="light"]{--cp-bg:#EEEEF3;--cp-rail:#FFFFFF;--cp-card:#FFFFFF;--cp-ph:rgba(120,120,128,.16);
+  --map-bg:#E7ECEA;--map-road:#FFFFFF;--map-road2:#D5DCD9;--map-park:#CBE5CF;--map-water:#B9D7EA;--map-route:#0A84FF}
+.cp-scr[data-theme="dark"]{--cp-bg:#000000;--cp-rail:#141416;--cp-card:#1C1C1E;--cp-ph:rgba(120,120,128,.3);
+  --map-bg:#1C2023;--map-road:#3B4146;--map-road2:#2A2F33;--map-park:#1D3124;--map-water:#14303F;--map-route:#0A84FF}
+.cp-rail{flex:none;width:var(--rail);display:flex;flex-direction:column;align-items:center;gap:12px;padding:14px 0;background:var(--cp-rail);box-shadow:inset -.5px 0 0 var(--separator)}
+[dir="rtl"] .cp-rail{box-shadow:inset .5px 0 0 var(--separator)}
+.cp-time{font:600 16px/1 var(--font);font-variant-numeric:tabular-nums}
+.cp-sig{display:flex;color:var(--label);opacity:.85}
+.cp-apps{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.cp-apps i{display:block;width:42px;height:42px;border-radius:10px;background:var(--cp-ph)}
+.cp-home{margin-top:auto;display:grid;place-items:center;width:44px;height:44px;border-radius:12px;color:var(--label)}
+.cp-main{position:relative;flex:1;min-width:0;display:flex;gap:16px;padding:16px}
+.cp-wgrid{align-items:center;justify-content:center}
+/* Die Fläche hinter einem Widget zeichnet CarPlay (angenommen: Karte in --cp-card) */
+.cp-slot{position:relative;flex:none;width:var(--slot);height:var(--slot);overflow:hidden;border-radius:calc(var(--slot)*.15);background:var(--cp-card)}
+.cpw{position:absolute;left:0;top:0;width:158px;height:158px;transform:scale(var(--k,1));transform-origin:0 0}
+[dir="rtl"] .cpw{left:auto;right:0;transform-origin:100% 0}
+.cp-ph-w{display:flex;flex-direction:column;justify-content:center;gap:12px;padding:0 calc(var(--slot)*.12)}
+.cp-ph-w i{display:block;height:calc(var(--slot)*.07);border-radius:99px;background:var(--cp-ph)}
+.cp-ph-w i:first-child{width:calc(var(--slot)*.24);height:calc(var(--slot)*.24);border-radius:50%}
+.cp-ph-w i:nth-child(2){width:72%}.cp-ph-w i:nth-child(3){width:46%}
+/* Widget „Nächstes Gebet“ ohne Hintergrund (§ 12.1): Symbol und Gebet, Uhrzeit groß, „in …“, Verbotszeit; ohne Stadt */
+.cpw-next{display:flex;flex-direction:column;justify-content:center;padding:12px 12px 12px 14px}
+.cpw-head{display:flex;align-items:center;gap:6px;color:var(--accent);font:600 19px/1.15 var(--font);letter-spacing:-.3px;white-space:nowrap}
+.cpw-head span{overflow:hidden;text-overflow:ellipsis}
+.cpw-time{margin-top:3px;font:600 46px/1 var(--font-rounded);letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.cpw-in{margin-top:5px;font:500 15px/1.2 var(--font);color:var(--label-2);font-variant-numeric:tabular-nums}
+.cpw-k{display:flex;align-items:center;gap:4px;margin-top:6px;font:600 11.5px/1.2 var(--font);letter-spacing:-.15px;color:var(--kerahat-text);white-space:nowrap}
+.cpw-k span{overflow:hidden;text-overflow:ellipsis}
+.cpw .k-dot{margin:0;width:7px;height:7px;opacity:1}
+/* Widget „Tagesbogen“ (neu, § 12.2): der Bogen mit Sonnenaufgang und Verbotszeiten, darin Gebet · Uhrzeit und Countdown,
+   darunter die Stadt bzw. „Verbotszeit bis …“ – mit Hintergrund auf dem Home-Bildschirm, ohne in StandBy und CarPlay */
+.cpw-arcw{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 6px}
+.cpw-arcbox{position:relative;width:146px;height:84px}
+.cpw-t{position:absolute;left:0;right:0;bottom:0;text-align:center}
+.cpw-name{font:600 12px/15px var(--font);color:var(--label-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.cpw-cd{font:700 25px/1.05 var(--font-rounded);letter-spacing:-.3px;font-variant-numeric:tabular-nums}
+.cpw-sub{display:flex;align-items:center;gap:5px;max-width:100%;margin-top:10px;font:600 13px/1.2 var(--font);color:var(--label-2);white-space:nowrap}
+.cpw-sub span{overflow:hidden;text-overflow:ellipsis}
+.cpw-sub.is-k{color:var(--kerahat-text)}
+.arc-cpw .arc-track,.arc-cpw .arc-done{stroke-width:6}
+.arc-cpw .arc-k.on-track{stroke-width:6}
+/* Ring um eng liegende Gebete in der Farbe der Widget-Fläche (--bg-cell; so auch ohne Hintergrund) */
+.arc-cpw .pm.is-tight .pm-c{stroke:var(--bg-cell)}
+.arc-cpw .arc-now{filter:none}
+.arc-cpw .arc-now circle{fill:#fff;stroke:var(--accent);stroke-width:2}
+/* Dashboard */
+.cp-dash{gap:12px;padding:12px}
+.cp-map{position:relative;flex:1;min-width:0;overflow:hidden;border-radius:14px;background:var(--map-bg)}
+.cp-map svg{position:absolute;inset:0;width:100%;height:100%}
+.m-bg{fill:var(--map-bg)} .m-water{fill:var(--map-water)} .m-park{fill:var(--map-park)}
+.m-road2{fill:none;stroke:var(--map-road2);stroke-width:7}
+.m-road{fill:none;stroke:var(--map-road);stroke-width:13;stroke-linecap:round}
+.m-route{fill:none;stroke:var(--map-route);stroke-width:9;stroke-linecap:round;stroke-linejoin:round}
+.m-puck-h{fill:color-mix(in srgb,var(--map-route) 24%,transparent)} .m-puck{fill:#fff} .m-arrow{fill:var(--map-route)}
+.cp-col{flex:none;display:flex;flex-direction:column;gap:12px}
+.cp-card{position:relative;overflow:hidden;border-radius:16px;background:var(--cp-card)}
+.cp-la{flex:none;background:none}
+.las-fit{transform:scale(var(--k));transform-origin:0 0}
+[dir="rtl"] .las-fit{transform-origin:100% 0}
+.cp-media{flex:1;display:flex;align-items:center;gap:12px;padding:14px}
+.cp-art{flex:none;width:64px;height:64px;border-radius:10px;background:var(--cp-ph)}
+.cp-bars{flex:1;display:flex;flex-direction:column;gap:9px}
+.cp-bars i{display:block;height:10px;border-radius:5px;background:var(--cp-ph)} .cp-bars i+i{width:60%}
+.cp-ctl{color:var(--label-2)}
+.cp-full{padding:0}
+.cp-full .cp-map{border-radius:0}
+.cp-note{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);border-radius:18px;box-shadow:0 10px 34px rgba(0,0,0,.32),0 0 0 .5px rgba(0,0,0,.08)}
+/* Live-Aktivität „klein“ (§ 12.3): Zeichnung des Sperrbildschirm-Widgets (ARCS.acc) auf der Fläche der Live-Aktivität, in den
+   Farben des Stils (--la-*, Block „Stil“) und mit voller Deckkraft – im Auto und im Smart Stack scheint nichts durch */
+.las{position:relative;flex:none;display:flex;flex-direction:column;justify-content:center;overflow:hidden;border-radius:18px;color:var(--la-fg,#fff);text-align:start;
+  background:linear-gradient(160deg,color-mix(in srgb,var(--la-base,var(--accent-l)) var(--la-hi,82%),#fff) 0%,var(--la-base,var(--accent-l)) 50%,color-mix(in srgb,var(--la-base,var(--accent-l)) var(--la-lo,78%),#000) 100%)}
+.las-head{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:0 12px;margin:-1px 0 -3px;font:600 12px/15px var(--font);letter-spacing:-.08px}
+.las-head .la-app{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.las-city{min-width:0;overflow:hidden;opacity:.75;font-weight:500;white-space:nowrap;text-overflow:ellipsis}
+.las.is-kerahat .las-city{opacity:1;font-weight:600;color:var(--la-warn,inherit)}
+.las-arc{position:relative;flex:none;width:160px;height:72px;margin:0 auto}
+.las .acc-name{white-space:nowrap}
+.las .acc-name.is-k{opacity:1;color:var(--la-warn,inherit)}
+.app-icon-img.ai-las{width:14px;height:14px;border-radius:3.5px}
+.las .arc-la .arc-track,.las .arc-la .arc-done,.las .arc-la .arc-k.on-track,.las .arc-la .arc-k-base{stroke-width:5}
+.las .arc-la .pm.is-tight .pm-c{stroke-width:2}
+.las .arc-la .arc-now circle{stroke-width:1.6}
+/* Nach dem Wechsel (staleDate): zwei Zeilen, mittig – die schmale Zeile des Sperrbildschirms (§ 10.3) passt nicht in 170 pt */
+.las-ended{align-items:center;gap:3px;font:600 13px/16px var(--font);letter-spacing:-.08px}
+.las-ended .la-app{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.las-end{opacity:.72;font-weight:500;white-space:nowrap}
+/* Tafeln */
+.cw-board{display:grid;place-items:center;padding:20px 24px;border-radius:22px;background:var(--bg-cell);color:var(--label);box-shadow:0 20px 44px -26px rgba(0,0,0,.35)}
+[data-theme="dark"] .cw-board{background:#000;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.las-sizes,.cws{display:grid;grid-template-columns:repeat(2,auto);gap:20px 28px;justify-content:center;align-items:end}
+.las-sizes figure,.cws figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:8px}
+.las-sizes figcaption,.cws figcaption{max-width:250px;font:500 12px/1.3 var(--font);color:var(--label-2);text-align:center;font-variant-numeric:tabular-nums}
+/* Tafel der kleinen Widgets: mit Hintergrund (Home-Bildschirm) und ohne (StandBy, CarPlay), 158 × 158 wie systemSmall bei 390 pt */
+.cw-board.cw-wboard{background:var(--bg-grouped)}
+.cws{grid-template-columns:repeat(2,170px);align-items:start}
+.cws figcaption{max-width:170px}
+.cws-tile{position:relative;width:158px;height:158px;border-radius:22px}
+.cws-tile.has-bg{background:var(--bg-cell);box-shadow:0 4px 18px rgba(0,0,0,.14)}
+.cws-tile .w-small{position:absolute;left:0;top:0;width:158px;height:158px}
+/* StandBy (angenähert): iPhone quer, schwarz, zwei Widgets ohne Hintergrund, vergrößert */
+.sb-dev{padding:12px;border-radius:64px}
+.sb-scr{position:relative;display:flex;align-items:center;justify-content:center;gap:44px;width:844px;height:390px;overflow:hidden;border-radius:52px;
+  background:#000;color:var(--label);font-family:var(--font);text-align:start;letter-spacing:-.2px}
+.sb-slot{position:relative;flex:none;width:310px;height:310px}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
@@ -1977,6 +2098,27 @@ Object.assign(T.bn, {"style": "স্টাইল", "styleColor": "মূল র
 Object.assign(T.fa, {"style": "سبک", "styleColor": "رنگ اصلی", "col_teal": "نفتی", "col_green": "سبز", "col_blue": "آبی", "col_violet": "بنفش", "col_berry": "تمشکی", "col_graphite": "گرافیتی", "col_cyan": "فیروزه‌ای", "col_grass": "چمنی", "col_indigo": "نیلی", "col_orchid": "ارکیده‌ای", "col_orange": "نارنجی", "col_gold": "طلایی", "col_ocean": "اقیانوسی", "col_forest": "کاجی", "col_navy": "سرمه‌ای", "col_plum": "بادمجانی", "col_wine": "زرشکی", "col_mono": "تک‌رنگ", "col_mint": "نعنایی", "col_sage": "مریم‌گلی", "col_ice": "آبی غباری", "col_lavender": "اسطوخودوسی", "col_mauve": "یاسی", "col_sand": "شنی", "styleColorFooter": "برای برنامه، ابزارک‌ها و فعالیت زنده اعمال می‌شود. با نارنجی، طلایی و شنی، اوقات مکروه به‌جای نارنجی، بنفش نشان داده می‌شوند.", "laFull": "رنگی", "laArc": "فقط کمان", "laMono": "سیاه و سفید", "laInvert": "معکوس", "laInvertSub": "پس‌زمینه روشن، نوشته تیره. برای تصویرهای زمینه روشن.", "styleLiveFooter": "برای ابزارک دارای کمان در صفحهٔ اصلی هم اعمال می‌شود. شفافیت در همه حالت‌ها یکسان است.", "styleReset": "بازگرداندن پیش‌فرض", "styleMoreColors": "رنگ‌های بیشتر", "styleLessColors": "رنگ‌های کمتر", "soundSystemFooter": "اینکه این کدام صدا باشد را در تنظیمات iOS، در بخش «صداها و بازخورد لمسی» انتخاب می‌کنید. یک برنامه نمی‌تواند صداهای Apple را خودش برای انتخاب عرضه کند.", "madhab": "مذهب", "madhab_hanafi": "حنفی", "madhab_maliki": "مالکی", "madhab_shafii": "شافعی", "madhab_hanbali": "حنبلی", "madhabAdj_hanafi": "حنفی", "madhabAdj_maliki": "مالکی", "madhabAdj_shafii": "شافعی", "madhabAdj_hanbali": "حنبلی", "madhabSub_hanafi": "اوقات مکروه هنگام طلوع آفتاب، پیش از ظهر و پیش از غروب آفتاب", "madhabSub_maliki": "اوقات مکروه هنگام طلوع آفتاب و پیش از غروب آفتاب", "madhabSub_shafii": "اوقات مکروه هنگام طلوع آفتاب، پیش از ظهر (جز روز جمعه) و پیش از غروب آفتاب", "madhabSub_hanbali": "اوقات مکروه هنگام طلوع آفتاب، پیش از ظهر و پیش از غروب آفتاب", "madhabFooter": "تعیین می‌کند برنامه کدام اوقات مکروه را نشان دهد و چگونه آن‌ها را توضیح دهد. وقت عصر را جداگانه در «{asr}» تنظیم می‌کنید.", "kerahatFooter_maliki": "با علامتی کم‌رنگ روی کمان و کنار اوقات مشخص شده‌اند: حدود 20 دقیقه پس از طلوع آفتاب و 20 دقیقه پیش از مغرب. بر اساس مذهب مالکی در این اوقات نماز نفل خوانده نمی‌شود.", "kerahatFooter_shafii": "با علامتی کم‌رنگ روی کمان و کنار اوقات مشخص شده‌اند: حدود 25 دقیقه پس از طلوع آفتاب، 10 دقیقه پیش از ظهر (جز روز جمعه) و 25 دقیقه پیش از مغرب. بر اساس مذهب شافعی در این اوقات نماز نفل خوانده نمی‌شود.", "kerahatFooter_hanbali": "با علامتی کم‌رنگ روی کمان و کنار اوقات مشخص شده‌اند: حدود 20 دقیقه پس از طلوع آفتاب، 10 دقیقه پیش از ظهر و 20 دقیقه پیش از مغرب. بر اساس مذهب حنبلی در این اوقات نماز نفل خوانده نمی‌شود.", "kerahatP1_maliki": "اوقات مکروه بر اساس مذهب مالکی دو بازه کوتاه در روز است که در آن‌ها نماز نفل خوانده نمی‌شود: هنگام طلوع آفتاب و پیش از غروب آفتاب. مذهب مالکی نیمروز را، وقتی خورشید در بالاترین نقطه است، جزو آن‌ها نمی‌شمارد.", "kerahatP1_shafii": "اوقات مکروه سه بازه کوتاه در روز است که در آن‌ها نماز نفل خوانده نمی‌شود. بر اساس مذهب شافعی، بازه پیش از ظهر در روز جمعه اعمال نمی‌شود؛ این مذهب برای مکه استثنای دیگری هم قائل است.", "kerahatP1_hanbali": "اوقات مکروه سه بازه کوتاه در روز است که در آن‌ها نماز نفل خوانده نمی‌شود.", "kerahatAfterTitle": "پس از نماز صبح و نماز عصر", "kerahatAfterBody": "پس از نماز صبح تا طلوع آفتاب و پس از نماز عصر تا غروب آفتاب نماز نفل خوانده نمی‌شود. هر چهار مذهب در این باره هم‌نظرند. چون این اوقات با نماز خود شما آغاز می‌شوند، برنامه آن‌ها را روی کمان نشان نمی‌دهد.", "kerahatQadaTitle": "قضای نمازهای فوت‌شده", "kerahatQadaHanafi": "بر اساس مذهب حنفی، نماز فوت‌شده را در این سه بازه قضا نمی‌کنید – فقط عصر همان روز را پیش از غروب آفتاب باز هم می‌خوانید. پس از نماز صبح و نماز عصر می‌توانید قضا کنید.", "kerahatQadaOther": "بر اساس مذهب {school} می‌توانید نماز فرض فوت‌شده را در اوقات مکروه هم قضا کنید. این نهی بیشتر به نمازهای نفل مربوط است.", "kerahatOtherTitle": "نمازهای دیگر", "kerahatOtherBody": "درباره نماز جنازه و نمازهایی که سبب خاصی دارند، مانند تحیت مسجد، مذاهب نظرهای متفاوتی دارند. در صورت تردید از امامی از مذهب خود بپرسید.", "kerahatFoot_maliki": "بر اساس مذهب مالکی (تنظیمات › مذهب). بازه‌ها تقریبی‌اند: 20 دقیقه پس از طلوع آفتاب و 20 دقیقه پیش از غروب آفتاب.", "kerahatFoot_shafii": "بر اساس مذهب شافعی (تنظیمات › مذهب). بازه‌ها تقریبی‌اند: 25 دقیقه پس از طلوع آفتاب، 10 دقیقه پیش از ظهر و 25 دقیقه پیش از غروب آفتاب.", "kerahatFoot_hanbali": "بر اساس مذهب حنبلی (تنظیمات › مذهب). بازه‌ها تقریبی‌اند: 20 دقیقه پس از طلوع آفتاب، 10 دقیقه پیش از ظهر و 20 دقیقه پیش از غروب آفتاب.", "obMadhabTitle": "مذهب شما", "obMadhabBody": "اوقات مکروه و توضیح آن‌ها بر این اساس تعیین می‌شوند. بعداً می‌توانید آن را در تنظیمات تغییر دهید."});
 Object.assign(T.ru, {"style": "Стиль", "styleColor": "Основной цвет", "col_teal": "Морская волна", "col_green": "Зелёный", "col_blue": "Синий", "col_violet": "Фиолетовый", "col_berry": "Ягодный", "col_graphite": "Графитовый", "col_cyan": "Бирюзовый", "col_grass": "Травяной", "col_indigo": "Индиго", "col_orchid": "Орхидея", "col_orange": "Оранжевый", "col_gold": "Золотой", "col_ocean": "Океан", "col_forest": "Хвойный", "col_navy": "Тёмно-синий", "col_plum": "Баклажановый", "col_wine": "Бордовый", "col_mono": "Моно", "col_mint": "Мятный", "col_sage": "Шалфей", "col_ice": "Сизый", "col_lavender": "Лавандовый", "col_mauve": "Мальвовый", "col_sand": "Песочный", "styleColorFooter": "Действует для приложения, виджетов и Live Activity. При оранжевом, золотом и песочном цвете время макрух отмечается фиолетовым, а не оранжевым.", "laFull": "Цветной", "laArc": "Только дуга", "laMono": "Чёрно-белый", "laInvert": "Инвертированный", "laInvertSub": "Светлый фон, тёмный текст. Для светлых обоев.", "styleLiveFooter": "Действует и для виджета с дугой на экране «Домой». Прозрачность во всех вариантах одинаковая.", "styleReset": "Восстановить по умолчанию", "styleMoreColors": "Больше цветов", "styleLessColors": "Меньше цветов", "soundSystemFooter": "Какой это звук, вы выбираете в Настройках iOS в разделе «Звуки, тактильные сигналы». Приложение не может само предложить звуки Apple на выбор.", "madhab": "Мазхаб", "madhab_hanafi": "Ханафитский", "madhab_maliki": "Маликитский", "madhab_shafii": "Шафиитский", "madhab_hanbali": "Ханбалитский", "madhabAdj_hanafi": "ханафитскому", "madhabAdj_maliki": "маликитскому", "madhabAdj_shafii": "шафиитскому", "madhabAdj_hanbali": "ханбалитскому", "madhabSub_hanafi": "Время макрух при восходе, перед Зухром и перед закатом", "madhabSub_maliki": "Время макрух при восходе и перед закатом", "madhabSub_shafii": "Время макрух при восходе, перед Зухром (не в пятницу) и перед закатом", "madhabSub_hanbali": "Время макрух при восходе, перед Зухром и перед закатом", "madhabFooter": "Определяет, какое время макрух показывает приложение и как его объясняет. Время Асра вы задаёте отдельно в разделе «{asr}».", "kerahatFooter_maliki": "Неброско отмечено на дуге и рядом со временем намазов: примерно 20 мин после восхода и 20 мин до Магриба. По маликитскому мазхабу в это время не совершают добровольных намазов.", "kerahatFooter_shafii": "Неброско отмечено на дуге и рядом со временем намазов: примерно 25 мин после восхода, 10 мин до Зухра (не в пятницу) и 25 мин до Магриба. По шафиитскому мазхабу в это время не совершают добровольных намазов.", "kerahatFooter_hanbali": "Неброско отмечено на дуге и рядом со временем намазов: примерно 20 мин после восхода, 10 мин до Зухра и 20 мин до Магриба. По ханбалитскому мазхабу в это время не совершают добровольных намазов.", "kerahatP1_maliki": "По маликитскому мазхабу время макрух – это два коротких промежутка в течение дня, когда не совершают добровольных намазов: при восходе и перед закатом. Полдень, когда солнце в зените, маликитский мазхаб к ним не относит.", "kerahatP1_shafii": "Время макрух – это три коротких промежутка в течение дня, когда не совершают добровольных намазов. По шафиитскому мазхабу промежуток перед Зухром в пятницу не действует; для Мекки этот мазхаб делает ещё одно исключение.", "kerahatP1_hanbali": "Время макрух – это три коротких промежутка в течение дня, когда не совершают добровольных намазов.", "kerahatAfterTitle": "После намазов Фаджр и Аср", "kerahatAfterBody": "После намаза Фаджр до восхода и после намаза Аср до заката не совершают добровольных намазов. В этом согласны все четыре мазхаба. Поскольку это время начинается с вашего собственного намаза, приложение не показывает его на дуге.", "kerahatQadaTitle": "Восполнение пропущенных намазов", "kerahatQadaHanafi": "По ханафитскому мазхабу пропущенный намаз не восполняют в эти три промежутка – только Аср того же дня ещё совершают перед закатом. После намазов Фаджр и Аср восполнять можно.", "kerahatQadaOther": "По {school} мазхабу пропущенный обязательный намаз можно восполнить и во время макрух. Запреты касаются прежде всего добровольных намазов.", "kerahatOtherTitle": "Другие намазы", "kerahatOtherBody": "В отношении джаназа-намаза и намазов по особому поводу, например намаза приветствия мечети, мазхабы расходятся. Если сомневаетесь, спросите имама своего мазхаба.", "kerahatFoot_maliki": "По маликитскому мазхабу (Настройки › Мазхаб). Время указано приблизительно: 20 минут после восхода и 20 минут до заката.", "kerahatFoot_shafii": "По шафиитскому мазхабу (Настройки › Мазхаб). Время указано приблизительно: 25 минут после восхода, 10 минут до Зухра и 25 минут до заката.", "kerahatFoot_hanbali": "По ханбалитскому мазхабу (Настройки › Мазхаб). Время указано приблизительно: 20 минут после восхода, 10 минут до Зухра и 20 минут до заката.", "obMadhabTitle": "Ваш мазхаб", "obMadhabBody": "От него зависят время макрух и то, как оно объясняется. Вы можете изменить его позже в Настройках."});
 Object.assign(T.it, {"style": "Stile", "styleColor": "Colore principale", "col_teal": "Petrolio", "col_green": "Verde", "col_blue": "Blu", "col_violet": "Viola", "col_berry": "Lampone", "col_graphite": "Grafite", "col_cyan": "Turchese", "col_grass": "Erba", "col_indigo": "Indaco", "col_orchid": "Orchidea", "col_orange": "Arancione", "col_gold": "Oro", "col_ocean": "Oceano", "col_forest": "Abete", "col_navy": "Blu notte", "col_plum": "Melanzana", "col_wine": "Bordeaux", "col_mono": "Mono", "col_mint": "Menta", "col_sage": "Salvia", "col_ice": "Blu polvere", "col_lavender": "Lavanda", "col_mauve": "Malva", "col_sand": "Sabbia", "styleColorFooter": "Vale per l’app, i widget e l’Attività in tempo reale. Con Arancione, Oro e Sabbia, i momenti makruh sono viola anziché arancioni.", "laFull": "A colori", "laArc": "Solo arco", "laMono": "Bianco e nero", "laInvert": "Invertito", "laInvertSub": "Sfondo chiaro, testo scuro. Per sfondi chiari.", "styleLiveFooter": "Vale anche per il widget con l’arco nella schermata Home. La trasparenza è uguale in tutte le varianti.", "styleReset": "Ripristina predefiniti", "styleMoreColors": "Altri colori", "styleLessColors": "Meno colori", "soundSystemFooter": "Il suono preciso lo scegli nelle Impostazioni di iOS, in “Suoni e feedback aptico”. Un’app non può offrire da sola la scelta dei suoni di Apple.", "madhab": "Scuola giuridica", "madhab_hanafi": "Hanafita", "madhab_maliki": "Malikita", "madhab_shafii": "Shafiita", "madhab_hanbali": "Hanbalita", "madhabAdj_hanafi": "hanafita", "madhabAdj_maliki": "malikita", "madhabAdj_shafii": "shafiita", "madhabAdj_hanbali": "hanbalita", "madhabSub_hanafi": "Momenti makruh all’alba, prima di Dhuhr e prima del tramonto", "madhabSub_maliki": "Momenti makruh all’alba e prima del tramonto", "madhabSub_shafii": "Momenti makruh all’alba, prima di Dhuhr (non il venerdì) e prima del tramonto", "madhabSub_hanbali": "Momenti makruh all’alba, prima di Dhuhr e prima del tramonto", "madhabFooter": "Stabilisce quali momenti makruh mostra l’app e come li spiega. L’orario dell’Asr lo imposti a parte in “{asr}”.", "kerahatFooter_maliki": "Segnati con discrezione sull’arco e accanto agli orari: circa 20 min dopo l’alba e 20 min prima di Maghrib. Secondo la scuola malikita, in questi momenti non si compiono preghiere facoltative.", "kerahatFooter_shafii": "Segnati con discrezione sull’arco e accanto agli orari: circa 25 min dopo l’alba, 10 min prima di Dhuhr (non il venerdì) e 25 min prima di Maghrib. Secondo la scuola shafiita, in questi momenti non si compiono preghiere facoltative.", "kerahatFooter_hanbali": "Segnati con discrezione sull’arco e accanto agli orari: circa 20 min dopo l’alba, 10 min prima di Dhuhr e 20 min prima di Maghrib. Secondo la scuola hanbalita, in questi momenti non si compiono preghiere facoltative.", "kerahatP1_maliki": "Secondo la scuola malikita, i momenti makruh sono due brevi fasce della giornata in cui non si compiono preghiere facoltative: all’alba e prima del tramonto. La scuola malikita non vi include il mezzogiorno, quando il sole è al punto più alto.", "kerahatP1_shafii": "I momenti makruh sono tre brevi fasce della giornata in cui non si compiono preghiere facoltative. Secondo la scuola shafiita, la fascia prima di Dhuhr non vale il venerdì; per la Mecca la scuola fa un’altra eccezione.", "kerahatP1_hanbali": "I momenti makruh sono tre brevi fasce della giornata in cui non si compiono preghiere facoltative.", "kerahatAfterTitle": "Dopo le preghiere del Fajr e dell’Asr", "kerahatAfterBody": "Dopo la preghiera del Fajr fino al sorgere del sole e dopo la preghiera dell’Asr fino al tramonto non si compiono preghiere facoltative. Su questo concordano tutte e quattro le scuole giuridiche. Poiché questi momenti iniziano con la tua preghiera, l’app non li mostra sull’arco.", "kerahatQadaTitle": "Recuperare le preghiere mancate", "kerahatQadaHanafi": "Secondo la scuola hanafita, non recuperi una preghiera mancata in queste tre fasce – solo l’Asr dello stesso giorno lo preghi ancora prima del tramonto. Dopo le preghiere del Fajr e dell’Asr puoi recuperarla.", "kerahatQadaOther": "Secondo la scuola {school}, puoi recuperare una preghiera obbligatoria mancata anche nei momenti makruh. I divieti riguardano soprattutto le preghiere facoltative.", "kerahatOtherTitle": "Altre preghiere", "kerahatOtherBody": "Per la preghiera funebre e per le preghiere legate a un’occasione particolare, come la preghiera di saluto alla moschea, le scuole giuridiche differiscono. Nel dubbio, chiedi a un imam della tua scuola giuridica.", "kerahatFoot_maliki": "Secondo la scuola malikita (Impostazioni › Scuola giuridica). Gli intervalli sono approssimativi: 20 minuti dopo l’alba e 20 minuti prima del tramonto.", "kerahatFoot_shafii": "Secondo la scuola shafiita (Impostazioni › Scuola giuridica). Gli intervalli sono approssimativi: 25 minuti dopo l’alba, 10 minuti prima di Dhuhr e 25 minuti prima del tramonto.", "kerahatFoot_hanbali": "Secondo la scuola hanbalita (Impostazioni › Scuola giuridica). Gli intervalli sono approssimativi: 20 minuti dopo l’alba, 10 minuti prima di Dhuhr e 20 minuti prima del tramonto.", "obMadhabTitle": "La tua scuola giuridica", "obMadhabBody": "Da essa dipendono i momenti makruh e la loro spiegazione. Puoi cambiarla in seguito nelle Impostazioni."});
+/* ===== Phase 19 (25.11.2026, Spec § 12): Beschreibung des neuen Widgets „Tagesbogen“ in der Galerie =====
+   Deutsch, Türkisch und Englisch entworfen; die 13 weiteren Sprachen als KI-Entwurf (vor dem App Store von Muttersprachlern prüfen). */
+const NEW_2511 = {
+  de:{wArcDesc:'Der Tagesbogen mit dem nächsten Gebet und den Verbotszeiten.'},
+  tr:{wArcDesc:'Sıradaki namaz ve kerahat vakitleriyle günün yayı.'},
+  en:{wArcDesc:'The day arc with the next prayer and the makruh times.'},
+  es:{wArcDesc:'El arco del día con la próxima oración y los tiempos makruh.'},
+  fr:{wArcDesc:'L’arc du jour avec la prochaine prière et les heures makrouh.'},
+  nl:{wArcDesc:'De dagboog met het volgende gebed en de makroeh-tijden.'},
+  bs:{wArcDesc:'Dnevni luk sa sljedećim namazom i mekruh vaktima.'},
+  sq:{wArcDesc:'Harku i ditës me namazin e radhës dhe kohët mekruh.'},
+  ar:{wArcDesc:'قوس اليوم مع الصلاة التالية وأوقات الكراهة.'},
+  ur:{wArcDesc:'اگلی نماز اور مکروہ اوقات کے ساتھ دن کی قوس۔'},
+  id:{wArcDesc:'Busur hari dengan salat berikutnya dan waktu makruh.'},
+  ms:{wArcDesc:'Lengkok hari dengan solat seterusnya dan waktu makruh.'},
+  bn:{wArcDesc:'পরবর্তী নামাজ ও মাকরুহ সময়সহ দিনের বৃত্তচাপ।'},
+  fa:{wArcDesc:'کمان روز با نماز بعدی و اوقات مکروه.'},
+  ru:{wArcDesc:'Дуга дня со следующим намазом и временем макрух.'},
+  it:{wArcDesc:'L’arco del giorno con la prossima preghiera e i momenti makruh.'}
+};
+Object.keys(NEW_2511).forEach(k => Object.assign(T[k], NEW_2511[k]));
 const PLURAL = {
   de: {
     arcPrayers:{text:'{n}', n:{one:'{n} von 5 Gebetszeiten hat heute begonnen', other:'{n} von 5 Gebetszeiten haben heute begonnen'}},
@@ -2192,6 +2334,7 @@ const S = {
   /* Nachtrag zu Phase 18: Stil der Live-Aktivität ('full' farbig | 'arc' nur Bogen | 'mono' schwarz-weiß), invertiert; `accent` steht oben beim Panel */
   palOpen:null /* Farbraster aufgeklappt; null = von der Wahl abhängig (aufgeklappt, wenn eine weitere Farbe gewählt ist) */,
   laStyle:'full', laInv:false,
+  cpScreen:'wide' /* Phase 19 (nur Werkzeug): Bildschirm im Auto 'wide' 8 : 3 | 'std' 5 : 3 */,
   adhan:{playing:false, pos:0},
   qibla:{heading:99, drag:false},
   search:{method:'', city:''},
@@ -3241,6 +3384,126 @@ function homeScreenHTML(island){
 }
 
 /* =====================================================================
+   8b) PHASE 19 (25.11.2026, Spec § 12): CARPLAY UND STANDBY
+   Aus dem Vorschlag „CarPlay und Apple Watch“ vom 24.11.2026, nur „ohne eigene App“: Eine eigene CarPlay-App gibt es nicht
+   (entschieden am 25.11.2026), die Apple Watch kommt in Phase 20 bis 22. Angepasst an „Stil“ (§ 11.7).
+   - CarPlay zeigt nur Widgets der Größe systemSmall, ohne ihren Hintergrund und vergrößert – wie StandBy. Antippen öffnet nichts.
+   - Live-Aktivität in der Familie „small“: CarPlay 240 × 78, 240 × 100, 170 × 78 pt; Smart Stack der Uhr (46 mm) 194 × 80,5 pt.
+   Anordnung von Dashboard, Widget-Raster und StandBy angenähert. Quellen: docs/vorschlaege/2026-11-24/carplay-watch.md
+   ===================================================================== */
+/* Bögen: Live-Aktivität „klein“ = Maße des Sperrbildschirm-Widgets in den Farben der Live-Aktivität; Widget „Tagesbogen“ */
+ARCS.lasm = {...ARCS.acc, kBase:false};
+ARCS.cpw  = {w:146, h:84, cx:73, cy:100, r:80, a0:.66, m:7.5, mc:9, is:9.5, isc:10.5, sw:2.4, glow:12, knob:5, lw:0, lh:0, gap:0, below:0, k:0, times:false};
+/* Bildschirme im Auto (pt, angenähert): breit 8 : 3 wie 1920 × 720 px, Standard 5 : 3 wie 800 × 480 */
+const CP = {wide:{w:960, h:360, rail:64}, std:{w:800, h:480, rail:74}};
+/* Live-Aktivität „small“: Maße aus den HIG */
+const LAS = {w:[240, 78], t:[240, 100], n:[170, 78], watch:[194, 80.5]};
+/* Kleines Widget: systemSmall auf einem iPhone mit 390 pt Breite; CarPlay und StandBy vergrößern es */
+const CPW = 158;
+/* Widgets im Auto: auf dem breiten Bildschirm drei nebeneinander, auf dem Standardbildschirm zwei (angenommen) */
+const cwCols = () => S.cpScreen === 'wide' ? 3 : 2;
+const cwSlot = c => Math.floor(Math.min(c.h - 40, (c.w - c.rail - 32 - (cwCols() - 1)*16)/cwCols()));
+const cwLabel = ph => { const k = activeKerahat(ph); return (k ? t('kerahatNow',{b:fmt(k.b)}) + ', ' : '') + laLabel(ph) + ' ' + cdText(ph.remaining); };
+function cwFrame(key, label, w, h, inner){
+  return `<div class="frame-col cwf" data-cw="${key}" style="--dw:${w}px;--dh:${h}px"><div class="frame">${inner}</div><div class="frame-label" lang="de">${label}</div></div>`;
+}
+/* Live-Aktivität „klein“ (§ 12.3): in der Verbotszeit orange bzw. violett (Block „Stil“), Kopfzeile nur in 240 × 100 – in den
+   flachen Größen steht „Verbotszeit bis …“ im Bogen an der Stelle von Gebet und Uhrzeit. Keine Knöpfe. */
+function laSmall(ph, size){
+  const [W, H] = LAS[size], nx = ph.next, k = activeKerahat(ph), head = size === 't', kt = k ? t('kerahatNow',{b:fmt(k.b)}) : '';
+  return `<div class="las las-${size} ${k ? 'is-kerahat' : ''}" ${laAttr()} style="width:${W}px;height:${H}px" role="img" aria-label="${esc(cwLabel(ph))}">
+    ${head ? `<div class="las-head"><span class="la-app">${appIconImg(14, 'ai-la ai-las', 'light')}<span>${t('appName')}</span></span><span class="las-city">${k ? kt : cityName()}</span></div>` : ''}
+    <div class="las-arc">${arcHTML(ph, 'lasm', 'la')}<div class="acc-text"><div class="acc-name ${k && !head ? 'is-k' : ''}">${k && !head ? kt : `${t('p_' + nx.p)} · ${fmt(nx.at/60)}`}</div>
+      <div class="acc-count" data-tick="cd">${cdDigital(ph.remaining)}</div></div></div></div>`;
+}
+/* Nach dem Wechsel (staleDate, § 10.3): Gebet · Uhrzeit und „hat begonnen“ bzw. beim grünen Teil vor einer Verbotszeit
+   „Verbotszeit ab …“ – zwei Zeilen, mittig */
+function laSmallEnded(ph, size){
+  const [W, H] = LAS[size], kNow = activeKerahat(ph), pv = ph.prev;
+  const [p, at, right, orange] = kNow && kNow.id !== 'sunrise' ? [ph.next.p, ph.next.at/60, t('kerahatFrom',{a:fmt(kNow.a)}), false]
+    : [pv.p, pv.at/60, t('laBegan'), kerahatWins(ph.t).some(w => w.id !== 'sunrise' && Math.abs(w.b*60 - pv.at) < 90)];
+  return `<div class="las las-ended ${orange ? 'is-kerahat' : ''}" ${laAttr()} style="width:${W}px;height:${H}px" role="img" aria-label="${esc(t('p_' + p) + ' ' + fmt(at) + ', ' + right)}">
+    <span class="la-app">${appIconImg(16, 'ai-la', 'light')}<span>${t('p_' + p)} · ${fmt(at)}</span></span><span class="las-end">${right}</span></div>`;
+}
+
+/* --- CarPlay ohne eigene App --- */
+function cpFrame(key, label, mainCls, inner){
+  const c = CP[S.cpScreen];
+  return cwFrame(key, label, c.w + 28, c.h + 28, `<div class="cp-dev"><div class="cp-scr" data-theme="${S.sysTheme}" dir="${S.rtl ? 'rtl' : 'ltr'}" lang="${S.lang}" style="--cw:${c.w}px;--ch:${c.h}px;--rail:${c.rail}px">
+    <div class="cp-rail" aria-hidden="true"><span class="cp-time" data-tick="clock">${fmtClock()}</span><span class="cp-sig">${SB.signal}</span><span class="cp-apps"><i></i><i></i><i></i></span>
+      <span class="cp-home"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7.8" height="7.8" rx="2.2"/><rect x="13.2" y="3" width="7.8" height="7.8" rx="2.2"/><rect x="3" y="13.2" width="7.8" height="7.8" rx="2.2"/><rect x="13.2" y="13.2" width="7.8" height="7.8" rx="2.2"/></svg></span></div>
+    <div class="cp-main ${mainCls}">${inner}</div></div></div>`);
+}
+/* Widget „Nächstes Gebet“ ohne Hintergrund (§ 12.1): das bisherige kleine Widget, größer gesetzt, ohne Stadt */
+function cpwNext(ph){
+  const nx = ph.next, k = activeKerahat(ph);
+  return `<div class="cpw cpw-next" role="img" aria-label="${esc(t('p_' + nx.p) + ' ' + fmt(nx.at/60) + ', ' + cwLabel(ph))}">
+    <div class="cpw-head">${ic(PICON[nx.p], 22)}<span>${t('p_' + nx.p)}</span></div><div class="cpw-time">${fmt(nx.at/60)}</div>
+    <div class="cpw-in" data-tick="wcount">${t('wIn',{t:cdDigital(ph.remaining)})}</div>
+    ${k ? `<div class="cpw-k"><i class="k-dot" aria-hidden="true"></i><span>${t('kerahatNow',{b:fmt(k.b)})}</span></div>` : ''}</div>`;
+}
+/* Widget „Tagesbogen“ (§ 12.2): der Bogen mit Sonnenaufgang und Verbotszeiten (§ 9.11, § 9.14, § 10.1) */
+function cpwArc(ph){
+  const nx = ph.next, k = activeKerahat(ph);
+  return `<div class="cpw cpw-arcw" role="img" aria-label="${esc(cwLabel(ph))}"><div class="cpw-arcbox">${arcHTML(ph, 'cpw')}
+      <div class="cpw-t"><div class="cpw-name">${t('p_' + nx.p)} · ${fmt(nx.at/60)}</div><div class="cpw-cd" data-tick="cd">${cdDigital(ph.remaining)}</div></div></div>
+    <div class="cpw-sub ${k ? 'is-k' : ''}">${k ? `<i class="k-dot" aria-hidden="true"></i><span>${t('kerahatNow',{b:fmt(k.b)})}</span>` : `${ic('locFill',12,'accent')}<span>${cityName()}</span>`}</div></div>`;
+}
+/* Das kleine Widget mit Hintergrund wie auf dem Home-Bildschirm (`homeScreenHTML()`), für die Tafel */
+function wSmallHTML(ph){
+  const nx = ph.next, nxName = t('p_' + nx.p), nxTime = fmt(nx.at/60);
+  return `<div class="w w-small" role="img" aria-label="${esc(nxName + ' ' + nxTime)}"><div class="w-top"><span class="w-city">${cityName()}</span>${ic(PICON[nx.p],20,'accent')}</div>
+      <div><div class="w-name">${nxName}</div><div class="w-time">${nxTime}</div><div class="w-count" data-tick="wcount">${t('wIn',{t:cdDigital(ph.remaining)})}</div></div></div>`;
+}
+function cpMapSVG(full){
+  const y0 = full ? 262 : 330, yp = full ? 240 : 300;   // mit Hinweis unten: Standort weiter oben, damit er sichtbar bleibt
+  return `<svg viewBox="0 0 600 360" preserveAspectRatio="xMidYMid slice"><rect class="m-bg" width="600" height="360"/>
+    <path class="m-water" d="M430 0H600V160C560 170 528 196 488 186S440 120 430 0Z"/><path class="m-park" d="M40 232L132 204L182 262L144 334L36 322Z"/>
+    <path class="m-road2" d="M0 122L600 82M118 0L178 360M300 0L262 360M0 300L600 242M470 360L560 0"/>
+    <path class="m-road" d="M0 212C150 202 240 172 330 192S520 252 600 232M250 0C260 120 280 220 370 360"/>
+    <path class="m-route" d="M300 ${y0}C300 ${full ? 222 : 272} 292 ${full ? 212 : 232} 330 192S440 152 470 92S520 32 560 10"/>
+    <g transform="translate(300 ${yp})"><circle class="m-puck-h" r="17"/><circle class="m-puck" r="10"/><path class="m-arrow" d="M0 -6L5 5L0 2.5L-5 5Z"/></g></svg>`;
+}
+/* Tafel: die kleinen Widgets mit Hintergrund (Home-Bildschirm) und ohne (StandBy, CarPlay), in Originalgröße */
+function cwSmallHTML(ph){
+  const tile = (inner, bg, cap) => `<figure><div class="cws-tile ${bg ? 'has-bg' : ''}">${inner}</div><figcaption>${cap}</figcaption></figure>`;
+  return `<div class="cw-board cw-wboard" data-theme="${S.sysTheme}" dir="${S.rtl ? 'rtl' : 'ltr'}" lang="${S.lang}"><div class="cws">
+    ${tile(wSmallHTML(ph), false, 'Nächstes Gebet · mit Hintergrund')}${tile(cpwArc(ph), true, 'Tagesbogen · mit Hintergrund')}
+    ${tile(cpwNext(ph), false, 'Nächstes Gebet · ohne Hintergrund')}${tile(cpwArc(ph), false, 'Tagesbogen · ohne Hintergrund')}</div></div>`;
+}
+/* StandBy (angenähert): immer dunkel, zwei Widgets ohne Hintergrund nebeneinander */
+function cwStandbyHTML(ph){
+  const sl = inner => `<div class="sb-slot" style="--k:${(310/CPW).toFixed(3)}">${inner}</div>`;
+  return `<div class="sb-dev"><div class="sb-scr" data-theme="dark" dir="${S.rtl ? 'rtl' : 'ltr'}" lang="${S.lang}">${sl(cpwArc(ph))}${sl(cpwNext(ph))}</div></div>`;
+}
+function cwCarPlayHTML(){
+  const ph = phase(nowSec()), c = CP[S.cpScreen], slot = cwSlot(c), k = (slot/CPW).toFixed(3);
+  const sl = inner => `<div class="cp-slot" style="--slot:${slot}px;--k:${k}">${inner}</div>`;
+  const colW = Math.round((c.w - c.rail - 36)*.36), size = S.cpScreen === 'wide' ? 'w' : 't', [W, H] = LAS[size], f = colW/W;
+  const cap = {w:'CarPlay · 240 × 78 pt', t:'CarPlay · 240 × 100 pt, mit Kopfzeile', n:'CarPlay · 170 × 78 pt', watch:'Smart Stack, Apple Watch 46 mm · 194 × 80,5 pt'};
+  const three = cwCols() === 3;
+  return cpFrame('cp-widgets', `CarPlay · Widgets links vom Dashboard · Vaqt „Nächstes Gebet“ und „Tagesbogen“${three ? ', rechts das Widget einer anderen App' : ''} · Anordnung angenähert`, 'cp-wgrid',
+      sl(cpwNext(ph)) + sl(cpwArc(ph)) + (three ? `<div class="cp-slot cp-ph-w" style="--slot:${slot}px" aria-hidden="true"><i></i><i></i><i></i></div>` : ''))
+    + cpFrame('cp-dash', 'CarPlay · Dashboard mit der Live-Aktivität „klein“ (ab 30 Min. vor dem Gebet), daneben Karte und Musik · angenähert', 'cp-dash',
+      `<div class="cp-map" aria-hidden="true">${cpMapSVG()}</div><div class="cp-col" style="width:${colW}px">
+        <div class="cp-card cp-la" style="height:${(H*f).toFixed(1)}px"><div class="las-fit" style="--k:${f.toFixed(3)}">${laSmall(ph, size)}</div></div>
+        <div class="cp-card cp-media" aria-hidden="true"><i class="cp-art"></i><span class="cp-bars"><i></i><i></i></span><span class="cp-ctl">${ic('play',24)}</span></div></div>`)
+    + cpFrame('cp-alert', 'CarPlay · Beginnt die Live-Aktivität, während eine andere App den Bildschirm füllt, erscheint sie unten als Hinweis', 'cp-full',
+      `<div class="cp-map" aria-hidden="true">${cpMapSVG(true)}</div><div class="cp-note">${laSmall(ph, 'w')}</div>`)
+    + cwFrame('cp-sizes', 'Live-Aktivität „klein“ in allen Größen von Apple · dieselbe Ansicht in CarPlay und im Smart Stack der Uhr · unten nach dem Wechsel', 568, 440,
+      `<div class="cw-board"><div class="las-sizes">${['t', 'w', 'n', 'watch'].map(s => `<figure>${laSmall(ph, s)}<figcaption>${cap[s]}</figcaption></figure>`).join('')}
+        ${['w', 'n'].map(s => `<figure>${laSmallEnded(ph, s)}<figcaption>Nach dem Wechsel · ${LAS[s].join(' × ')} pt</figcaption></figure>`).join('')}</div></div>`)
+    + cwFrame('cp-small', 'Die kleinen Widgets in Originalgröße: oben mit Hintergrund (Home-Bildschirm), unten ohne (StandBy, CarPlay)', 436, 440, cwSmallHTML(ph))
+    + cwFrame('cp-standby', 'StandBy (angenähert): iPhone quer, zwei kleine Widgets ohne Hintergrund, vergrößert, immer dunkel', 872, 418, cwStandbyHTML(ph));
+}
+function cwLayout(){
+  if (S.view !== 'carplay') return false;
+  const st = document.getElementById('stage'), availW = st.clientWidth - 48;
+  st.style.setProperty('--s', Math.max(.3, Math.min(1, availW/(CP[S.cpScreen].w + 28))).toFixed(3));
+  return true;
+}
+
+/* =====================================================================
    9) PROTOTYPE PANEL (outside the phone; English tooling labels)
    ===================================================================== */
 function renderPanel(){
@@ -3250,7 +3513,13 @@ function renderPanel(){
   const swatch = (k, c) => `<button class="swatch" style="background:${c}" data-act="pn-set" data-k="accent" data-v="${k}" aria-pressed="${S.accent === k}" aria-label="Accent ${k}" data-fkey="pn-acc-${k}"></button>`;
   const jump = (v, l) => `<button class="pn-btn" data-act="jump" data-v="${v}" data-fkey="pn-j-${v}">${l}</button>`;
   document.getElementById('panel').innerHTML = `
-    <div class="pn-title" lang="de">Vaqt · Vorschlag für den Nachtrag zu Phase 18: Stil, Klang und Verbotszeiten</div><div class="pn-sub" lang="de">Prototyp vom 24.11.2026 auf Basis von Spec v0.10 (Phase 18). Noch nichts beschlossen.</div>
+    <div class="pn-title" lang="de">Vaqt · iOS-Prototyp</div><div class="pn-sub" lang="de">Design-Referenz für die SwiftUI-App · Spec v0.12 (Phase 19: CarPlay und StandBy)</div>
+    <section class="pn-sec pn-chg" lang="de"><h3>Phase 19: CarPlay und StandBy (25.11.2026)</h3><p class="pn-chg-lead">Spec v0.12 § 12. Aus dem Vorschlag vom 24.11.2026, ohne eigene CarPlay-App und ohne Apple Watch. Stil, Grundfarbe, Uhrzeit, Stadt, Sprache und Hell/Dunkel gelten auch hier. Zum Ansehen antippen.</p>
+      <ol class="pn-chg-list">${[['cp-widgets','CarPlay: Widgets links vom Dashboard'],['cp-dash','CarPlay: Dashboard mit Live-Aktivität „klein“'],['cp-alert','CarPlay: Live-Aktivität als Hinweis'],['cp-sizes','Live-Aktivität „klein“ in allen Größen'],
+          ['cp-small','Kleine Widgets mit und ohne Hintergrund'],['cp-standby','StandBy'],['cp-k','In der Verbotszeit (vor Maghrib)']]
+        .map(([v, l]) => `<li><button class="pn-btn" data-act="cp" data-v="${v}" data-fkey="pn-cp-${v}">${l}</button></li>`).join('')}</ol>
+      <div style="height:10px"></div><div class="pn-sub" style="margin:0 0 6px">Bildschirm im Auto (angenähert)</div>
+      ${seg('cpScreen',[['wide','Breit 8 : 3'],['std','Standard 5 : 3']])}</section>
     <section class="pn-sec pn-chg" lang="de"><h3>Nachtrag zu Phase 18 (24.11.2026)</h3><p class="pn-chg-lead">Abgenommen am 24.11.2026, Spec v0.11 § 11.3–11.7: Stil, Klang, „Darstellung“ über „Berechnung“, Verbotszeiten nach Rechtsschule, Onboarding. Zum Ansehen antippen.</p>
       <ol class="pn-chg-list">${[['settings','Einstellungen: „Darstellung“ über „Berechnung“'],['page','Seite „Stil“ in den Einstellungen'],['page-open','Seite „Stil“ mit allen 24 Farben'],['sound','Seite „Klang“: Systemton mit Hinweis'],['ob-madhab','Onboarding: Rechtsschule wählen'],['madhab','Einstellungen › Rechtsschule'],['ksheet','Blatt „Was sind Verbotszeiten?“'],['ksheet-maliki','Dasselbe nach malikitischer Lehre'],['fri','Schafii an einem Freitag: kein Fenster vor Dhuhr'],['home','Zeiten-Seite in der Grundfarbe'],['live','Live-Aktivität und Dynamic Island'],['live-k','Dasselbe in der Verbotszeit'],
         ['widgets','Widgets']]
@@ -3270,7 +3539,7 @@ function renderPanel(){
       ${seg('laAlpha',[['30','30 %'],['20','20 %'],['100','100 % (vorher)']])}
       <div style="height:8px"></div><div class="pn-sub" style="margin:0 0 6px">Deckkraft Widget „Live“ (entschieden: 30 %)</div>
       ${seg('wlaAlpha',[['30','30 %'],['85','85 %'],['100','100 % (vorher)']])}</section>
-    <section class="pn-sec"><h3>View</h3>${seg('view',[['app','App'],['widgets','Widgets'],['live','Live Activity'],['notifications','Notifications']])}</section>
+    <section class="pn-sec"><h3>View</h3>${seg('view',[['app','App'],['widgets','Widgets'],['live','Live Activity'],['notifications','Notifications'],['carplay','CarPlay']])}</section>
     <section class="pn-sec"><h3>Device (app view)</h3>${seg('device',[['iphone','iPhone 17'],['duo-closed','Duo closed'],['duo-open','Duo open']])}</section>
     <section class="pn-sec"><h3>System</h3>${seg('sysTheme',[['light','Light'],['dark','Dark']])}<label class="pn-field"><span>Sprache / language</span><select class="pn-select" data-pn="lang" data-fkey="pn-lang">${Object.keys(LANG_NAMES).map(k =>
         `<option value="${k}" ${S.lang === k ? 'selected' : ''}>${LANG_NAMES[k]} (${k})</option>`).join('')}</select></label></section>
@@ -3335,6 +3604,7 @@ function renderStage(){
   saveUI();
   const st = document.getElementById('stage');
   st.innerHTML = S.view === 'app' ? frame('App · ' + DEV[S.device].label, appScreenHTML(), S.device)
+    : S.view === 'carplay' ? cwCarPlayHTML()   // Phase 19: CarPlay und StandBy
     : S.view === 'widgets' ? frame('Lock Screen', lockScreenHTML(false)) + frame('Home Screen', homeScreenHTML())
     : S.view === 'live' ? frame('Lock Screen · Live Activity', lockScreenHTML(false, true)) + frame('Dynamic Island · compact', homeScreenHTML(diCompact))
         + frame('Dynamic Island · expanded (long press)', homeScreenHTML(diExpanded))
@@ -3370,6 +3640,7 @@ function runAnims(){
   }
 }
 function layout(){
+  if (cwLayout()) return;   // Phase 19: CarPlay und StandBy
   const st = document.getElementById('stage'), n = S.view === 'widgets' ? 2 : S.view === 'live' ? 3 : 1, d = DEV[appDev()];
   const stacked = window.innerWidth <= 860;
   const availH = (stacked ? 1e9 : window.innerHeight - 48 - 30);
@@ -3554,6 +3825,16 @@ const ACT = {
     render();
   },
   /* Nachtrag zu Phase 18: Stil – Sprünge aus dem Panel, Schalter, Zurücksetzen, Auswahl in der Übersicht */
+  /* Phase 19: Sprünge aus dem Panel zu CarPlay und StandBy */
+  cp(el){
+    const v = el.dataset.v, tt = todayTimes(); stopAdhan(); S.sheet = null; S.alert = null; S.busy = false; S.walk = null; S.dayOff = 0; S.onboarded = true;
+    const setMin = m => { S.clock.base = Math.round((((m % 1440) + 1440) % 1440)*60); S.clock.anchor = Date.now(); S.clock.preset = 'custom'; };
+    S.view = 'carplay'; S.kerahat = true;
+    setMin(v === 'cp-k' ? tt.maghrib - 22 : tt.asr + 26);
+    render();
+    const fr = document.querySelector(`[data-cw="${v === 'cp-k' ? 'cp-widgets' : v}"]`);
+    if (fr) fr.scrollIntoView({block:'center'}); else window.scrollTo(0, 0);
+  },
   stil(el){
     const v = el.dataset.v, tt = todayTimes(); stopAdhan(); S.view = 'app'; S.sheet = null; S.alert = null; S.busy = false; S.walk = null; S.dayOff = 0;
     S.onboarded = true; S.stack.settings = []; S.section = 'prayers'; S.tab = 'today'; S.kerahat = true; S.palOpen = null;

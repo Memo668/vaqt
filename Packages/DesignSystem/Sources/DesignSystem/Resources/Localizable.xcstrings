@@ -45933,6 +45933,107 @@
         }
       }
     },
+    "wArcDesc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "قوس اليوم مع الصلاة التالية وأوقات الكراهة."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "পরবর্তী নামাজ ও মাকরুহ সময়সহ দিনের বৃত্তচাপ।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Dnevni luk sa sljedećim namazom i mekruh vaktima."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Tagesbogen mit dem nächsten Gebet und den Verbotszeiten."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The day arc with the next prayer and the makruh times."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El arco del día con la próxima oración y los tiempos makruh."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "کمان روز با نماز بعدی و اوقات مکروه."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "L’arc du jour avec la prochaine prière et les heures makrouh."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Busur hari dengan salat berikutnya dan waktu makruh."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "L’arco del giorno con la prossima preghiera e i momenti makruh."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Lengkok hari dengan solat seterusnya dan waktu makruh."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "De dagboog met het volgende gebed en de makroeh-tijden."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Дуга дня со следующим намазом и временем макрух."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Harku i ditës me namazin e radhës dhe kohët mekruh."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sıradaki namaz ve kerahat vakitleriyle günün yayı."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "اگلی نماز اور مکروہ اوقات کے ساتھ دن کی قوس۔"
+          }
+        }
+      }
+    },
     "wIn" : {
       "comment" : "Argumente: 1 = t.",
       "extractionState" : "manual",

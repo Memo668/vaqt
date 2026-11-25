@@ -881,6 +881,8 @@ public enum L10n {
     public static var obMadhabTitle: String { text("obMadhabTitle") }
     /// „Danach richten sich die Verbotszeiten und ihre Erklärung. Du kannst sie später in den Einstellungen ändern.“
     public static var obMadhabBody: String { text("obMadhabBody") }
+    /// „Der Tagesbogen mit dem nächsten Gebet und den Verbotszeiten.“
+    public static var wArcDesc: String { text("wArcDesc") }
 
     /// Name einer Sure aus `SURAH` im Prototyp, z. B. „Al-Baqara“ für 2.
     public static func surahName(_ surah: Int) -> String { text("surah_\(surah)") }
@@ -1326,6 +1328,7 @@ public enum L10n {
         "kerahatFoot_hanbali",
         "obMadhabTitle",
         "obMadhabBody",
+        "wArcDesc",
         "surah_2",
         "surah_13",
         "surah_20",
