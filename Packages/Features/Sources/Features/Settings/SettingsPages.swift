@@ -602,6 +602,7 @@ struct StylePage: View {
             }
         }
         .onAppear {
+            model.isStylePageShown = true
             if isPaletteOpen == nil {
                 isPaletteOpen = !model.settings.style.accent.isInStandardRow
             }
@@ -609,6 +610,7 @@ struct StylePage: View {
         // Das App-Icon wechselt beim Verlassen der Seite, nicht bei jedem Antippen einer Farbe: iOS zeigt bei jedem
         // Wechsel einen Hinweis (Spec § 13.2).
         .onDisappear {
+            model.isStylePageShown = false
             Task { await model.applyAppIcon() }
         }
     }

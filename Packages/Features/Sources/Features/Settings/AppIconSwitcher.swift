@@ -1,3 +1,4 @@
+import OSLog
 import PrayerCore
 import SwiftUI
 import UIKit
@@ -51,16 +52,18 @@ public enum AppIconTarget: Sendable, Equatable {
     }
 }
 
-/// Wechselt das App-Icon passend zum Stil (Spec § 13.2): beim Verlassen der Seite Stil und wenn die App in den
-/// Hintergrund geht, nicht bei jedem Antippen einer Farbe – iOS zeigt bei jedem Wechsel einen Hinweis, so kommt er
-/// einmal. Gerufen wird nur, wenn sich der Name ändert: `nil` (Haupt-Icon) bei Petrol oder ausgeschaltetem
-/// Schalter, sonst `AppIcon-<id>`.
+/// Wechselt das App-Icon passend zum Stil (Spec § 13.2): beim Verlassen der Seite Stil, nicht bei jedem Antippen einer
+/// Farbe – iOS zeigt bei jedem Wechsel einen Hinweis, so kommt er einmal. Verlässt man die App von Stil aus, wechselt
+/// es, sobald sie wieder vorn ist (`AppIconPlanning`); im Hintergrund lehnt iOS den Wechsel ab. Gerufen wird nur, wenn
+/// sich der Name ändert: `nil` (Haupt-Icon) bei Petrol oder ausgeschaltetem Schalter, sonst `AppIcon-<id>`.
 @MainActor
 public final class AppIconSwitcher {
     private let target: any AlternateIconSetting
     /// Der Name, der gerade gesetzt wird – solange iOS ihn noch nicht meldet; so ruft ein zweiter Anlass während
     /// des Wechsels nicht noch einmal.
     private var pending: String??
+
+    static let log = Logger(subsystem: AppInfo.bundleIdentifier, category: "appIcon")
 
     public init(target: any AlternateIconSetting) {
         self.target = target
@@ -80,18 +83,23 @@ public final class AppIconSwitcher {
         guard current != wanted else { return false }
         pending = .some(wanted)
         defer { pending = nil }
+        Self.log.info("App-Icon: \(current ?? "AppIcon", privacy: .public) → \(wanted ?? "AppIcon", privacy: .public)")
         do {
             try await target.setAlternateIconName(wanted)
             return true
         } catch {
-            // Etwa im Hintergrund abgelehnt: Beim nächsten Anlass versucht die App es wieder.
+            // Abgelehnt, etwa weil die App nicht mehr vorn ist: Beim nächsten Anlass versucht sie es wieder.
+            Self.log.error("App-Icon nicht gewechselt: \(error.localizedDescription, privacy: .public)")
             return false
         }
     }
 }
 
-/// Bringt das App-Icon auf den Stand des Stils, sobald die App nicht mehr vorn ist (`inactive`, dann `background`) –
-/// der zweite Anlass neben dem Verlassen der Seite Stil (Spec § 13.2). Hat sich nichts geändert, ruft sie iOS nicht.
+/// Bringt das App-Icon auf den Stand des Stils, sobald die App vorn ist und die Seite Stil nicht offen – beim Start
+/// und wenn sie zurückkommt (Spec § 13.2, entschieden am 26.11.2026: „Beim nächsten Öffnen“). Der zweite Anlass neben
+/// dem Verlassen der Seite: Wer Stil über den Home-Bildschirm verlässt, bekommt das neue Icon beim nächsten Öffnen.
+/// Im Hintergrund lehnt iOS den Wechsel ab („Vorgang abgebrochen“, im Simulator geprüft). Hat sich nichts geändert,
+/// ruft die App iOS nicht.
 struct AppIconPlanning: View {
     let model: SettingsModel
 
@@ -100,9 +108,14 @@ struct AppIconPlanning: View {
     var body: some View {
         Color.clear
             .accessibilityHidden(true)
-            .onChange(of: scenePhase) { _, phase in
-                guard phase != .active else { return }
+            .onChange(of: scenePhase, initial: true) { _, phase in
+                guard Self.applies(in: phase, isStylePageShown: model.isStylePageShown) else { return }
                 Task { await model.applyAppIcon() }
             }
+    }
+
+    /// Nur vorn und nicht auf der Seite Stil – dort wechselt das Icon erst beim Verlassen.
+    nonisolated static func applies(in phase: ScenePhase, isStylePageShown: Bool) -> Bool {
+        phase == .active && !isStylePageShown
     }
 }

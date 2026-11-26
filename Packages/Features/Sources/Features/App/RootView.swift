@@ -213,7 +213,7 @@ struct AppContent: View {
         .background {
             FajrAlarmPlanning(model: alarm)
         }
-        // Das App-Icon in der Grundfarbe, wenn die App nach hinten geht (Spec § 13.2).
+        // Das App-Icon in der Grundfarbe, wenn die App vorn ist und Stil nicht offen (Spec § 13.2).
         .background {
             AppIconPlanning(model: settingsModel)
         }

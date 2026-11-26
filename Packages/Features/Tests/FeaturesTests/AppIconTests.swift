@@ -3,6 +3,7 @@
 import DesignSystem
 import Foundation
 import PrayerCore
+import SwiftUI
 import Testing
 @testable import Features
 
@@ -129,6 +130,15 @@ struct AppIconTests {
         #expect(settings.style == .standard && settings.style.tintsAppIcon)
         await model.applyAppIcon()
         #expect(icons.requests == ["AppIcon-ocean", nil])
+    }
+
+    @Test("zweiter Anlass: nur vorn und nicht auf der Seite Stil – beim Start und wenn die App zurückkommt")
+    func planning() {
+        #expect(AppIconPlanning.applies(in: .active, isStylePageShown: false))
+        #expect(!AppIconPlanning.applies(in: .active, isStylePageShown: true))
+        // Im Hintergrund lehnt iOS ab; dann versucht die App es gar nicht erst.
+        #expect(!AppIconPlanning.applies(in: .inactive, isStylePageShown: false))
+        #expect(!AppIconPlanning.applies(in: .background, isStylePageShown: false))
     }
 
     @Test("Umgebung: die App wechselt über das System, Tests und Aufnahmen mit Mock-Zeiten nur im Speicher")

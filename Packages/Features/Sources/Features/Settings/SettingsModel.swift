@@ -213,8 +213,12 @@ public final class SettingsModel {
         settings.updateStyle { $0.tintsAppIcon = isOn }
     }
 
-    /// Bringt das App-Icon auf den Stand des Stils – beim Verlassen der Seite Stil und wenn die App in den
-    /// Hintergrund geht; gerufen wird iOS nur, wenn sich der Name ändert.
+    /// Ob die Seite Stil gerade zu sehen ist. Solange wechselt das Icon nicht, auch nicht, wenn die App wieder nach
+    /// vorn kommt – erst beim Verlassen der Seite.
+    @ObservationIgnored public internal(set) var isStylePageShown = false
+
+    /// Bringt das App-Icon auf den Stand des Stils – beim Verlassen der Seite Stil und wenn die App vorn ist, ohne dass
+    /// Stil offen ist; gerufen wird iOS nur, wenn sich der Name ändert.
     public func applyAppIcon() async {
         await appIcons.apply(settings.style)
     }
