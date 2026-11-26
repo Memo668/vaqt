@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 25.11.2026, nach der Abnahme von Phase 18 (Verse und Adhan, Spec § 11.1–11.2, mit dem Nachtrag Klang, Stil, Rechtsschule und Onboarding, Spec § 11.3–11.7); Build 0.1.0 (5) ist am 25.11.2026 hochgeladen und bei „Intern“ und „Extern“ (Golden Beta am 26.11.2026).
+Stand: 26.11.2026, nach der Abnahme des Hotfix „App weiterempfehlen“ (Absturz beim Teilen mit einer anderen Grundfarbe als Petrol, `ba8782c`); daraus Build 0.1.0 (6). Davor Phase 18 (Verse und Adhan, Spec § 11.1–11.2, mit dem Nachtrag Klang, Stil, Rechtsschule und Onboarding, Spec § 11.3–11.7), abgenommen am 25.11.2026; Build 0.1.0 (5) ist bei „Intern“ und „Extern“ (Golden Beta am 26.11.2026).
 
 ## Für die erste Beta
 
@@ -342,6 +342,7 @@ Diese Punkte standen bis Phase 10 unter „Braucht eine Entscheidung“.
 | 16 | 18.11.2026, „Abgenommen“ | `e270627` | Am iPhone 18 Pro und Duo ausprobiert. Das Widget „Live“ bleibt deckend (iOS lässt Home-Widgets nicht durchscheinen; so abgenommen). Offen: fachliche Prüfung der Verbotszeiten-Erklärung und der Regel für Frauen (Ibrahim), die 13 Sprachen als KI-Entwurf, Phase 17 Wecker. Danach Build 0.1.0 (3). |
 | 17 | 19.11.2026, „Abgenommen“ | `14088de` | Am iPhone Duo hat ein Test-Wecker geklingelt (18.11.2026). Offen: Stummmodus und Fokus ausdrücklich, der kurze Adhan als Weckton, die 13 Sprachen der vier neuen Texte als KI-Entwurf. Danach Build 0.1.0 (4). |
 | 18 | 25.11.2026, „Abgenommen“ | `50711fb` | Verse, Adhan und Nachtrag (Klang, Stil, Rechtsschule, Onboarding) als ein Stand; am iPhone Duo installiert, Abnahme auf die Frage „Nimmst du Phase 18 nach der Hörprobe ab?“. Offen: Farben, Stile auf echten Hintergrundbildern und Live-Aktivität nach einem Wechsel des Stils am Gerät, Duo im Simulator und VoiceOver von Hand (laut Übergabe nicht geprüft); fachliche Prüfung der Verbotszeiten-Texte (Ibrahim); die 13 Sprachen der neuen Texte als KI-Entwurf; Rechte und Muttersprachler bei Versen und Adhan (siehe „Vor dem App Store“). Danach Build 0.1.0 (5). |
+| Hotfix | 26.11.2026, „Abgenommen“ | `ba8782c` | „App weiterempfehlen“ und „Teilen“ beim Vers stürzten ab, sobald eine andere Grundfarbe als Petrol gewählt war: Die Farbe der Fenster (`WindowTint`) gehörte zum Main Actor, das Teilen-Blatt löst sie auf einer Warteschlange des Systems auf. Am iPhone Duo nachgestellt und mit Korrektur geprüft; Test `WindowTintTests`, Ablauf `hotfix-teilen-grundfarbe.txt` im UI-Hilfsprojekt. Danach Build 0.1.0 (6). |
 
 ### Erste Beta, entschieden am 12.11.2026
 
