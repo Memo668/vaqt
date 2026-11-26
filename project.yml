@@ -58,9 +58,19 @@ targets:
         # iOS-Targets sonst „1,2“, und als iPad-App ohne alle vier Ausrichtungen lehnt Apple den Upload ab.
         TARGETED_DEVICE_FAMILY: "1"
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
-        # TODO(placeholder): Platzhalter-Icon aus Phase 11 (Tagesbogen mit den fünf Gebeten), erzeugt von
-        # scripts/app-icon.swift; das endgültige Icon folgt (Spec § 6.9).
+        # App-Icon seit Phase 20 (Spec § 13): die Icon-Composer-Datei App/AppIcon.icon – weißer Grund, dunkel
+        # schwarz, der Tagesbogen in Petrol mit der Glas-Linse auf dem oberen Punkt. Der Name passt zur Datei.
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        # Je weitere Grundfarbe ein alternatives Icon (App/AlternateIcons/AppIcon-<id>.icon, <id> wie
+        # AccentColorID). Die App wechselt es beim Verlassen von Einstellungen › Stil (Spec § 11.7).
+        ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES: >-
+          AppIcon-green AppIcon-blue AppIcon-violet AppIcon-berry AppIcon-graphite
+          AppIcon-cyan AppIcon-grass AppIcon-indigo AppIcon-orchid AppIcon-orange AppIcon-gold
+          AppIcon-ocean AppIcon-forest AppIcon-navy AppIcon-plum AppIcon-wine AppIcon-mono
+          AppIcon-mint AppIcon-sage AppIcon-ice AppIcon-lavender AppIcon-mauve AppIcon-sand
+        # actool legt je Icon drei fertige Bilder 1024 × 1024 ab (hell, dunkel, getönt), zusammen rund 2 MB;
+        # „space“ macht Assets.car etwa 13 % kleiner (gemessen in Phase 20).
+        ASSETCATALOG_COMPILER_OPTIMIZATION: space
     info:
       path: App/Info.plist
       properties:
