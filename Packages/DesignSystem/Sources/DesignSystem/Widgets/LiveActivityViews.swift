@@ -144,6 +144,15 @@ public enum LiveActivityTexts {
         content.prayer.prayer.localizedName + " · " + L10n.time(content.prayerTime)
     }
 
+    /// Rechts in der schmalen Zeile einer abgelaufenen Aktivität (Spec § 10.3) und unten in der Live-Aktivität „klein“
+    /// nach dem Wechsel (§ 12.3): „hat begonnen“, beim grünen Teil vor einer Verbotszeit „Verbotszeit ab 11:42“.
+    public static func endedTrailing(_ content: LiveActivityContent) -> String {
+        if content.kind == .beforeProhibited, let start = content.prohibitedStartTime {
+            return L10n.kerahatFrom(a: L10n.time(start))
+        }
+        return L10n.laBegan
+    }
+
     /// „Asr 14:00“ und „Maghrib 16:27“ an den Enden des Balkens (`.di-ends`).
     public static func ends(_ content: LiveActivityContent) -> (start: String, end: String) {
         (
@@ -247,7 +256,7 @@ public struct LiveActivityEndedRow: View {
                 Text(LiveActivityTexts.nameAndTime(content))
             }
             Spacer(minLength: 8)
-            Text(trailing)
+            Text(LiveActivityTexts.endedTrailing(content))
                 .fontWeight(.medium)
                 .opacity(LiveActivityMetrics.cityOpacity)
         }
@@ -257,13 +266,6 @@ public struct LiveActivityEndedRow: View {
         .foregroundStyle(Color(colors.foreground))
         .padding(LiveActivityMetrics.endedPadding)
         .accessibilityElement(children: .combine)
-    }
-
-    private var trailing: String {
-        if content.kind == .beforeProhibited, let start = content.prohibitedStartTime {
-            return L10n.kerahatFrom(a: L10n.time(start))
-        }
-        return L10n.laBegan
     }
 }
 

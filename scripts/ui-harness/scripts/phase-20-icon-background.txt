@@ -1,0 +1,31 @@
+# Phase 20 (Spec § 13.2): Farbe auf der Seite Stil wählen und die App direkt verlassen (Home). Im Hintergrund lehnt iOS
+# den Wechsel ab; entschieden am 26.11.2026 („Beim nächsten Öffnen“): Das Icon wechselt, sobald die App wieder vorn ist
+# und Stil nicht offen – hier beim nächsten Start auf der Zeiten-Seite, mit dem Hinweis von iOS. Danach wieder Petrol.
+# Ändert die gespeicherten Einstellungen der App im Simulator und das Icon auf dem Home-Bildschirm.
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugCity berlin -debugTab style
+wait 4
+taplabel Blau
+wait 1.5
+home
+wait 4
+shot {OUT}/p20-11-home-after-blue.png
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugCity berlin
+wait 5
+shot {OUT}/p20-12-reopened.png
+sbdump {OUT}/p20-12-reopened-alert.txt
+sbtapif 0
+wait 1.5
+home
+wait 2.5
+shot {OUT}/p20-13-home-blue.png
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugCity berlin -debugTab style
+wait 4
+taplabel Petrol
+wait 1
+taplabel Einstellungen
+wait 2
+sbtapif 0
+wait 1.5
+home
+wait 2.5
+shot {OUT}/p20-14-home-petrol.png

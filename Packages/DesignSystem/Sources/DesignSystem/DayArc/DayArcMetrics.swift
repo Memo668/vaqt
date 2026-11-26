@@ -104,6 +104,19 @@ public struct DayArcMetrics: Hashable, Sendable {
         timeFontSize: 0, timeScales: false, tabularTimes: false, contentBottomInset: 4, showsTimes: false
     )
 
+    /// `ARCS.cpw`: der Bogen des kleinen Widgets „Tagesbogen“ (Spec § 12.2, seit Phase 19), 146 × 84 pt: Gebete
+    /// 15 pt mit 9,5-pt-Symbol, das laufende 18 pt mit 10,5-pt-Symbol und Schein (12 pt), Spur 6 pt, Kerahat 6 pt
+    /// auf der Spur, Knopf 5 pt mit Ring; keine Uhrzeiten. Gebet und Countdown schließen unten mit dem Bogen ab
+    /// (`.cpw-t`: `bottom: 0`).
+    public static let smallWidget = DayArcMetrics(
+        size: CGSize(width: 146, height: 84), center: CGPoint(x: 73, y: 100), radius: 80, endAngle: 0.66,
+        markerRadius: 7.5, currentMarkerRadius: 9, symbolSize: 9.5, currentSymbolSize: 10.5,
+        glowRadius: 12, knobRadius: 5,
+        timeBox: .zero, timeGap: 0, timeBelow: 0, kerahatInset: 0,
+        trackWidth: 6, kerahatWidth: 6, kerahatOnTrack: true, ringWidth: 1.5,
+        timeFontSize: 0, timeScales: false, tabularTimes: false, contentBottomInset: 0, showsTimes: false
+    )
+
     // MARK: - Geometrie
 
     /// Winkel des Bogens im Bogenmaß.

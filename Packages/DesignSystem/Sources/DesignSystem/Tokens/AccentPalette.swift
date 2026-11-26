@@ -119,8 +119,30 @@ public final class AccentStore: Observable, Sendable {
 
     private let registrar = ObservationRegistrar()
     private let storage = Mutex(AccentColorID.standard)
+    private let iconStorage = Mutex(AccentColorID.standard)
 
     public init() {}
+
+    /// Übernimmt Grundfarbe und Farbe des App-Icons aus dem Stil (Spec § 11.7, § 13.2).
+    public func apply(_ style: AppStyle) {
+        accent = style.accent
+        iconAccent = style.appIconAccent
+    }
+
+    /// Die Grundfarbe des Zeichens `AppMark` – wie das Icon auf dem Home-Bildschirm: die Grundfarbe, bei
+    /// ausgeschaltetem Schalter „App-Icon in der Grundfarbe“ Petrol (`AppStyle.appIconAccent`, seit Phase 20).
+    public var iconAccent: AccentColorID {
+        get {
+            registrar.access(self, keyPath: \.iconAccent)
+            return iconStorage.withLock { $0 }
+        }
+        set {
+            guard iconStorage.withLock({ $0 }) != newValue else { return }
+            registrar.withMutation(of: self, keyPath: \.iconAccent) {
+                iconStorage.withLock { $0 = newValue }
+            }
+        }
+    }
 
     /// Die Grundfarbe; der Standard ist Petrol.
     public var accent: AccentColorID {

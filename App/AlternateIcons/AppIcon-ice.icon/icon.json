@@ -1,0 +1,352 @@
+{
+  "fill-specializations": [
+    {
+      "value": {
+        "solid": "srgb:1.00000,1.00000,1.00000,1.00000"
+      }
+    },
+    {
+      "appearance": "dark",
+      "value": {
+        "solid": "srgb:0.00000,0.00000,0.00000,1.00000"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "name": "Glas",
+      "layers": [
+        {
+          "name": "Glasrand",
+          "image-name": "glas-ring.svg",
+          "glass": true,
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:0.87451,0.89020,0.90588,0.90000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,0.35000"
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,0.50000"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Symbol",
+          "image-name": "glas-symbol.png",
+          "glass": false,
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,1.00000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.07451,0.10588,0.15294,1.00000"
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": {
+                "solid": "srgb:0.25098,0.25098,0.25098,1.00000"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Linse aus Glas",
+          "image-name": "glas-linse.svg",
+          "glass": true,
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,0.18000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,0.12000"
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,0.20000"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Kreis vergrößert",
+          "image-name": "glas-kreis.svg",
+          "glass": false,
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:0.27059,0.35294,0.45490,1.00000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.62353,0.75686,0.92157,1.00000"
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,1.00000"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Bogen vergrößert",
+          "image-name": "glas-bogen.svg",
+          "glass": false,
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:0.27059,0.35294,0.45490,1.00000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.62353,0.75686,0.92157,1.00000"
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,1.00000"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Spur vergrößert",
+          "image-name": "glas-spur.svg",
+          "glass": false,
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:0.27059,0.35294,0.45490,0.32000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.62353,0.75686,0.92157,0.32000"
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,0.35000"
+              }
+            }
+          ]
+        }
+      ],
+      "specular": true,
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.8
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.3
+      }
+    },
+    {
+      "name": "Punkte",
+      "layers": [
+        {
+          "name": "Symbole begonnen",
+          "image-name": "sym-begun.png",
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,1.00000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.07451,0.10588,0.15294,1.00000"
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": {
+                "solid": "srgb:0.25098,0.25098,0.25098,1.00000"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Symbole kommend",
+          "image-name": "sym-next.png",
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:0.27059,0.35294,0.45490,1.00000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.62353,0.75686,0.92157,1.00000"
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,1.00000"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Kreise begonnen",
+          "image-name": "dots-begun.svg",
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:0.27059,0.35294,0.45490,1.00000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.62353,0.75686,0.92157,1.00000"
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,1.00000"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Kreise kommend",
+          "image-name": "dots-next.svg",
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:0.78039,0.80784,0.83529,1.00000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.21961,0.26667,0.32157,1.00000"
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,0.45000"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Schein um Asr",
+          "image-name": "glow.svg",
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:0.27059,0.35294,0.45490,0.28000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.62353,0.75686,0.92157,0.28000"
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,0.25000"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bogen",
+      "layers": [
+        {
+          "name": "Bogen bis jetzt",
+          "image-name": "fill.svg",
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:0.27059,0.35294,0.45490,1.00000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.62353,0.75686,0.92157,1.00000"
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,1.00000"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Spur",
+          "image-name": "track.svg",
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:0.27059,0.35294,0.45490,0.32000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.62353,0.75686,0.92157,0.32000"
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,0.35000"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "supported-platforms": {
+    "circles": [
+      "watchOS"
+    ],
+    "squares": "shared"
+  }
+}

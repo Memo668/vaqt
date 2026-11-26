@@ -51,6 +51,9 @@ public struct AppEnvironment: Sendable {
     /// Ob die App die Wecker zu Fadschr anmeldet. Mit `-debugFixtureTimes` nicht – damit Aufnahmen keine
     /// auslösen.
     public var plansAlarms: Bool
+    /// Wohin der Wechsel des App-Icons geht (Phase 20, Spec § 13.2): in der App ans System, in Tests und mit
+    /// `-debugFixtureTimes` nur in den Speicher – Aufnahmen ändern so das Icon des Simulators nicht.
+    public var appIcons: AppIconTarget
     /// `-debugAlarmIn`: ein zusätzlicher Wecker zu diesem Zeitpunkt (Uhr der App).
     public var alarmTestDate: Date?
     public var initialTab: AppTab
@@ -100,6 +103,7 @@ public struct AppEnvironment: Sendable {
         alarmScheduler: any FajrAlarmScheduling = FixedFajrAlarmScheduler(),
         plansAlarms: Bool = true,
         alarmTestDate: Date? = nil,
+        appIcons: AppIconTarget = .memory(),
         initialTab: AppTab = .prayers,
         initialPage: PrayersPage = .today,
         settingsPath: [SettingsRoute] = [],
@@ -127,6 +131,7 @@ public struct AppEnvironment: Sendable {
         self.alarmScheduler = alarmScheduler
         self.plansAlarms = plansAlarms
         self.alarmTestDate = alarmTestDate
+        self.appIcons = appIcons
         self.initialTab = initialTab
         self.initialPage = initialPage
         self.settingsPath = settingsPath
@@ -150,7 +155,8 @@ public struct AppEnvironment: Sendable {
             notificationScheduler: SystemNotificationScheduler(),
             widgetPublisher: AppGroupWidgetPublisher(suiteName: appGroupIdentifier),
             liveActivityScheduler: SystemLiveActivityScheduler(),
-            alarmScheduler: SystemFajrAlarmScheduler()
+            alarmScheduler: SystemFajrAlarmScheduler(),
+            appIcons: .system
         )
     }
 
@@ -267,6 +273,8 @@ extension AppEnvironment {
             alarmScheduler = SystemFajrAlarmScheduler()
         }
         plansAlarms = !options.fixtureTimes
+        // Mit Mock-Zeiten (flüchtige Einstellungen) wechselt das Icon nur im Speicher, sonst wie in der App.
+        appIcons = options.fixtureTimes ? .memory() : .system
         if let minutes = options.alarmInMinutes {
             alarmTestDate = clock.now.addingTimeInterval(TimeInterval(minutes * 60))
         } else {

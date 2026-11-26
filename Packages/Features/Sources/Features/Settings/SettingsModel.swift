@@ -21,6 +21,8 @@ public final class SettingsModel {
     @ObservationIgnored private let timesSource: any PrayerTimesSource
     @ObservationIgnored private let notificationAuthorizer: any NotificationAuthorizing
     @ObservationIgnored private let locale: Locale
+    /// Wechselt das App-Icon passend zum Stil (Spec § 13.2).
+    @ObservationIgnored private let appIcons: AppIconSwitcher
 
     /// Adresse hinter „Quellcode“; `nil`, solange keine eingetragen ist.
     public let sourceCodeURL: URL?
@@ -37,7 +39,8 @@ public final class SettingsModel {
     init(
         settings: SettingsStore, today: TodayModel, navigation: AppNavigation,
         timesSource: any PrayerTimesSource, notificationAuthorizer: any NotificationAuthorizing,
-        sourceCodeURL: URL?, appStoreURL: URL? = nil, version: String, locale: Locale = L10n.locale
+        sourceCodeURL: URL?, appStoreURL: URL? = nil, version: String, locale: Locale = L10n.locale,
+        appIcons: AppIconSwitcher = AppIconSwitcher(target: FixedAlternateIcons())
     ) {
         self.settings = settings
         self.today = today
@@ -48,6 +51,7 @@ public final class SettingsModel {
         self.appStoreURL = appStoreURL
         self.version = version
         self.locale = locale
+        self.appIcons = appIcons
     }
 
     private var location: PlaceModel { today.location }
@@ -194,9 +198,29 @@ public final class SettingsModel {
         settings.updateStyle { $0.isInverted = isInverted }
     }
 
-    /// „Standard wiederherstellen“: Petrol, farbig, nicht invertiert.
+    /// „Standard wiederherstellen“: Petrol, Icon in der Grundfarbe, farbig, nicht invertiert.
     public func resetStyle() {
         settings.setStyle(.standard)
+    }
+
+    /// Ob es den Schalter „App-Icon in der Grundfarbe“ gibt – nur, wenn das Gerät alternative Icons kann.
+    public var offersAppIconSwitch: Bool {
+        appIcons.isAvailable
+    }
+
+    /// „App-Icon in der Grundfarbe“ (Spec § 13.2). Das Icon wechselt erst beim Verlassen der Seite (`applyAppIcon()`).
+    public func setTintsAppIcon(_ isOn: Bool) {
+        settings.updateStyle { $0.tintsAppIcon = isOn }
+    }
+
+    /// Ob die Seite Stil gerade zu sehen ist. Solange wechselt das Icon nicht, auch nicht, wenn die App wieder nach
+    /// vorn kommt – erst beim Verlassen der Seite.
+    @ObservationIgnored public internal(set) var isStylePageShown = false
+
+    /// Bringt das App-Icon auf den Stand des Stils – beim Verlassen der Seite Stil und wenn die App vorn ist, ohne dass
+    /// Stil offen ist; gerufen wird iOS nur, wenn sich der Name ändert.
+    public func applyAppIcon() async {
+        await appIcons.apply(settings.style)
     }
 
     /// Die Live-Aktivität, wie sie jetzt aussähe – die zum nächsten Gebet, im gewählten Stil – für die Vorschau

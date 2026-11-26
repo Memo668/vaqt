@@ -40763,6 +40763,208 @@
         }
       }
     },
+    "styleIconFooter" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تتغيّر الأيقونة في الشاشة الرئيسية عندما تغادر هذه الصفحة. ويؤكّد iOS كل تغيير بإشعار."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "এই পৃষ্ঠা ছেড়ে গেলে হোম স্ক্রিনের আইকন বদলে যায়। iOS প্রতিটি পরিবর্তন একটি বার্তায় নিশ্চিত করে।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ikona na početnom ekranu mijenja se kada napustite ovu stranicu. iOS potvrđuje svaku promjenu obavještenjem."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Icon auf dem Home-Bildschirm wechselt, wenn du diese Seite verlässt. iOS bestätigt jeden Wechsel mit einem Hinweis."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The icon on the Home Screen changes when you leave this page. iOS confirms each change with a notice."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El icono de la pantalla de inicio cambia cuando sales de esta página. iOS confirma cada cambio con un aviso."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "نماد روی صفحهٔ اصلی وقتی این صفحه را ترک کنید عوض می‌شود. iOS هر تغییر را با یک پیام تأیید می‌کند."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "L’icône sur l’écran d’accueil change lorsque vous quittez cette page. iOS confirme chaque changement par un message."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ikon di Layar Utama berubah saat Anda meninggalkan halaman ini. iOS mengonfirmasi setiap perubahan dengan pemberitahuan."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "L’icona nella schermata Home cambia quando esci da questa pagina. iOS conferma ogni modifica con un avviso."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ikon di Skrin Utama berubah apabila anda meninggalkan halaman ini. iOS mengesahkan setiap perubahan dengan pemberitahuan."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Het symbool op het beginscherm verandert wanneer je deze pagina verlaat. iOS bevestigt elke wijziging met een melding."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Значок на экране «Домой» меняется, когда вы покидаете эту страницу. iOS подтверждает каждое изменение уведомлением."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ikona në ekranin bazë ndryshon kur dilni nga kjo faqe. iOS e konfirmon çdo ndryshim me një njoftim."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ana ekrandaki simge, bu sayfadan çıktığında değişir. iOS her değişikliği bir uyarıyla onaylar."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ہوم اسکرین پر آئیکن اس وقت بدلتا ہے جب آپ یہ صفحہ چھوڑتے ہیں۔ iOS ہر تبدیلی کی تصدیق ایک پیغام سے کرتا ہے۔"
+          }
+        }
+      }
+    },
+    "styleIconTint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "أيقونة التطبيق باللون الأساسي"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "মূল রঙে অ্যাপ আইকন"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ikona aplikacije u osnovnoj boji"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App-Icon in der Grundfarbe"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Icon in Accent Color"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Icono de la app en el color principal"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "نماد برنامه با رنگ اصلی"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Icône de l’app dans la couleur principale"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ikon App dengan Warna Utama"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Icona dell’app nel colore principale"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ikon Apl dalam Warna Utama"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Appsymbool in de hoofdkleur"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Значок приложения в основном цвете"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ikona e aplikacionit në ngjyrën bazë"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulama simgesi ana renkte"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ایپ آئیکن بنیادی رنگ میں"
+          }
+        }
+      }
+    },
     "styleLessColors" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -45929,6 +46131,107 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "ریکارڈنگ: DARSA TV، تنزانیہ (مختصر)۔ لائسنس: CC BY۔"
+          }
+        }
+      }
+    },
+    "wArcDesc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "قوس اليوم مع الصلاة التالية وأوقات الكراهة."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "পরবর্তী নামাজ ও মাকরুহ সময়সহ দিনের বৃত্তচাপ।"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Dnevni luk sa sljedećim namazom i mekruh vaktima."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Tagesbogen mit dem nächsten Gebet und den Verbotszeiten."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The day arc with the next prayer and the makruh times."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El arco del día con la próxima oración y los tiempos makruh."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "کمان روز با نماز بعدی و اوقات مکروه."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "L’arc du jour avec la prochaine prière et les heures makrouh."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Busur hari dengan salat berikutnya dan waktu makruh."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "L’arco del giorno con la prossima preghiera e i momenti makruh."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Lengkok hari dengan solat seterusnya dan waktu makruh."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "De dagboog met het volgende gebed en de makroeh-tijden."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Дуга дня со следующим намазом и временем макрух."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Harku i ditës me namazin e radhës dhe kohët mekruh."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sıradaki namaz ve kerahat vakitleriyle günün yayı."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "اگلی نماز اور مکروہ اوقات کے ساتھ دن کی قوس۔"
           }
         }
       }

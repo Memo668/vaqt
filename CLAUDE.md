@@ -4,14 +4,14 @@ Gemeinnützige Gebetszeiten-App: werbefrei, ohne Tracking, ohne Konto. Name unte
 
 ## Quellen der Wahrheit
 
-1. `design/prayer-times-design-spec.md` – Design Spec v0.11: Tokens, Komponenten, Verhalten, Zustände, iPhone Duo (§ 8), offene Fragen (§ 6), Varianten (§ 7), Änderungen vor der Beta (§ 9), nach der ersten Beta (§ 10) und vor der Golden Beta (§ 11, mit dem Nachtrag § 11.3–11.7: Klang, Stil, Rechtsschule, Onboarding).
+1. `design/prayer-times-design-spec.md` – Design Spec v0.13: Tokens, Komponenten, Verhalten, Zustände, iPhone Duo (§ 8), offene Fragen (§ 6), Varianten (§ 7), Änderungen vor der Beta (§ 9), nach der ersten Beta (§ 10), vor der Golden Beta (§ 11, mit dem Nachtrag § 11.3–11.7: Klang, Stil, Rechtsschule, Onboarding) CarPlay und StandBy (§ 12, Phase 19) und das App-Icon (§ 13, Phase 20).
 2. `design/screenshots/` – Referenzbilder je Bildschirm und Zustand. Übersicht: `design/screenshots/INDEX.md`. Seit Spec v0.8 nimmt `scripts/capture-prototype` sie aus dem Prototyp auf.
 3. `design/prayer-times-prototype.html` – Quelltext des Prototyps (~2 400 Zeilen, nicht komplett einlesen, gezielt suchen):
    - Tokens: `:root`-CSS am Anfang (Farben hell/dunkel, Abstände, Radien, Schriftgrößen)
    - alle Texte, 16 Sprachen (Spec § 9.10): JS-Objekt `T`
    - Logik: `todayTimes()`, `phase()`, `phaseKey()`, `kerahatWins()`, `activeKerahat()`, `guideState()`, `dayProgress()`, `ARCS` + `arcHTML()`, `qadaPage()`
    - Daten: `METHODS`, `RAKAH`, `GUIDE_STEPS`, `FORMULA`, `VERSES`, `KERAHAT_MIN`, `KERAHAT_MIN_BY` und `MADHABS` (Verbotszeiten je Rechtsschule), `ACCENTS` (24 Grundfarben), `LA_STYLES` (Stile der Live-Aktivität)
-   - Seiten: `homePage()`, `prayerRow()`, `topBarHTML()`, `qiblaPage()`, `guidePage()`, `versesPage()`, `qadaPage()`, `PAGES` (Einstellungen, darin `style()` und `madhab()`), `laBanner()`/`diExpanded()` (Live-Aktivität, Stil über `laAttr()` und die Variablen `--la-*` im Block „Stil“)
+   - Seiten: `homePage()`, `prayerRow()`, `topBarHTML()`, `qiblaPage()`, `guidePage()`, `versesPage()`, `qadaPage()`, `PAGES` (Einstellungen, darin `style()` und `madhab()`), `laBanner()`/`diExpanded()` (Live-Aktivität, Stil über `laAttr()` und die Variablen `--la-*` im Block „Stil“), `cwCarPlayHTML()` (Ansicht „CarPlay“ seit Phase 19: `laSmall()`, `cpwNext()`, `cpwArc()`, `ARCS.cpw`/`lasm`, `LAS`)
 
 Werte und Formeln von dort übernehmen, nicht schätzen. Bei Widerspruch gilt: Spec > Screenshot > HTML. Ist etwas unklar, frag nach oder trag es in `docs/OPEN-QUESTIONS.md` ein – nicht raten.
 
@@ -63,7 +63,7 @@ Nur in DEBUG: Startargumente, mit denen sich jeder Referenz-Screenshot nachstell
 -debugLiveActivity            # Live-Aktivität zum nächsten Gebet sofort, auch außerhalb des Vorlaufs und mit Mock-Zeiten (system/93–96)
 -debugAlarm before|fixed|denied   # Wecker zu Fadschr an (vor Sonnenaufgang / feste Uhrzeit mit kurzem Adhan) oder Erlaubnis abgelehnt, nur mit -debugFixtureTimes (iphone/24, 84)
 -debugAlarmIn 2               # ein echter Wecker (AlarmKit) so viele Minuten nach dem Start – zum Test von Ton, Stummmodus und Fokus am Gerät
--debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|widgets|live|all   # Katalog der Bausteine statt der App, für den Abgleich (make compare, make compare-system)
+-debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|widgets|live|carplay|all   # Katalog der Bausteine statt der App, für den Abgleich (make compare, make compare-system); carplay = kleine Widgets ohne Hintergrund (Phase 19)
 ```
 
 Uhrzeit, Datum und Ort laufen über eine injizierbare `Clock`/`LocationSource`, nie direkt über `Date()` oder `CLLocationManager` in den Views.

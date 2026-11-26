@@ -17,16 +17,24 @@ struct PrayerEntry: TimelineEntry {
 /// sie keinen Ort, zeigen die Widgets „Stadt wählen“; die App lädt sie neu, sobald es einen Ort gibt.
 struct PrayerTimelineProvider: TimelineProvider {
 
-    /// Das Widget, für das die Zeitleiste ist (`PrayerTimesWidget.kind`, `PrayerLiveWidget.kind`).
+    /// Das Widget, für das die Zeitleiste ist (`PrayerTimesWidget.kind`, `PrayerLiveWidget.kind`, `PrayerArcWidget.kind`).
     let kind: String
 
-    /// Abstand der Einträge für den Bogen je Widget und Größe: im Widget „Live“ alle 5 Minuten, im Rechteck
-    /// des Sperrbildschirms alle 10 Minuten, sonst nur zu den Ereignissen – die übrigen Größen zeigen keinen
-    /// Bogen, und jeder Eintrag vergrößert das Archiv, das iOS bei 10 MB ablehnt (Phase 14).
-    static func arcStep(kind: String, family: WidgetFamily) -> TimeInterval? {
-        if kind == PrayerLiveWidget.kind { return WidgetTimeline.arcStep }
-        if family == .accessoryRectangular { return WidgetTimeline.lockScreenArcStep }
-        return nil
+    /// Welches Widget das ist, so wie seine Zeitleiste es braucht (`WidgetTimeline.Surface`): Der Bogen braucht
+    /// Zwischeneinträge – im Widget „Live“ alle 5 Minuten, im Rechteck des Sperrbildschirms und im „Tagesbogen“ alle
+    /// 10 Minuten –, das kleine Widget Einträge zu Beginn und Ende jeder Verbotszeit (ohne Hintergrund zeigt es
+    /// „Verbotszeit bis …“, Spec § 12.1). Die übrigen Größen kommen mit den Ereignissen aus; jeder Eintrag vergrößert
+    /// das Archiv, das iOS bei 10 MB ablehnt (Phase 14).
+    static func surface(kind: String, family: WidgetFamily) -> WidgetTimeline.Surface {
+        if kind == PrayerLiveWidget.kind { return .live }
+        if kind == PrayerArcWidget.kind { return .dayArc }
+        switch family {
+        case .systemSmall: return .small
+        case .accessoryCircular: return .lockScreenCircular
+        case .accessoryRectangular: return .lockScreenRectangular
+        case .accessoryInline: return .lockScreenInline
+        default: return .medium
+        }
     }
 
     func placeholder(in context: Context) -> PrayerEntry {
@@ -38,11 +46,11 @@ struct PrayerTimelineProvider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<PrayerEntry>) -> Void) {
-        completion(timeline(at: Date(), arcStep: Self.arcStep(kind: kind, family: context.family)))
+        completion(timeline(at: Date(), surface: Self.surface(kind: kind, family: context.family)))
     }
 
-    /// Die Zeitleiste ab `deviceNow`.
-    func timeline(at deviceNow: Date, arcStep: TimeInterval? = nil) -> Timeline<PrayerEntry> {
+    /// Die Zeitleiste ab `deviceNow`; ohne Angabe des Widgets nur mit den Ereignissen.
+    func timeline(at deviceNow: Date, surface: WidgetTimeline.Surface = .medium) -> Timeline<PrayerEntry> {
         guard let state = WidgetState.sharedDefaults.flatMap(WidgetState.load(from:)) else {
             return Timeline(entries: [Self.noPlace(at: deviceNow, language: nil)], policy: .never)
         }
@@ -52,10 +60,10 @@ struct PrayerTimelineProvider: TimelineProvider {
         // Mit `-debugTime` läuft die Uhr der App anders als die des Geräts: gerechnet wird in App-Zeit,
         // die Einträge stehen in Gerätezeit.
         let offset = state.clockOffset
-        // Mit Zwischenschritten für den Bogen im Rechteck und im Widget „Live“ (Phase 14).
+        // Mit Zwischenschritten für den Bogen (Phase 14, 19) und den Grenzen der Verbotszeiten (Phase 19).
         let result = WidgetTimeline.entries(
             from: deviceNow.addingTimeInterval(offset), source: Self.timesSource(for: state), place: place,
-            settings: state.calculation, arcStep: arcStep
+            settings: state.calculation, surface: surface
         )
         let entries = result.entries.map { entry in
             PrayerEntry(
@@ -101,11 +109,14 @@ struct PrayerTimesWidgetView: View {
     let entry: PrayerEntry
 
     @Environment(\.widgetFamily) private var family
+    /// In StandBy und CarPlay lässt iOS den Hintergrund weg; das kleine Widget hat dann eine eigene Anordnung
+    /// (Spec § 12.1).
+    @Environment(\.showsWidgetContainerBackground) private var showsBackground
 
     var body: some View {
         // Die Texte in der Sprache der App und die Grundfarbe (Spec § 11.7), bevor die Ansichten sie lesen.
         L10n.chosenLanguage = entry.language
-        AccentStore.shared.accent = entry.content.style.accent
+        AccentStore.shared.apply(entry.content.style)
         return content
             .environment(\.locale, L10n.locale)
             .environment(\.layoutDirection, L10n.layoutDirection)
@@ -136,7 +147,7 @@ struct PrayerTimesWidgetView: View {
             InlinePrayerWidget(content: entry.content)
                 .containerBackground(for: .widget) { Color.clear }
         default:
-            SmallPrayerWidget(content: entry.content)
+            SmallPrayerWidget(content: entry.content, showsBackground: showsBackground)
                 .containerBackground(Palette.backgroundCell, for: .widget)
         }
     }
@@ -155,6 +166,47 @@ struct PrayerTimesWidget: Widget {
         .supportedFamilies([.systemSmall, .systemMedium, .accessoryCircular, .accessoryRectangular, .accessoryInline])
         // Die Abstände setzt das Widget selbst, wie im Prototyp.
         .contentMarginsDisabled()
+        // StandBy und CarPlay dürfen den Hintergrund weglassen (Spec § 12.1); das ist der Standard, hier ausdrücklich.
+        .containerBackgroundRemovable(true)
+    }
+}
+
+/// Das kleine Widget „Tagesbogen“ (Spec § 12.2, seit Phase 19): der Tagesbogen mit Gebet, Uhrzeit und Countdown,
+/// darunter der Ort bzw. „Verbotszeit bis …“ – auf dem Home-Bildschirm. In StandBy und CarPlay (ohne Hintergrund) zeigt
+/// es die Anordnung von „Nächstes Gebet“ und steht dort in der Galerie hinten. In der Galerie heißt es wie die anderen
+/// nach der App; die Beschreibung sagt, was es zeigt (`wArcDesc`).
+struct PrayerArcWidget: Widget {
+    nonisolated static let kind = "PrayerArc"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: Self.kind, provider: PrayerTimelineProvider(kind: Self.kind)) { entry in
+            PrayerArcWidgetView(entry: entry)
+        }
+        .configurationDisplayName(L10n.appName)
+        .description(L10n.wArcDesc)
+        .supportedFamilies([.systemSmall])
+        .contentMarginsDisabled()
+        .containerBackgroundRemovable(true)
+        // Ohne Hintergrund sieht es aus wie „Nächstes Gebet“ – dort zuerst das (Spec § 12.2).
+        .disfavoredLocations([.standBy, .carPlay], for: [.systemSmall])
+    }
+}
+
+/// Die Ansicht des Widgets „Tagesbogen“: mit Hintergrund der Bogen, ohne (StandBy, CarPlay) die Anordnung von
+/// „Nächstes Gebet“.
+struct PrayerArcWidgetView: View {
+    let entry: PrayerEntry
+
+    @Environment(\.showsWidgetContainerBackground) private var showsBackground
+
+    var body: some View {
+        // Die Texte in der Sprache der App und die Grundfarbe (Spec § 11.7), bevor die Ansichten sie lesen.
+        L10n.chosenLanguage = entry.language
+        AccentStore.shared.apply(entry.content.style)
+        return SmallArcPrayerWidget(content: entry.content, showsBackground: showsBackground)
+            .environment(\.locale, L10n.locale)
+            .environment(\.layoutDirection, L10n.layoutDirection)
+            .containerBackground(Palette.backgroundCell, for: .widget)
     }
 }
 
@@ -182,7 +234,7 @@ struct PrayerLiveWidgetView: View {
     var body: some View {
         // Die Texte in der Sprache der App und die Grundfarbe, bevor die Ansichten sie lesen.
         L10n.chosenLanguage = entry.language
-        AccentStore.shared.accent = entry.content.style.accent
+        AccentStore.shared.apply(entry.content.style)
         // Der Stil der Live-Aktivität gilt auch für dieses Widget (Spec § 11.7).
         return LivePrayerWidget(content: entry.content)
             .environment(\.locale, L10n.locale)

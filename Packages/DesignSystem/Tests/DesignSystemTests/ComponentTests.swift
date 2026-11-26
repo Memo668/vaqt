@@ -144,7 +144,7 @@ struct ComponentTests {
     func catalogSections() {
         #expect(ComponentCatalog.Section.allCases.map(\.rawValue) == [
             "arc", "rows", "glass", "cards", "compass", "guide", "steps", "verses", "qada", "settings", "onboarding",
-            "adhan", "widgets", "live", "all",
+            "adhan", "widgets", "live", "carplay", "all",
         ])
     }
     #endif

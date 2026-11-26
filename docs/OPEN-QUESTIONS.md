@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 26.11.2026, nach der Abnahme des Hotfix „App weiterempfehlen“ (Absturz beim Teilen mit einer anderen Grundfarbe als Petrol, `ba8782c`); daraus Build 0.1.0 (6). Davor Phase 18 (Verse und Adhan, Spec § 11.1–11.2, mit dem Nachtrag Klang, Stil, Rechtsschule und Onboarding, Spec § 11.3–11.7), abgenommen am 25.11.2026; Build 0.1.0 (5) ist bei „Intern“ und „Extern“ (Golden Beta am 26.11.2026).
+Stand: 26.11.2026, Golden Beta 0.9.1 (Build 7): In `main` zusammengeführt sind Phase 19 (CarPlay-Widgets, StandBy und Live-Aktivität „klein“, Spec § 12), Phase 20 (App-Icon, Spec § 13) und der Hotfix „App weiterempfehlen“ (Absturz beim Teilen mit einer anderen Grundfarbe als Petrol, `ba8782c`); Phase 19 und 20 abgenommen am 26.11.2026. Davor Phase 18 (Verse und Adhan, Spec § 11.1–11.2, mit dem Nachtrag Klang, Stil, Rechtsschule und Onboarding, Spec § 11.3–11.7), abgenommen am 25.11.2026. Bei „Intern“ sind Build 0.1.0 (5) und (6), bei „Extern“ Build 0.1.0 (5).
 
 ## Für die erste Beta
 
@@ -66,6 +66,34 @@ Offen bleibt:
 - **Welche Verse und wie viele:** Es bleiben die sechs bisherigen. Bei einem Vers am Tag wiederholen sie sich jede Woche (Spec § 6.12).
 - **Rechte an der Aufnahme:** Die Lizenz hat der Kanal DARSA TV gesetzt, der im Video als Produzent genannt ist. Eine eigene Zusage des Muezzins liegt nicht vor.
 - **Fadschr:** Für eine Fassung mit „aṣ-ṣalātu khayrun mina n-nawm“ braucht es eine eigene Aufnahme. Bis dahin spielt Fadschr dieselbe wie die übrigen Gebete.
+
+## App-Icon, entschieden am 25./26.11.2026
+
+Nach dem Vorschlag „Neues App-Icon“ (Prototyp https://claude.ai/artifact/FHC9umY9SGxcLaRibudgk9, Beschreibung in `docs/vorschlaege/2026-11-25/icon.md`, nicht im Repo). Go zum Bau am 26.11.2026 („bauen“), gebaut in Phase 20 (Spec § 13).
+
+| Punkt | Antwort | Entscheidung |
+|---|---|---|
+| Variante | „B (Empfohlen)“, 25.11.2026 | Hell weißer Grund, dunkel schwarzer Grund, Bogen in der Grundfarbe. |
+| Glas-Punkt | „Linse“ und „Oben (Empfohlen)“, dann „prägnanter und größer“: „Groß mit Glasrand“, 26.11.2026 | Glas-Linse auf dem oberen Punkt, Radius 140, heller Rand, darunter 1,6-fach. |
+| Icon in der Grundfarbe | „Dafür brauchen wir keinen Prototypen. Du kannst einfach direkt umsetzen.“, 26.11.2026 | 24 Icons, Petrol ist das Haupt-Icon; Schalter unter Stil, standardmäßig an; Wechsel beim Verlassen der Seite. |
+| Bauweg | „Ja, eintragen“, 26.11.2026 | Icon-Composer-Datei `App/AppIcon.icon`; PNGs nur als Rückfall (nicht nötig: XcodeGen und actool verarbeiten `.icon`). |
+| Nummer | Hauptsitzung, 26.11.2026 | Phase 20; die Apple Watch rückt auf 21 bis 23. |
+| Paketgröße | „Alle 24 behalten (Empfohlen)“, 26.11.2026 | actool legt je Icon drei fertige Bilder 1024 × 1024 ab (rund 1,8 MB, auch ohne Glas). Archiv 94 statt 9,2 MB, für ein iPhone nach dem Ausdünnen rund 55 MB. |
+| Text am Schalter | „App-Icon in der Grundfarbe“, 26.11.2026 | `styleIconTint` |
+| Wechsel im Hintergrund | „Beim nächsten Öffnen (Empfohlen)“, 26.11.2026 – nach dem Befund, dass iOS den Wechsel im Hintergrund ablehnt | Verlässt man die App von Stil aus, wechselt das Icon, sobald sie wieder vorn ist und Stil nicht offen (beim Start oder Zurückkommen), mit dem Hinweis von iOS. |
+| Fußnote | „Nur der Hinweis von iOS“, 26.11.2026 | `styleIconFooter`: „Das Icon auf dem Home-Bildschirm wechselt, wenn du diese Seite verlässt. iOS bestätigt jeden Wechsel mit einem Hinweis.“ |
+
+## CarPlay und Apple Watch, entschieden am 25.11.2026
+
+Nach dem Vorschlag „CarPlay und Apple Watch“ vom 24.11.2026 (Prototyp https://claude.ai/artifact/UFPJkRBD6A5hXzseS1G8cZ, Recherche mit Quellen in `docs/vorschlaege/2026-11-24/carplay-watch.md`, nicht im Repo). Bauplan freigegeben am 25.11.2026 („Plan freigeben“):
+
+| Punkt | Entscheidung |
+|---|---|
+| Eigene CarPlay-App | Nein. Gebetszeiten passen in keine Kategorie; die Berechtigung „Audio“ wird nicht beantragt. |
+| CarPlay | Phase 19: beide kleinen Widgets („Nächstes Gebet“ angepasst, neu „Tagesbogen“) und die Live-Aktivität „klein“ (Spec § 12). |
+| Apple Watch | Phasen 21 bis 23 (bis 26.11.2026: 20 bis 22; Phase 20 wurde das App-Icon), nacheinander, jede in einer eigenen Sitzung: App (rechnet selbst, Einstellungen vom iPhone, Qibla mit Kompass), Komplikationen und Smart Stack, Feinschliff am Gerät. Nur zusammen mit der iPhone-App, watchOS 26. |
+| Zeitpunkt | Nach der Abnahme von Phase 18; nicht für den Release am 29.11.2026, Phase 19 könnte ins erste Update. |
+| „Tagesbogen“ in StandBy und CarPlay | Nach dem Test am Gerät (25.11.2026, „Da sind 7 Punkte auf dem Widget und der Halbkreis bringt ja auch mal gar nichts.“) auf die Frage, was er dort zeigen soll: „Wie „Nächstes Gebet““. Ohne Hintergrund also dieselbe große Anordnung, kein Bogen; dort in der Galerie hinten. Auf dem Home-Bildschirm bleibt der Bogen (Spec § 12.2). |
 
 ## Nachtrag zu Phase 18: Stil, Klang und Verbotszeiten nach Rechtsschule, entschieden am 24.11.2026
 
@@ -202,7 +230,9 @@ Offen bzw. Annahmen:
 - **Übersetzungen der Verse** (Phase 18, Spec § 11.1): Seit dem 24.11.2026 wörtliche Ausschnitte veröffentlichter Übersetzungen, eine vorläufige Auswahl. Vor dem App Store: die Rechte klären, sobald die App Geld annimmt (Tanzil: nur nicht kommerziell), die Ausschnitte von Menschen mit Muttersprache lesen lassen und entscheiden, welche und wie viele Verse die App zeigt. Der arabische Text entspricht dem von Tanzil (CC BY 3.0, Hinweis auf der Lizenzseite).
 - **Adhan-Aufnahme** (Phase 18, Spec § 11.2): Seit dem 24.11.2026 eine Aufnahme, der Adhan von Ustadh Mmanga Muharram (DARSA TV, auf YouTube unter CC BY). Vor dem App Store: festhalten, wer die Rechte an der Aufnahme hält – am besten eine kurze schriftliche Zusage von DARSA TV oder dem Muezzin –, und entscheiden, ob es eine Fadschr-Fassung geben soll. Den Schnitt (welcher Teil des Adhan in 30 Sekunden passt) sollte jemand fachlich ansehen.
 - **Texte der Anleitung** (Phase 5, Spec § 6.14): Niemand hat sie fachlich geprüft (Imam oder Gelehrter je Sprache). Offen sind auch eine neutrale Fassung oder Varianten je Rechtsschule und für Frauen, echte Illustrationen und Audio für die Formeln. Seit Phase 13 gehören die Texte von „Gebet Schritt für Schritt“ dazu (Spec § 9.6: Start, Stehen in Rakʿa 1–2, „Sprich dreimal“, kurzes Sitzen, zweite Niederwerfung, erstes und letztes Sitzen, Schluss). Im String Catalog tragen alle 43 Texte den Kommentar `TODO(review)`; `scripts/import-strings` setzt ihn (`walkReviewKeys`, `guideReviewKeys`).
-- **Icon** (Spec § 6.9): Das Icon ist ein Platzhalter (Phase 11). Seit Phase 12 zeigen Onboarding und Tagline das App-Symbol selbst, seit Phase 14 auch Live-Aktivität und Widgets (Spec § 9.1, Bildsatz `AppMark` im DesignSystem); ändert sich das Icon, den Bildsatz neu erzeugen (Kommentar in `AppMark.swift`).
+- **Icon** (Spec § 6.9, § 13): Seit Phase 20 das endgültige Icon (entschieden am 25./26.11.2026, unten „App-Icon“), in jeder Grundfarbe. Ändert sich ein Icon, den Bildsatz `AppMark` mit `scripts/app-mark` neu erzeugen. Vor dem App Store:
+  - **SF Symbols im Icon:** Die fünf Symbole im Icon sind SF Symbols (`sun.horizon`, `sun.max`, `sun.min`, `sunset`, `moon.stars`), übernommen aus dem Platzhalter. Apple erlaubt SF Symbols laut HIG nicht in App-Icons und Logos. Klären, ob die Symbole neu gezeichnet werden müssen (eigene Formen statt SF Symbols); bis dahin ein Risiko bei der Prüfung.
+  - Am Gerät in allen sechs Darstellungen ansehen (Prüfliste in `docs/BUILD-PLAN.md`, Phase 20).
 - **Name** (Spec § 9.13): „Vaqt“ ist ein Arbeitsname (entschieden am 15.11.2026, „Vaqt als Arbeitsname (Empfohlen)“); den endgültigen Namen vor dem App Store festlegen. Im App Store gibt es schon:
   - „Vaqt“ (Huriye DIVARCI, Kategorie Lifestyle, seit 09/2026) – deshalb heißt der Store-Eintrag „Vaqt – Prayer Time“;
   - „Vaqt: Prayer Times & Qibla“ (Shokhabbos Makhmudov, eine Gebetszeiten-App, seit 05/2026, im deutschen Store „Vaqt: Gebetszeiten & Qibla“, letzte Version am 10.11.2026). Verwechslung und eine Ablehnung wegen Ähnlichkeit sind möglich.
@@ -564,6 +594,64 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 | Ausrichtung | „Ja, so lassen“ | nur Hochformat. Phase 10: Die Info.plist bleibt so; auf dem inneren Display des iPhone Duo zeigt iOS die App trotzdem quer und hoch (siehe „Annahmen in Phase 10“). |
 | Nachholen | „Ja, so lassen“ | Die App startet leer: kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr. `iphone/60` und `61` zeigen die Beispielzahlen des Prototyps; die gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Annahme für Phase 6: Mit `-debugFixtureTimes` zeigt die Seite sie. |
 | JAKIM und Kemenag | „Ja, so lassen“ | reine Winkel 20°/18°. Vor der Veröffentlichung gegen offizielle Tabellen zu prüfen, siehe oben. |
+
+## Annahmen in Phase 20
+
+Gebaut am 26.11.2026 auf `claude/phase-20` (ab `claude/phase-19` = `3820e60`), Spec v0.13 § 13. 1143 Tests grün (PrayerCore 505, DesignSystem 274, Features 364; vorher 1126). `make check-strings` und `make check-icons` in Ordnung, `make archive` mit `scripts/check-archive` in Ordnung (auch die 23 alternativen Icons).
+
+### Was mit den Referenzbildern übereinstimmt
+- **Einstellungen und Onboarding** (`make compare-settings STATES='01 72 87'`, `72` mit dem UI-Hilfsprojekt `iphone-71-72-settings.txt`): Icon im Onboarding und über der Tagline wie im Prototyp (weiß, Glas-Linse, Bogen in Petrol); unter Stil die neue Gruppe an derselben Stelle, 4,7–13 % der Pixel (Schrift). Abweichungen wie bisher: der Simulator ist 12 pt breiter (Fußnoten brechen anders um), die Tableiste des Systems verdeckt die Kacheln der Live-Aktivität anders, „Lizenzen“ gibt es nur in der App.
+- **Widgets und Live-Aktivität** (`make compare-system`, alle Zustände): das neue Icon im Kopf von Live-Aktivität, Widget „Live“ und Live-Aktivität „klein“; die Abweichungen sind die bekannten (Hintergrund des Katalogs statt Hintergrundbild, Schrift, Symbole). `90`, `91`, `93`, `97ai`, `99` zeigten im ersten Lauf ein leeres Bild – der Katalog war beim Aufnehmen noch nicht da; mit `WAIT=5` stimmen sie.
+- **Kopf der Live-Aktivität dunkel** (`system/96`): Der Prototyp zeigt dort jetzt das schwarze Icon, die App wie bisher das helle (unten, „Kopf der Live-Aktivität“).
+- **Im System** (UI-Hilfsprojekt `phase-20-icon.txt`, `phase-20-icon-background.txt`, Protokoll `#ChangeIconWithAlert` von `lsd`): Farben antippen wechselt nichts; beim Verlassen von Stil genau ein Wechsel mit dem Hinweis von iOS („You have changed the icon for “Vaqt”.“ mit dem neuen Icon); von Stil über Home verlassen kein Versuch, beim nächsten Öffnen ein Wechsel mit Hinweis; zurück zu Petrol ebenso. Das Icon auf dem Home-Bildschirm zeigt die gewählte Farbe.
+
+### Annahmen in der Umsetzung
+- **Schalter in eigener Gruppe** direkt unter der Grundfarbe, ohne Überschrift, mit eigener Fußnote – „unter dem Farbraster“ im Bauplan; die Fußnote der Grundfarbe bleibt, wie sie ist. „Standard wiederherstellen“ schaltet ihn wieder an und erscheint auch, wenn nur er aus ist.
+- **Der Schalter gehört zum Stil** (`AppStyle.tintsAppIcon`, gespeichert mit `settings.style`; früher gespeicherte Stile lesen sich mit „an“). So tragen App Group und Inhalt der Live-Aktivität ihn ohne eigenen Weg mit; Widgets und Live-Aktivität setzen `AccentStore.iconAccent` und zeigen `AppMark` in derselben Farbe wie der Home-Bildschirm.
+- **Wann das Icon wechselt:** beim Verschwinden der Seite Stil (`onDisappear`) und – entschieden am 26.11.2026, „Beim nächsten Öffnen“ – sobald die App vorn ist und Stil nicht offen (`AppIconPlanning`, `onChange(of: scenePhase, initial: true)`, also auch beim Start). Im Hintergrund lehnt iOS ab: Im Simulator meldete `setAlternateIconName` für `inactive` und `background` „Der Vorgang wurde abgebrochen“; die App versucht es dort deshalb nicht. Gerufen wird nur, wenn sich der Name gegenüber `alternateIconName` (oder einem laufenden Wechsel) ändert; der Logger `appIcon` meldet Wechsel und Ablehnungen.
+- **Mit `-debugFixtureTimes`** wechselt das Icon nur im Speicher (`AppIconTarget.memory`): Aufnahmen und Abgleich ändern das Icon des Simulators nicht, und kein Hinweis von iOS stört die Bilder. Ohne Mock-Zeiten geht es wie in der App ans System.
+- **Ohne alternative Icons** (`supportsAlternateIcons` falsch) fehlt der Schalter; `AppMark` folgt dann weiter dem Stil. Bei dieser App kommt das nicht vor, weil die Info.plist die Icons nennt.
+- **`AppMark` je Grundfarbe:** 48 Bilder zu 360 px, zusammen 2,2 MB, je einmal in der App und in der Widget-Erweiterung (das Paket DesignSystem liegt in beiden). Petrol heißt weiter `AppMark`, die übrigen `AppMark-<id>`. `ictool` rendert nicht ganz bitgleich; ein neuer Lauf von `scripts/app-mark` kann deshalb Bilder ändern, die gleich aussehen.
+- **Bilder im Prototyp:** `APP_ICON` hat je Grundfarbe ein helles und ein dunkles Bild zu 240 px (wie bisher), der Prototyp wächst damit von 0,8 auf 2,3 MB.
+- **Kopf der Live-Aktivität:** bleibt wie in Phase 14 die helle Fassung (oben „App-Symbol im Kopf immer hell“: iOS zeichnet den Sperrbildschirm auch im hellen System dunkel, die Erweiterung kennt das Erscheinungsbild des Systems dort nicht); im Stil „Schwarz-weiß“ grau. Der Prototyp nimmt dort das Erscheinungsbild des Systems und zeigt in `system/96` das schwarze Icon.
+- **`scripts/app-icon.swift` entfällt:** Es zeichnete nur das grüne Platzhalter-Icon; der Rückfall auf PNGs war nicht nötig. Der Vorschlag liest es weiter aus dem Commit `6f5910a`.
+- **`make check-icons`** (`scripts/app-mark --check`, vor `make test`): zu jeder Grundfarbe eine `.icon`-Datei und ein Bildsatz hell und dunkel mit 360 px, `project.yml` nennt die 23 Namen in der Reihenfolge von `AccentColorID`. `scripts/check-archive` prüft dazu `CFBundleAlternateIcons` und die Icons in `Assets.car`.
+- **Paketgröße:** Release-Archiv vorher 9,2 MB (gezippt 4,5 MB), nachher 96 MB (gezippt 93 MB); `Assets.car` 85 MB, `DesignSystem_DesignSystem.bundle` 2,7 statt 1,3 MB in App und Erweiterung. Auf dem iPhone kommt nach dem Ausdünnen durch den App Store etwa die Hälfte der Icon-Bilder an (nur `phone`, nicht `pad`), rund 55 MB. Entschieden am 26.11.2026: alle 24 behalten.
+
+### Was sich im Simulator nicht prüfen lässt
+- Die sechs Darstellungen des Home-Bildschirms (Klar und Getönt zeigt der Simulator nicht), das Icon in Mitteilungen und Spotlight und der Wechsel am Gerät: nach der Prüfliste in `docs/BUILD-PLAN.md` (Phase 20).
+- **SF Symbols im Icon:** siehe „Vor dem App Store“, Punkt „Icon“.
+
+## Annahmen in Phase 19
+
+Gebaut am 25.11.2026 auf `claude/phase-19` (ab `main` = `6f5910a`), Spec v0.12 § 12. 1126 Tests grün (PrayerCore 503, DesignSystem 268, Features 355; vorher 1104). Nach dem ersten Test am iPhone Duo geändert: Der „Tagesbogen“ zeigt ohne Hintergrund die Anordnung von „Nächstes Gebet“ (Entscheidung oben unter „CarPlay und Apple Watch“). Neue Referenzbilder: `design/screenshots/carplay/` (34 Bilder aus der Ansicht „CarPlay“ des Prototyps).
+
+### Was mit den Referenzbildern übereinstimmt
+- **Live-Aktivität „klein“** (`carplay/cp-40`–`cp-43`, `scripts/compare-system cp40 …` im Katalog `-debugCatalog live`): die vier Größen 240 × 100 mit Kopf, 240 × 78, 170 × 78 und 194 × 80,5; in der Verbotszeit orange mit „Verbotszeit bis 16:27“ im Kopf bzw. im Bogen; die Stile Nur Bogen (Warnfarbe `#F8B877`), Schwarz-weiß (gestreift, App-Symbol grau), invertiert, Ozean und warm (violett). Nach dem Wechsel (`-debugCatalog carplay`): zwei Zeilen, um 14:25 „Verbotszeit ab 15:42“, um 16:05 orange mit „hat begonnen“.
+- **Kleine Widgets** (`cp-50`–`cp-52`, Katalog `-debugCatalog carplay`): „Nächstes Gebet“ mit Hintergrund wie bisher, ohne Hintergrund mit Symbol und Name, Uhrzeit 46 pt, „in …“ und „Verbotszeit bis …“; „Tagesbogen“ mit Hintergrund mit dem Bogen, ohne Hintergrund genau wie „Nächstes Gebet“; hell und dunkel, in der Verbotszeit, Ozean und warm. Abweichungen nur in Schrift (Browser statt SF Pro, auch der Doppelpunkt von SF Pro Rounded) und in den Symbolen (SF Symbols statt der Zeichnungen des Prototyps), wie in den früheren Phasen.
+- **Im System** (UI-Hilfsprojekt, `scripts/ui-harness/scripts/phase-19-system.txt`): Das Widget „Tagesbogen“ steht in der Galerie von „Vaqt“ als vierte Seite mit seiner Beschreibung (englisches System: „The day arc with the next prayer and the makruh times.“) und läuft auf dem Home-Bildschirm, um 16:05 mit „Verbotszeit bis 16:27“. Nach der Prüfung wieder entfernt.
+- **Arabisch und dunkel** (Stichprobe im Katalog): gespiegelt – Fadschr rechts, Kopf der Live-Aktivität gespiegelt, Widget ohne Hintergrund rechtsbündig.
+
+### Was abweicht und bleibt
+- **Katalog:** Die Abschnitte `widgets` und `live` sind voll. Die Live-Aktivität „klein“ in vier Größen steht unten in `live`; die kleinen Widgets mit und ohne Hintergrund und „klein“ nach dem Wechsel stehen im neuen Abschnitt `carplay`.
+- **Rahmen im Prototyp:** Bildschirm im Auto, Dashboard, Anordnung der Widgets im Auto und StandBy sind angenähert (Ansicht „CarPlay“); verglichen werden nur die Tafeln in Originalgröße.
+
+### Annahmen in der Umsetzung
+- **Ohne Hintergrund** heißt `showsWidgetContainerBackground == false` – das gilt in StandBy und CarPlay gleichermaßen; beide lassen sich im Widget nicht unterscheiden. Der Hintergrund bleibt entfernbar (`containerBackgroundRemovable(true)`, der Standard, hier ausdrücklich).
+- **Ring um eng liegende Gebete** im „Tagesbogen“: in der Farbe der Widget-Fläche (`backgroundCell`); den Bogen gibt es nur mit Hintergrund.
+- **„Tagesbogen“ in StandBy und CarPlay:** ohne Hintergrund die Anordnung von „Nächstes Gebet“ (`SmallArcPrayerWidget(content:showsBackground:)`), in der Galerie dort hinter „Nächstes Gebet“ (`disfavoredLocations([.standBy, .carPlay], for: [.systemSmall])`). Wer beide Widgets in StandBy oder CarPlay hinzufügt, sieht zweimal dasselbe – so entschieden.
+- **Pfeil vor dem Ort** im „Tagesbogen“ nur beim aktuellen Standort, wie im mittleren Widget. Der Prototyp zeigt ihn immer.
+- **Dynamic Type:** Das kleine Widget ohne Hintergrund wächst wie mit Hintergrund begrenzt mit (bis 1,2-fach, `WidgetTextScaling`); der „Tagesbogen“ nicht – sein Text steht im Bogen wie im Rechteck des Sperrbildschirms.
+- **Zeitleiste:** `WidgetTimeline.Surface` ordnet jedem Widget zu, was es braucht. Das kleine Widget bekommt Einträge zu Beginn und Ende jeder Verbotszeit (sonst erschiene „Verbotszeit bis …“ erst beim nächsten Gebet), der „Tagesbogen“ zusätzlich alle 10 Minuten zwischen Fadschr und Ischa wie das Rechteck – höchstens rund 100 Einträge je Tag, wegen der 10-MB-Grenze des Archivs (Phase 14).
+- **Galerie:** Das neue Widget heißt wie die anderen „Vaqt“; die Beschreibung (`wArcDesc`) unterscheidet es. Die übrigen Widgets haben weiter keine Beschreibung (Bauplan: nur das neue).
+- **Live-Aktivität „klein“:** Die Ansicht zeichnet ihren Verlauf selbst (volle Deckkraft); `activityBackgroundTint` bleibt `.clear` wie auf dem Sperrbildschirm. Die Kopfzeile steht ab 90 pt Höhe – also in 240 × 100, nicht in 240 × 78 und nicht im Smart Stack (80,5 pt). Nach dem Wechsel stehen zwei Zeilen statt der schmalen Zeile des Sperrbildschirms, weil die in 170 pt nicht passt; das ist im Prototyp ergänzt.
+- **App-Symbol im Kopf** der Live-Aktivität „klein“: 14 pt mit Radius 3,5 (`.ai-las`), immer die helle Fassung mit Kachel wie im Kopf der Live-Aktivität. Im Vorschlag war es die dunkle.
+- **Neuer Text** `wArcDesc`: Deutsch, Türkisch und Englisch entworfen, die 13 übrigen Sprachen als KI-Entwurf (Spanisch im Katalog „translated“, die zwölf ab FR „Needs Review“).
+
+### Was sich im Simulator nicht prüfen lässt
+- **CarPlay Simulator und StandBy:** Device Hub (Xcode 27.2) hat unter „Device“ die Punkte „CarPlay Simulator“ und „Show Standby“. Für das iPhone 18 Pro (iOS 27.2) waren beide ausgegraut, als ich sie über die Bedienungshilfen ansteuerte; den CarPlay-Bildschirm des Simulators („Wireless“, Typ CarPlay) lässt `simctl io … screenConfig --display=3 power on` zwar an, er bleibt aber schwarz – CarPlay startet dort nicht. Offen bleibt deshalb: wie CarPlay die Fläche hinter dem Widget zeichnet, ob die Familie „small“ ihre Fläche selbst zeichnen darf, wie die Live-Aktivität beim Start als Hinweis erscheint, wie groß StandBy die Widgets zeichnet und wie der rote Nachtmodus sie färbt. Von Hand in Device Hub oder im Auto prüfen.
+- **Smart Stack der Apple Watch:** ohne gekoppelte Uhr nicht geprüft.
+- **Antippen im Auto:** Vaqt ist keine CarPlay-App; ein Tipp auf das Widget öffnet dort nichts (laut Apple).
 
 ## Annahmen im Nachtrag zu Phase 18
 

@@ -14,13 +14,19 @@ public enum DayArcStyle: Hashable, Sendable {
     /// Der Bogen des rechteckigen Widgets auf dem Sperrbildschirm: wie in der Live-Aktivität, aber einfarbig
     /// und ohne Uhrzeiten, Kerahat gestreift (`ARCS.acc`, `.arc-acc`; Spec § 9.11).
     case lockScreen
+    /// Der Bogen der Live-Aktivität „klein“ (CarPlay, Smart Stack der Uhr): die Maße des Sperrbildschirm-Widgets
+    /// in den Farben der Live-Aktivität (`ARCS.lasm` mit dem Aussehen `la`; Spec § 12.3).
+    case liveActivitySmall(LiveActivityLook)
+    /// Der Bogen des kleinen Widgets „Tagesbogen“ in den Farben der Zeiten-Seite (`ARCS.cpw`, `.arc-cpw`; Spec § 12.2).
+    case smallWidget
 
     public var metrics: DayArcMetrics {
         switch self {
         case .home: .home
         case .liveActivity: .liveActivity
         case .liveWidget: .liveWidget
-        case .lockScreen: .lockScreen
+        case .lockScreen, .liveActivitySmall: .lockScreen
+        case .smallWidget: .smallWidget
         }
     }
 
@@ -29,6 +35,8 @@ public enum DayArcStyle: Hashable, Sendable {
         case .home: .home
         case .liveActivity(let look), .liveWidget(let look): .live(look.colors)
         case .lockScreen: .lockScreen
+        case .liveActivitySmall(let look): .live(look.colors, knobStrokeWidth: DayArcColors.smallKnobStrokeWidth)
+        case .smallWidget: .smallWidget
         }
     }
 }
@@ -181,8 +189,29 @@ struct DayArcColors {
         )
     }
 
+    /// Ring um den Knopf im kleinen Bogen der Live-Aktivität (`.las .arc-la .arc-now circle`: `stroke-width: 1.6`) –
+    /// wie im Sperrbildschirm-Widget, dessen Maße er hat.
+    static let smallKnobStrokeWidth: CGFloat = 1.6
+
+    /// `.arc-cpw`: das kleine Widget „Tagesbogen“ (Spec § 12.2) in den Farben der Zeiten-Seite. Anders als dort hat der
+    /// Knopf keinen Schatten, sondern einen 2 pt breiten Ring in Akzent; der Ring um eng liegende Gebete hat die
+    /// Farbe der Widget-Fläche (`--bg-cell`) – mit und ohne Hintergrund.
+    static var smallWidget: DayArcColors {
+        DayArcColors(
+            track: Palette.arcTrack, done: Palette.accent,
+            markerUpcoming: Palette.arcTrack, symbolUpcoming: Palette.accent,
+            markerBegun: Palette.accent, symbolBegun: Palette.onAccent,
+            glow: Palette.accent.opacity(0.16), ring: Palette.backgroundCell,
+            time: .clear, timeCurrent: .clear,
+            kerahat: Palette.kerahat, kerahatOpacity: 0.92, kerahatPastOpacity: 0.42, kerahatActiveOpacity: 1,
+            knob: .white, knobStroke: Palette.accent, knobStrokeWidth: 2, knobShadow: nil,
+            // Die Symbole sind gut 9 pt groß; wie im Sperrbildschirm-Widget erst so kräftig wie im Prototyp (`sw: 2.4`).
+            symbolWeight: .heavy
+        )
+    }
+
     /// `.arc-la` in einem Stil der Live-Aktivität (`--la-*`, Spec § 10.3, § 11.7).
-    static func live(_ la: LiveActivityColors) -> DayArcColors {
+    static func live(_ la: LiveActivityColors, knobStrokeWidth: CGFloat = 2) -> DayArcColors {
         DayArcColors(
             track: Color(la.track), done: Color(la.line),
             markerUpcoming: Color(la.marker), symbolUpcoming: Color(la.markerSymbol),
@@ -196,7 +225,7 @@ struct DayArcColors {
             // Schwarz-weiß: gestreift über Schwarz zu 50 % (`[data-la="mono"] .arc-k-base`, `stroke-dasharray: 2.4 2.2`).
             kerahatDash: la.isMonochrome ? [2.4, 2.2] : nil,
             kerahatBase: la.isMonochrome ? Color.black.opacity(0.5) : nil,
-            knob: Color(la.knob), knobStroke: Color(la.knobRing), knobStrokeWidth: 2,
+            knob: Color(la.knob), knobStroke: Color(la.knobRing), knobStrokeWidth: knobStrokeWidth,
             knobShadow: nil,
             // Die Symbole sind hier nur gut 8 pt groß; erst mit dieser Stärke ist der Strich so kräftig
             // wie im Prototyp (1,15 pt).

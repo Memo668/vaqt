@@ -71,6 +71,49 @@ public enum WidgetTimeline {
     /// am 15.11.2026: 10,5 MB; mit zehn Minuten etwa die Hälfte).
     public static let lockScreenArcStep: TimeInterval = 10 * 60
 
+    /// Abstand der Einträge für den Bogen im kleinen Widget „Tagesbogen“ (Spec § 12.2, seit Phase 19): zehn
+    /// Minuten wie im Rechteck – der Bogen ist ähnlich groß (Radius 80 statt 88 pt), der Knopf rückt um gut 2 pt.
+    public static let smallArcStep: TimeInterval = 10 * 60
+
+    /// Die Widgets der App, so wie ihre Zeitleiste sie braucht (Spec § 3, § 9.11, § 12). Die Extension ordnet
+    /// jedem Widget und jeder Größe eines davon zu.
+    public enum Surface: Hashable, Sendable, CaseIterable {
+        /// Das kleine Widget „Nächstes Gebet“. Ohne Hintergrund (StandBy, CarPlay) zeigt es „Verbotszeit bis …“
+        /// (§ 12.1) – das braucht Einträge zu Beginn und Ende jeder Verbotszeit.
+        case small
+        /// Das mittlere Widget mit der Liste.
+        case medium
+        /// Das mittlere Widget „Live“ mit dem Bogen.
+        case live
+        /// Das kleine Widget „Tagesbogen“ (§ 12.2).
+        case dayArc
+        /// Der Ring auf dem Sperrbildschirm; läuft von selbst.
+        case lockScreenCircular
+        /// Das Rechteck auf dem Sperrbildschirm mit dem Bogen.
+        case lockScreenRectangular
+        /// Die Zeile über der Uhr.
+        case lockScreenInline
+
+        /// Abstand der Zwischeneinträge für den Bogen; `nil` ohne Bogen.
+        public var arcStep: TimeInterval? {
+            switch self {
+            case .live: WidgetTimeline.arcStep
+            case .lockScreenRectangular: WidgetTimeline.lockScreenArcStep
+            case .dayArc: WidgetTimeline.smallArcStep
+            case .small, .medium, .lockScreenCircular, .lockScreenInline: nil
+            }
+        }
+
+        /// Ob das Widget Einträge zu Beginn und Ende jeder Verbotszeit braucht: wo es sie zeigt – auf der Spur
+        /// des Bogens oder als „Verbotszeit bis …“.
+        public var needsKerahatEdges: Bool {
+            switch self {
+            case .small, .live, .dayArc, .lockScreenRectangular: true
+            case .medium, .lockScreenCircular, .lockScreenInline: false
+            }
+        }
+    }
+
     /// Was ein Eintrag zeigt.
     public enum Content: Hashable, Sendable {
         /// Die Zeiten.
@@ -103,16 +146,29 @@ public enum WidgetTimeline {
     ///   - place: der Ort, der in der App gilt.
     ///   - settings: Methode, Asr, Regel für hohe Breiten, Minutenkorrekturen.
     ///   - arcStep: Abstand der Einträge für den Bogen (`WidgetTimeline.arcStep`); ohne Angabe nur ein
-    ///     Eintrag je Ereignis.
+    ///     Eintrag je Ereignis. Mit Bogen kommen immer die Einträge zu Beginn und Ende der Verbotszeiten dazu.
+    ///   - kerahatEdges: Einträge zu Beginn und Ende jeder Verbotszeit, auch ohne Bogen – für „Verbotszeit
+    ///     bis …“ im kleinen Widget ohne Hintergrund (Spec § 12.1).
     public static func entries(
         from now: Date, source: any PrayerTimesSource, place: Place, settings: CalculationSettings,
-        arcStep: TimeInterval? = nil
+        arcStep: TimeInterval? = nil, kerahatEdges: Bool = false
     ) -> Result {
         let result = eventEntries(from: now, source: source, place: place, settings: settings)
-        guard let arcStep, arcStep > 0 else { return result }
+        let step = arcStep.flatMap { $0 > 0 ? $0 : nil }
+        guard step != nil || kerahatEdges else { return result }
         return Result(
-            entries: addingArcSteps(to: result.entries, step: arcStep, source: source, place: place, settings: settings),
+            entries: addingSteps(to: result.entries, arcStep: step, source: source, place: place, settings: settings),
             reloadDate: result.reloadDate
+        )
+    }
+
+    /// Die Zeitleiste ab `now` für ein Widget: mit den Zwischeneinträgen, die es braucht (`Surface`).
+    public static func entries(
+        from now: Date, source: any PrayerTimesSource, place: Place, settings: CalculationSettings, surface: Surface
+    ) -> Result {
+        entries(
+            from: now, source: source, place: place, settings: settings,
+            arcStep: surface.arcStep, kerahatEdges: surface.needsKerahatEdges
         )
     }
 
@@ -142,12 +198,12 @@ public enum WidgetTimeline {
         return Result(entries: entries, reloadDate: reloadDate)
     }
 
-    /// Die Einträge mit den Zwischenschritten für den Bogen: Zwischen zwei Einträgen kommt alle `step`
-    /// Sekunden einer dazu – aber nur, solange der Bogen „jetzt“ zeigt, also zwischen Fadschr und Ischa –,
-    /// dazu einer zu Beginn und Ende jedes Kerahat-Fensters, damit der Abschnitt auf der Spur pünktlich
-    /// kräftiger und wieder blasser wird.
-    static func addingArcSteps(
-        to entries: [Entry], step: TimeInterval, source: any PrayerTimesSource, place: Place, settings: CalculationSettings
+    /// Die Einträge mit den Zwischenschritten: Mit `arcStep` kommt zwischen zwei Einträgen alle `arcStep`
+    /// Sekunden einer dazu – aber nur, solange der Bogen „jetzt“ zeigt, also zwischen Fadschr und Ischa. Immer
+    /// kommt einer zu Beginn und Ende jedes Kerahat-Fensters dazu: Der Abschnitt auf der Spur wird pünktlich
+    /// kräftiger und wieder blasser, „Verbotszeit bis …“ erscheint und verschwindet (Spec § 12.1).
+    static func addingSteps(
+        to entries: [Entry], arcStep: TimeInterval?, source: any PrayerTimesSource, place: Place, settings: CalculationSettings
     ) -> [Entry] {
         var result: [Entry] = []
         for (index, entry) in entries.enumerated() {
@@ -158,7 +214,7 @@ public enum WidgetTimeline {
             var dates = Set<Date>()
             let from = max(entry.date, times.fajr)
             let to = min(end, times.isha)
-            if from < to {
+            if let step = arcStep, from < to {
                 var next = ((from.timeIntervalSinceReferenceDate / step).rounded(.down) + 1) * step
                 while next < to.timeIntervalSinceReferenceDate {
                     dates.insert(Date(timeIntervalSinceReferenceDate: next))

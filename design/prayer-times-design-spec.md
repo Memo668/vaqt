@@ -1,4 +1,4 @@
-# Prayer Times (iOS) – Design Spec v0.11
+# Prayer Times (iOS) – Design Spec v0.13
 
 Handoff for building the native SwiftUI app. The visual reference is `prayer-times-prototype.html` (single file, open it in a browser). Design tokens are in its `:root` CSS, every string is in the JS object `T` (16 languages since v0.8, § 9.10), mock data is in `CITIES` / `BERLIN_SUMMER` / `METHODS`, and the app state model is `S`.
 
@@ -44,7 +44,7 @@ Settings
      └─ About: Source Code ↗ · Privacy → page · Version   (footer: calculation disclaimer)
 
 Sheets: City search (.large, searchable) · Adhan player (.large)
-Outside the app: Widgets (small, medium, accessoryCircular, accessoryRectangular, accessoryInline) · Live Activity (Lock Screen, Dynamic Island compact / minimal / expanded) · Local notifications (prayer + reminder)
+Outside the app: Widgets (small, medium, accessoryCircular, accessoryRectangular, accessoryInline; since v0.12 the small "Tagesbogen") · Live Activity (Lock Screen, Dynamic Island compact / minimal / expanded; since v0.12 "small" for CarPlay and the Apple Watch Smart Stack) · Local notifications (prayer + reminder) · StandBy and CarPlay show the small widgets without background (§ 12)
 ```
 
 iPhone Duo (foldable, since 23.10.2026) uses the same map; only the bars move (see § 8).
@@ -102,7 +102,7 @@ Countdown: 64 pt thin, `monospacedDigit()`, `@ScaledMetric` capped at ×1.05 (×
 | Banner / note / hint pill | Location denied (banner + "Change"), high latitude (note card + link), offline (small pill). |
 | Compass | Dial with 5° ticks, upright cardinal labels, N in red, accent Qibla needle + Kaaba marker, fixed lubber line. Aligned within ±3° → accent + `.success` haptic. |
 | Adhan player | Title (name of the muezzin), waveform (played part in accent), scrubber, 72 pt play/pause; under the card a footnote with the source and licence of the recording. Until v0.9 also a voice list (placeholders) and a Fajr variant toggle; both removed in § 11.2. |
-| Widgets | systemSmall (next prayer + timer) · systemMedium (next + all six times, next highlighted) · accessoryCircular (Gauge from previous → next) · accessoryRectangular (next, timer, following) · accessoryInline (icon + "Asr 14:00"). |
+| Widgets | systemSmall (next prayer + timer; without background in StandBy and CarPlay its own arrangement, § 12.1) · systemSmall "Tagesbogen" (§ 12.2) · systemMedium (next + all six times, next highlighted) · accessoryCircular (Gauge from previous → next) · accessoryRectangular (next, timer, following) · accessoryInline (icon + "Asr 14:00"). |
 | Live Activity | ActivityKit + WidgetKit extension. **Lock Screen** (≤ 160 pt): accent background (`activityBackgroundTint`, light accent in both modes), header app glyph + name / city, the day arc in white (7 pt track, 21 pt markers, Kerahat marks in warm yellow), inside the arc "Maghrib · 16:27" and the countdown (30 pt rounded bold, `Text(timerInterval:)`). **Dynamic Island compact**: leading prayer symbol, trailing countdown, both in the dark accent. **Minimal**: prayer symbol in a progress ring. **Expanded**: leading symbol + time, trailing city, caption "Maghrib in", countdown 38 pt, bar from the previous event to the next with the Kerahat window as a 2 pt line under the bar, ends labelled ("Asr 14:00" / "Maghrib 16:27"). No buttons. |
 | Notifications | Title "Dhuhr · 13:12", body "It's time for Dhuhr in Berlin." Reminder: "Dhuhr in 10 minutes". |
 | Verse card | Card radius 26: caption line (VERSE OF THE DAY · date), Arabic text right-aligned (system Arabic font, ~29 pt, `lang="ar"`), translation (`.body`), reference in accent ("Al-Baqara 2:45"), Share (ShareLink) and Copy as capsule buttons. Footer: translation source. Below: last days as standalone cards (date, two lines of translation, reference); tap shows that verse. |
@@ -161,7 +161,7 @@ Automatic method per country (proposal): DE → MWL, TR → Diyanet, ES → MWL,
 6. Time-sensitive notifications (break through Focus)? Needs the entitlement and a justification for review.
 7. Hijri date: Umm al-Qura calendar vs. local moon sighting; ±1 day correction setting?
 8. Passed rows now use textSecondary `#6C6C70` (4.7 : 1). Is that enough dimming, or should passed rows get an extra marker?
-9. Brand: app name per language and app icon (the crescent in the prototype is a placeholder).
+9. Brand: app name per language and app icon (the crescent in the prototype is a placeholder). → Name: "Vaqt" (§ 9.13). Icon decided 25./26.11.2026: day arc on white, dark on black, glass lens on the top point, in the accent colour (§ 13).
 10. Minimum iOS version: the top bar uses `glassEffect`, `GlassEffectContainer` and `.buttonStyle(.glass)` (iOS 26). Deployment target iOS 26, like Projekt-Health?
 11. Share a small design package with Projekt-Health (tokens, top bar, card radius 26), or keep the two apps independent?
 12. Verses: which translations, with which licence (e.g. DE Bubenheim/Elyas, TR Diyanet meali, EN Sahih International, ES Isa García)? The prototype uses placeholder translations. Arabic text source (e.g. Tanzil, Uthmani script) with attribution. Who picks the verses (fixed curated list vs. rotation)? → Provisional decision 24.11.2026: verbatim excerpts of published translations, Arabic text in the spelling of Tanzil (§ 11.1). Which verses and how many is still open.
@@ -220,6 +220,7 @@ Requested by the product owner after Phase 11 and approved in the prototype ("Pa
 
 ### 9.1 App icon everywhere
 The real app icon (light and dark variant of `AppIcon`) replaces the crescent glyph wherever the brand mark appears: Onboarding step 1 (120 pt, corner radius 22.4 %, soft shadow), the tagline at the end of Settings (34 pt), Live Activity header (16 pt, radius 4), the new Live-style widget header (16 pt). Notifications and the Home Screen show the system icon anyway. SwiftUI cannot load `AppIcon` as an image: add an image set with the same artwork.
+*Since v0.13 (§ 13):* the icon is the day arc on white (dark: on black) with a glass lens on the top point, in the accent colour; the image set `AppMark` has one light and one dark image per accent and follows the same rule as the Home Screen icon. A fifth place is the ring on the Lock Screen while there are no times (24 pt), and since § 12.3 the header of the Live Activity "small" (14 pt).
 
 ### 9.2 Top bar centred
 On iPhone and the Duo when not in rail mode the chips sit centred; the Settings circle moves to the **trailing** edge; a leading spacer of the circle's width keeps the chips centred. The collapse rule is unchanged (unselected chips shrink to circles when the labels don't fit). Duo rail: the circle stays at the top of the column. RTL mirrors (circle leading).
@@ -424,7 +425,8 @@ Decided by the product owner on 24.11.2026, built in Phase 18. § 11.3–11.7 ar
   - a preview of the Live Activity on a neutral wallpaper (the current state, at 94 %);
   - group **Grundfarbe** (`styleColor`) with footer `styleColorFooter`;
   - group **Live-Aktivität** (`liveAct`): three tiles Farbig / Nur Bogen / Schwarz-weiß (`laFull`, `laArc`, `laMono`) with a small sign of the style and a radio circle, then a switch **Invertiert** (`laInvert`, subline `laInvertSub`); footer `styleLiveFooter`;
-  - **Standard wiederherstellen** (`styleReset`), only when something differs from the default (Petrol, Farbig, not inverted).
+  - group with the switch **App-Icon in der Grundfarbe** (`styleIconTint`), footer `styleIconFooter` (since v0.13, § 13.2);
+  - **Standard wiederherstellen** (`styleReset`), only when something differs from the default (Petrol, icon in the accent on, Farbig, not inverted).
 - **Accent colours:** 24 circles in rows of six (36 pt circle, 48 pt tap target, selected = ring and checkmark, never colour alone). No visible name; VoiceOver reads the name (`col_<id>`).
   - **Collapsed:** only the standard row, under it a small grey chevron (VoiceOver `styleMoreColors`/`styleLessColors`). If another colour is selected, a small dot in that colour stands beside the chevron.
   - **Expanded:** the grid 4 × 6. When the page opens with a colour outside the standard row, it opens expanded; afterwards only the chevron changes it.
@@ -437,7 +439,8 @@ Decided by the product owner on 24.11.2026, built in Phase 18. § 11.3–11.7 ar
 | gedeckt | mint Mint `#015D54`/`#9AE9DD`/`#01201C` · sage Salbei `#556345`/`#BDD4A3`/`#161E0B` · ice Taubenblau `#455A74`/`#9FC1EB`/`#131B27` · lavender Lavendel `#69639D`/`#CBC6FF`/`#1A172C` · mauve Malve `#714967`/`#CBB7C5`/`#1F181D` · sand Sand `#6F4D27`/`#ECCAA7`/`#24180B` |
 
   - Every colour reaches 4.5 : 1: light on white and on `#F2F2F7`, dark on `#1C1C1E`, the text colour on the dark accent. The colours from row 2 on keep an OKLab distance of at least 0.065 to every other colour, 0.12 to the kerahat colours and to signal red, and 0.07 to the grey secondary text. Unit tests check this.
-  - The accent applies to the whole app (everything that was `--accent`, and what is mixed from it), the widgets, the Live Activity and the Dynamic Island. The app icon stays. In dark mode `--on-accent` is the text colour of the row.
+  - The accent applies to the whole app (everything that was `--accent`, and what is mixed from it), the widgets, the Live Activity and the Dynamic Island. In dark mode `--on-accent` is the text colour of the row. *Since v0.13:* the app icon follows the accent too, unless the switch below is off (§ 13.2).
+- **Switch "App-Icon in der Grundfarbe"** (`styleIconTint`, since v0.13, § 13.2): its own group right under the accent group, on by default, footer `styleIconFooter`. The Home Screen icon changes when the user leaves the page, not on every tap; left via the Home Screen, at the next opening. Hidden when the device cannot switch icons.
 - **Warm colours** Orange, Gold, Sand: the prohibited time is **violet instead of orange** everywhere – arc, rows, info dot, Live Activity in every style except black and white, Dynamic Island (including the marks under the bar). Each orange tone is turned to OKLCH hue 300 with the same lightness and chroma:
 
 | Orange | Violet | Use |
@@ -462,9 +465,101 @@ Decided by the product owner on 24.11.2026, built in Phase 18. § 11.3–11.7 ar
 - Debug: `-debugAccent <id>`, `-debugLiveStyle full|arc|mono`, `-debugLiveInverted`, `-debugTab style`.
 - Reference: `iphone/87-settings-style` (+ `-dark`, `-open` with Orange and "Nur Bogen, invertiert", `-open-end`), `iphone/25-home-accent-ocean`, `iphone/25-home-accent-orange-kerahat` (+ `-dark`), `system/97-*` (six styles and Ozean), `system/98-*` (prohibited time, also warm), `system/99-*` (widget "Live").
 
+## 12. CarPlay and StandBy (v0.12, Phase 19, decided 25.11.2026)
+
+Decided by the product owner on 25.11.2026 after the proposal "CarPlay und Apple Watch" (prototype of 24.11.2026): **no own CarPlay app** – prayer times fit no CarPlay app category, the "Audio" entitlement is not requested; Phase 19 builds the CarPlay widgets and the Live Activity "small"; the Apple Watch app follows in Phases 21–23 (Phase 20 became the app icon, § 13). Apple's rules with sources: `docs/vorschlaege/2026-11-24/carplay-watch.md`. Prototype: view "CarPlay" (panel block "Phase 19"). Where this section and older sections disagree, this section wins.
+
+What Apple allows (iOS 26):
+- **Widgets in CarPlay** stand left of the Dashboard (right with right-hand drive). Only the `systemSmall` family, drawn **without the container background**, enlarged and in full colour – like StandBy. Which widgets appear is chosen on the iPhone (Settings › General › CarPlay). Tapping a Vaqt widget in the car does nothing; only CarPlay apps can be opened from there.
+- **Live Activities** appear on the CarPlay Dashboard by themselves. With the family `small` they get their own view, the same as in the Smart Stack of Apple Watch. Sizes (HIG): CarPlay 240 × 78, 240 × 100 and 170 × 78 pt, Smart Stack (46 mm) 194 × 80.5 pt; CarPlay scales them per screen. Buttons would do nothing in the car.
+- Vaqt's notifications do not appear in the car (only CarPlay apps of some categories may show them).
+- The car screen (wide 8 : 3 or standard 5 : 3), the number of widgets side by side, the surface behind a widget and the place of the Live Activity on the Dashboard are approximated in the prototype.
+
+### 12.1 Small widget "Nächstes Gebet" without background
+- With its background (Home Screen) it stays as it is (§ 3, `system/91`).
+- Without background (`showsWidgetContainerBackground` is false: StandBy and CarPlay) it has its own arrangement, leading and vertically centred, padding 12 / 12 / 12 / 14 (158 pt reference):
+  - prayer symbol (22 pt box) and name, 19 pt semibold, accent, tracking −0.3, gap 6;
+  - the time large: 46 pt rounded semibold, tracking −1, 3 pt below;
+  - "in 2:01:29" (`wIn`), 15 pt medium, secondary, 5 pt below;
+  - during a prohibited time: kerahat dot (7 pt) and "Verbotszeit bis 16:27" (`kerahatNow`), 11.5 pt semibold in `--kerahat-text` (violet for warm accents, § 11.7), 6 pt below;
+  - no city.
+- The background stays removable (`containerBackgroundRemovable(true)`, the default).
+- The timeline of the small family also has entries at the start and end of each prohibited window, so that line appears and disappears on time.
+
+### 12.2 New small widget "Tagesbogen"
+- `systemSmall` only. Gallery name "Vaqt" like the other widgets, description `wArcDesc` ("Der Tagesbogen mit dem nächsten Gebet und den Verbotszeiten.").
+- **With background** (Home Screen, `--bg-cell`) it shows the arc as below.
+- **Without background** (StandBy, CarPlay) it shows the arrangement of § 12.1, exactly like "Nächstes Gebet" – no arc. Decided by the product owner on 25.11.2026 after the test on the device ("Wie „Nächstes Gebet“"): from a distance the half circle and its seven points (six events and the knob) say nothing. In StandBy and CarPlay the gallery lists it after "Nächstes Gebet" (`disfavoredLocations`).
+- Layout with background (158 × 158 reference), a centred column with padding 8 / 6:
+  - the arc `ARCS.cpw`, 146 × 84: centre 73 / 100, radius 80, ends at 0.66 rad; markers 15 pt with a 9.5 pt symbol, the current one 18 pt with a 10.5 pt symbol and a 12 pt glow; track 6 pt, kerahat 6 pt on the track (minimum length § 10.1); knob 5 pt, white with a 2 pt accent ring, no shadow; no times; sunrise as a marker (§ 9.14);
+  - inside the arc "{p} · {time}" (12 pt semibold, secondary) and the countdown (25 pt rounded bold, tracking −0.3), flush with the bottom of the arc;
+  - 10 pt below: the location arrow (accent) and the city, 13 pt semibold, secondary – during a prohibited time the kerahat dot and "Verbotszeit bis …" in `--kerahat-text`.
+- Colours as the Home arc: accent, `--arc-track`, `--kerahat`, violet for warm accents. The ring around close markers is `--bg-cell`.
+- Timeline from `WidgetTimeline`: an entry at each event, every 10 minutes between Fajr and Isha for the knob, and at the start and end of each prohibited window (as the Lock Screen rectangle).
+
+### 12.3 Live Activity "small"
+- `supplementalActivityFamilies([.small])`. For `activityFamily == .small` the activity has its own view; Lock Screen and Dynamic Island stay unchanged.
+- The drawing of the Lock Screen widget (`ARCS.acc`, 160 × 72 incl. "{p} · {time}" and countdown, § 9.11) centred on the surface of the activity, in the colours of the selected style (`--la-*`, § 11.7), but **at full opacity** instead of 30 %: in the car and in the Smart Stack no wallpaper shows through. Orange in a prohibited time (§ 10.3), violet for warm accents; black and white striped.
+- A header (app icon 14 pt, "Vaqt", the city or "Verbotszeit bis …"; 12 pt semibold, the city at 0.75) only where there is room: 240 × 100. In the flat sizes "Verbotszeit bis …" replaces "{p} · {time}" inside the arc during a prohibited time.
+- No buttons.
+- After the change (`staleDate`, § 10.3): two lines, centred – app icon and "{p} · {time}", below "hat begonnen" (`laBegan`) or, for the green part before a prohibited time, "Verbotszeit ab …" (`kerahatFrom`). The single line of the Lock Screen does not fit into 170 pt.
+
+### 12.4 StandBy
+StandBy shows the small widgets like CarPlay: without background, enlarged, always dark; both small widgets of Vaqt then look the same (§ 12.1). The red night mode is drawn by the system.
+
+- Debug: `-debugCatalog carplay` (the small widgets with and without background, the Live Activity "small" after the change) and `-debugCatalog live` (the Live Activity "small" in the four sizes), with `-debugTime`, `-debugAccent`, `-debugLiveStyle`, `-debugLiveInverted` as before.
+- Reference: `carplay/cp-10` … `cp-61` (`INDEX.md`); `cp-10`–`cp-12`, `cp-50`–`cp-52`, `cp-60`/`cp-61` show the "Tagesbogen" without background like "Nächstes Gebet" (since the test on the device).
+- Open (only the CarPlay Simulator or a car can show it): how CarPlay draws the surface behind a widget, whether the `small` family may draw its own surface (the prototype assumes it may), and how the Live Activity appears as a notice when it starts while another app fills the screen.
+
+
+## 13. App icon (v0.13, Phase 20, decided 25./26.11.2026)
+
+Decided by the product owner after the proposal "Neues App-Icon" (prototype of 25./26.11.2026, `docs/vorschlaege/2026-11-25/icon.md`): variant **B** – white, dark black, the arc in the accent (25.11.2026); a **glass lens on the top point**, large with a light glass rim (26.11.2026); the **icon in the accent colour** (26.11.2026); an **Icon Composer document** as the build path (26.11.2026). It replaces the placeholder icon of Phase 11 (green gradient, white arc). Where this section and older sections disagree, this section wins.
+
+### 13.1 Artwork
+- The drawing of the placeholder (canvas 1024, `scripts/app-icon.swift` until Phase 19): five prayers on the day arc, Asr running, the arc filled to 62 %; symbols `sun.horizon`, `sun.max`, `sun.min`, `sunset`, `moon.stars` (bold). The arc is a filled shape, not an open stroke (iOS 26 drew a chord across the icon for open strokes).
+- Groups, top first: **Glas** (the lens), **Punkte** (symbols, circles, glow around Asr), **Bogen** (filled arc and track).
+- Colours per appearance (Petrol; other accents the same with their own row of § 11.7):
+
+| | Default (light) | Dark | Mono (Clear and Tinted) |
+|---|---|---|---|
+| Ground | white `#FFFFFF` | black `#000000` (own dark fill – without it Icon Composer puts its dark gradient behind) | as the tinted image of the placeholder; iOS colours it |
+| Arc, begun points | light accent `#1F7A6D` (5.2 : 1 on white) | dark accent `#4CC2AE` (9.6 : 1 on black) | white and grey |
+| Symbol in a begun point | white | the text colour on the dark accent `#04221D` | |
+| Upcoming points | 30 % accent on white `#BCD7D3`, symbol in the accent | 35 % accent on black `#1B443D`, symbol in the accent | |
+| Track, glow | accent at 32 %, glow 28 % | the same | |
+
+- **Glass lens on the top point** (the point of Asr in the icon; in the app Dhuhr stands highest): on the 1024 canvas the lens has radius 140 (the point otherwise 71), a light glass rim from radius 126 to 140; under it point, symbol and arc 1.6× (a picture in the picture – Icon Composer does not refract like a real lens); 17 px air to the neighbouring points. The glow around Asr lies under the lens.
+  - Group "Glas": specular on, shadow neutral 0.8, translucency 0.3. Layers under the glass have `glass: false`.
+  - Lens white at 18 % (Default), 12 % (Dark), 20 % (Mono). Rim `#D9E6E3` at 90 % (Default; for the other accents white with 17 % of the light accent), white 35 % (Dark), white 50 % (Mono).
+- The values were found by rendering with `ictool`; everything else of Liquid Glass is the Icon Composer default. Small (16 pt) little of the glass remains; from Home Screen size on it shows.
+
+### 13.2 Icon in the accent colour
+- iOS cannot recolour an app icon at run time. The app ships one finished icon per accent and switches with `setAlternateIconName`.
+- **Main icon** `AppIcon` (Petrol). App Store and TestFlight always show it. **23 alternate icons** `AppIcon-<id>` (`<id>` as in `ACCENTS`) with the same layers and measures, light accent on white, dark accent on black, the text colour of the row in the begun point. Contrast of the arc at least 5.0 : 1 on white (Grün 5.05) and 6.2 : 1 on black (Bordeaux). Mono is the same for all.
+- **Settings › Stil** (§ 11.7): switch **App-Icon in der Grundfarbe** (`styleIconTint`) in its own group under the accent group, on by default, footer `styleIconFooter`. Hidden when `supportsAlternateIcons` is false.
+- **When the icon changes:** when the user leaves the page Stil – not on every tap on a colour. iOS shows its own notice on every change, which cannot be turned off; this way it comes once. The app only calls when the name differs from the current `alternateIconName`.
+  - In the background iOS refuses the change ("operation cancelled", checked in the simulator). Decided by the product owner on 26.11.2026 ("Beim nächsten Öffnen"): if the user leaves the app from the page Stil, the icon changes as soon as the app is in front again and Stil is not open – at the next launch or return, with the notice of iOS.
+- Petrol or switch off → main icon (`nil`). "Standard wiederherstellen" turns the switch on again and, with Petrol, leads back to the main icon.
+
+### 13.3 Brand mark `AppMark`
+- One image set per accent: `AppMark` (Petrol) and `AppMark-<id>`, light = Default, dark = Dark rendition of the icon, 360 px, rendered by `ictool` in the look of iOS 27 (`scripts/app-mark`).
+- It follows the same rule as the Home Screen icon: the accent, or Petrol when the switch is off.
+- Places (§ 9.1): Onboarding step 1 (120 pt), tagline at the end of Settings (34 pt), header of the Live Activity and of the widget "Live" (16 pt), Live Activity "small" (14 pt, § 12.3), the ring on the Lock Screen while there are no times (24 pt). Widgets and Live Activity get accent and switch with the style (App Group, content of the activity). In "Schwarz-weiß" the icon in the Live Activity stays grey.
+- Prototype: `APP_ICON` holds the 24 light and dark images (240 px from `ictool`), `appIconImg()` picks by `S.accent` and `S.iconTint`.
+
+### 13.4 Build
+- `App/AppIcon.icon` (Icon Composer document) replaces `AppIcon.appiconset`; the alternates are `App/AlternateIcons/AppIcon-<id>.icon`. `ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon`, `ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES` the 23 names. XcodeGen (2.46) adds `.icon` as `wrapper.icon` to the resources of the app.
+- The files come from `docs/vorschlaege/2026-11-25/build_icon.py` (proposal, not in the repo); Petrol is byte-identical with the chosen icon.
+- actool stores the layers of each icon plus three flattened images 1024 × 1024 (light, dark, tinted, about 2 MB together); this makes the package much larger. Release archive (Phase 20): 9.2 MB before, 96 MB after (`Assets.car` 85 MB, half of it the iPad images the App Store thins out); on an iPhone about 55 MB. Decided 26.11.2026: keep all 24.
+- Reference: `iphone/01-onboarding-1-welcome` (+ `-dark`), `iphone/72-settings-bottom` (+ `-dark`), `iphone/87-settings-style*`, `system/91`–`99`.
+- Not checked yet: the six Home Screen looks on a device (Default, Dark, Clear light/dark, Tinted light/dark), the notice of iOS on a change, iOS 26 next to iOS 27.
+
 ---
 
 ## Changelog
+- **v0.13 (26.11.2026, Phase 20):** app icon (§ 13): day arc on white, dark on black, with a glass lens on the top point, as an Icon Composer document; one icon per accent colour (23 alternate icons) with the switch "App-Icon in der Grundfarbe" under Settings › Stil; the image set `AppMark` per accent. The Apple Watch phases move to 21–23.
+- **v0.12 (25.11.2026, Phase 19):** CarPlay and StandBy (§ 12): the small widget "Nächstes Gebet" without background in its own arrangement, the new small widget "Tagesbogen" (its arc only with background; without, like "Nächstes Gebet" – after the test on the device), the Live Activity "small" for CarPlay and the Smart Stack of Apple Watch at full opacity; no own CarPlay app.
 - **v0.11 (24./25.11.2026):** Addendum to the changes before the Golden Beta (§ 11.3–11.7): sound only with the iOS default and a hint where to choose it; group "Darstellung" above "Berechnung"; onboarding with five pages (madhab as a menu) and swipe; prohibited times by madhab (Hanafi, Maliki, Schafii, Hanbali) with their own lengths, texts and info sheet sections; Settings › Stil with 24 accent colours (violet prohibited time for Orange, Gold, Sand) and six Live Activity styles at 30 %.
 - **v0.10 (24.11.2026):** Changes before the Golden Beta (§ 11): verse translations as verbatim excerpts of published translations in 15 languages, with the translation named under the card; one adhan recording (Ustadh Mmanga Muharram, DARSA TV, CC BY) instead of three placeholder voices, no Fajr variant switch.
 - **v0.9 (18.11.2026):** Changes after the first beta (§ 10): "Verbotszeit" in German and longer kerahat windows on the arc, info sheet on prohibited times, Live Activity at 30 % with orange prohibited time and compact ended activities (newest on top), Live widget at 30 %, new onboarding title, location and Live Activity hints, honest privacy texts, qada for men and women with reset, Fajr alarm (Phase 17), share link to TestFlight.

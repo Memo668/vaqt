@@ -26,7 +26,7 @@ import PrayerCore
 /// -debugLiveActivity            Live-Aktivität zum nächsten Gebet sofort, auch außerhalb des Vorlaufs und mit Mock-Zeiten
 /// -debugAlarm before|fixed|denied   Wecker zu Fadschr an (vor Sonnenaufgang / feste Uhrzeit mit kurzem Adhan) oder abgelehnt; nur mit -debugFixtureTimes
 /// -debugAlarmIn 2               ein echter Wecker in so vielen Minuten (AlarmKit), zum Test von Ton, Stummmodus und Fokus
-/// -debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|all   Katalog der Bausteine statt der App, für den Abgleich
+/// -debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|widgets|live|carplay|all   Katalog der Bausteine statt der App, für den Abgleich
 /// ```
 ///
 /// Es gibt diesen Typ nur in DEBUG-Builds. Alles, was nicht mit `-debug` beginnt, wird übergangen.

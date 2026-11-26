@@ -42,8 +42,12 @@ public struct ComponentCatalog: View {
         /// Die fünf Widgets: mittleres und kleines wie `system/91`, die drei des Sperrbildschirms wie
         /// `system/90`.
         case widgets
-        /// Die Live-Aktivität: Insel kompakt und erweitert (`system/94`, `95`), Sperrbildschirm (`93`, `96`).
+        /// Die Live-Aktivität: Insel kompakt und erweitert (`system/94`, `95`), Sperrbildschirm (`93`, `96`), seit Phase 19
+        /// darunter „klein“ in vier Größen (`carplay/cp-40`).
         case live
+        /// CarPlay und StandBy (Phase 19): die kleinen Widgets mit und ohne Hintergrund (`carplay/cp-50`), die
+        /// Live-Aktivität „klein“ nach dem Wechsel (`cp-40`, unten). Die Abschnitte `widgets` und `live` sind voll.
+        case carplay
         /// Alles untereinander, zum Durchblättern.
         case all
     }
@@ -110,6 +114,8 @@ public struct ComponentCatalog: View {
             captureScreen { CatalogWidgets(state: outside) }
         case .live:
             captureScreen { CatalogLiveActivity(state: outside) }
+        case .carplay:
+            captureScreen { CatalogCarPlay(state: outside) }
         case .all:
             everything
         }
@@ -228,9 +234,14 @@ public struct ComponentCatalog: View {
                 CatalogGroup("Live-Aktivität – vor und ab Gebetsbeginn") {
                     ForEach([false, true], id: \.self) { isStale in
                         CatalogLiveActivity(state: outside, isStale: isStale)
-                            .frame(height: CatalogOutsideMetrics.lockScreenTop + LiveActivityMetrics.lockScreenHeight + 20)
+                            .frame(height: (CatalogOutsideMetrics.smallActivityFrames.map(\.maxY).max() ?? 0) + 20)
                             .padding(.horizontal, -Layout.inset)
                     }
+                }
+                CatalogGroup("CarPlay und StandBy – kleine Widgets mit und ohne Hintergrund") {
+                    CatalogCarPlay(state: outside)
+                        .frame(height: (CatalogOutsideMetrics.endedActivityFrames.map(\.maxY).max() ?? 0) + 20)
+                        .padding(.horizontal, -Layout.inset)
                 }
                 CatalogGroup("Tokens") {
                     CatalogTokens()

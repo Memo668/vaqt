@@ -49,7 +49,7 @@ open Gebetszeiten.xcodeproj
 | `make compare-verses` | Verse in den Zuständen von `iphone/50` (hell) und `51` (dunkel) aufnehmen und neben die Referenz legen |
 | `make compare-qada` | Nachholen im Zustand von `iphone/60` aufnehmen und neben die Referenz legen, dazu `61`, wenn aufgenommen |
 | `make compare-settings` | Einstellungen, Onboarding und Adhan-Sheet in den Zuständen von `iphone/01`–`03`, `05`, `06`, `70`, `73`–`81`, `80-settings-sound-system`, `83`, `86`, `87` und `88` aufnehmen und neben die Referenz legen, dazu `71`, `72` und `82`, wenn aufgenommen |
-| `make compare-system` | Widgets und Live-Aktivität im Katalog in den Zuständen von `system/90`, `91`, `93`–`96` und den Stilen `97`–`99` (Nachtrag zu Phase 18) aufnehmen und neben die Referenz legen |
+| `make compare-system` | Widgets und Live-Aktivität im Katalog in den Zuständen von `system/90`, `91`, `93`–`96`, den Stilen `97`–`99` (Nachtrag zu Phase 18) und den Tafeln `carplay/cp-40`–`cp-52` (Phase 19) aufnehmen und neben die Referenz legen |
 | `make compare-language` | eine Sprache gegen den Prototyp in derselben Sprache: 20 Zustände (Onboarding, Zeiten, Qibla, Anleitung, Durchlauf, Verse, Nachholen, Einstellungen, Widgets, Live-Aktivität) aus dem Prototyp und der App nebeneinander (`LANGUAGE=ar STATES='10 43'`, `REGION=ar_SA` für eine andere Region; Phase 15) |
 | `make compare-duo` | auf dem Simulator „iPhone Duo“ die Zustände von `duo/open-*` (`MODE=open`, aufgeklappt und quer) oder `duo/closed-*` (`MODE=closed`) aufnehmen und neben die Referenz legen; auf- und zuklappen in Device Hub |
 | `make harness` | Skripte des UI-Hilfsprojekts ausführen, das antippt, wischt und aufnimmt (`SCRIPTS='scripts/ui-harness/scripts/iphone-61-qada.txt'`) – für Zustände mit Tipp |
@@ -111,7 +111,7 @@ Nur in DEBUG-Builds. Damit lässt sich jeder Referenz-Screenshot nachstellen:
 -debugLiveActivity            Live-Aktivität zum nächsten Gebet sofort, auch außerhalb des Vorlaufs und mit Mock-Zeiten
 -debugAlarm before|fixed|denied   Wecker zu Fadschr an oder Erlaubnis abgelehnt, nur mit -debugFixtureTimes
 -debugAlarmIn 2               ein echter Wecker (AlarmKit) so viele Minuten nach dem Start
--debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|widgets|live|all   Katalog der Bausteine statt der App, für den Abgleich
+-debugCatalog arc|rows|glass|cards|compass|guide|steps|verses|qada|settings|onboarding|adhan|widgets|live|carplay|all   Katalog der Bausteine statt der App, für den Abgleich
 ```
 
 Die Sprache kommt über die Systemargumente `-AppleLanguages '(tr)' -AppleLocale tr_TR` – für jede der 16 Sprachen mit der Region aus `LOC` im Prototyp (`make run LANGUAGE=ar`; Arabisch, Urdu und Persisch laufen dann von rechts nach links). Welche Argumente zu welchem Screenshot gehören, steht in `docs/PROMPTS.md`.
@@ -165,7 +165,7 @@ scripts/ui-harness      UI-Hilfsprojekt: ein UI-Test, der die App antippt, wisch
 scripts/capture-prototype nimmt die Referenzbilder aus dem Prototyp auf (Playwright, 2x, ohne Rahmen; Zustände in scripts/capture-prototype.mjs)
 scripts/capture-matrix  nimmt jeden Bildschirm in Varianten auf (Sprache, Schriftgröße, hell/dunkel, RTL), mit Prüfung der Bedienungshilfen
 scripts/contact-sheet.swift legt Aufnahmen als Kontaktbogen in ein Raster
-scripts/app-icon.swift  zeichnet das Platzhalter-Icon (hell, dunkel, getönt) nach App/Assets.xcassets/AppIcon.appiconset
+scripts/app-mark        rendert den Bildsatz AppMark je Grundfarbe aus den Icon-Composer-Dateien (ictool), --check prüft ihn
 scripts/adhan-clip.swift schneidet die Adhan-Ausschnitte für Player und Mitteilungen (Quellen im Kopf der Datei)
 project.yml             Beschreibung des Xcode-Projekts für XcodeGen
 design/                 Prototyp, Design Spec, Referenz-Screenshots
@@ -231,7 +231,7 @@ Die Referenzwerte für die Berechnung liegen unter `Packages/PrayerCore/Tests/Pr
 | `QadaSummary`, `QadaSummaryCard`, `QadaPrayerRow`, `QadaOverview`, `QadaDetails`, `QadaAction` | Texte der Zusammenfassung und des Plans (`num()`, Monat und Jahr), die Prozentkarte mit Balken, die Zeile je Gebet, die beiden Teile der Seite „Nachholen“, die Aktionen der Seite |
 | `RowTitle`, `ValueRowLabel`, `CheckRow`, `ListSwitchRow`, `ListLinkRow`, `ExternalLinkRow`, `ListSectionHeader`, `ListSectionFooter`, `groupedListMetrics()` | Zeilen für die Liste des Systems wie `group()` im Prototyp: Titel mit Zusatz, Wert (höchstens 52 %), Häkchen, Schalter, Link in Akzent oder Rot, Link nach außen mit ↗, Kopf und Fuß, Abstände der Gruppen |
 | `PrayerNotificationRow`, `AdjustmentRow`, `PrivacyNote` | Zeile „Pro Gebet“ mit den Glocken, Zeile der Minutenkorrektur mit Uhrzeit und Stepper, die Seite „Datenschutz“ |
-| `AppMark`, `IconBadge`, `Tagline` | das App-Symbol (120, 34, 24 und 16 pt; seit Phase 14 auch in Live-Aktivität und Widgets statt der Mondsichel), Symbol auf getöntem Kreis, Zeichen über „Gemeinnützig · Werbefrei · Ohne Tracking“ |
+| `AppMark`, `IconBadge`, `Tagline` | das App-Symbol (120, 34, 24, 16 und 14 pt; seit Phase 14 auch in Live-Aktivität und Widgets statt der Mondsichel, seit Phase 20 in der Grundfarbe), Symbol auf getöntem Kreis, Zeichen über „Gemeinnützig · Werbefrei · Ohne Tracking“ |
 | `OnboardingPage`, `PageDots` | Seite des Onboardings mit Zeichen, Titel und Text; die Punkte darunter |
 | `AdhanPlayerCard`, `AdhanWaveform`, `PlayPauseButton`, `AdhanTime` | Karte des Adhan-Players: Wellenform mit 44 Balken (gespielter Teil in Akzent), Schieberegler, Zeiten wie `fmtDur()`, Play/Pause 72 pt |
 | `WidgetState` | was die App für Widgets und Live-Aktivität in die App Group schreibt: Ort, Name, Berechnung, Kerahat, Sprache, in DEBUG Mock-Zeiten und Debug-Uhr |
@@ -439,6 +439,8 @@ Seit Phase 16 (Spec § 10.3):
 
 `make compare-system` nimmt den Katalog (`-debugCatalog widgets`, `live`) in den Maßen des Prototyps auf und legt jeden Baustein neben die Referenz. Im System selbst – Widgets auf Home- und Sperrbildschirm, Live-Aktivität auf dem Sperrbildschirm und in der Dynamic Island – stellt das UI-Hilfsprojekt die Referenzbilder nach; die Schritte und Argumente stehen in `docs/PROMPTS.md`, was abweicht in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 9“ und „Annahmen in Phase 14“). Die Widgets von „Vaqt“ liegen im Simulator auf der Seite links neben der des Hilfsprojekts; eingerichtet werden sie mit `system-setup-home-widgets.txt` und `system-setup-lock-widgets.txt`.
 
+Seit Phase 19 (Spec § 12) zeigt `-debugCatalog live` unten die Live-Aktivität „klein“ für CarPlay und den Smart Stack der Uhr in vier Größen, und `-debugCatalog carplay` die kleinen Widgets mit und ohne Hintergrund (StandBy, CarPlay) sowie „klein“ nach dem Wechsel; `make compare-system STATES='cp40 cp50'` legt sie neben die Tafeln aus `design/screenshots/carplay/`. Das neue Widget „Tagesbogen“ im System zeigt `scripts/ui-harness/scripts/phase-19-system.txt`. CarPlay Simulator und StandBy gibt es in Device Hub (Device › „CarPlay Simulator“, „Show Standby“).
+
 Seit dem Nachtrag zu Phase 18 (Spec § 11.7) zeigt der Katalog Live-Aktivität und Widget „Live“ im Stil aus `-debugAccent`, `-debugLiveStyle` und `-debugLiveInverted`; `make compare-system` vergleicht damit auch `system/97`–`99`. Im System selbst nimmt `scripts/ui-harness/scripts/nachtrag-18-system.txt` Widgets in Ozean, die Live-Aktivität in der Verbotszeit mit Orange (violett) und schwarz-weiß auf; `nachtrag-18-onboarding-stil.txt` prüft das Wischen im Onboarding, das Menü der Rechtsschule und das Auf- und Zuklappen der Grundfarben.
 
 Das Protokoll der App nennt in DEBUG, welche Aktivitäten es gibt und was die App anmeldet, auffrischt und beendet:
@@ -505,11 +507,11 @@ Die App folgt Dynamic Type bis AX5 (Phase 11). Ab den AX-Größen stellen sich e
 
 ## App Store
 
-`make archive` baut das Release-Archiv für das iPhone (`generic/platform=iOS`) ohne Signatur nach `Archives/Gebetszeiten.xcarchive` neben den Build-Daten, auf der externen Platte, wenn sie angesteckt ist. Danach prüft `scripts/check-archive` es auf das, was der Upload braucht: Widget-Extension und Symbole eingebettet, beide Datenschutz-Manifeste, das helle App-Icon ohne Alphakanal, alle Texte in DE, TR, EN und ES, nur iPhone (`UIDeviceFamily` 1), Exportkontrolle, Kennungen und Versionen von App, Extension und Hintergrundaufgabe, keine Debug-Startargumente in den Binärdateien und, bei einem signierten Archiv, die App Group in den Entitlements. „FEHLER“ heißt: so nicht hochladen; „Hinweis“ nennt die Platzhalter, die bis zum Entwicklerkonto bleiben. Ein anderes Archiv prüft `scripts/check-archive <Pfad.xcarchive>`.
+`make archive` baut das Release-Archiv für das iPhone (`generic/platform=iOS`) ohne Signatur nach `Archives/Gebetszeiten.xcarchive` neben den Build-Daten, auf der externen Platte, wenn sie angesteckt ist. Danach prüft `scripts/check-archive` es auf das, was der Upload braucht: Widget-Extension und Symbole eingebettet, beide Datenschutz-Manifeste, das helle App-Icon ohne Alphakanal und die 23 alternativen Icons der Grundfarben, alle Texte in DE, TR, EN und ES, nur iPhone (`UIDeviceFamily` 1), Exportkontrolle, Kennungen und Versionen von App, Extension und Hintergrundaufgabe, keine Debug-Startargumente in den Binärdateien und, bei einem signierten Archiv, die App Group in den Entitlements. „FEHLER“ heißt: so nicht hochladen; „Hinweis“ nennt die Platzhalter, die bis zum Entwicklerkonto bleiben. Ein anderes Archiv prüft `scripts/check-archive <Pfad.xcarchive>`.
 
 Die Gerätefamilie steht in `project.yml` an beiden Targets, nicht beim Projekt: XcodeGen setzt für iOS-Targets sonst „1,2“, und als iPad-App mit nur Hochformat lehnte Apple den Upload ab. Die Exportkontrolle beantwortet `ITSAppUsesNonExemptEncryption = NO` in der Info.plist: Die App verschlüsselt nicht selbst und geht nur über MapKit ins Netz.
 
-Datenschutz-Manifeste: `App/PrivacyInfo.xcprivacy` und `Widgets/PrivacyInfo.xcprivacy` (kein Tracking, keine erfassten Daten, UserDefaults mit Grund). Die Angaben für App Store Connect – „Keine Daten erfasst“ mit Begründung je Datenart – stehen in `docs/APP-STORE.md`. Das App-Symbol ist ein Platzhalter: der Tagesbogen mit den fünf Gebeten, hell, dunkel und getönt, erzeugt von `swift scripts/app-icon.swift` (TODO(placeholder), Spec § 6.9).
+Datenschutz-Manifeste: `App/PrivacyInfo.xcprivacy` und `Widgets/PrivacyInfo.xcprivacy` (kein Tracking, keine erfassten Daten, UserDefaults mit Grund). Die Angaben für App Store Connect – „Keine Daten erfasst“ mit Begründung je Datenart – stehen in `docs/APP-STORE.md`. Das App-Icon (seit Phase 20, Spec § 13) ist die Icon-Composer-Datei `App/AppIcon.icon`: der Tagesbogen mit den fünf Gebeten auf Weiß (dunkel auf Schwarz) mit einer Glas-Linse auf dem oberen Punkt. Je weitere Grundfarbe liegt ein alternatives Icon in `App/AlternateIcons/`; die App wechselt es beim Verlassen von Einstellungen › Stil. Ändert sich ein Icon, erzeugt `scripts/app-mark` den Bildsatz `AppMark` neu (`make check-icons` prüft, dass Icons, Bildsatz und `project.yml` zusammenpassen). actool legt je Icon drei fertige Bilder 1024 × 1024 ab; deshalb ist das Archiv rund 94 MB groß, für ein iPhone nach dem Ausdünnen durch den App Store rund 55 MB.
 
 ## Bundle-ID und App Group
 

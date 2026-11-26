@@ -240,6 +240,83 @@ struct WidgetTimelineTests {
         #expect(result.entries.count > 70 && result.entries.count < 100)
     }
 
+    // MARK: - Je Widget (Phase 19, Spec § 12)
+
+    private func times(_ surface: WidgetTimeline.Surface, from time: String) -> [String] {
+        WidgetTimeline.entries(
+            from: day.at(time, in: .berlin), source: FixtureTimesSource(), place: berlin,
+            settings: CalculationSettings(), surface: surface
+        ).entries.map { ClockTime($0.date, in: .berlin).description }
+    }
+
+    @Test("je Widget: Bogen alle 5 bzw. 10 Minuten nur im Widget „Live“, im Rechteck und im „Tagesbogen“")
+    func surfaceSteps() {
+        #expect(WidgetTimeline.Surface.live.arcStep == TimeInterval(5 * 60))
+        #expect(WidgetTimeline.Surface.lockScreenRectangular.arcStep == TimeInterval(10 * 60))
+        #expect(WidgetTimeline.Surface.dayArc.arcStep == TimeInterval(10 * 60))
+        #expect(WidgetTimeline.smallArcStep == WidgetTimeline.lockScreenArcStep)
+        for surface in [WidgetTimeline.Surface.small, .medium, .lockScreenCircular, .lockScreenInline] {
+            #expect(surface.arcStep == nil)
+        }
+        // „Verbotszeit bis …“ (kleines Widget ohne Hintergrund) und der Abschnitt auf der Spur brauchen die Grenzen.
+        #expect(WidgetTimeline.Surface.allCases.filter(\.needsKerahatEdges) == [.small, .live, .dayArc, .lockScreenRectangular])
+    }
+
+    @Test("kleines Widget: zu jedem Ereignis und zu Beginn und Ende jeder Verbotszeit ein Eintrag, sonst keine")
+    func smallWidgetKerahatEdges() {
+        #expect(times(.small, from: "14:25") == [
+            "14:25", "15:42", "16:27", "18:17", "05:16", "07:14", "07:59", "11:42", "11:52", "14:00",
+        ])
+        // Das mittlere Widget zeigt keine Verbotszeit: nur die Ereignisse.
+        #expect(times(.medium, from: "14:25") == ["14:25", "16:27", "18:17", "05:16", "07:14", "11:52", "14:00"])
+    }
+
+    @Test("kleines Widget: ab 15:42 läuft die Verbotszeit bis Maghrib, ab 16:27 nicht mehr")
+    func smallWidgetKerahatState() {
+        let result = WidgetTimeline.entries(
+            from: day.at("14:25", in: .berlin), source: FixtureTimesSource(), place: berlin,
+            settings: CalculationSettings(), surface: .small
+        )
+        let states = result.entries.prefix(4).compactMap { entry -> String? in
+            guard case .times(let snapshot) = entry.content else { return nil }
+            let window = snapshot.phase.activeKerahat.map { " bis " + ClockTime($0.end, in: .berlin).description } ?? ""
+            return ClockTime(entry.date, in: .berlin).description + window
+        }
+        #expect(states == ["14:25", "15:42 bis 16:27", "16:27", "18:17"])
+        #expect(result.reloadDate == day.adding(days: 1).at("14:00", in: .berlin))
+    }
+
+    @Test("Tagesbogen: alle 10 Minuten zwischen Fadschr und Ischa, dazu die Grenzen der Verbotszeiten")
+    func dayArcSteps() {
+        let times = times(.dayArc, from: "14:25")
+        let untilMaghrib = times.prefix { $0 != "16:27" }
+        #expect(Array(untilMaghrib) == [
+            "14:25", "14:30", "14:40", "14:50", "15:00", "15:10", "15:20", "15:30", "15:40", "15:42", "15:50",
+            "16:00", "16:10", "16:20",
+        ])
+        // In der Nacht steht der Bogen ohne Knopf: von Ischa bis Fadschr keine Schritte.
+        let night = times.drop { $0 != "18:17" }.prefix { $0 != "05:20" }
+        #expect(Array(night) == ["18:17", "05:16"])
+        #expect(times.contains("07:59") && times.contains("11:42"))
+        // Ein ganzer Tag bleibt so klein wie im Rechteck: das Archiv unter 10 MB (Phase 14).
+        #expect(times.count > 70 && times.count < 100)
+    }
+
+    @Test("je Widget dieselben Einträge wie mit den einzelnen Angaben")
+    func surfaceMatchesExplicitSteps() {
+        let now = day.at("06:00", in: .berlin)
+        for surface in WidgetTimeline.Surface.allCases {
+            let bySurface = WidgetTimeline.entries(
+                from: now, source: FixtureTimesSource(), place: berlin, settings: CalculationSettings(), surface: surface
+            )
+            let explicit = WidgetTimeline.entries(
+                from: now, source: FixtureTimesSource(), place: berlin, settings: CalculationSettings(),
+                arcStep: surface.arcStep, kerahatEdges: surface.needsKerahatEdges
+            )
+            #expect(bySurface == explicit)
+        }
+    }
+
     // MARK: - Ohne Zeiten
 
     @Test("in einer Gegend ohne Zeiten: ein Eintrag mit dem Hinweis, neu gerechnet um Mitternacht")

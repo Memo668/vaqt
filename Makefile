@@ -57,7 +57,7 @@ SHOT ?= screenshots-out/screenshot.png
 
 XCODEBUILD := xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' -derivedDataPath '$(DERIVED)'
 
-.PHONY: help project strings check-strings build test test-core coverage archive boot run statusbar screenshot compare compare-today compare-qibla compare-guide compare-walk compare-verses compare-qada compare-settings compare-system compare-language compare-duo harness capture clean
+.PHONY: help project strings check-strings check-icons build test test-core coverage archive boot run statusbar screenshot compare compare-today compare-qibla compare-guide compare-walk compare-verses compare-qada compare-settings compare-system compare-language compare-duo harness capture clean
 
 help: ## Diese Übersicht
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -71,10 +71,13 @@ strings: ## String Catalog und L10n.swift aus dem Prototyp neu erzeugen
 check-strings: ## Prüfen, ob String Catalog und L10n.swift zum Prototyp passen
 	scripts/import-strings --check
 
+check-icons: ## Prüfen, ob App-Icons, Bildsatz AppMark und project.yml zu den Grundfarben passen (Phase 20)
+	scripts/app-mark --check
+
 build: project ## App für den Simulator bauen
 	$(XCODEBUILD) build
 
-test: project check-strings ## Alle Tests im Simulator, vorher der Abgleich der Texte
+test: project check-strings check-icons ## Alle Tests im Simulator, vorher der Abgleich der Texte und Icons
 	$(XCODEBUILD) test
 
 test-core: ## Nur PrayerCore, ohne Simulator
@@ -143,7 +146,7 @@ compare-settings: build boot ## Einstellungen, Onboarding und Adhan wie in iphon
 	xcrun simctl install '$(SIM)' '$(APP)'
 	SIM='$(SIM)' scripts/compare-settings $(STATES)
 
-compare-system: build boot ## Widgets und Live-Aktivität wie in system/90, 91, 93–96 im Katalog aufnehmen und danebenlegen (STATES='93 96' für einzelne)
+compare-system: build boot ## Widgets und Live-Aktivität wie in system/90–99 und carplay/cp-40–52 im Katalog aufnehmen und danebenlegen (STATES='93 cp50' für einzelne)
 	xcrun simctl install '$(SIM)' '$(APP)'
 	SIM='$(SIM)' scripts/compare-system $(STATES)
 
