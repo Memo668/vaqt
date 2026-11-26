@@ -5,7 +5,7 @@ import Testing
 @testable import PrayerCore
 
 /// Der Stil der App (Nachtrag zu Phase 18, Spec § 11.7): Grundfarbe und Aussehen der Live-Aktivität, im Inhalt der
-/// Aktivität mitgetragen.
+/// Aktivität mitgetragen; seit Phase 20 auch das App-Icon in der Grundfarbe (Spec § 13.2).
 @Suite("Stil der App")
 struct AppStyleTests {
 
@@ -16,6 +16,35 @@ struct AppStyleTests {
         #expect(!AppStyle(accent: .ocean).isStandard)
         #expect(!AppStyle(liveActivity: .mono).isStandard)
         #expect(!AppStyle(isInverted: true).isStandard)
+        #expect(AppStyle.standard.tintsAppIcon)
+        #expect(!AppStyle(tintsAppIcon: false).isStandard)
+    }
+
+    @Test("App-Icon: Petrol und Schalter aus ergeben das Haupt-Icon, sonst AppIcon-<id> (Spec § 13.2)")
+    func appIcon() {
+        #expect(AppStyle.standard.alternateIconName == nil)
+        #expect(AppStyle.standard.appIconAccent == .teal)
+        #expect(AppStyle(accent: .ocean).alternateIconName == "AppIcon-ocean")
+        #expect(AppStyle(accent: .ocean).appIconAccent == .ocean)
+        #expect(AppStyle(accent: .ocean, tintsAppIcon: false).alternateIconName == nil)
+        #expect(AppStyle(accent: .ocean, tintsAppIcon: false).appIconAccent == .teal)
+        #expect(AppStyle(accent: .teal, tintsAppIcon: false).alternateIconName == nil)
+        // Der Stil der Live-Aktivität ändert das Icon nicht.
+        #expect(AppStyle(accent: .sand, liveActivity: .mono, isInverted: true).alternateIconName == "AppIcon-sand")
+        for accent in AccentColorID.allCases {
+            #expect(AppStyle(accent: accent).alternateIconName == AppIconName.alternate(for: accent))
+        }
+    }
+
+    @Test("23 alternative Icons, eines je Grundfarbe außer Petrol, mit eindeutigen Namen")
+    func alternateIconNames() {
+        #expect(AppIconName.primary == "AppIcon")
+        #expect(AppIconName.alternates.count == AccentColorID.allCases.count - 1)
+        #expect(Set(AppIconName.alternates).count == AppIconName.alternates.count)
+        #expect(AppIconName.alternates.first == "AppIcon-green")
+        #expect(AppIconName.alternates.last == "AppIcon-sand")
+        #expect(!AppIconName.alternates.contains("AppIcon-teal"))
+        #expect(AppIconName.alternates.allSatisfy { $0.hasPrefix(AppIconName.primary + "-") })
     }
 
     @Test("die Kennungen sind die des Prototyps (ACCENTS, LA_STYLES)")
@@ -38,6 +67,9 @@ struct AppStyleTests {
             == AppStyle(accent: .ocean, liveActivity: .arc, isInverted: true))
         #expect(try decode(#"{"accent":"neon","liveActivity":"glow"}"#) == .standard)
         #expect(try decode("{}") == .standard)
+        // Vor Phase 20 gespeichert, ohne den Schalter: das Icon folgt der Grundfarbe.
+        #expect(try decode(#"{"accent":"ocean"}"#).tintsAppIcon)
+        #expect(try decode(#"{"accent":"ocean","tintsAppIcon":false}"#) == AppStyle(accent: .ocean, tintsAppIcon: false))
         let style = AppStyle(accent: .sand, liveActivity: .mono, isInverted: true)
         #expect(try JSONDecoder().decode(AppStyle.self, from: JSONEncoder().encode(style)) == style)
     }

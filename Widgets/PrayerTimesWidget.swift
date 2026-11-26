@@ -116,7 +116,7 @@ struct PrayerTimesWidgetView: View {
     var body: some View {
         // Die Texte in der Sprache der App und die Grundfarbe (Spec § 11.7), bevor die Ansichten sie lesen.
         L10n.chosenLanguage = entry.language
-        AccentStore.shared.accent = entry.content.style.accent
+        AccentStore.shared.apply(entry.content.style)
         return content
             .environment(\.locale, L10n.locale)
             .environment(\.layoutDirection, L10n.layoutDirection)
@@ -202,7 +202,7 @@ struct PrayerArcWidgetView: View {
     var body: some View {
         // Die Texte in der Sprache der App und die Grundfarbe (Spec § 11.7), bevor die Ansichten sie lesen.
         L10n.chosenLanguage = entry.language
-        AccentStore.shared.accent = entry.content.style.accent
+        AccentStore.shared.apply(entry.content.style)
         return SmallArcPrayerWidget(content: entry.content, showsBackground: showsBackground)
             .environment(\.locale, L10n.locale)
             .environment(\.layoutDirection, L10n.layoutDirection)
@@ -234,7 +234,7 @@ struct PrayerLiveWidgetView: View {
     var body: some View {
         // Die Texte in der Sprache der App und die Grundfarbe, bevor die Ansichten sie lesen.
         L10n.chosenLanguage = entry.language
-        AccentStore.shared.accent = entry.content.style.accent
+        AccentStore.shared.apply(entry.content.style)
         // Der Stil der Live-Aktivität gilt auch für dieses Widget (Spec § 11.7).
         return LivePrayerWidget(content: entry.content)
             .environment(\.locale, L10n.locale)

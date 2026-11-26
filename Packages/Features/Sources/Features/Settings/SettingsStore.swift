@@ -105,7 +105,7 @@ public final class SettingsStore {
         language = snapshot.language
         onboardingCompleted = snapshot.onboardingCompleted
         // Die Grundfarbe gilt vom ersten Bild an (Spec § 11.7).
-        accentStore.accent = snapshot.style.accent
+        accentStore.apply(snapshot.style)
     }
 
     /// Der Stand aller Einstellungen.
@@ -262,7 +262,7 @@ public final class SettingsStore {
     /// Live-Aktivitäten bekommen den Stil, wenn die App neu plant.
     public func setStyle(_ style: AppStyle) {
         self.style = style
-        accentStore.accent = style.accent
+        accentStore.apply(style)
         save(style, forKey: Key.style)
     }
 

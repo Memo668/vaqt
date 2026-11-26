@@ -46,22 +46,39 @@ public enum LiveActivityStyle: String, CaseIterable, Codable, Sendable {
     case mono
 }
 
-/// Der Stil der App: Grundfarbe und Aussehen der Live-Aktivität (Einstellungen › Stil, Spec § 11.7). Gilt für
-/// App, Widgets, Live-Aktivität und Dynamic Island.
+/// Der Stil der App: Grundfarbe, App-Icon und Aussehen der Live-Aktivität (Einstellungen › Stil, Spec § 11.7 und
+/// § 13.2). Gilt für App, Widgets, Live-Aktivität und Dynamic Island.
 public struct AppStyle: Hashable, Codable, Sendable {
     public var accent: AccentColorID
+    /// „App-Icon in der Grundfarbe“ (seit Phase 20): Das Icon auf dem Home-Bildschirm und das Zeichen der App
+    /// (`AppMark`) folgen der Grundfarbe; aus heißt immer Petrol.
+    public var tintsAppIcon: Bool
     public var liveActivity: LiveActivityStyle
     /// „Invertiert“: heller Grund, dunkle Schrift – für helle Hintergrundbilder.
     public var isInverted: Bool
 
-    public init(accent: AccentColorID = .standard, liveActivity: LiveActivityStyle = .full, isInverted: Bool = false) {
+    public init(
+        accent: AccentColorID = .standard, tintsAppIcon: Bool = true, liveActivity: LiveActivityStyle = .full,
+        isInverted: Bool = false
+    ) {
         self.accent = accent
+        self.tintsAppIcon = tintsAppIcon
         self.liveActivity = liveActivity
         self.isInverted = isInverted
     }
 
-    /// Petrol, farbig, nicht invertiert – wie vor dem Nachtrag zu Phase 18.
+    /// Petrol, Icon in der Grundfarbe, farbig, nicht invertiert.
     public static let standard = AppStyle()
+
+    /// Die Grundfarbe des App-Icons und des Zeichens `AppMark`: die Grundfarbe, bei ausgeschaltetem Schalter Petrol.
+    public var appIconAccent: AccentColorID {
+        tintsAppIcon ? accent : .standard
+    }
+
+    /// Der Name für `setAlternateIconName`: `nil` ist das Haupt-Icon in Petrol, sonst `AppIcon-<id>`.
+    public var alternateIconName: String? {
+        AppIconName.alternate(for: appIconAccent)
+    }
 
     /// Ob etwas vom Standard abweicht; dann gibt es „Standard wiederherstellen“.
     public var isStandard: Bool {
@@ -72,11 +89,31 @@ public struct AppStyle: Hashable, Codable, Sendable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         accent = (try? container.decodeIfPresent(AccentColorID.self, forKey: .accent)) ?? .standard
+        // Gespeichert vor Phase 20: an, wie der Standard.
+        tintsAppIcon = (try? container.decodeIfPresent(Bool.self, forKey: .tintsAppIcon)) ?? true
         liveActivity = (try? container.decodeIfPresent(LiveActivityStyle.self, forKey: .liveActivity)) ?? .full
         isInverted = (try? container.decodeIfPresent(Bool.self, forKey: .isInverted)) ?? false
     }
 
     private enum CodingKeys: String, CodingKey {
-        case accent, liveActivity, isInverted
+        case accent, tintsAppIcon, liveActivity, isInverted
+    }
+}
+
+/// Die Namen der App-Icons (Phase 20, Spec § 13.2). iOS kann ein Icon nicht umfärben; die App bringt je Grundfarbe
+/// ein fertiges Icon mit: das Haupt-Icon `AppIcon` in Petrol (`App/AppIcon.icon`) und 23 alternative Icons
+/// `AppIcon-<id>` (`App/AlternateIcons/`, eingetragen in `ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES`).
+public enum AppIconName {
+    /// Das Haupt-Icon; App Store und TestFlight zeigen immer dieses.
+    public static let primary = "AppIcon"
+
+    /// Das alternative Icon einer Grundfarbe; `nil` für Petrol, das Haupt-Icon.
+    public static func alternate(for accent: AccentColorID) -> String? {
+        accent == .standard ? nil : "\(primary)-\(accent.rawValue)"
+    }
+
+    /// Alle alternativen Icons in der Reihenfolge der Grundfarben.
+    public static var alternates: [String] {
+        AccentColorID.allCases.compactMap(alternate(for:))
     }
 }

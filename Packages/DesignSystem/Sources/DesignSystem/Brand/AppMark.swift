@@ -1,14 +1,17 @@
+import PrayerCore
 import SwiftUI
 
 /// Das Zeichen der App: das App-Symbol selbst (Spec § 9.1, `appIconImg()` im Prototyp). Es steht groß im
 /// ersten Schritt des Onboardings, klein über der Tagline der Einstellungen und seit Phase 14 im Kopf der
 /// Live-Aktivität und des Widgets „Live“ sowie im Ring auf dem Sperrbildschirm, solange es keine Zeiten gibt.
 ///
-/// SwiftUI kann `AppIcon` nicht als Bild laden; deshalb liegt dieselbe Zeichnung als Bildsatz `AppMark` im
-/// Paket (hell und dunkel, 360 px, aus `App/Assets.xcassets/AppIcon.appiconset`). Ändert sich das Symbol,
-/// den Bildsatz mit `sips -Z 360` neu erzeugen.
+/// SwiftUI kann `AppIcon` nicht als Bild laden; deshalb liegt dieselbe Zeichnung als Bildsatz im Paket: je Grundfarbe
+/// hell und dunkel, 360 px, gerendert von `ictool` aus den Icon-Composer-Dateien der App (Phase 20, Spec § 13.3) –
+/// `AppMark` für Petrol (`App/AppIcon.icon`), `AppMark-<id>` für die übrigen (`App/AlternateIcons/`). Ändert sich
+/// ein Icon, die Bildsätze mit `scripts/app-mark` neu erzeugen.
 ///
-/// TODO(placeholder): Das App-Symbol ist seit Phase 11 ein Platzhalter (Tagesbogen, `scripts/app-icon.swift`).
+/// Welcher Bildsatz gilt, sagt `AccentStore.iconAccent`: die Grundfarbe, bei ausgeschaltetem Schalter „App-Icon in
+/// der Grundfarbe“ Petrol – wie das Icon auf dem Home-Bildschirm.
 public struct AppMark: View {
 
     /// Größe des Zeichens.
@@ -35,7 +38,7 @@ public struct AppMark: View {
     public var body: some View {
         let side = AppMarkMetrics.side(for: size)
         let shape = RoundedRectangle(cornerRadius: AppMarkMetrics.cornerRadius(for: size), style: .continuous)
-        Image("AppMark", bundle: .module)
+        Image(AppMarkMetrics.imageName(for: AccentStore.shared.iconAccent), bundle: .module)
             .resizable()
             .interpolation(.high)
             .frame(width: side, height: side)
@@ -58,6 +61,11 @@ public struct AppMark: View {
 
 /// Maße des Zeichens (`.app-icon-img`, `.ai-xl`, `.ai-tag`).
 enum AppMarkMetrics {
+    /// Der Bildsatz einer Grundfarbe: `AppMark` für Petrol, sonst `AppMark-<id>` (`scripts/app-mark`).
+    nonisolated static func imageName(for accent: AccentColorID) -> String {
+        accent == .standard ? "AppMark" : "AppMark-\(accent.rawValue)"
+    }
+
     static func side(for size: AppMark.Size) -> CGFloat {
         switch size {
         case .large: 120

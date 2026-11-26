@@ -61,7 +61,7 @@ struct PrayerLiveActivity: Widget {
     static func apply(_ content: LiveActivityContent) {
         let state = WidgetState.sharedDefaults.flatMap(WidgetState.load(from:))
         L10n.chosenLanguage = state?.language
-        AccentStore.shared.accent = (content.style ?? state?.effectiveStyle ?? .standard).accent
+        AccentStore.shared.apply(content.style ?? state?.effectiveStyle ?? .standard)
     }
 }
 
