@@ -1,5 +1,17 @@
 # Schlussabgleich der Referenzbilder
 
+## Phase 20 (26.11.2026, App-Icon, Spec v0.13 § 13)
+
+Neu aus dem Prototyp sind alle Bilder mit dem Icon (`design/screenshots/INDEX.md`, Absatz „Spec v0.13“); alle 138 Zustände des Prototyps aufgenommen und Pixel für Pixel verglichen, die übrigen sind gleich.
+
+| Bild | Befehl | Ergebnis |
+|---|---|---|
+| `iphone/01`, `72`, `87` | `make compare-settings STATES='01 72 87'` (72 vorher mit `iphone-71-72-settings.txt`) | stimmt – Icon im Onboarding und über der Tagline wie im Prototyp; Schalter „App-Icon in der Grundfarbe“ mit Fußnote an derselben Stelle (4,7–13 % der Pixel, Schrift und 12 pt Breite) |
+| `system/90`–`99` | `make compare-system`, für `90 91 93 97ai 99ai 99o` mit `WAIT=5` | stimmt – neues Icon im Kopf von Live-Aktivität und Widget „Live“; Abweichungen wie bisher (Hintergrund des Katalogs); `96` zeigt in der App das helle Icon (Annahme seit Phase 14) |
+| `carplay/cp-40`–`cp-52` | `make compare-system` | stimmt – Icon im Kopf der Live-Aktivität „klein“ (8–14 % der Pixel wie in Phase 19) |
+| Wechsel des Icons | `make harness SCRIPTS='… phase-20-icon.txt … phase-20-icon-background.txt'` | stimmt – ein Wechsel mit Hinweis beim Verlassen von Stil, keiner beim Antippen, beim nächsten Öffnen nach dem Verlassen über Home; Home-Bildschirm in der gewählten Farbe |
+| Home-Bildschirm in sechs Darstellungen | am Gerät | nicht geprüft – Prüfliste in `docs/BUILD-PLAN.md`, Phase 20 |
+
 ## Phase 19 (25.11.2026, Prototyp mit der Ansicht „CarPlay“, Spec v0.12 § 12)
 
 Neu aus dem Prototyp sind die Tafeln und Rahmen unter `design/screenshots/carplay/` (`scripts/capture-prototype cp-`). Verglichen werden die Tafeln in Originalgröße; Bildschirm im Auto, Dashboard und StandBy sind angenähert. Die übrigen Referenzbilder sind pixelgleich geblieben.

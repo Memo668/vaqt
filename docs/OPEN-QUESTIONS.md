@@ -77,6 +77,7 @@ Nach dem Vorschlag „Neues App-Icon“ (Prototyp https://claude.ai/artifact/FHC
 | Nummer | Hauptsitzung, 26.11.2026 | Phase 20; die Apple Watch rückt auf 21 bis 23. |
 | Paketgröße | „Alle 24 behalten (Empfohlen)“, 26.11.2026 | actool legt je Icon drei fertige Bilder 1024 × 1024 ab (rund 1,8 MB, auch ohne Glas). Archiv 94 statt 9,2 MB, für ein iPhone nach dem Ausdünnen rund 55 MB. |
 | Text am Schalter | „App-Icon in der Grundfarbe“, 26.11.2026 | `styleIconTint` |
+| Wechsel im Hintergrund | „Beim nächsten Öffnen (Empfohlen)“, 26.11.2026 – nach dem Befund, dass iOS den Wechsel im Hintergrund ablehnt | Verlässt man die App von Stil aus, wechselt das Icon, sobald sie wieder vorn ist und Stil nicht offen (beim Start oder Zurückkommen), mit dem Hinweis von iOS. |
 | Fußnote | „Nur der Hinweis von iOS“, 26.11.2026 | `styleIconFooter`: „Das Icon auf dem Home-Bildschirm wechselt, wenn du diese Seite verlässt. iOS bestätigt jeden Wechsel mit einem Hinweis.“ |
 
 ## CarPlay und Apple Watch, entschieden am 25.11.2026
@@ -589,6 +590,33 @@ Die Berliner Mock-Zeiten passen eher zum 6./7. November. Die übrigen vier Städ
 | Ausrichtung | „Ja, so lassen“ | nur Hochformat. Phase 10: Die Info.plist bleibt so; auf dem inneren Display des iPhone Duo zeigt iOS die App trotzdem quer und hoch (siehe „Annahmen in Phase 10“). |
 | Nachholen | „Ja, so lassen“ | Die App startet leer: kein Zeitraum, nichts offen, 5 Gebete pro Tag, ohne Witr. `iphone/60` und `61` zeigen die Beispielzahlen des Prototyps; die gibt es nur in DEBUG (`QadaLedger.prototypeSample`). Annahme für Phase 6: Mit `-debugFixtureTimes` zeigt die Seite sie. |
 | JAKIM und Kemenag | „Ja, so lassen“ | reine Winkel 20°/18°. Vor der Veröffentlichung gegen offizielle Tabellen zu prüfen, siehe oben. |
+
+## Annahmen in Phase 20
+
+Gebaut am 26.11.2026 auf `claude/phase-20` (ab `claude/phase-19` = `3820e60`), Spec v0.13 § 13. 1143 Tests grün (PrayerCore 505, DesignSystem 274, Features 364; vorher 1126). `make check-strings` und `make check-icons` in Ordnung, `make archive` mit `scripts/check-archive` in Ordnung (auch die 23 alternativen Icons).
+
+### Was mit den Referenzbildern übereinstimmt
+- **Einstellungen und Onboarding** (`make compare-settings STATES='01 72 87'`, `72` mit dem UI-Hilfsprojekt `iphone-71-72-settings.txt`): Icon im Onboarding und über der Tagline wie im Prototyp (weiß, Glas-Linse, Bogen in Petrol); unter Stil die neue Gruppe an derselben Stelle, 4,7–13 % der Pixel (Schrift). Abweichungen wie bisher: der Simulator ist 12 pt breiter (Fußnoten brechen anders um), die Tableiste des Systems verdeckt die Kacheln der Live-Aktivität anders, „Lizenzen“ gibt es nur in der App.
+- **Widgets und Live-Aktivität** (`make compare-system`, alle Zustände): das neue Icon im Kopf von Live-Aktivität, Widget „Live“ und Live-Aktivität „klein“; die Abweichungen sind die bekannten (Hintergrund des Katalogs statt Hintergrundbild, Schrift, Symbole). `90`, `91`, `93`, `97ai`, `99` zeigten im ersten Lauf ein leeres Bild – der Katalog war beim Aufnehmen noch nicht da; mit `WAIT=5` stimmen sie.
+- **Kopf der Live-Aktivität dunkel** (`system/96`): Der Prototyp zeigt dort jetzt das schwarze Icon, die App wie bisher das helle (unten, „Kopf der Live-Aktivität“).
+- **Im System** (UI-Hilfsprojekt `phase-20-icon.txt`, `phase-20-icon-background.txt`, Protokoll `#ChangeIconWithAlert` von `lsd`): Farben antippen wechselt nichts; beim Verlassen von Stil genau ein Wechsel mit dem Hinweis von iOS („You have changed the icon for “Vaqt”.“ mit dem neuen Icon); von Stil über Home verlassen kein Versuch, beim nächsten Öffnen ein Wechsel mit Hinweis; zurück zu Petrol ebenso. Das Icon auf dem Home-Bildschirm zeigt die gewählte Farbe.
+
+### Annahmen in der Umsetzung
+- **Schalter in eigener Gruppe** direkt unter der Grundfarbe, ohne Überschrift, mit eigener Fußnote – „unter dem Farbraster“ im Bauplan; die Fußnote der Grundfarbe bleibt, wie sie ist. „Standard wiederherstellen“ schaltet ihn wieder an und erscheint auch, wenn nur er aus ist.
+- **Der Schalter gehört zum Stil** (`AppStyle.tintsAppIcon`, gespeichert mit `settings.style`; früher gespeicherte Stile lesen sich mit „an“). So tragen App Group und Inhalt der Live-Aktivität ihn ohne eigenen Weg mit; Widgets und Live-Aktivität setzen `AccentStore.iconAccent` und zeigen `AppMark` in derselben Farbe wie der Home-Bildschirm.
+- **Wann das Icon wechselt:** beim Verschwinden der Seite Stil (`onDisappear`) und – entschieden am 26.11.2026, „Beim nächsten Öffnen“ – sobald die App vorn ist und Stil nicht offen (`AppIconPlanning`, `onChange(of: scenePhase, initial: true)`, also auch beim Start). Im Hintergrund lehnt iOS ab: Im Simulator meldete `setAlternateIconName` für `inactive` und `background` „Der Vorgang wurde abgebrochen“; die App versucht es dort deshalb nicht. Gerufen wird nur, wenn sich der Name gegenüber `alternateIconName` (oder einem laufenden Wechsel) ändert; der Logger `appIcon` meldet Wechsel und Ablehnungen.
+- **Mit `-debugFixtureTimes`** wechselt das Icon nur im Speicher (`AppIconTarget.memory`): Aufnahmen und Abgleich ändern das Icon des Simulators nicht, und kein Hinweis von iOS stört die Bilder. Ohne Mock-Zeiten geht es wie in der App ans System.
+- **Ohne alternative Icons** (`supportsAlternateIcons` falsch) fehlt der Schalter; `AppMark` folgt dann weiter dem Stil. Bei dieser App kommt das nicht vor, weil die Info.plist die Icons nennt.
+- **`AppMark` je Grundfarbe:** 48 Bilder zu 360 px, zusammen 2,2 MB, je einmal in der App und in der Widget-Erweiterung (das Paket DesignSystem liegt in beiden). Petrol heißt weiter `AppMark`, die übrigen `AppMark-<id>`. `ictool` rendert nicht ganz bitgleich; ein neuer Lauf von `scripts/app-mark` kann deshalb Bilder ändern, die gleich aussehen.
+- **Bilder im Prototyp:** `APP_ICON` hat je Grundfarbe ein helles und ein dunkles Bild zu 240 px (wie bisher), der Prototyp wächst damit von 0,8 auf 2,3 MB.
+- **Kopf der Live-Aktivität:** bleibt wie in Phase 14 die helle Fassung (oben „App-Symbol im Kopf immer hell“: iOS zeichnet den Sperrbildschirm auch im hellen System dunkel, die Erweiterung kennt das Erscheinungsbild des Systems dort nicht); im Stil „Schwarz-weiß“ grau. Der Prototyp nimmt dort das Erscheinungsbild des Systems und zeigt in `system/96` das schwarze Icon.
+- **`scripts/app-icon.swift` entfällt:** Es zeichnete nur das grüne Platzhalter-Icon; der Rückfall auf PNGs war nicht nötig. Der Vorschlag liest es weiter aus dem Commit `6f5910a`.
+- **`make check-icons`** (`scripts/app-mark --check`, vor `make test`): zu jeder Grundfarbe eine `.icon`-Datei und ein Bildsatz hell und dunkel mit 360 px, `project.yml` nennt die 23 Namen in der Reihenfolge von `AccentColorID`. `scripts/check-archive` prüft dazu `CFBundleAlternateIcons` und die Icons in `Assets.car`.
+- **Paketgröße:** Release-Archiv vorher 9,2 MB (gezippt 4,5 MB), nachher 96 MB (gezippt 93 MB); `Assets.car` 85 MB, `DesignSystem_DesignSystem.bundle` 2,7 statt 1,3 MB in App und Erweiterung. Auf dem iPhone kommt nach dem Ausdünnen durch den App Store etwa die Hälfte der Icon-Bilder an (nur `phone`, nicht `pad`), rund 55 MB. Entschieden am 26.11.2026: alle 24 behalten.
+
+### Was sich im Simulator nicht prüfen lässt
+- Die sechs Darstellungen des Home-Bildschirms (Klar und Getönt zeigt der Simulator nicht), das Icon in Mitteilungen und Spotlight und der Wechsel am Gerät: nach der Prüfliste in `docs/BUILD-PLAN.md` (Phase 20).
+- **SF Symbols im Icon:** siehe „Vor dem App Store“, Punkt „Icon“.
 
 ## Annahmen in Phase 19
 

@@ -440,7 +440,7 @@ Decided by the product owner on 24.11.2026, built in Phase 18. § 11.3–11.7 ar
 
   - Every colour reaches 4.5 : 1: light on white and on `#F2F2F7`, dark on `#1C1C1E`, the text colour on the dark accent. The colours from row 2 on keep an OKLab distance of at least 0.065 to every other colour, 0.12 to the kerahat colours and to signal red, and 0.07 to the grey secondary text. Unit tests check this.
   - The accent applies to the whole app (everything that was `--accent`, and what is mixed from it), the widgets, the Live Activity and the Dynamic Island. In dark mode `--on-accent` is the text colour of the row. *Since v0.13:* the app icon follows the accent too, unless the switch below is off (§ 13.2).
-- **Switch "App-Icon in der Grundfarbe"** (`styleIconTint`, since v0.13, § 13.2): its own group right under the accent group, on by default, footer `styleIconFooter`. The Home Screen icon changes when the user leaves the page (or the app goes to the background), not on every tap. Hidden when the device cannot switch icons.
+- **Switch "App-Icon in der Grundfarbe"** (`styleIconTint`, since v0.13, § 13.2): its own group right under the accent group, on by default, footer `styleIconFooter`. The Home Screen icon changes when the user leaves the page, not on every tap; left via the Home Screen, at the next opening. Hidden when the device cannot switch icons.
 - **Warm colours** Orange, Gold, Sand: the prohibited time is **violet instead of orange** everywhere – arc, rows, info dot, Live Activity in every style except black and white, Dynamic Island (including the marks under the bar). Each orange tone is turned to OKLCH hue 300 with the same lightness and chroma:
 
 | Orange | Violet | Use |
@@ -536,9 +536,10 @@ Decided by the product owner after the proposal "Neues App-Icon" (prototype of 2
 
 ### 13.2 Icon in the accent colour
 - iOS cannot recolour an app icon at run time. The app ships one finished icon per accent and switches with `setAlternateIconName`.
-- **Main icon** `AppIcon` (Petrol). App Store and TestFlight always show it. **23 alternate icons** `AppIcon-<id>` (`<id>` as in `ACCENTS`) with the same layers and measures, light accent on white, dark accent on black, the text colour of the row in the begun point. Contrast of the arc at least 5.05 : 1 on white and 6.21 : 1 on black. Mono is the same for all.
+- **Main icon** `AppIcon` (Petrol). App Store and TestFlight always show it. **23 alternate icons** `AppIcon-<id>` (`<id>` as in `ACCENTS`) with the same layers and measures, light accent on white, dark accent on black, the text colour of the row in the begun point. Contrast of the arc at least 5.0 : 1 on white (Grün 5.05) and 6.2 : 1 on black (Bordeaux). Mono is the same for all.
 - **Settings › Stil** (§ 11.7): switch **App-Icon in der Grundfarbe** (`styleIconTint`) in its own group under the accent group, on by default, footer `styleIconFooter`. Hidden when `supportsAlternateIcons` is false.
-- **When the icon changes:** when the user leaves the page Stil or the app goes to the background – not on every tap on a colour. iOS shows its own notice on every change, which cannot be turned off; this way it comes once. The app only calls when the name differs from the current `alternateIconName`.
+- **When the icon changes:** when the user leaves the page Stil – not on every tap on a colour. iOS shows its own notice on every change, which cannot be turned off; this way it comes once. The app only calls when the name differs from the current `alternateIconName`.
+  - In the background iOS refuses the change ("operation cancelled", checked in the simulator). Decided by the product owner on 26.11.2026 ("Beim nächsten Öffnen"): if the user leaves the app from the page Stil, the icon changes as soon as the app is in front again and Stil is not open – at the next launch or return, with the notice of iOS.
 - Petrol or switch off → main icon (`nil`). "Standard wiederherstellen" turns the switch on again and, with Petrol, leads back to the main icon.
 
 ### 13.3 Brand mark `AppMark`
@@ -550,7 +551,7 @@ Decided by the product owner after the proposal "Neues App-Icon" (prototype of 2
 ### 13.4 Build
 - `App/AppIcon.icon` (Icon Composer document) replaces `AppIcon.appiconset`; the alternates are `App/AlternateIcons/AppIcon-<id>.icon`. `ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon`, `ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES` the 23 names. XcodeGen (2.46) adds `.icon` as `wrapper.icon` to the resources of the app.
 - The files come from `docs/vorschlaege/2026-11-25/build_icon.py` (proposal, not in the repo); Petrol is byte-identical with the chosen icon.
-- actool stores the layers of each icon plus three flattened images 1024 × 1024 (light, dark, tinted, about 2 MB together); this makes the package much larger (Phase 20: SIZE_NOTE).
+- actool stores the layers of each icon plus three flattened images 1024 × 1024 (light, dark, tinted, about 2 MB together); this makes the package much larger. Release archive (Phase 20): 9.2 MB before, 96 MB after (`Assets.car` 85 MB, half of it the iPad images the App Store thins out); on an iPhone about 55 MB. Decided 26.11.2026: keep all 24.
 - Reference: `iphone/01-onboarding-1-welcome` (+ `-dark`), `iphone/72-settings-bottom` (+ `-dark`), `iphone/87-settings-style*`, `system/91`–`99`.
 - Not checked yet: the six Home Screen looks on a device (Default, Dark, Clear light/dark, Tinted light/dark), the notice of iOS on a change, iOS 26 next to iOS 27.
 
