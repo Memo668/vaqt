@@ -3,7 +3,7 @@
 #
 #   - Widget-Extension eingebettet, Symbole (dSYMs) für Absturzberichte dabei
 #   - Datenschutz-Manifeste in App und Extension, gleich den Dateien in App/ und Widgets/
-#   - App-Icon: helles Bild 1024 × 1024 ohne Alphakanal
+#   - App-Icon: helles Bild 1024 × 1024 ohne Alphakanal, die 23 alternativen Icons der Grundfarben (Phase 20)
 #   - Texte in DE, TR, EN und ES, so vollständig wie der String Catalog, dazu die der Info.plist
 #   - nur iPhone, Exportkontrolle, Mindestversion
 #   - Kennungen: Extension und Hintergrundaufgabe passen zur App, App Group und Version überall gleich
@@ -104,6 +104,25 @@ else
     false) fail "App-Icon: Das helle Bild hat einen Alphakanal – App Store Connect lehnt es ab" ;;
     *) fail "App-Icon: kein helles Bild 1024 × 1024 in Assets.car" ;;
   esac
+  # Seit Phase 20 (Spec § 13.2): je weitere Grundfarbe ein alternatives Icon, wie in project.yml genannt, in der
+  # Info.plist und in Assets.car.
+  expected_alt="$(awk '/ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES/ {on=1; next} on && /^ +AppIcon-/ {print; next} on {exit}' "$ROOT/project.yml" \
+    | tr -s ' ' '\n' | grep '^AppIcon-' | sort | tr '\n' ' ')"
+  actual_alt="$(plutil -extract CFBundleIcons.CFBundleAlternateIcons xml1 -o - "$INFO" 2>/dev/null \
+    | sed -n 's/^	<key>\(AppIcon-[a-z]*\)<\/key>$/\1/p' | sort | tr '\n' ' ')"
+  missing_alt=""
+  for name in $expected_alt; do
+    grep -q "\"Name\" : \"$name\"" "$TMP/assets.json" || missing_alt="$missing_alt $name"
+  done
+  if [ -z "$expected_alt" ]; then
+    fail "App-Icon: project.yml nennt keine alternativen Icons (ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES)"
+  elif [ "$actual_alt" != "$expected_alt" ]; then
+    fail "App-Icon: CFBundleAlternateIcons ist „$actual_alt“ statt „$expected_alt“"
+  elif [ -n "$missing_alt" ]; then
+    fail "App-Icon: in Assets.car fehlen$missing_alt"
+  else
+    ok "App-Icon: $(echo $expected_alt | wc -w | tr -d ' ') alternative Icons der Grundfarben in Info.plist und Assets.car"
+  fi
 fi
 
 # Texte

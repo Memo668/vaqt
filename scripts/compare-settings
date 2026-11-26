@@ -179,7 +179,10 @@ if wanted 87; then
   echo "iphone/87 (Stil):"
   compare preview-87 87-settings-style "0,105,390,190" "$OUT/settings-87.png" "6,122,390,190"
   halves colors-87 87-settings-style "$OUT/settings-87.png" 295 312 200
-  halves live-87 87-settings-style "$OUT/settings-87.png" 495 512 270
+  # Seit Phase 20 (Spec § 13.2) der Schalter „App-Icon in der Grundfarbe“ mit Fußnote; die Live-Aktivität rückt
+  # 155 pt tiefer, unter die Tableiste – verglichen wird ihr oberer Teil.
+  halves icon-87 87-settings-style "$OUT/settings-87.png" 495 512 155
+  halves live-87 87-settings-style "$OUT/settings-87.png" 650 667 105
 fi
 if wanted 87o; then
   launch "$OUT/settings-87o.png" "${STATE[@]}" -debugTab style -debugAccent orange -debugLiveStyle arc -debugLiveInverted

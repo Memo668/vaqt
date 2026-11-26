@@ -165,7 +165,8 @@ struct AppContent: View {
         _settingsModel = State(initialValue: SettingsModel(
             settings: settings, today: today, navigation: navigation,
             timesSource: environment.timesSource, notificationAuthorizer: environment.notificationAuthorizer,
-            sourceCodeURL: AppInfo.sourceCodeURL, appStoreURL: AppInfo.appStoreURL, version: AppInfo.version
+            sourceCodeURL: AppInfo.sourceCodeURL, appStoreURL: AppInfo.appStoreURL, version: AppInfo.version,
+            appIcons: AppIconSwitcher(target: environment.appIcons.make())
         ))
         _onboarding = State(initialValue: OnboardingModel(navigation: navigation, today: today, notifications: notifications))
         _adhan = State(initialValue: AdhanPlayerModel())
@@ -211,6 +212,10 @@ struct AppContent: View {
         // Die Wecker zu Fadschr ebenso (Spec § 10.8).
         .background {
             FajrAlarmPlanning(model: alarm)
+        }
+        // Das App-Icon in der Grundfarbe, wenn die App nach hinten geht (Spec § 13.2).
+        .background {
+            AppIconPlanning(model: settingsModel)
         }
         .environment(settingsModel)
         .environment(alarm)

@@ -1,0 +1,39 @@
+# Phase 20 (Spec § 13.2): Das App-Icon wechselt beim Verlassen der Seite Stil, nicht schon beim Antippen einer Farbe,
+# und iOS zeigt dazu genau einen Hinweis. Ohne -debugFixtureTimes, damit der Wechsel ans System geht (mit Mock-Zeiten
+# wechselt das Icon nur im Speicher). -debugCity, damit keine Standortabfrage dazwischenkommt.
+#
+# Achtung: ändert die gespeicherten Einstellungen der App im Simulator und das Icon auf dem Home-Bildschirm. Der zweite
+# Teil stellt wieder Petrol ein (Haupt-Icon).
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugCity berlin -debugTab style
+wait 4
+shot {OUT}/p20-01-style.png
+dump {OUT}/p20-01-style-tree.txt
+taplabel Blau
+wait 1
+taplabel Grün
+wait 1.5
+sbdump {OUT}/p20-02-picked-alert.txt
+shot {OUT}/p20-02-picked.png
+taplabel Einstellungen
+wait 2.5
+shot {OUT}/p20-03-left.png
+sbdump {OUT}/p20-03-left-alert.txt
+sbtapif 0
+wait 1.5
+shot {OUT}/p20-04-settings.png
+home
+wait 2.5
+shot {OUT}/p20-05-home.png
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugCity berlin -debugTab style
+wait 4
+taplabel Petrol
+wait 1
+taplabel Einstellungen
+wait 2.5
+shot {OUT}/p20-06-left-petrol.png
+sbdump {OUT}/p20-06-left-petrol-alert.txt
+sbtapif 0
+wait 1.5
+home
+wait 2.5
+shot {OUT}/p20-07-home-petrol.png

@@ -519,8 +519,9 @@ struct AppearancePage: View {
 }
 
 /// Einstellungen › Stil (`PAGES.style`, Spec § 11.7): oben die Vorschau der Live-Aktivität, darunter die
-/// Grundfarben (zugeklappt die Standardreihe, aufgeklappt 4 × 6), die drei Stile der Live-Aktivität mit dem
-/// Schalter „Invertiert“ und, sobald etwas vom Standard abweicht, „Standard wiederherstellen“.
+/// Grundfarben (zugeklappt die Standardreihe, aufgeklappt 4 × 6), seit Phase 20 der Schalter „App-Icon in der
+/// Grundfarbe“, die drei Stile der Live-Aktivität mit dem Schalter „Invertiert“ und, sobald etwas vom Standard
+/// abweicht, „Standard wiederherstellen“.
 struct StylePage: View {
     @Environment(SettingsModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -558,6 +559,17 @@ struct StylePage: View {
             } footer: {
                 ListSectionFooter(L10n.styleColorFooter)
             }
+            // Seit Phase 20 (Spec § 13.2): eigene Gruppe unter der Grundfarbe; ohne alternative Icons gibt es sie nicht.
+            if model.offersAppIconSwitch {
+                Section {
+                    ListSwitchRow(L10n.styleIconTint, isOn: Binding(
+                        get: { model.settings.style.tintsAppIcon }, set: model.setTintsAppIcon
+                    ))
+                    .listRowMetrics()
+                } footer: {
+                    ListSectionFooter(L10n.styleIconFooter)
+                }
+            }
             Section {
                 HStack(alignment: .top, spacing: StyleMetrics.tilesGap) {
                     ForEach(LiveActivityStyle.allCases, id: \.self) { kind in
@@ -593,6 +605,11 @@ struct StylePage: View {
             if isPaletteOpen == nil {
                 isPaletteOpen = !model.settings.style.accent.isInStandardRow
             }
+        }
+        // Das App-Icon wechselt beim Verlassen der Seite, nicht bei jedem Antippen einer Farbe: iOS zeigt bei jedem
+        // Wechsel einen Hinweis (Spec § 13.2).
+        .onDisappear {
+            Task { await model.applyAppIcon() }
         }
     }
 }
