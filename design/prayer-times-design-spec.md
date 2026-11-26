@@ -1,4 +1,4 @@
-# Prayer Times (iOS) – Design Spec v0.13
+# Prayer Times (iOS) – Design Spec v0.14
 
 Handoff for building the native SwiftUI app. The visual reference is `prayer-times-prototype.html` (single file, open it in a browser). Design tokens are in its `:root` CSS, every string is in the JS object `T` (16 languages since v0.8, § 9.10), mock data is in `CITIES` / `BERLIN_SUMMER` / `METHODS`, and the app state model is `S`.
 
@@ -79,7 +79,7 @@ Alternative accents (prototype panel): Deep Green `#2E7D4F`/`#5FCB8A`, Night Ind
 **Type** (system text styles, Dynamic Type on): largeTitle 34 bold · title2 22 semibold (city) · title3 20 · headline/body 17 · subheadline 15 · footnote 13 · caption 12/11.
 Countdown: 64 pt thin, `monospacedDigit()`, `@ScaledMetric` capped at ×1.05 (×0.86 when ≥ 10 h); inside the day arc 56 pt (50 pt when ≥ 10 h).
 **Motion**: native push, sheets and toggles; small "pop" on the bell (`.bouncy`); respect Reduce Motion.
-**Icons**: SF Symbols, e.g. `sun.horizon`, `sunrise`, `sun.max`, `sun.min`, `sunset`, `moon.stars`, `bell.and.waves.left.and.right`, `bell`, `bell.slash`, `location.fill`, `location.slash`, `wifi.slash`, `safari`, `gearshape`.
+**Icons**: SF Symbols, e.g. `sun.horizon`, `sunrise`, `sun.max`, `sun.min`, `sunset`, `moon.stars`, `bell.and.waves.left.and.right`, `bell`, `bell.slash`, `location.fill`, `location.slash`, `wifi.slash`, `safari`, `gearshape`. Only in the interface – never in the app icon or the brand mark `AppMark` (§ 13.1, since v0.14).
 
 ---
 
@@ -512,12 +512,22 @@ StandBy shows the small widgets like CarPlay: without background, enlarged, alwa
 - Open (only the CarPlay Simulator or a car can show it): how CarPlay draws the surface behind a widget, whether the `small` family may draw its own surface (the prototype assumes it may), and how the Live Activity appears as a notice when it starts while another app fills the screen.
 
 
-## 13. App icon (v0.13, Phase 20, decided 25./26.11.2026)
+## 13. App icon (v0.13, Phase 20, decided 25./26.11.2026; own symbols v0.14)
 
-Decided by the product owner after the proposal "Neues App-Icon" (prototype of 25./26.11.2026, `docs/vorschlaege/2026-11-25/icon.md`): variant **B** – white, dark black, the arc in the accent (25.11.2026); a **glass lens on the top point**, large with a light glass rim (26.11.2026); the **icon in the accent colour** (26.11.2026); an **Icon Composer document** as the build path (26.11.2026). It replaces the placeholder icon of Phase 11 (green gradient, white arc). Where this section and older sections disagree, this section wins.
+Decided by the product owner after the proposal "Neues App-Icon" (prototype of 25./26.11.2026, `docs/vorschlaege/2026-11-25/icon.md`): variant **B** – white, dark black, the arc in the accent (25.11.2026); a **glass lens on the top point**, large with a light glass rim (26.11.2026); the **icon in the accent colour** (26.11.2026); an **Icon Composer document** as the build path (26.11.2026); **own symbols "Vertraut"** instead of SF Symbols (26.11.2026, since v0.14, § 13.1). It replaces the placeholder icon of Phase 11 (green gradient, white arc). Where this section and older sections disagree, this section wins.
 
 ### 13.1 Artwork
-- The drawing of the placeholder (canvas 1024, `scripts/app-icon.swift` until Phase 19): five prayers on the day arc, Asr running, the arc filled to 62 %; symbols `sun.horizon`, `sun.max`, `sun.min`, `sunset`, `moon.stars` (bold). The arc is a filled shape, not an open stroke (iOS 26 drew a chord across the icon for open strokes).
+- The drawing of the placeholder (canvas 1024, `scripts/app-icon.swift` until Phase 19): five prayers on the day arc, Asr running, the arc filled to 62 %. The arc is a filled shape, not an open stroke (iOS 26 drew a chord across the icon for open strokes). Until v0.13 the symbols were SF Symbols (`sun.horizon`, `sun.max`, `sun.min`, `sunset`, `moon.stars`, bold).
+- **Symbols: own drawing "Vertraut"** (since v0.14). Decided by the product owner on 26.11.2026 ("Vertraut besser"; the other proposals were "Schlicht" – a disc over a horizon line – and "Nur die Linse").
+  - Why: the Xcode and Apple SDKs Agreement, § 2.10 "System-Provided Images", licenses SF Symbols only for developing apps and forbids them in app icons and logos and as a trademark, together with "substantially or confusingly similar images"; Apple can ask for such a use to be changed or stopped. The HIG "SF Symbols" says the same. It concerns all 24 icons and `AppMark` (§ 13.3). SF Symbols in the interface stay allowed.
+  - The same motifs as before, drawn freely in another form language – full discs instead of rings, pointed rays instead of rounded strokes, a reflection instead of an arrow, round stars instead of sparkles:
+
+| Fajr | Dhuhr | Asr (under the lens) | Maghrib | Isha |
+|---|---|---|---|---|
+| half disc on a line, five pointed rays | disc, eight long pointed rays | smaller disc, eight short pointed rays | half disc, below it three lines (reflection) | crescent with two round stars |
+
+  - All shapes are filled paths, about ±32 px around the centre of a point with radius 59 (as before). In the Icon Composer document they are SVG layers (`sym-begun.svg`, `sym-next.svg`, `glas-symbol.svg`) instead of PNG masks; no image of Apple is left in the files.
+  - Source: `docs/vorschlaege/2026-11-25/eigene_symbole.py` (proposal, not in the repo), prototype view "Eigene Symbole" (artifact version 7).
 - Groups, top first: **Glas** (the lens), **Punkte** (symbols, circles, glow around Asr), **Bogen** (filled arc and track).
 - Colours per appearance (Petrol; other accents the same with their own row of § 11.7):
 
@@ -544,13 +554,14 @@ Decided by the product owner after the proposal "Neues App-Icon" (prototype of 2
 
 ### 13.3 Brand mark `AppMark`
 - One image set per accent: `AppMark` (Petrol) and `AppMark-<id>`, light = Default, dark = Dark rendition of the icon, 360 px, rendered by `ictool` in the look of iOS 27 (`scripts/app-mark`).
+- It is a logo, so the rule of § 13.1 applies: since v0.14 it shows the own symbols, rendered from the same icons. When an icon changes, run `scripts/app-mark` again.
 - It follows the same rule as the Home Screen icon: the accent, or Petrol when the switch is off.
 - Places (§ 9.1): Onboarding step 1 (120 pt), tagline at the end of Settings (34 pt), header of the Live Activity and of the widget "Live" (16 pt), Live Activity "small" (14 pt, § 12.3), the ring on the Lock Screen while there are no times (24 pt). Widgets and Live Activity get accent and switch with the style (App Group, content of the activity). In "Schwarz-weiß" the icon in the Live Activity stays grey.
 - Prototype: `APP_ICON` holds the 24 light and dark images (240 px from `ictool`), `appIconImg()` picks by `S.accent` and `S.iconTint`.
 
 ### 13.4 Build
 - `App/AppIcon.icon` (Icon Composer document) replaces `AppIcon.appiconset`; the alternates are `App/AlternateIcons/AppIcon-<id>.icon`. `ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon`, `ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES` the 23 names. XcodeGen (2.46) adds `.icon` as `wrapper.icon` to the resources of the app.
-- The files come from `docs/vorschlaege/2026-11-25/build_icon.py` (proposal, not in the repo); Petrol is byte-identical with the chosen icon.
+- The files come from `docs/vorschlaege/2026-11-25/build_icon.py` (proposal, not in the repo); Petrol is byte-identical with the chosen icon. Since v0.14 all 24 are byte-identical with `icons/Eigene-Symbole-Vertraut/` (`build_icon.py` with `eigene_symbole.py`).
 - actool stores the layers of each icon plus three flattened images 1024 × 1024 (light, dark, tinted, about 2 MB together); this makes the package much larger. Release archive (Phase 20): 9.2 MB before, 96 MB after (`Assets.car` 85 MB, half of it the iPad images the App Store thins out); on an iPhone about 55 MB. Decided 26.11.2026: keep all 24.
 - Reference: `iphone/01-onboarding-1-welcome` (+ `-dark`), `iphone/72-settings-bottom` (+ `-dark`), `iphone/87-settings-style*`, `system/91`–`99`.
 - Not checked yet: the six Home Screen looks on a device (Default, Dark, Clear light/dark, Tinted light/dark), the notice of iOS on a change, iOS 26 next to iOS 27.
@@ -558,6 +569,7 @@ Decided by the product owner after the proposal "Neues App-Icon" (prototype of 2
 ---
 
 ## Changelog
+- **v0.14 (26.11.2026, Phase 20 addendum):** own symbols "Vertraut" in the app icon and in `AppMark` instead of SF Symbols (§ 13.1): the Xcode and Apple SDKs Agreement § 2.10 forbids SF Symbols and similar images in app icons and logos. Same motifs, drawn freely, as SVG layers; all 24 icons, the 48 images of `AppMark` and `APP_ICON` in the prototype are new. No new texts.
 - **v0.13 (26.11.2026, Phase 20):** app icon (§ 13): day arc on white, dark on black, with a glass lens on the top point, as an Icon Composer document; one icon per accent colour (23 alternate icons) with the switch "App-Icon in der Grundfarbe" under Settings › Stil; the image set `AppMark` per accent. The Apple Watch phases move to 21–23.
 - **v0.12 (25.11.2026, Phase 19):** CarPlay and StandBy (§ 12): the small widget "Nächstes Gebet" without background in its own arrangement, the new small widget "Tagesbogen" (its arc only with background; without, like "Nächstes Gebet" – after the test on the device), the Live Activity "small" for CarPlay and the Smart Stack of Apple Watch at full opacity; no own CarPlay app.
 - **v0.11 (24./25.11.2026):** Addendum to the changes before the Golden Beta (§ 11.3–11.7): sound only with the iOS default and a hint where to choose it; group "Darstellung" above "Berechnung"; onboarding with five pages (madhab as a menu) and swipe; prohibited times by madhab (Hanafi, Maliki, Schafii, Hanbali) with their own lengths, texts and info sheet sections; Settings › Stil with 24 accent colours (violet prohibited time for Orange, Gold, Sand) and six Live Activity styles at 30 %.
