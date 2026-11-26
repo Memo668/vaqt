@@ -39,6 +39,9 @@ Die erste Beta über TestFlight kommt nach Phase 11 – seit dem 15.11.2026 nach
     - „Was testen“ steht auf Deutsch und Englisch drin (`docs/APP-STORE.md`), eingetragen am 25.11.2026 mit dem Go des Nutzers („Passt, eintragen“).
     - Für „Extern“ hat der Nutzer ihn am 25.11.2026 freigegeben („Ja, für Extern freigeben“): Er war sofort „Testing“, ohne erneute Prüfung, „Automatically notify testers“ stand an. Bei „Extern“ stehen jetzt Build 2, 3 und 5.
     - Die Beta-Beschreibung (Deutsch und Englisch) ist am 25.11.2026 mit dem Go des Nutzers geändert: Verse und Adhan sind „vorläufig“ statt „Platzhalter“, letzter Absatz (`docs/APP-STORE.md`, „Beta-Beschreibung“).
+  - Build 0.1.0 (6) (Hotfix „App weiterempfehlen“, `9c6b3f6`) ist am 26.11.2026 um 17:05 hochgeladen und war nach wenigen Minuten verarbeitet. Er ist automatisch bei „Intern“ („Ready to Submit“, 5 Tester).
+    - „Was testen“ steht auf Deutsch und Englisch drin (`docs/APP-STORE.md`), eingetragen am 26.11.2026 mit dem Go des Nutzers („Passt, eintragen“).
+    - Noch nicht bei „Extern“: Der Nutzer will erst die Icons freigeben (26.11.2026, „warte auf Freigabe der Icons“). Bis dahin steht bei „Extern“ Build 5, der beim Teilen mit einer anderen Grundfarbe als Petrol abstürzt.
   - Rückmeldungen aus TestFlight zu Build 2 (Tester, 17.11.2026), noch zu beheben:
     - Im Adhan-Sheet ist „Stimme 3“ stumm. Für sie gibt es keine Aufnahme; Stimme 1 und 2 sind Platzhalter von Wikimedia.
     - Ist der Schalter für die Fadschr-Fassung an, kommt bei keiner Stimme ein Ton.

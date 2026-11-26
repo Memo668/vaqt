@@ -87,6 +87,48 @@ Vaqt is a non-profit app for the five daily prayers – no ads, no tracking, no 
 This is the first beta. Some content is still provisional: the selection of verse translations, the single adhan recording and the app icon. Nobody has reviewed the guide and makruh texts for religious accuracy yet, and the languages from French on are drafts that native speakers have yet to review.
 ```
 
+### Was testen – Build 0.1.0 (6)
+
+Hotfix nach Build 5 (`ba8782c`): Absturz beim Teilen mit einer anderen Grundfarbe als Petrol. Am 26.11.2026 so in App Store Connect eingetragen, nach „Passt, eintragen“ des Nutzers; Deutsch 1482, Englisch 1481 Zeichen. Der Rest wie bei Build 5, „Neu in Build 5“ zu einer Zeile gekürzt.
+
+Deutsch:
+
+```text
+Neu in Build 6:
+– Behoben: Die App stürzte beim Teilen ab („App weiterempfehlen“ unter Unterstützen und „Teilen“ beim Vers des Tages), wenn unter Stil eine andere Grundfarbe als Petrol gewählt war.
+
+Seit Build 5: Verse als wörtlicher Ausschnitt einer veröffentlichten Übersetzung, ein echter Adhan (DARSA TV, CC BY), Stil mit 24 Grundfarben, Rechtsschule für die Verbotszeiten, Onboarding auch durch Wischen.
+Bitte besonders prüfen: Klappt Teilen mit deiner Grundfarbe? Klingt der Adhan gut, und endet der Ausschnitt (30 Sekunden) passend? Stimmen die Verbotszeiten für deine Rechtsschule? Sind Farben und Live-Aktivität auf deinem Hintergrundbild lesbar? Sind die Verse in deiner Sprache verständlich?
+
+Außerdem im Alltag prüfen:
+– Stimmen die Gebetszeiten für deinen Ort (Vergleich mit Moschee oder Kalender; Methode und Minuten in den Einstellungen)?
+– Kommen Mitteilungen und Wecker pünktlich, auch bei gesperrtem iPhone, im Stummmodus und bei Fokus?
+– Stimmen Widgets und Live-Aktivität (ab 30 Minuten vor jedem Gebet)?
+– Zeigt der Qibla-Kompass ruhig in die richtige Richtung?
+– Unverständlich, abgeschnitten oder falsch übersetzt? Arabisch, Urdu und Persisch laufen von rechts nach links.
+Bekannt: Symbol ist ein Platzhalter; Anleitung und Verbotszeiten-Texte fachlich ungeprüft; Sprachen ab Französisch sind Entwürfe; Vers-Ausschnitte noch von niemandem mit Muttersprache gelesen; der Adhan hat keine Fadschr-Fassung.
+Feedback am besten mit Screenshot direkt aus TestFlight.
+```
+
+Englisch:
+
+```text
+New in build 6:
+– Fixed: the app crashed when sharing ("Recommend the App" under Support and "Share" on the Verse of the Day) if an accent color other than Teal was chosen under Style.
+
+Since build 5: verses as a literal excerpt of a published translation, a real adhan (DARSA TV, CC BY), Style with 24 accent colors, madhhab for the makruh times, onboarding by swiping too.
+Please check in particular: Does sharing work with your accent color? Does the adhan sound good, and does the excerpt (30 seconds) end in a fitting place? Are the makruh times right for your madhhab? Are colors and the Live Activity readable on your wallpaper? Are the verses understandable in your language?
+
+Also check in everyday life:
+– Are the prayer times right for your location (compare with your mosque or calendar; method and minutes in Settings)?
+– Do notifications and the alarm arrive on time, also with the iPhone locked, in silent mode and with a Focus on?
+– Are widgets and Live Activity (from 30 minutes before each prayer) right?
+– Does the Qibla compass point the right way, without jitter?
+– Anything unclear, cut off or mistranslated? Arabic, Urdu and Persian run right to left.
+Known: the icon is a placeholder; the guide and the makruh texts are not reviewed for religious accuracy yet; the languages from French on are drafts; nobody who speaks the language has read the verse excerpts yet; the adhan has no Fajr version.
+Feedback ideally with a screenshot straight from TestFlight.
+```
+
 ### Was testen – Build 0.1.0 (5)
 
 Neu seit Build 4 (Phase 18, Spec § 11). Für jeden weiteren Build anpassen: Was ist neu, was soll geprüft werden?
