@@ -89,6 +89,22 @@ Vaqt is a non-profit app for the five daily prayers – no ads, no tracking, no 
 This is the golden beta before the release. Some content is still provisional: the selection of verse translations and the single adhan recording. Nobody has reviewed the guide and makruh texts for religious accuracy yet, and the languages from French on are drafts that native speakers have yet to review.
 ```
 
+### Was testen – Build 0.9.1 (8)
+
+Nachtrag zu Phase 20: eigene Symbole statt SF Symbols im Icon. Auf die Frage nach dem Text hat der Nutzer am 26.11.2026 die kurze Fassung gewählt („Kurz“; die ausführliche mit allem seit Build 7 war die Empfehlung). Deutsch 441, Englisch 453 Zeichen. Am 26.11.2026 so in App Store Connect eingetragen; beim Zuordnen zu „Extern“ waren beide Texte vorbelegt.
+
+Deutsch:
+
+```text
+Golden Beta 0.9.1 – Build 8: Das App-Icon hat eigene Symbole statt Apples SF Symbols (gleiche Motive, neu gezeichnet), in allen 24 Grundfarben und im kleinen Zeichen in App, Widgets und Live-Aktivität. Zeigt der Home-Bildschirm noch das alte Icon, das iPhone einmal neu starten. Sonst wie Build 7. Bitte vor allem das Icon ansehen: hell, dunkel, klar, getönt und in deiner Grundfarbe. Feedback am besten mit Screenshot direkt aus TestFlight.
+```
+
+Englisch:
+
+```text
+Golden Beta 0.9.1 – build 8: the app icon has its own symbols instead of Apple's SF Symbols (same motifs, newly drawn), in all 24 accent colors and in the small mark in the app, widgets and Live Activity. If your Home Screen still shows the old icon, restart the iPhone once. Otherwise as in build 7. Please look at the icon in particular: light, dark, clear, tinted and in your accent color. Feedback ideally with a screenshot straight from TestFlight.
+```
+
 ### Was testen – Build 0.9.1 (7)
 
 Golden Beta 0.9.1 mit Phase 19 (CarPlay-Widgets, StandBy und Live-Aktivität „klein“), Phase 20 (App-Icon) und dem Hotfix aus Build 6. Am 26.11.2026 so in App Store Connect eingetragen, nach „Passt, eintragen“ des Nutzers, und nach dem Neuladen bestätigt; Deutsch 1635, Englisch 1618 Zeichen. „Bekannt“ ohne das Symbol, weil das Icon jetzt endgültig ist. Beim Zuordnen zu „Extern“ waren beide Texte vorbelegt.
