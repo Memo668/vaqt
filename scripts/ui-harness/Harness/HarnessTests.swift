@@ -15,6 +15,8 @@ import XCTest
 ///   pages <Pfad ohne Endung>    die ganze Seite: aufnehmen und weiterscrollen, bis sie am Ende steht
 ///                               (<Pfad>-1.png, -2.png …)
 ///   dump <Pfad.txt>             Baum der Bedienungshilfen
+///   alive [Sekunden]            Fehler, wenn die App nicht mehr im Vordergrund läuft (abgestürzt), so lange geprüft
+///   expectid <Kennung>          Fehler, wenn binnen 20 s kein Element mit dieser Kennung erscheint
 ///   audit <Pfad.txt>            Prüfung der Bedienungshilfen (performAccessibilityAudit) als Liste
 ///   sbtap <n> / sbtapif <n>     Knopf n im Dialog des Systems (sbtapif: nur wenn einer kommt)
 ///   sbdump <Pfad.txt>           Baum des Dialogs des Systems
@@ -87,6 +89,21 @@ final class HarnessTests: XCTestCase {
                 try capturePages(of: app, to: rest)
             case "dump":
                 try app.debugDescription.write(toFile: rest, atomically: true, encoding: .utf8)
+            case "alive":
+                // Hotfix vom 26.11.2026: Stürzt die App ab, laufen die übrigen Befehle ohne Fehler weiter. Deshalb
+                // so viele Sekunden lang immer wieder prüfen, ob sie noch im Vordergrund läuft.
+                let end = Date().addingTimeInterval(numbers.first ?? 0)
+                repeat {
+                    guard app.state == .runningForeground else {
+                        XCTFail("die App läuft nicht mehr – abgestürzt?")
+                        break
+                    }
+                    Thread.sleep(forTimeInterval: 0.5)
+                } while Date() < end
+            case "expectid":
+                // Ein Element mit dieser Kennung erscheint, z. B. das Teilen-Blatt (ShareSheet.RemoteContainerView).
+                let element = app.descendants(matching: .any).matching(identifier: rest).firstMatch
+                XCTAssertTrue(element.waitForExistence(timeout: 20), "kein Element mit Kennung \(rest)")
             case "audit":
                 try audit(app, to: rest)
             case "sbdump":

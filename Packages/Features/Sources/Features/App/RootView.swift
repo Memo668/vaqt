@@ -79,14 +79,23 @@ public struct RootView: View {
 @MainActor
 enum WindowTint {
     static func apply(_ accent: AccentColorID) {
-        let color = UIColor { traits in
-            let value = traits.userInterfaceStyle == .dark ? accent.dark : accent.light
-            return UIColor(red: value.red, green: value.green, blue: value.blue, alpha: value.alpha)
-        }
+        let color = color(for: accent)
         for case let scene as UIWindowScene in UIApplication.shared.connectedScenes {
             for window in scene.windows {
                 window.tintColor = color
             }
+        }
+    }
+
+    /// Die Grundfarbe für hell und dunkel. Nicht an den Main Actor gebunden: Für das Teilen-Blatt, das in einem
+    /// Dienst des Systems läuft, kodiert UIKit die Eigenschaften des Fensters samt dieser Farbe auf einer eigenen
+    /// Warteschlange und löst sie dabei auf. Eine Closure des Main Actors bricht dort ab (`EXC_BREAKPOINT` in
+    /// `_swift_task_checkIsolatedSwift`) – so stürzte „App weiterempfehlen“ ab, sobald eine andere Grundfarbe
+    /// als Petrol gewählt war (Hotfix vom 26.11.2026).
+    nonisolated static func color(for accent: AccentColorID) -> UIColor {
+        UIColor { traits in
+            let value = traits.userInterfaceStyle == .dark ? accent.dark : accent.light
+            return UIColor(red: value.red, green: value.green, blue: value.blue, alpha: value.alpha)
         }
     }
 }

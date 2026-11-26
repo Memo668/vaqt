@@ -1,0 +1,21 @@
+# Hotfix vom 26.11.2026: Teilen mit einer anderen Grundfarbe als Petrol. Vorher stürzte die App ab, sobald das
+# Teilen-Blatt erschien (Farbe der Fenster, `WindowTint`, siehe WindowTintTests). Unterstützen › „App weiterempfehlen“
+# und Verse › „Teilen“ mit Grün: Das Teilen-Blatt muss erscheinen und die App danach weiterlaufen. Das Blatt braucht
+# im Simulator beim ersten Mal gut 10 Sekunden. Für das iPhone 18 Pro und das iPhone Duo, zu- und aufgeklappt
+# (SIM_ID=<Kennung des Duo>).
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25 -debugAccent green -debugTab support
+wait 4
+drag 200 600 200 250
+wait 1
+taplabel App weiterempfehlen
+expectid ShareSheet.RemoteContainerView
+alive 10
+shot {OUT}/teilen-grundfarbe-support.png
+dump {OUT}/teilen-grundfarbe-support.txt
+launch -AppleLanguages (de) -AppleLocale de_DE -debugSkipOnboarding -debugFixtureTimes -debugDate 2026-11-10 -debugTime 14:25 -debugAccent green -debugTab verses
+wait 4
+taplabel Teilen
+expectid ShareSheet.RemoteContainerView
+alive 10
+shot {OUT}/teilen-grundfarbe-vers.png
+dump {OUT}/teilen-grundfarbe-vers.txt
