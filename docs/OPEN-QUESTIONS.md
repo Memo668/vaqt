@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 25.11.2026, Phase 19 (CarPlay-Widgets, StandBy und Live-Aktivität „klein“, Spec § 12) gebaut auf `claude/phase-19`, noch nicht abgenommen. Davor: nach der Abnahme von Phase 18 (Verse und Adhan, Spec § 11.1–11.2, mit dem Nachtrag Klang, Stil, Rechtsschule und Onboarding, Spec § 11.3–11.7); Build 0.1.0 (5) ist am 25.11.2026 hochgeladen und bei „Intern“ und „Extern“ (Golden Beta am 26.11.2026).
+Stand: 26.11.2026, Phase 20 (App-Icon, Spec § 13) gebaut auf `claude/phase-20`, aufbauend auf Phase 19 (CarPlay-Widgets, StandBy und Live-Aktivität „klein“, Spec § 12, `claude/phase-19`); beide noch nicht abgenommen. Davor: nach der Abnahme von Phase 18 (Verse und Adhan, Spec § 11.1–11.2, mit dem Nachtrag Klang, Stil, Rechtsschule und Onboarding, Spec § 11.3–11.7); Build 0.1.0 (5) ist am 25.11.2026 hochgeladen und bei „Intern“ und „Extern“ (Golden Beta am 26.11.2026).
 
 ## Für die erste Beta
 
@@ -64,6 +64,21 @@ Offen bleibt:
 - **Rechte an der Aufnahme:** Die Lizenz hat der Kanal DARSA TV gesetzt, der im Video als Produzent genannt ist. Eine eigene Zusage des Muezzins liegt nicht vor.
 - **Fadschr:** Für eine Fassung mit „aṣ-ṣalātu khayrun mina n-nawm“ braucht es eine eigene Aufnahme. Bis dahin spielt Fadschr dieselbe wie die übrigen Gebete.
 
+## App-Icon, entschieden am 25./26.11.2026
+
+Nach dem Vorschlag „Neues App-Icon“ (Prototyp https://claude.ai/artifact/FHC9umY9SGxcLaRibudgk9, Beschreibung in `docs/vorschlaege/2026-11-25/icon.md`, nicht im Repo). Go zum Bau am 26.11.2026 („bauen“), gebaut in Phase 20 (Spec § 13).
+
+| Punkt | Antwort | Entscheidung |
+|---|---|---|
+| Variante | „B (Empfohlen)“, 25.11.2026 | Hell weißer Grund, dunkel schwarzer Grund, Bogen in der Grundfarbe. |
+| Glas-Punkt | „Linse“ und „Oben (Empfohlen)“, dann „prägnanter und größer“: „Groß mit Glasrand“, 26.11.2026 | Glas-Linse auf dem oberen Punkt, Radius 140, heller Rand, darunter 1,6-fach. |
+| Icon in der Grundfarbe | „Dafür brauchen wir keinen Prototypen. Du kannst einfach direkt umsetzen.“, 26.11.2026 | 24 Icons, Petrol ist das Haupt-Icon; Schalter unter Stil, standardmäßig an; Wechsel beim Verlassen der Seite. |
+| Bauweg | „Ja, eintragen“, 26.11.2026 | Icon-Composer-Datei `App/AppIcon.icon`; PNGs nur als Rückfall (nicht nötig: XcodeGen und actool verarbeiten `.icon`). |
+| Nummer | Hauptsitzung, 26.11.2026 | Phase 20; die Apple Watch rückt auf 21 bis 23. |
+| Paketgröße | „Alle 24 behalten (Empfohlen)“, 26.11.2026 | actool legt je Icon drei fertige Bilder 1024 × 1024 ab (rund 1,8 MB, auch ohne Glas). Archiv 94 statt 9,2 MB, für ein iPhone nach dem Ausdünnen rund 55 MB. |
+| Text am Schalter | „App-Icon in der Grundfarbe“, 26.11.2026 | `styleIconTint` |
+| Fußnote | „Nur der Hinweis von iOS“, 26.11.2026 | `styleIconFooter`: „Das Icon auf dem Home-Bildschirm wechselt, wenn du diese Seite verlässt. iOS bestätigt jeden Wechsel mit einem Hinweis.“ |
+
 ## CarPlay und Apple Watch, entschieden am 25.11.2026
 
 Nach dem Vorschlag „CarPlay und Apple Watch“ vom 24.11.2026 (Prototyp https://claude.ai/artifact/UFPJkRBD6A5hXzseS1G8cZ, Recherche mit Quellen in `docs/vorschlaege/2026-11-24/carplay-watch.md`, nicht im Repo). Bauplan freigegeben am 25.11.2026 („Plan freigeben“):
@@ -72,7 +87,7 @@ Nach dem Vorschlag „CarPlay und Apple Watch“ vom 24.11.2026 (Prototyp https:
 |---|---|
 | Eigene CarPlay-App | Nein. Gebetszeiten passen in keine Kategorie; die Berechtigung „Audio“ wird nicht beantragt. |
 | CarPlay | Phase 19: beide kleinen Widgets („Nächstes Gebet“ angepasst, neu „Tagesbogen“) und die Live-Aktivität „klein“ (Spec § 12). |
-| Apple Watch | Phasen 20 bis 22, nacheinander, jede in einer eigenen Sitzung: App (rechnet selbst, Einstellungen vom iPhone, Qibla mit Kompass), Komplikationen und Smart Stack, Feinschliff am Gerät. Nur zusammen mit der iPhone-App, watchOS 26. |
+| Apple Watch | Phasen 21 bis 23 (bis 26.11.2026: 20 bis 22; Phase 20 wurde das App-Icon), nacheinander, jede in einer eigenen Sitzung: App (rechnet selbst, Einstellungen vom iPhone, Qibla mit Kompass), Komplikationen und Smart Stack, Feinschliff am Gerät. Nur zusammen mit der iPhone-App, watchOS 26. |
 | Zeitpunkt | Nach der Abnahme von Phase 18; nicht für den Release am 29.11.2026, Phase 19 könnte ins erste Update. |
 | „Tagesbogen“ in StandBy und CarPlay | Nach dem Test am Gerät (25.11.2026, „Da sind 7 Punkte auf dem Widget und der Halbkreis bringt ja auch mal gar nichts.“) auf die Frage, was er dort zeigen soll: „Wie „Nächstes Gebet““. Ohne Hintergrund also dieselbe große Anordnung, kein Bogen; dort in der Galerie hinten. Auf dem Home-Bildschirm bleibt der Bogen (Spec § 12.2). |
 
@@ -211,7 +226,9 @@ Offen bzw. Annahmen:
 - **Übersetzungen der Verse** (Phase 18, Spec § 11.1): Seit dem 24.11.2026 wörtliche Ausschnitte veröffentlichter Übersetzungen, eine vorläufige Auswahl. Vor dem App Store: die Rechte klären, sobald die App Geld annimmt (Tanzil: nur nicht kommerziell), die Ausschnitte von Menschen mit Muttersprache lesen lassen und entscheiden, welche und wie viele Verse die App zeigt. Der arabische Text entspricht dem von Tanzil (CC BY 3.0, Hinweis auf der Lizenzseite).
 - **Adhan-Aufnahme** (Phase 18, Spec § 11.2): Seit dem 24.11.2026 eine Aufnahme, der Adhan von Ustadh Mmanga Muharram (DARSA TV, auf YouTube unter CC BY). Vor dem App Store: festhalten, wer die Rechte an der Aufnahme hält – am besten eine kurze schriftliche Zusage von DARSA TV oder dem Muezzin –, und entscheiden, ob es eine Fadschr-Fassung geben soll. Den Schnitt (welcher Teil des Adhan in 30 Sekunden passt) sollte jemand fachlich ansehen.
 - **Texte der Anleitung** (Phase 5, Spec § 6.14): Niemand hat sie fachlich geprüft (Imam oder Gelehrter je Sprache). Offen sind auch eine neutrale Fassung oder Varianten je Rechtsschule und für Frauen, echte Illustrationen und Audio für die Formeln. Seit Phase 13 gehören die Texte von „Gebet Schritt für Schritt“ dazu (Spec § 9.6: Start, Stehen in Rakʿa 1–2, „Sprich dreimal“, kurzes Sitzen, zweite Niederwerfung, erstes und letztes Sitzen, Schluss). Im String Catalog tragen alle 43 Texte den Kommentar `TODO(review)`; `scripts/import-strings` setzt ihn (`walkReviewKeys`, `guideReviewKeys`).
-- **Icon** (Spec § 6.9): Das Icon ist ein Platzhalter (Phase 11). Seit Phase 12 zeigen Onboarding und Tagline das App-Symbol selbst, seit Phase 14 auch Live-Aktivität und Widgets (Spec § 9.1, Bildsatz `AppMark` im DesignSystem); ändert sich das Icon, den Bildsatz neu erzeugen (Kommentar in `AppMark.swift`).
+- **Icon** (Spec § 6.9, § 13): Seit Phase 20 das endgültige Icon (entschieden am 25./26.11.2026, unten „App-Icon“), in jeder Grundfarbe. Ändert sich ein Icon, den Bildsatz `AppMark` mit `scripts/app-mark` neu erzeugen. Vor dem App Store:
+  - **SF Symbols im Icon:** Die fünf Symbole im Icon sind SF Symbols (`sun.horizon`, `sun.max`, `sun.min`, `sunset`, `moon.stars`), übernommen aus dem Platzhalter. Apple erlaubt SF Symbols laut HIG nicht in App-Icons und Logos. Klären, ob die Symbole neu gezeichnet werden müssen (eigene Formen statt SF Symbols); bis dahin ein Risiko bei der Prüfung.
+  - Am Gerät in allen sechs Darstellungen ansehen (Prüfliste in `docs/BUILD-PLAN.md`, Phase 20).
 - **Name** (Spec § 9.13): „Vaqt“ ist ein Arbeitsname (entschieden am 15.11.2026, „Vaqt als Arbeitsname (Empfohlen)“); den endgültigen Namen vor dem App Store festlegen. Im App Store gibt es schon:
   - „Vaqt“ (Huriye DIVARCI, Kategorie Lifestyle, seit 09/2026) – deshalb heißt der Store-Eintrag „Vaqt – Prayer Time“;
   - „Vaqt: Prayer Times & Qibla“ (Shokhabbos Makhmudov, eine Gebetszeiten-App, seit 05/2026, im deutschen Store „Vaqt: Gebetszeiten & Qibla“, letzte Version am 10.11.2026). Verwechslung und eine Ablehnung wegen Ähnlichkeit sind möglich.

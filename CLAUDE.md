@@ -4,7 +4,7 @@ Gemeinnützige Gebetszeiten-App: werbefrei, ohne Tracking, ohne Konto. Name unte
 
 ## Quellen der Wahrheit
 
-1. `design/prayer-times-design-spec.md` – Design Spec v0.12: Tokens, Komponenten, Verhalten, Zustände, iPhone Duo (§ 8), offene Fragen (§ 6), Varianten (§ 7), Änderungen vor der Beta (§ 9), nach der ersten Beta (§ 10), vor der Golden Beta (§ 11, mit dem Nachtrag § 11.3–11.7: Klang, Stil, Rechtsschule, Onboarding) und CarPlay und StandBy (§ 12, Phase 19).
+1. `design/prayer-times-design-spec.md` – Design Spec v0.13: Tokens, Komponenten, Verhalten, Zustände, iPhone Duo (§ 8), offene Fragen (§ 6), Varianten (§ 7), Änderungen vor der Beta (§ 9), nach der ersten Beta (§ 10), vor der Golden Beta (§ 11, mit dem Nachtrag § 11.3–11.7: Klang, Stil, Rechtsschule, Onboarding) CarPlay und StandBy (§ 12, Phase 19) und das App-Icon (§ 13, Phase 20).
 2. `design/screenshots/` – Referenzbilder je Bildschirm und Zustand. Übersicht: `design/screenshots/INDEX.md`. Seit Spec v0.8 nimmt `scripts/capture-prototype` sie aus dem Prototyp auf.
 3. `design/prayer-times-prototype.html` – Quelltext des Prototyps (~2 400 Zeilen, nicht komplett einlesen, gezielt suchen):
    - Tokens: `:root`-CSS am Anfang (Farben hell/dunkel, Abstände, Radien, Schriftgrößen)

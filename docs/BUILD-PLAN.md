@@ -351,7 +351,7 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 
 ## Phase 19 – CarPlay-Widgets, StandBy und Live-Aktivität „klein“
 
-*Grundlage: Spec v0.12 § 12 und die Ansicht „CarPlay“ des Prototyps, aus dem Vorschlag „CarPlay und Apple Watch“ vom 24.11.2026 (nur „ohne eigene App“). Entschieden am 25.11.2026: keine eigene CarPlay-App, die Apple Watch in den Phasen 20 bis 22 (`docs/OPEN-QUESTIONS.md`, „CarPlay und Apple Watch“). Bauplan freigegeben am 25.11.2026. Nicht für den Release am 29.11.2026; könnte ins erste Update.*
+*Grundlage: Spec v0.12 § 12 und die Ansicht „CarPlay“ des Prototyps, aus dem Vorschlag „CarPlay und Apple Watch“ vom 24.11.2026 (nur „ohne eigene App“). Entschieden am 25.11.2026: keine eigene CarPlay-App, die Apple Watch in den Phasen 21 bis 23 (bis 26.11.2026: 20 bis 22; `docs/OPEN-QUESTIONS.md`, „CarPlay und Apple Watch“). Bauplan freigegeben am 25.11.2026. Nicht für den Release am 29.11.2026; könnte ins erste Update.*
 
 *Gebaut am 25.11.2026 auf `claude/phase-19` (ab `6f5910a`), 1126 Tests grün, im Katalog gegen `carplay/cp-40`–`cp-52` abgeglichen, das Widget „Tagesbogen“ im System (Galerie, Home-Bildschirm). CarPlay Simulator und StandBy waren in Device Hub ausgegraut; Annahmen und was offen bleibt in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 19“). Noch nicht abgenommen.*
 
@@ -363,4 +363,26 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 - **Katalog:** `-debugCatalog live` zeigt unten die Live-Aktivität „klein“ in vier Größen; neu `-debugCatalog carplay` mit den kleinen Widgets mit und ohne Hintergrund und „klein“ nach dem Wechsel. `scripts/compare-system cp40 … cp52w` legt sie neben die Tafeln.
 - **Tests:** Zeitleiste je Widget (PrayerCore); Zeilen je Zustand mit und ohne Hintergrund, in der Verbotszeit, nach Rechtsschule, Kopfzeile je Höhe, nach dem Wechsel, Maße und Lage des Bogens wie im Prototyp, Farben, Lage im Katalog (DesignSystem, `CarPlayStandByTests`).
 - **Prüfen:** `make build`, `make test`, `make compare-system STATES='cp40 cp41 cp50 cp51'`, im System `make harness SCRIPTS=scripts/ui-harness/scripts/phase-19-system.txt`. Von Hand: Device Hub › Device › „CarPlay Simulator“ (breit und Standard, hell und dunkel) und „Show Standby“; der Smart Stack einer Apple Watch.
-- **Danach:** Abnahme durch den Nutzer. Die Apple Watch folgt in den Phasen 20 bis 22 laut Bauplan (`docs/vorschlaege/2026-11-24/bauplan-carplay-watch.md`, nicht im Repo).
+- **Danach:** Abnahme durch den Nutzer. Die Apple Watch folgt in den Phasen 21 bis 23 laut Bauplan (`docs/vorschlaege/2026-11-24/bauplan-carplay-watch.md`, nicht im Repo; dort noch als 20 bis 22 – Phase 20 wurde am 26.11.2026 das App-Icon).
+
+## Phase 20 – App-Icon
+
+*Grundlage: Spec v0.13 § 13 und der Vorschlag „Neues App-Icon“ vom 25./26.11.2026 (`docs/vorschlaege/2026-11-25/icon.md`, nicht im Repo; Prototyp https://claude.ai/artifact/FHC9umY9SGxcLaRibudgk9). Entschieden: Variante B (25.11.2026), Glas-Linse groß mit Glasrand auf dem oberen Punkt, Icon in der Grundfarbe, Bauweg Icon-Composer-Datei (26.11.2026). Go zum Bau am 26.11.2026 („bauen“). Aufbauend auf Phase 19 (`claude/phase-19`, nicht abgenommen); nicht für den Release am 29.11.2026. Die Apple Watch rückt damit auf die Phasen 21 bis 23.*
+
+*Gebaut am 26.11.2026 auf `claude/phase-20` (ab `claude/phase-19` = `3820e60`). Annahmen in `docs/OPEN-QUESTIONS.md` („Annahmen in Phase 20“). Noch nicht abgenommen.*
+
+- **Spec und Prototyp:** Spec v0.13 (§ 13 neu, § 6.9 erledigt, § 9.1 und § 11.7 ergänzt). Im Prototyp zeigt `APP_ICON` je Grundfarbe das helle und dunkle Bild aus `ictool`; `appIconImg()` wählt nach `S.accent` und `S.iconTint`. Unter Einstellungen › Stil eine eigene Gruppe mit dem Schalter „App-Icon in der Grundfarbe“ (`styleIconTint`, Fußnote `styleIconFooter`, Wortlaut gewählt am 26.11.2026), 16 Sprachen, die zwölf ab FR als KI-Entwurf.
+- **Referenzbilder** neu aus dem Prototyp: `iphone/01-onboarding-1-welcome`, `72-settings-bottom` (je hell und dunkel), `87-settings-style*`, `system/91`–`99`; die übrigen per Pixelvergleich unverändert.
+- **Icon:** `App/AppIcon.icon` (Petrol, B mit Glas-Linse) statt `AppIcon.appiconset`; 23 alternative Icons `App/AlternateIcons/AppIcon-<id>.icon` in `ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES`. XcodeGen 2.46 nimmt `.icon` als `wrapper.icon`, actool kompiliert alle. Paket: Release-Archiv vorher 9,2 MB, nachher rund 94 MB (Entscheidung „Alle 24 behalten“, 26.11.2026); `ASSETCATALOG_COMPILER_OPTIMIZATION: space`.
+- **`AppMark`:** je Grundfarbe ein Bildsatz hell und dunkel (360 px, `scripts/app-mark` mit `ictool`), gewählt nach Grundfarbe und Schalter (`AppStyle.appIconAccent`, `AccentStore.iconAccent`), auch in Widgets und Live-Aktivität.
+- **Wechsel des Icons:** `AppIconSwitcher` (Features) ruft `setAlternateIconName` beim Verlassen der Seite Stil und beim Wechsel in den Hintergrund, nur wenn sich der Name ändert; `nil` bei Petrol oder Schalter aus. Ohne `supportsAlternateIcons` ist der Schalter ausgeblendet.
+- **Prüfen:** `make build`, `make test` (mit `make check-icons`), `make check-strings`, `make compare-settings STATES='01 72 87'`, `make compare-system`, `make archive`. Am Gerät die Prüfliste unten.
+- **Am Gerät (Schritt 6, Prüfliste für den Nutzer):**
+  1. Home-Bildschirm in allen sechs Darstellungen (Bearbeiten › Anpassen: Standard, Dunkel, Klar hell/dunkel, Getönt hell/dunkel): Glas-Linse oben, Bogen in Petrol, dunkel echtes Schwarz.
+  2. Sperrbildschirm mit Live-Aktivität (`-debugLiveActivity`), Widget „Live“, eine Mitteilung (`-debugNotifications`): Icon im Kopf und in der Mitteilung.
+  3. Einstellungen › Stil: Grundfarbe wechseln, mehrmals antippen, dann zurück – der Hinweis von iOS kommt genau einmal; Home-Bildschirm, Live-Aktivität und Widget in der neuen Farbe.
+  4. Auf der Seite Stil eine Farbe wählen und die App mit einer Wischgeste verlassen: Wechselt das Icon (Hinweis beim nächsten Öffnen oder gar keiner)?
+  5. Schalter aus → Icon wieder Petrol, `AppMark` (Tagline unten in den Einstellungen) ebenfalls; „Standard wiederherstellen“ → Petrol und Schalter an.
+  6. Wenn möglich ein Gerät mit iOS 26 (rendert flacher).
+  7. Nach dem nächsten Upload: das Icon des Builds in App Store Connect und TestFlight (immer Petrol).
+- **Außerhalb des Codes, nur mit Go (Schritt 7):** In TestFlight „Was testen“ und Beta-Beschreibung das Icon nicht mehr „vorläufig“ nennen (`docs/APP-STORE.md`); das Vorschauvideo (`~/Developer/NamazVakti-Video`) prüfen.
