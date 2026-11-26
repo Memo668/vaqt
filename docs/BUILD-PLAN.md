@@ -384,5 +384,5 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
   4. Auf der Seite Stil eine Farbe wählen und die App mit einer Wischgeste verlassen: Das Icon bleibt zunächst; beim nächsten Öffnen der App kommt der Hinweis, danach steht das neue Icon auf dem Home-Bildschirm.
   5. Schalter aus → Icon wieder Petrol, `AppMark` (Tagline unten in den Einstellungen) ebenfalls; „Standard wiederherstellen“ → Petrol und Schalter an.
   6. Wenn möglich ein Gerät mit iOS 26 (rendert flacher).
-  7. Nach dem nächsten Upload: das Icon des Builds in App Store Connect und TestFlight (immer Petrol).
-- **Außerhalb des Codes, nur mit Go (Schritt 7):** In TestFlight „Was testen“ und Beta-Beschreibung das Icon nicht mehr „vorläufig“ nennen (`docs/APP-STORE.md`); das Vorschauvideo (`~/Developer/NamazVakti-Video`) prüfen.
+  7. Nach dem nächsten Upload: das Icon des Builds in App Store Connect und TestFlight (immer Petrol). Bei Build 0.9.1 (7) zeigt die Liste der Builds in App Store Connect das neue helle Icon mit dem Bogen in Petrol (nur klein angesehen); in der TestFlight-App noch offen.
+- **Außerhalb des Codes, nur mit Go (Schritt 7):** In TestFlight „Was testen“ und Beta-Beschreibung das Icon nicht mehr „vorläufig“ nennen (`docs/APP-STORE.md`); das Vorschauvideo (`~/Developer/NamazVakti-Video`) prüfen. Die TestFlight-Texte sind seit Build 0.9.1 (7) angepasst (26.11.2026, mit dem Go des Nutzers); das Vorschauvideo ist offen.

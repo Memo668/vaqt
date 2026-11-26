@@ -48,7 +48,7 @@ Für den App Store Pflicht, für TestFlight mit externen Testern ebenfalls. Der 
 
 ## Archiv
 
-`make archive` baut das Release-Archiv ohne Signatur und prüft es mit `scripts/check-archive` (README, Abschnitt „App Store“). Stand 14.11.2026: in Ordnung, mit Hinweisen nur auf die Platzhalter (Bundle-ID, App Group, Link „Quellcode“) und die fehlende Signatur. Für die Beta reicht das Platzhalter-Icon (`App/Assets.xcassets/AppIcon.appiconset`, erzeugt von `scripts/app-icon.swift`); das helle Bild hat keinen Alphakanal.
+`make archive` baut das Release-Archiv ohne Signatur und prüft es mit `scripts/check-archive` (README, Abschnitt „App Store“). Stand 14.11.2026: in Ordnung, mit Hinweisen nur auf die Platzhalter (Bundle-ID, App Group, Link „Quellcode“) und die fehlende Signatur. Bis Build 0.1.0 (6) hatte die App das Platzhalter-Icon (`App/Assets.xcassets/AppIcon.appiconset`, erzeugt von `scripts/app-icon.swift`). Seit der Golden Beta 0.9.1 (Phase 20) ist es das endgültige Icon `App/AppIcon.icon` mit 23 alternativen Icons der Grundfarben (`App/AlternateIcons/`); `scripts/check-archive` prüft das helle Bild ohne Alphakanal und die alternativen Icons in Info.plist und `Assets.car`.
 
 Beim ersten Release-Archiv fiel auf: App und Extension waren als iPhone- und iPad-App gebaut, weil XcodeGen an iOS-Targets „1,2“ setzt. Mit nur Hochformat hätte Apple den Upload abgelehnt (iPad-Multitasking verlangt alle vier Ausrichtungen), und App Store Connect hätte iPad-Bilder verlangt. Seitdem steht „1“ an beiden Targets.
 
@@ -71,20 +71,66 @@ Einzutragen in App Store Connect › TestFlight › Testinformationen, auf Deuts
 
 ### Beta-Beschreibung
 
+Stand 26.11.2026, Golden Beta 0.9.1: Auf die Frage, ob die Beschreibung angepasst werden soll, hat der Nutzer „Wie im Entwurf“ gewählt. Seitdem heißt es „Golden Beta vor dem Release“ statt „erste Beta“, das App-Symbol ist nicht mehr vorläufig, und bei den Widgets stehen StandBy und CarPlay. So in App Store Connect eingetragen und nach dem Neuladen bestätigt (Deutsch 1043, Englisch 995 Zeichen).
+
 Deutsch:
 
 ```text
-Vaqt ist eine gemeinnützige App für die fünf täglichen Gebete – werbefrei, ohne Tracking und ohne Konto. Sie rechnet die Zeiten auf dem iPhone, für deinen Standort oder eine gewählte Stadt, und zeigt sie als Tagesbogen mit Countdown. Dazu kommen die Qibla-Richtung mit Kompass, eine Anleitung zu jedem Gebet, ein Vers des Tages und eine Übersicht zum Nachholen. Mitteilungen mit Adhan, Widgets für Home- und Sperrbildschirm und eine Live-Aktivität zum nächsten Gebet sind dabei; auf dem iPhone Duo nutzt die App beide Hälften. Sprachen: Deutsch, Türkisch, Englisch, Spanisch, Französisch, Niederländisch, Bosnisch, Albanisch, Arabisch, Urdu, Indonesisch, Malaiisch, Bengali, Persisch, Russisch und Italienisch.
+Vaqt ist eine gemeinnützige App für die fünf täglichen Gebete – werbefrei, ohne Tracking und ohne Konto. Sie rechnet die Zeiten auf dem iPhone, für deinen Standort oder eine gewählte Stadt, und zeigt sie als Tagesbogen mit Countdown. Dazu kommen die Qibla-Richtung mit Kompass, eine Anleitung zu jedem Gebet, ein Vers des Tages und eine Übersicht zum Nachholen. Mitteilungen mit Adhan, Widgets für Home- und Sperrbildschirm, StandBy und CarPlay und eine Live-Aktivität zum nächsten Gebet sind dabei; auf dem iPhone Duo nutzt die App beide Hälften. Sprachen: Deutsch, Türkisch, Englisch, Spanisch, Französisch, Niederländisch, Bosnisch, Albanisch, Arabisch, Urdu, Indonesisch, Malaiisch, Bengali, Persisch, Russisch und Italienisch.
 
-Dies ist die erste Beta. Einige Inhalte sind noch vorläufig: die Auswahl der Vers-Übersetzungen, die einzelne Adhan-Aufnahme und das App-Symbol. Die Texte der Anleitung und der Verbotszeiten hat noch niemand fachlich geprüft, und die Sprachen ab Französisch sind Entwürfe, die noch Muttersprachler durchsehen.
+Dies ist die Golden Beta vor dem Release. Einige Inhalte sind noch vorläufig: die Auswahl der Vers-Übersetzungen und die einzelne Adhan-Aufnahme. Die Texte der Anleitung und der Verbotszeiten hat noch niemand fachlich geprüft, und die Sprachen ab Französisch sind Entwürfe, die noch Muttersprachler durchsehen.
 ```
 
 Englisch:
 
 ```text
-Vaqt is a non-profit app for the five daily prayers – no ads, no tracking, no account. It calculates the times on your iPhone, for your location or a city you choose, and shows them as a day arc with a countdown. It also has the Qibla direction with a compass, a guide to each prayer, a verse of the day and an overview for making up missed prayers. Notifications with the adhan, widgets for the Home Screen and Lock Screen and a Live Activity for the next prayer are included; on iPhone Duo the app uses both halves. Languages: German, Turkish, English, Spanish, French, Dutch, Bosnian, Albanian, Arabic, Urdu, Indonesian, Malay, Bengali, Persian, Russian and Italian.
+Vaqt is a non-profit app for the five daily prayers – no ads, no tracking, no account. It calculates the times on your iPhone, for your location or a city you choose, and shows them as a day arc with a countdown. It also has the Qibla direction with a compass, a guide to each prayer, a verse of the day and an overview for making up missed prayers. Notifications with the adhan, widgets for the Home Screen, Lock Screen, StandBy and CarPlay and a Live Activity for the next prayer are included; on iPhone Duo the app uses both halves. Languages: German, Turkish, English, Spanish, French, Dutch, Bosnian, Albanian, Arabic, Urdu, Indonesian, Malay, Bengali, Persian, Russian and Italian.
 
-This is the first beta. Some content is still provisional: the selection of verse translations, the single adhan recording and the app icon. Nobody has reviewed the guide and makruh texts for religious accuracy yet, and the languages from French on are drafts that native speakers have yet to review.
+This is the golden beta before the release. Some content is still provisional: the selection of verse translations and the single adhan recording. Nobody has reviewed the guide and makruh texts for religious accuracy yet, and the languages from French on are drafts that native speakers have yet to review.
+```
+
+### Was testen – Build 0.9.1 (7)
+
+Golden Beta 0.9.1 mit Phase 19 (CarPlay-Widgets, StandBy und Live-Aktivität „klein“), Phase 20 (App-Icon) und dem Hotfix aus Build 6. Am 26.11.2026 so in App Store Connect eingetragen, nach „Passt, eintragen“ des Nutzers, und nach dem Neuladen bestätigt; Deutsch 1635, Englisch 1618 Zeichen. „Bekannt“ ohne das Symbol, weil das Icon jetzt endgültig ist. Beim Zuordnen zu „Extern“ waren beide Texte vorbelegt.
+
+Deutsch:
+
+```text
+Golden Beta 0.9.1 – neu in Build 7:
+– Neues App-Icon: der Tagesbogen mit Glas-Linse, hell und dunkel. Unter Einstellungen › Stil der Schalter „App-Icon in der Grundfarbe“: Das Icon wechselt, wenn du die Seite verlässt; iOS bestätigt mit einem Hinweis.
+– Neues kleines Widget mit dem Tagesbogen und den Verbotszeiten.
+– StandBy und CarPlay: Die kleinen Widgets zeigen dort das nächste Gebet mit großer Uhrzeit. Die Live-Aktivität hat eine eigene Ansicht für CarPlay und den Smart Stack der Apple Watch.
+– Behoben: Absturz beim Teilen („App weiterempfehlen“, Vers teilen) mit einer anderen Grundfarbe als Petrol (bei Intern schon in Build 6).
+Bitte besonders prüfen: Wie wirkt das Icon auf deinem Home-Bildschirm (hell, dunkel, klar, getönt) und in deiner Grundfarbe? Sind Widgets und Live-Aktivität in StandBy, im Auto oder auf der Uhr gut lesbar? Klappt Teilen mit deiner Grundfarbe?
+
+Außerdem im Alltag prüfen:
+– Stimmen die Gebetszeiten für deinen Ort (Vergleich mit Moschee oder Kalender; Methode und Minuten in den Einstellungen)?
+– Kommen Mitteilungen und Wecker pünktlich, auch bei gesperrtem iPhone, im Stummmodus und bei Fokus?
+– Stimmen Widgets und Live-Aktivität (ab 30 Minuten vor jedem Gebet)?
+– Zeigt der Qibla-Kompass ruhig in die richtige Richtung?
+– Unverständlich, abgeschnitten oder falsch übersetzt? Arabisch, Urdu und Persisch laufen von rechts nach links.
+Bekannt: Anleitung und Verbotszeiten-Texte fachlich ungeprüft; Sprachen ab Französisch sind Entwürfe; Vers-Ausschnitte noch von niemandem mit Muttersprache gelesen; der Adhan hat keine Fadschr-Fassung.
+Feedback am besten mit Screenshot direkt aus TestFlight.
+```
+
+Englisch:
+
+```text
+Golden Beta 0.9.1 – new in build 7:
+– New app icon: the day arc with a glass lens, light and dark. Under Settings › Style, the switch "App Icon in Accent Color": the icon changes when you leave the page; iOS confirms with a notice.
+– New small widget with the day arc and the makruh times.
+– StandBy and CarPlay: the small widgets show the next prayer with a large time there. The Live Activity has its own view for CarPlay and the Smart Stack on Apple Watch.
+– Fixed: crash when sharing ("Recommend the App", sharing a verse) with an accent color other than Teal (already in build 6 for Intern).
+Please check in particular: How does the icon look on your Home Screen (light, dark, clear, tinted) and in your accent color? Are widgets and the Live Activity readable in StandBy, in the car or on the watch? Does sharing work with your accent color?
+
+Also check in everyday life:
+– Are the prayer times right for your location (compare with your mosque or calendar; method and minutes in Settings)?
+– Do notifications and the alarm arrive on time, also with the iPhone locked, in silent mode and with a Focus on?
+– Are widgets and Live Activity (from 30 minutes before each prayer) right?
+– Does the Qibla compass point the right way, without jitter?
+– Anything unclear, cut off or mistranslated? Arabic, Urdu and Persian run right to left.
+Known: the guide and the makruh texts are not reviewed for religious accuracy yet; the languages from French on are drafts; nobody who speaks the language has read the verse excerpts yet; the adhan has no Fajr version.
+Feedback ideally with a screenshot straight from TestFlight.
 ```
 
 ### Was testen – Build 0.1.0 (6)

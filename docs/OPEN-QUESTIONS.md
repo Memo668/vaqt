@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 26.11.2026, Golden Beta 0.9.1 (Build 7): In `main` zusammengeführt sind Phase 19 (CarPlay-Widgets, StandBy und Live-Aktivität „klein“, Spec § 12), Phase 20 (App-Icon, Spec § 13) und der Hotfix „App weiterempfehlen“ (Absturz beim Teilen mit einer anderen Grundfarbe als Petrol, `ba8782c`); Phase 19 und 20 abgenommen am 26.11.2026. Davor Phase 18 (Verse und Adhan, Spec § 11.1–11.2, mit dem Nachtrag Klang, Stil, Rechtsschule und Onboarding, Spec § 11.3–11.7), abgenommen am 25.11.2026. Bei „Intern“ sind Build 0.1.0 (5) und (6), bei „Extern“ Build 0.1.0 (5).
+Stand: 26.11.2026, Golden Beta 0.9.1 (Build 7): In `main` zusammengeführt sind Phase 19 (CarPlay-Widgets, StandBy und Live-Aktivität „klein“, Spec § 12), Phase 20 (App-Icon, Spec § 13) und der Hotfix „App weiterempfehlen“ (Absturz beim Teilen mit einer anderen Grundfarbe als Petrol, `ba8782c`); Phase 19 und 20 abgenommen am 26.11.2026. Build 0.9.1 (7) ist hochgeladen, bei „Intern“ und für „Extern“ zur Beta-App-Prüfung eingereicht („Waiting for Review“; bis dahin haben die externen Tester Build 0.1.0 (5)). Davor Phase 18 (Verse und Adhan, Spec § 11.1–11.2, mit dem Nachtrag Klang, Stil, Rechtsschule und Onboarding, Spec § 11.3–11.7), abgenommen am 25.11.2026.
 
 ## Für die erste Beta
 
@@ -42,6 +42,10 @@ Die erste Beta über TestFlight kommt nach Phase 11 – seit dem 15.11.2026 nach
   - Build 0.1.0 (6) (Hotfix „App weiterempfehlen“, `9c6b3f6`) ist am 26.11.2026 um 17:05 hochgeladen und war nach wenigen Minuten verarbeitet. Er ist automatisch bei „Intern“ („Ready to Submit“, 5 Tester).
     - „Was testen“ steht auf Deutsch und Englisch drin (`docs/APP-STORE.md`), eingetragen am 26.11.2026 mit dem Go des Nutzers („Passt, eintragen“).
     - Noch nicht bei „Extern“: Der Nutzer will erst die Icons freigeben (26.11.2026, „warte auf Freigabe der Icons“). Bis dahin steht bei „Extern“ Build 5, der beim Teilen mit einer anderen Grundfarbe als Petrol abstürzt.
+  - Build 0.9.1 (7), die Golden Beta mit Phase 19, Phase 20 und dem Hotfix (`18760c4`), ist am 26.11.2026 um 17:59 hochgeladen und war nach rund 14 Minuten verarbeitet (länger als bisher, das Paket ist mit den 24 Icons größer). Er ist automatisch bei „Intern“ (5 Tester).
+    - „Was testen“ steht auf Deutsch und Englisch drin (`docs/APP-STORE.md`), eingetragen am 26.11.2026 mit dem Go des Nutzers („Passt, eintragen“).
+    - Bei „Extern“ mit der Freigabe des Nutzers vom 26.11.2026, die nur für diesen Build gilt: am 26.11.2026 gegen 18:15 der Gruppe zugeordnet und zur Beta-App-Prüfung eingereicht, „Automatically notify testers“ an. Weil die Versionsnummer neu ist, prüft Apple erneut; Stand „Waiting for Review“. Bis zur Freigabe bekommen die externen Tester weiter Build 5.
+    - Die Beta-Beschreibung (Deutsch und Englisch) ist am 26.11.2026 mit dem Go des Nutzers („Wie im Entwurf“) geändert: „Golden Beta vor dem Release“ statt „erste Beta“, das App-Symbol nicht mehr vorläufig, Widgets auch für StandBy und CarPlay (`docs/APP-STORE.md`, „Beta-Beschreibung“).
   - Rückmeldungen aus TestFlight zu Build 2 (Tester, 17.11.2026), noch zu beheben:
     - Im Adhan-Sheet ist „Stimme 3“ stumm. Für sie gibt es keine Aufnahme; Stimme 1 und 2 sind Platzhalter von Wikimedia.
     - Ist der Schalter für die Fadschr-Fassung an, kommt bei keiner Stimme ein Ton.
