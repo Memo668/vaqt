@@ -2,7 +2,7 @@
 
 Hier steht, was für die erste Beta und vor dem App Store noch fehlt, was eine Entscheidung braucht und was entschieden ist. Darunter steht je Phase, was die App annimmt und wo sie von den Referenzbildern abweicht. Die offenen Designfragen der Spec selbst stehen in `design/prayer-times-design-spec.md` § 6.
 
-Stand: 26.11.2026, Golden Beta 0.9.1 (Build 7): In `main` zusammengeführt sind Phase 19 (CarPlay-Widgets, StandBy und Live-Aktivität „klein“, Spec § 12), Phase 20 (App-Icon, Spec § 13) und der Hotfix „App weiterempfehlen“ (Absturz beim Teilen mit einer anderen Grundfarbe als Petrol, `ba8782c`); Phase 19 und 20 abgenommen am 26.11.2026. Build 0.9.1 (7) ist hochgeladen, bei „Intern“ und für „Extern“ zur Beta-App-Prüfung eingereicht („Waiting for Review“; bis dahin haben die externen Tester Build 0.1.0 (5)). Davor Phase 18 (Verse und Adhan, Spec § 11.1–11.2, mit dem Nachtrag Klang, Stil, Rechtsschule und Onboarding, Spec § 11.3–11.7), abgenommen am 25.11.2026.
+Stand: 26.11.2026, Golden Beta 0.9.1 (Build 7): In `main` zusammengeführt sind Phase 19 (CarPlay-Widgets, StandBy und Live-Aktivität „klein“, Spec § 12), Phase 20 (App-Icon, Spec § 13) und der Hotfix „App weiterempfehlen“ (Absturz beim Teilen mit einer anderen Grundfarbe als Petrol, `ba8782c`); Phase 19 und 20 abgenommen am 26.11.2026. Build 0.9.1 (7) ist hochgeladen, bei „Intern“ und für „Extern“ zur Beta-App-Prüfung eingereicht („Waiting for Review“; bis dahin haben die externen Tester Build 0.1.0 (5)). Davor Phase 18 (Verse und Adhan, Spec § 11.1–11.2, mit dem Nachtrag Klang, Stil, Rechtsschule und Onboarding, Spec § 11.3–11.7), abgenommen am 25.11.2026. Dazu gebaut am 26.11.2026 auf `claude/icon-eigene-symbole-a31f4c` der Nachtrag zu Phase 20: eigene Symbole statt SF Symbols im Icon (Spec v0.14 § 13.1) – noch nicht in `main`, nicht hochgeladen; Build 0.9.1 (8) nur mit Go des Nutzers.
 
 ## Für die erste Beta
 
@@ -86,6 +86,7 @@ Nach dem Vorschlag „Neues App-Icon“ (Prototyp https://claude.ai/artifact/FHC
 | Text am Schalter | „App-Icon in der Grundfarbe“, 26.11.2026 | `styleIconTint` |
 | Wechsel im Hintergrund | „Beim nächsten Öffnen (Empfohlen)“, 26.11.2026 – nach dem Befund, dass iOS den Wechsel im Hintergrund ablehnt | Verlässt man die App von Stil aus, wechselt das Icon, sobald sie wieder vorn ist und Stil nicht offen (beim Start oder Zurückkommen), mit dem Hinweis von iOS. |
 | Fußnote | „Nur der Hinweis von iOS“, 26.11.2026 | `styleIconFooter`: „Das Icon auf dem Home-Bildschirm wechselt, wenn du diese Seite verlässt. iOS bestätigt jeden Wechsel mit einem Hinweis.“ |
+| Symbole im Icon | „Vertraut besser“ (aus „Vertraut“, „Schlicht“ und „Nur die Linse“; Empfehlung war „Schlicht“), 26.11.2026; Go zum Bau „Jetzt, vor dem Release (Empfohlen)“ | Eigene Zeichnung statt SF Symbols, weil das Xcode and Apple SDKs Agreement § 2.10 SF Symbols und ähnliche Bilder in App-Icons und Logos verbietet. Gleiche Motive, frei gezeichnet (volle Scheiben, spitze Strahlen, Spiegelung statt Pfeil, runde Sterne), als SVG-Ebenen; in allen 24 Icons und in `AppMark`. Gebaut als Nachtrag zu Phase 20 (Spec v0.14 § 13.1). |
 
 ## CarPlay und Apple Watch, entschieden am 25.11.2026
 
@@ -235,7 +236,7 @@ Offen bzw. Annahmen:
 - **Adhan-Aufnahme** (Phase 18, Spec § 11.2): Seit dem 24.11.2026 eine Aufnahme, der Adhan von Ustadh Mmanga Muharram (DARSA TV, auf YouTube unter CC BY). Vor dem App Store: festhalten, wer die Rechte an der Aufnahme hält – am besten eine kurze schriftliche Zusage von DARSA TV oder dem Muezzin –, und entscheiden, ob es eine Fadschr-Fassung geben soll. Den Schnitt (welcher Teil des Adhan in 30 Sekunden passt) sollte jemand fachlich ansehen.
 - **Texte der Anleitung** (Phase 5, Spec § 6.14): Niemand hat sie fachlich geprüft (Imam oder Gelehrter je Sprache). Offen sind auch eine neutrale Fassung oder Varianten je Rechtsschule und für Frauen, echte Illustrationen und Audio für die Formeln. Seit Phase 13 gehören die Texte von „Gebet Schritt für Schritt“ dazu (Spec § 9.6: Start, Stehen in Rakʿa 1–2, „Sprich dreimal“, kurzes Sitzen, zweite Niederwerfung, erstes und letztes Sitzen, Schluss). Im String Catalog tragen alle 43 Texte den Kommentar `TODO(review)`; `scripts/import-strings` setzt ihn (`walkReviewKeys`, `guideReviewKeys`).
 - **Icon** (Spec § 6.9, § 13): Seit Phase 20 das endgültige Icon (entschieden am 25./26.11.2026, unten „App-Icon“), in jeder Grundfarbe. Ändert sich ein Icon, den Bildsatz `AppMark` mit `scripts/app-mark` neu erzeugen. Vor dem App Store:
-  - **SF Symbols im Icon:** Die fünf Symbole im Icon sind SF Symbols (`sun.horizon`, `sun.max`, `sun.min`, `sunset`, `moon.stars`), übernommen aus dem Platzhalter. Apple erlaubt SF Symbols laut HIG nicht in App-Icons und Logos. Klären, ob die Symbole neu gezeichnet werden müssen (eigene Formen statt SF Symbols); bis dahin ein Risiko bei der Prüfung.
+  - **SF Symbols im Icon – erledigt am 26.11.2026:** Die fünf Symbole im Icon waren SF Symbols (`sun.horizon`, `sun.max`, `sun.min`, `sunset`, `moon.stars`), übernommen aus dem Platzhalter. Das Xcode and Apple SDKs Agreement § 2.10 und die HIG verbieten sie in App-Icons und Logos. Entscheidung am 26.11.2026: eigene Symbole „Vertraut“ (Mehmet: „Vertraut besser“), gebaut vor dem Release („Jetzt, vor dem Release (Empfohlen)“) als Nachtrag zu Phase 20 (Spec v0.14 § 13.1, oben „App-Icon“), in allen 24 Icons und in `AppMark`. In die Golden Beta kommt das mit Build 0.9.1 (8), sobald der Nutzer ihn freigibt; Build 7 zeigt noch die SF Symbols.
   - Am Gerät in allen sechs Darstellungen ansehen (Prüfliste in `docs/BUILD-PLAN.md`, Phase 20).
 - **Name** (Spec § 9.13): „Vaqt“ ist ein Arbeitsname (entschieden am 15.11.2026, „Vaqt als Arbeitsname (Empfohlen)“); den endgültigen Namen vor dem App Store festlegen. Im App Store gibt es schon:
   - „Vaqt“ (Huriye DIVARCI, Kategorie Lifestyle, seit 09/2026) – deshalb heißt der Store-Eintrag „Vaqt – Prayer Time“;
@@ -626,7 +627,17 @@ Gebaut am 26.11.2026 auf `claude/phase-20` (ab `claude/phase-19` = `3820e60`), S
 
 ### Was sich im Simulator nicht prüfen lässt
 - Die sechs Darstellungen des Home-Bildschirms (Klar und Getönt zeigt der Simulator nicht), das Icon in Mitteilungen und Spotlight und der Wechsel am Gerät: nach der Prüfliste in `docs/BUILD-PLAN.md` (Phase 20).
-- **SF Symbols im Icon:** siehe „Vor dem App Store“, Punkt „Icon“.
+- **SF Symbols im Icon:** erledigt im Nachtrag unten.
+
+### Nachtrag: eigene Symbole statt SF Symbols (26.11.2026)
+Gebaut am 26.11.2026 auf `claude/icon-eigene-symbole-a31f4c` (ab `main` = `2ea2f7c`), Spec v0.14 § 13.1. 1144 Tests grün (PrayerCore 505, DesignSystem 274, Features 365, wie vorher). `make check-strings`, `make check-icons`, `make archive` mit `scripts/check-archive` in Ordnung; Abgleich in `docs/REFERENCE-CHECK.md`.
+- **Dateien wie gewählt:** `App/AppIcon.icon` und `App/AlternateIcons/` sind mit `diff -r` bitgleich mit `docs/vorschlaege/2026-11-25/icons/Eigene-Symbole-Vertraut/`; die Formen stammen aus `eigene_symbole.py` und sind nicht nachgearbeitet. Keine PNG-Masken mehr in den Icons.
+- **`AppMark`:** mit `scripts/app-mark` neu gerendert (48 Bilder, 2,4 statt 2,3 MB). `ictool` rendert nicht ganz bitgleich; einzelne Bilder schwanken in der Größe (`AppMark-forest` dunkel 69 statt 47 KB); angesehen und in Ordnung.
+- **Prototyp:** nur die 24 Bildpaare in `APP_ICON` neu; der Prototyp wird damit um 34 KB kleiner (2,27 → 2,23 MB).
+- **Keine neuen Texte**, keine Änderung am Code: Namen der Icons, `project.yml`, Schalter und Wechsel bleiben wie in Phase 20. Version weiter 0.9.1 (7); die Build-Nummer 8 setzt erst der Schritt zum Upload, nur mit Go des Nutzers.
+- **Klein kaum zu erkennen:** Auf dem Home-Bildschirm sind die vier kleinen Symbole wie bisher nur als Form zu sehen, lesbar ist das Symbol unter der Linse. Groß (Onboarding, App Store) sieht man alle.
+- **Restrisiko** (aus dem Vorschlag): Eine Sonne mit Strahlen bleibt Apples Zeichen näher als die Fassung „Schlicht“; nachgezeichnet ist nichts.
+- **Nicht geprüft:** Gerät (Prüfliste in `docs/BUILD-PLAN.md`, Phase 20, Nachtrag), iOS 26.
 
 ## Annahmen in Phase 19
 

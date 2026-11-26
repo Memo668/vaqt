@@ -1,5 +1,17 @@
 # Schlussabgleich der Referenzbilder
 
+## Phase 20, Nachtrag (26.11.2026, eigene Symbole im App-Icon, Spec v0.14 § 13.1)
+
+Neu aus dem Prototyp sind alle Bilder mit dem Icon (`design/screenshots/INDEX.md`, Absatz „Spec v0.14“): `iphone/01`, `72` (je hell und dunkel), `87*`, `system/91`–`99`, `carplay/cp-21`, `cp-40`–`cp-43`. Alle 138 Zustände des Prototyps aufgenommen und Pixel für Pixel verglichen, die übrigen sind gleich (`iphone/16-home-after-isha-dark`: Rauschen in wenigen Pixeln, bleibt).
+
+| Bild | Befehl | Ergebnis |
+|---|---|---|
+| `iphone/01`, `72`, `87` | `make compare-settings STATES='01 72 87'` (72 vorher mit `iphone-71-72-settings.txt`, `OUT=screenshots-out/phase-7`) | stimmt – Icon im Onboarding, über der Tagline und im Kopf der Vorschau mit den eigenen Symbolen wie im Prototyp; 4,4–17,7 % der Pixel (Schrift, 12 pt Breite, SF Symbols der Oberfläche statt der CSS-Zeichnungen, Tableiste über den Kacheln) |
+| `system/90`–`99` | `WAIT=5 make compare-system` | stimmt – Icon im Kopf von Live-Aktivität und Widget „Live“ mit den eigenen Symbolen; Abweichungen wie bisher (Hintergrund des Katalogs statt Hintergrundbild, Schrift); `96` zeigt in der App das helle Icon (Annahme seit Phase 14) |
+| `carplay/cp-40`–`cp-52` | `WAIT=5 make compare-system` | stimmt – Icon im Kopf der Live-Aktivität „klein“ (6–15 % der Pixel wie in Phase 19 und 20) |
+| Wechsel des Icons | `make harness SCRIPTS='scripts/ui-harness/scripts/phase-20-icon.txt'` | stimmt – Antippen von Blau und Grün ohne Hinweis, beim Verlassen von Stil genau ein Hinweis („You have changed the icon for “Vaqt”.“); Home-Bildschirm grün mit den eigenen Symbolen, danach wieder Petrol |
+| Home-Bildschirm in sechs Darstellungen | am Gerät | nicht geprüft – Prüfliste in `docs/BUILD-PLAN.md`, Phase 20, Nachtrag |
+
 ## Phase 20 (26.11.2026, App-Icon, Spec v0.13 § 13)
 
 Neu aus dem Prototyp sind alle Bilder mit dem Icon (`design/screenshots/INDEX.md`, Absatz „Spec v0.13“); alle 138 Zustände des Prototyps aufgenommen und Pixel für Pixel verglichen, die übrigen sind gleich.
