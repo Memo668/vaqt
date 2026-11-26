@@ -15,6 +15,8 @@ Wenn nichts anderes steht: Deutsch, hell, Berlin, 14:25 (Asr aktiv).
 
 **Spec v0.12 (Phase 19, 25.11.2026, § 12):** Neu ist der Ordner `carplay/` mit CarPlay, StandBy und den Tafeln der kleinen Widgets und der Live-Aktivität „klein“ (Abschnitt unten). Alle übrigen Bilder sind gleich geblieben (Pixelvergleich von `iphone/10`, `87`, `system/91`, `93` mit der Aufnahme aus dem neuen Prototyp).
 
+**Spec v0.13 (Phase 20, 26.11.2026, § 13):** Das neue App-Icon (Tagesbogen auf Weiß, dunkel auf Schwarz, Glas-Linse auf dem oberen Punkt, in der Grundfarbe) und der Schalter „App-Icon in der Grundfarbe“ unter Stil. Neu aufgenommen sind alle Bilder mit dem Icon: `iphone/01-onboarding-1-welcome` und `72-settings-bottom` (je hell und dunkel), `87-settings-style*` (mit dem neuen Schalter), `system/91`–`99` und aus Phase 19 `carplay/cp-21`, `cp-30` und `cp-40`–`cp-43`. Die übrigen Bilder sind gleich geblieben: alle 138 Zustände aus dem neuen Prototyp aufgenommen und Pixel für Pixel verglichen; `iphone/16-home-after-isha-dark` und `18-home-high-latitude` weichen in wenigen Pixeln ab (Rauschen beim Zeichnen) und bleiben.
+
 **Nachtrag 16.11.2026 (Spec § 9.14):** Der Sonnenaufgang steht als Punkt im Bogen, gleich groß wie die Gebete. Neu aufgenommen sind deshalb `iphone/10`–`23` sowie `system/90`, `91`, `93`, `94` und `96`. Die Bilder unter `duo/*` sind weiter von v0.7 und zeigen den Bogen noch ohne Sonnenaufgang.
 
 **Phase 14 (15.11.2026):** `system/90`–`96` aus dem Prototyp v0.8 neu (Ansichten `widgets`, `live` und die der Mitteilungen; `screen` in `capture-prototype.mjs` wählt den Bildschirm): Rechteck mit Mini-Bogen, Widget „Live“ über dem mittleren, Kerahat auf der Spur der Live-Aktivität, App-Symbol im Kopf und in den Mitteilungen. Wegen des Namens „Vaqt“ (Spec § 9.13) neu: `04` (Dialog des Systems, jetzt auch aus dem Prototyp), `05`, `71`, `72`, `83` (Texte mit `{app}`). Nach dem Änderungswunsch zum Rechteck (Stil der Live-Aktivität, Spec § 9.11) noch einmal neu: `90`, `93`, `96`.
@@ -150,7 +152,7 @@ Vollbild über der Anleitung; `-debugWalk dhuhr -debugWalkStep N` mit `N` wie `S
 | `iphone/84-settings-alarm-fixed.png` | Same with a fixed time 05:30 and the short adhan (`-debugAlarm fixed`) |
 | `iphone/84-settings-alarm-off.png` | Same page, alarm off (`-debugTab alarm`) |
 | `iphone/84-settings-alarm-denied.png` | Alarm permission denied (`-debugAlarm denied`): switch off and disabled, „iOS-Einstellungen öffnen“ |
-| `iphone/87-settings-style.png` | Settings › Stil (`-debugTab style`, § 11.7): Live Activity preview, standard row of accent colours, three styles, „Invertiert“ |
+| `iphone/87-settings-style.png` | Settings › Stil (`-debugTab style`, § 11.7): Live Activity preview, standard row of accent colours, switch „App-Icon in der Grundfarbe“ (since v0.13, § 13.2), three styles, „Invertiert“ |
 | `iphone/87-settings-style-dark.png` | Same in dark mode |
 | `iphone/87-settings-style-open.png` | Same with Orange and „Nur Bogen“ inverted: grid 4 × 6 open (`-debugAccent orange -debugLiveStyle arc -debugLiveInverted`) |
 | `iphone/87-settings-style-open-end.png` | Same, scrolled to the end: „Standard wiederherstellen“ |
