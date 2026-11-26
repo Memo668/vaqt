@@ -363,7 +363,7 @@ Am 15.11.2026 hat der Nutzer zwölf Änderungen gewünscht und im Prototyp abgen
 - **Katalog:** `-debugCatalog live` zeigt unten die Live-Aktivität „klein“ in vier Größen; neu `-debugCatalog carplay` mit den kleinen Widgets mit und ohne Hintergrund und „klein“ nach dem Wechsel. `scripts/compare-system cp40 … cp52w` legt sie neben die Tafeln.
 - **Tests:** Zeitleiste je Widget (PrayerCore); Zeilen je Zustand mit und ohne Hintergrund, in der Verbotszeit, nach Rechtsschule, Kopfzeile je Höhe, nach dem Wechsel, Maße und Lage des Bogens wie im Prototyp, Farben, Lage im Katalog (DesignSystem, `CarPlayStandByTests`).
 - **Prüfen:** `make build`, `make test`, `make compare-system STATES='cp40 cp41 cp50 cp51'`, im System `make harness SCRIPTS=scripts/ui-harness/scripts/phase-19-system.txt`. Von Hand: Device Hub › Device › „CarPlay Simulator“ (breit und Standard, hell und dunkel) und „Show Standby“; der Smart Stack einer Apple Watch.
-- **Danach:** Abnahme durch den Nutzer. Die Apple Watch folgt in den Phasen 21 bis 23 laut Bauplan (`docs/vorschlaege/2026-11-24/bauplan-carplay-watch.md`, nicht im Repo; dort noch als 20 bis 22 – Phase 20 wurde am 26.11.2026 das App-Icon).
+- **Danach:** Abnahme durch den Nutzer. Die Apple Watch folgt in den Phasen 21 bis 23 laut Bauplan (`docs/vorschlaege/2026-11-24/bauplan-carplay-watch.md`, nicht im Repo; bis 26.11.2026 als 20 bis 22 – Phase 20 wurde das App-Icon).
 
 ## Phase 20 – App-Icon
 
