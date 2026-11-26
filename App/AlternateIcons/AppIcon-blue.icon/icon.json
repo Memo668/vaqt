@@ -42,7 +42,7 @@
         },
         {
           "name": "Symbol",
-          "image-name": "glas-symbol.png",
+          "image-name": "glas-symbol.svg",
           "glass": false,
           "fill-specializations": [
             {
@@ -176,7 +176,7 @@
       "layers": [
         {
           "name": "Symbole begonnen",
-          "image-name": "sym-begun.png",
+          "image-name": "sym-begun.svg",
           "fill-specializations": [
             {
               "value": {
@@ -199,7 +199,7 @@
         },
         {
           "name": "Symbole kommend",
-          "image-name": "sym-next.png",
+          "image-name": "sym-next.svg",
           "fill-specializations": [
             {
               "value": {
